@@ -21,7 +21,7 @@
             <ScrollViewer HorizontalScrollMode="Disabled">
               <StackPanel MaxWidth="1920" Padding="{utu:Responsive Narrow='12,12,12,28', Wide='24,20,24,32'}" Spacing="16">
                 <Border CornerRadius="24" Background="{ThemeResource CloverSky}">
-                  <Grid Height="{utu:Responsive Narrowest=780, Normal=520, Wide=520}">
+                  <Grid MinHeight="{utu:Responsive Narrowest=780, Normal=520, Wide=520}">
                     <controls:PetBackdrop Photo="{Binding Data.HeroPhoto}" Hero="True" Pulse="{Binding Parent.DosePulse}" ReduceMotion="{Binding Parent.ReduceMotion}" />
                     <Grid Padding="24" ColumnDefinitions="*,Auto" RowDefinitions="Auto,*,Auto" RowSpacing="12">
                       <StackPanel Spacing="8" MaxWidth="340" HorizontalAlignment="Left">
