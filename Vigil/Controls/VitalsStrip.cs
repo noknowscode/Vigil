@@ -130,7 +130,7 @@ public sealed partial class VitalsStrip : SKCanvasElement
         }
         try
         {
-            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/IBMPlexMono_Medium.ttf"));
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/MartianMono_Medium.ttf"));
             await using var stream = await file.OpenStreamForReadAsync();
             var buffer = new MemoryStream();
             await stream.CopyToAsync(buffer);

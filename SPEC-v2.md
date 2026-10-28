@@ -39,6 +39,7 @@ User decisions (2026-10-28):
   - `Case.Labs` (`LabResult(string Panel, LabState State, DateTimeOffset At)` list; `LabState { Pending, Ready, Reviewed }`).
   - `RecoveryLog.PainScores` (list of `PainScore(DateTimeOffset At, int Score)`; the single `PainScore` stays for export).
   - `Case.DischargeCall` (`DischargeCall(DateTimeOffset DueAt, DateTimeOffset? DoneAt)`?).
+  - `Case.FastingSince` and `Case.ParentNotifiedAt` (DateTimeOffset?) for the next-surgery hero state.
   - Formulary: `RedoseMinutes` per drug (cefazolin 90) → next dose = last dose + RedoseMinutes.
   - Practice preference `PlannedPrepMinutes` (default 25) for the care-time insight.
 - **Derived logic (pure, unit-tested)**: `Stage.Of(case)` Booked/Prep/Surgery/Recovery/Home;
@@ -99,6 +100,21 @@ User decisions (2026-10-28):
   the frame stack. Breadcrumb "Patients" → Patients. Anesthesia → Record of the live case (disabled when none).
 - **FeedView states**: every async block (hero, gantt, cards, due, care time, record panes) has Progress (skeleton),
   None (empty copy), Error (message + Retry → `Store.Reload`).
+- **State designs** (user reference image, 2026-10-28, chat only; values read from it):
+  - *No surgery in progress*: the hero card becomes "Next surgery · Oscar" (calendar icon tile, "Mass removal, left
+    flank · OR 1"), secondary button "Start prep" (sets `PrepStartedAt`), countdown "1:18 until 14:00" (mono hero),
+    green chip "✓ Bloodwork ready" (from Labs) + "Fasting since 06:00", stats Prep starts 13:30 (in 48 min) · Team
+    Dr. Okafor / S. Tremblay · Pet parent L. Moreau (notified 12:30). Needs new fields `FastingSince` and
+    `ParentNotifiedAt`.
+  - *Monitor signal lost* (patient card): status strip turns error-soft (#FBE6E2/#F1C9C2), "⚠ Signal lost at 12:39" in
+    error ink, clock keeps running. Needs a monitor connection (see UQ).
+  - *Loading*: skeleton with the collapsed card's footprint (photo block, two text bars, strip block, stepper bars,
+    toggle bar) in #ECECEE-family greys.
+  - *Nothing due*: the table is replaced by a check tile (green soft) "All caught up" + "Next: Oscar prep at 13:30";
+    header copy "Nothing due before 14:00", the Open agenda link stays.
+  - *Monitoring paused* (sidebar): error-soft pill, "⚠ Monitoring paused", "Last sync 12:39 · Retry" (link).
+  - *No patients today*: section card "Today's patients" / "No one is booked in for today yet." with buttons
+    "New patient +" and "Open agenda".
 - **Motion** (§6): buttons press 0.96/150 ms; show-details expand 300/collapse 200 ms ease (0.2,0,0,1); chevron
   rotate; pulse ring 2 s; reduced motion (Preferences) disables all.
 - **Accessibility**: composed AutomationProperties.Name on cards, rows and stats; disabled items announce
@@ -167,7 +183,9 @@ substitutions in UQ).
 
 - Disabled-but-visible Records, Messages, Reports, Help center, clinic switcher, search and bell show features the
   app does not have (user chose this; capability rule flags it). Revisit before any release.
-- "Monitoring on" pill: Vigil has no device link. Shown disabled; should its text change?
+- Monitoring: the state designs (signal lost on a card, "Monitoring paused · Last sync · Retry") assume a live
+  connection to a patient monitor. Vigil has none and says it is not a live monitor. Build a monitor-connection
+  service (which device/protocol?), or keep the pill disabled and drop the signal-lost / paused states?
 - Dark-theme values are derived, not designed.
 - Negative tracking on mono numbers is dropped on Skia.
 - Phone layout (< 760) is not in the prototypes; the drawer-sidebar behaviour is our design.

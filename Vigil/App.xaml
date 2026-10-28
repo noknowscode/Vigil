@@ -12,9 +12,9 @@
           <!-- Material controls stay Roboto without this (FontOverrideSource). Weights resolve through the .ttf.manifest files. -->
           <utum:MaterialToolkitTheme.FontOverrideDictionary>
             <ResourceDictionary>
-              <FontFamily x:Key="MaterialLightFontFamily">ms-appx:///Assets/Fonts/PublicSans.ttf</FontFamily>
-              <FontFamily x:Key="MaterialRegularFontFamily">ms-appx:///Assets/Fonts/PublicSans.ttf</FontFamily>
-              <FontFamily x:Key="MaterialMediumFontFamily">ms-appx:///Assets/Fonts/PublicSans_SemiBold.ttf</FontFamily>
+              <FontFamily x:Key="MaterialLightFontFamily">ms-appx:///Assets/Fonts/HankenGrotesk.ttf</FontFamily>
+              <FontFamily x:Key="MaterialRegularFontFamily">ms-appx:///Assets/Fonts/HankenGrotesk.ttf</FontFamily>
+              <FontFamily x:Key="MaterialMediumFontFamily">ms-appx:///Assets/Fonts/HankenGrotesk_Medium.ttf</FontFamily>
             </ResourceDictionary>
           </utum:MaterialToolkitTheme.FontOverrideDictionary>
         </utum:MaterialToolkitTheme>

@@ -9,8 +9,8 @@
   -->
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
-      <Color x:Key="VitalHrColor">#2E7D32</Color>
-      <Color x:Key="VitalBpColor">#C62828</Color>
+      <Color x:Key="VitalHrColor">#0F8A57</Color>
+      <Color x:Key="VitalBpColor">#5F78E2</Color>
       <Color x:Key="VitalSpO2Color">#00707F</Color>
       <Color x:Key="VitalEtCo2Color">#56625D</Color>
       <Color x:Key="VitalTempColor">#A84B00</Color>
@@ -21,8 +21,8 @@
       <SolidColorBrush x:Key="VitalTempBrush" Color="{StaticResource VitalTempColor}" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <Color x:Key="VitalHrColor">#6BD37E</Color>
-      <Color x:Key="VitalBpColor">#FF7A70</Color>
+      <Color x:Key="VitalHrColor">#6FCF9F</Color>
+      <Color x:Key="VitalBpColor">#9AAAF0</Color>
       <Color x:Key="VitalSpO2Color">#5CC8D7</Color>
       <Color x:Key="VitalEtCo2Color">#B8C4BF</Color>
       <Color x:Key="VitalTempColor">#FFA54F</Color>

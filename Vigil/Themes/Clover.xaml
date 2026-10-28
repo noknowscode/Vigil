@@ -1,45 +1,45 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
-      <SolidColorBrush x:Key="CloverCanvas" Color="#EFEEE7" />
-      <SolidColorBrush x:Key="CloverLavender" Color="#E6E5F7" />
-      <SolidColorBrush x:Key="CloverLavenderEdge" Color="#DAD9EE" />
-      <SolidColorBrush x:Key="CloverMint" Color="#DDF0E6" />
-      <SolidColorBrush x:Key="CloverMintEdge" Color="#CEE3D7" />
-      <SolidColorBrush x:Key="CloverLime" Color="#E8EFBA" />
-      <SolidColorBrush x:Key="CloverSky" Color="#DAEAF0" />
-      <SolidColorBrush x:Key="CloverCream" Color="#F4EBDD" />
-      <SolidColorBrush x:Key="CloverGlass" Color="#ECFFFEF9" />
-      <SolidColorBrush x:Key="CloverSage" Color="#E8EDE2" />
+      <SolidColorBrush x:Key="CloverCanvas" Color="#F3F3F2" />
+      <SolidColorBrush x:Key="CloverLavender" Color="#E5E8F9" />
+      <SolidColorBrush x:Key="CloverLavenderEdge" Color="#CDD3F3" />
+      <SolidColorBrush x:Key="CloverMint" Color="#D5ECE0" />
+      <SolidColorBrush x:Key="CloverMintEdge" Color="#B8DDC8" />
+      <SolidColorBrush x:Key="CloverLime" Color="#F3F3F2" />
+      <SolidColorBrush x:Key="CloverSky" Color="#DCEAF0" />
+      <SolidColorBrush x:Key="CloverCream" Color="#E9EAEF" />
+      <SolidColorBrush x:Key="CloverGlass" Color="#80FFFFFF" />
+      <SolidColorBrush x:Key="CloverSage" Color="#E9EAEF" />
       <!-- Photo panels: placeholder fill drawn by PetBackdrop, and the live surgery band. -->
-      <SolidColorBrush x:Key="CloverPhotoBase" Color="#DFEAF0" />
-      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#D4E2CD" />
-      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#F0E7D6" />
-      <SolidColorBrush x:Key="CloverGlassEdge" Color="#EFFFFFFF" />
-      <SolidColorBrush x:Key="CloverLiveInk" Color="#41604A" />
-      <LinearGradientBrush x:Key="CloverLiveBand" StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#E5E2FA" Offset="0" /><GradientStop Color="#DAEBF3" Offset="0.55" /><GradientStop Color="#DFEEDC" Offset="1" /></LinearGradientBrush>
+      <SolidColorBrush x:Key="CloverPhotoBase" Color="#E9E9EB" />
+      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#EDEDEF" />
+      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#F3F3F2" />
+      <SolidColorBrush x:Key="CloverGlassEdge" Color="#CCFFFFFF" />
+      <SolidColorBrush x:Key="CloverLiveInk" Color="#3F5249" />
+      <LinearGradientBrush x:Key="CloverLiveBand" StartPoint="0,0.32" EndPoint="1,0.68"><GradientStop Color="#E5E8F9" Offset="0" /><GradientStop Color="#DCEAF0" Offset="0.52" /><GradientStop Color="#D5ECE0" Offset="1" /></LinearGradientBrush>
 </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="CloverCanvas" Color="#111A15" />
-      <SolidColorBrush x:Key="CloverLavender" Color="#33374C" />
-      <SolidColorBrush x:Key="CloverLavenderEdge" Color="#454A62" />
-      <SolidColorBrush x:Key="CloverMint" Color="#244536" />
-      <SolidColorBrush x:Key="CloverMintEdge" Color="#375C49" />
-      <SolidColorBrush x:Key="CloverLime" Color="#28361F" />
-      <SolidColorBrush x:Key="CloverSky" Color="#253F47" />
-      <SolidColorBrush x:Key="CloverCream" Color="#3A342B" />
-      <SolidColorBrush x:Key="CloverGlass" Color="#EF1A2820" />
-      <SolidColorBrush x:Key="CloverSage" Color="#2B3C31" />
-      <SolidColorBrush x:Key="CloverPhotoBase" Color="#1F2F35" />
-      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#24372A" />
-      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#332E26" />
-      <SolidColorBrush x:Key="CloverGlassEdge" Color="#26FFFFFF" />
-      <SolidColorBrush x:Key="CloverLiveInk" Color="#94A39C" />
-      <LinearGradientBrush x:Key="CloverLiveBand" StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#262A3D" Offset="0" /><GradientStop Color="#1E3137" Offset="0.55" /><GradientStop Color="#203325" Offset="1" /></LinearGradientBrush>
+      <SolidColorBrush x:Key="CloverCanvas" Color="#111315" />
+      <SolidColorBrush x:Key="CloverLavender" Color="#262B45" />
+      <SolidColorBrush x:Key="CloverLavenderEdge" Color="#3A4166" />
+      <SolidColorBrush x:Key="CloverMint" Color="#17372A" />
+      <SolidColorBrush x:Key="CloverMintEdge" Color="#24513D" />
+      <SolidColorBrush x:Key="CloverLime" Color="#1E2125" />
+      <SolidColorBrush x:Key="CloverSky" Color="#1C2A30" />
+      <SolidColorBrush x:Key="CloverCream" Color="#2A2D33" />
+      <SolidColorBrush x:Key="CloverGlass" Color="#801A1D21" />
+      <SolidColorBrush x:Key="CloverSage" Color="#2A2D33" />
+      <SolidColorBrush x:Key="CloverPhotoBase" Color="#23262B" />
+      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#2A2D33" />
+      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#1E2125" />
+      <SolidColorBrush x:Key="CloverGlassEdge" Color="#33FFFFFF" />
+      <SolidColorBrush x:Key="CloverLiveInk" Color="#A9C2B5" />
+      <LinearGradientBrush x:Key="CloverLiveBand" StartPoint="0,0.32" EndPoint="1,0.68"><GradientStop Color="#262B45" Offset="0" /><GradientStop Color="#1C2A30" Offset="0.52" /><GradientStop Color="#17372A" Offset="1" /></LinearGradientBrush>
 </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
-  <FontFamily x:Key="CloverFont">ms-appx:///Assets/Fonts/PublicSans.ttf</FontFamily>
-  <FontFamily x:Key="CloverEditorialFont">Georgia</FontFamily>
+  <FontFamily x:Key="CloverFont">ms-appx:///Assets/Fonts/HankenGrotesk.ttf</FontFamily>
+  <FontFamily x:Key="CloverEditorialFont">ms-appx:///Assets/Fonts/Newsreader.ttf</FontFamily>
 
   <Style x:Key="CloverDisplay" TargetType="TextBlock">
     <Setter Property="FontFamily" Value="{StaticResource CloverFont}" />

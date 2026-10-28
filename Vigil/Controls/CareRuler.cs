@@ -16,8 +16,8 @@ public sealed partial class CareRuler : UserControl
     private readonly Canvas _blocks = new();
     private readonly Canvas _present = new() { IsHitTestVisible = false };
     private readonly Dictionary<string, Button> _buttons = new();
-    private readonly FontFamily _font = new("ms-appx:///Assets/Fonts/PublicSans.ttf");
-    private readonly FontFamily _mono = new("ms-appx:///Assets/Fonts/IBMPlexMono.ttf");
+    private readonly FontFamily _font = new("ms-appx:///Assets/Fonts/HankenGrotesk.ttf");
+    private readonly FontFamily _mono = new("ms-appx:///Assets/Fonts/MartianMono.ttf");
     private bool _drawing;
 
     public CareRuler()
@@ -86,8 +86,8 @@ public sealed partial class CareRuler : UserControl
                 }
                 button.Width = laneWidth - 5; button.Height = slot.Height;
                 Canvas.SetLeft(button, 52 + laneWidth * slot.Lane); Canvas.SetTop(button, slot.Top + 24);
-                button.Background = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverLavender" : "CloverMint", span.Phase == CarePhase.Anaesthesia ? "#E6E5F7" : "#DDF0E6");
-                button.BorderBrush = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverLavenderEdge" : "CloverMintEdge", "#D6DFD4");
+                button.Background = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverMint" : "CloverLavender", span.Phase == CarePhase.Anaesthesia ? "#D5ECE0" : "#E5E8F9");
+                button.BorderBrush = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverMintEdge" : "CloverLavenderEdge", "#E4E4E6");
                 var content = new StackPanel { Spacing = 4 };
                 var name = Label(span.Name, 15, text);
                 name.FontWeight = Microsoft.UI.Text.FontWeights.SemiBold;
