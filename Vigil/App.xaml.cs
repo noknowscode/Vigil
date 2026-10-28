@@ -169,6 +169,10 @@ public partial class App : Application
             {
                 await prefs.SetClinicianNameAsync("Okafor", CancellationToken.None);
             }
+            if (string.IsNullOrWhiteSpace(prefs.ClinicianFirstName))
+            {
+                await prefs.SetClinicianFirstNameAsync("Amara", CancellationToken.None);
+            }
         }
         if (seed is null)
         {

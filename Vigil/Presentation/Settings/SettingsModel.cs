@@ -39,6 +39,10 @@ public partial record SettingsModel(
     public IState<string> ClinicianName => State.Value(this, () => Preferences.ClinicianName)
         .ForEach(async (name, ct) => await Preferences.SetClinicianNameAsync(name ?? "", ct));
 
+    /// <summary>First name, for the sidebar avatar initials only; saved when the field loses focus.</summary>
+    public IState<string> ClinicianFirstName => State.Value(this, () => Preferences.ClinicianFirstName)
+        .ForEach(async (name, ct) => await Preferences.SetClinicianFirstNameAsync(name ?? "", ct));
+
     public IState<string> Notice => State.Value(this, () => "");
 
     public IState<string> LanguageNotice => State.Value(this, () => "");

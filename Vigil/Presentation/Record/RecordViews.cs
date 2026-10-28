@@ -267,11 +267,23 @@ public sealed partial record FluidsText(string Text, bool IsRunning)
 {
     public static FluidsText None { get; } = new("", false);
     public bool IsStopped => !IsRunning;
+
+    /// <summary>The start button reads as a rate change while a run is going.</summary>
+    public string StartLabel => IsRunning ? Loc.T("Fluids_ChangeRate", "Change rate") : Loc.T("Fluids_Start", "Start fluids");
 }
 
 /// <summary>Record page sentences, built from the case and the time (unit-tested in RecordViewTests).</summary>
 public static class RecordText
 {
+    /// <summary>The record's status pill: "Under anesthesia", "Recovery", "Signed", "Scheduled".</summary>
+    public static string StatusLabel(CaseStatus s) => s switch
+    {
+        CaseStatus.Anesthetized => Loc.T("Status_Anesthetized", "Under anesthesia"),
+        CaseStatus.Recovery => Loc.T("Status_Recovery", "Recovery"),
+        CaseStatus.Signed => Loc.T("Status_Signed", "Signed"),
+        _ => Loc.T("Status_Scheduled", "Scheduled"),
+    };
+
     /// <summary>"Started 11:30 · OR 1 · Dr. Okafor, S. Tremblay" (or "Planned 14:00 · …" before induction).</summary>
     public static string ProcedureMeta(Case c, DateTimeOffset now)
     {

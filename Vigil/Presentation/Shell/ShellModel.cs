@@ -14,6 +14,8 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
 
     private IFeed<string> Surname { get; } = Feed.Async(async ct => { await Task.Yield(); return Preferences.ClinicianName; }, Preferences.Changed);
 
+    private IFeed<string> Initials { get; } = Feed.Async(async ct => { await Task.Yield(); return ShellSection.Initials(Preferences.ClinicianFirstName, Preferences.ClinicianName); }, Preferences.Changed);
+
     /// <summary>
     /// The highlighted sidebar item. A pick sets it at once (<see cref="Go"/>); every route change in the content frame
     /// then sets it from the page shown (raised after the page loads), so detail pages move it too (Record: Patients).
@@ -37,7 +39,7 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
     public IFeed<bool> HasLive => Cases.Select(c => ShellSection.Live(c) > 0);
 
     public IFeed<string> ClinicianName => Surname.Select(ShellSection.ClinicianLabel);
-    public IFeed<string> ClinicianInitials => Surname.Select(ShellSection.Initials);
+    public IFeed<string> ClinicianInitials => Initials;
 
     /// <summary>Full sidebar (true) or icon rail (false) from 1080 px; below that the rail is forced by width.</summary>
     public IState<bool> IsExpanded => State.Value(this, () => true);

@@ -24,13 +24,18 @@ public interface IPreferences
 
     ValueTask SetClinicianNameAsync(string name, CancellationToken ct);
 
+    /// <summary>First name, for the avatar initials only ("Amara" + "Okafor" gives "AO"); empty uses the surname alone.</summary>
+    string ClinicianFirstName { get; }
+
+    ValueTask SetClinicianFirstNameAsync(string name, CancellationToken ct);
+
     /// <summary>Planned preparation time per case, for the care-time insight and the next surgery's prep start.</summary>
     int PlannedPrepMinutes { get; }
 
     ValueTask SetPlannedPrepMinutesAsync(int minutes, CancellationToken ct);
 }
 
-internal sealed record PreferencesFile(int ReadingIntervalMinutes, bool ReduceMotion, string ClinicianName = "", int PlannedPrepMinutes = Preferences.DefaultPlannedPrepMinutes);
+internal sealed record PreferencesFile(int ReadingIntervalMinutes, bool ReduceMotion, string ClinicianName = "", int PlannedPrepMinutes = Preferences.DefaultPlannedPrepMinutes, string ClinicianFirstName = "");
 
 [JsonSerializable(typeof(PreferencesFile))]
 internal partial class PreferencesJsonContext : JsonSerializerContext;
@@ -73,6 +78,10 @@ public sealed class Preferences : IPreferences
     public string ClinicianName => _value.ClinicianName ?? "";
 
     public ValueTask SetClinicianNameAsync(string name, CancellationToken ct) => SaveAsync(_value with { ClinicianName = name.Trim() }, ct);
+
+    public string ClinicianFirstName => _value.ClinicianFirstName ?? "";
+
+    public ValueTask SetClinicianFirstNameAsync(string name, CancellationToken ct) => SaveAsync(_value with { ClinicianFirstName = name.Trim() }, ct);
 
     public int PlannedPrepMinutes => _value.PlannedPrepMinutes is >= 5 and <= 180 ? _value.PlannedPrepMinutes : DefaultPlannedPrepMinutes;
 

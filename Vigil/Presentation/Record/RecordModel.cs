@@ -148,7 +148,7 @@ public partial record CaseView(
             c.Procedure,
             $"{c.Veterinarian} · {c.Technician}",
             c.Status,
-            CaseSummary.StatusLabel(c.Status),
+            RecordText.StatusLabel(c.Status),
             p.WeightKg,
             $"{p.WeightKg:0.0}",
             string.Join(" · ", new[] { p.SpeciesAndBreed, p.AgeYears > 0 ? Loc.F("Patient_AgeShort", "{0:0.#} y", p.AgeYears) : "", string.IsNullOrWhiteSpace(p.Owner) ? "" : Loc.F("Patient_OwnerShort", "owner {0}", p.Owner) }.Where(x => x.Length > 0)),
@@ -401,6 +401,29 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
     {
         var at = Clock.Now;
         await SaveAsync(c => c.WithDischargeCallDone(at), ct);
+    }
+
+    /// <summary>Medication record pane: the fluid to start, prefilled with the usual maintenance run.</summary>
+    public IState<string> FluidName => State.Value(this, () => "LRS");
+
+    /// <summary>Rate in mL/kg/h, text while typing like the other numeric fields.</summary>
+    public IState<string> FluidRate => State.Value(this, () => "5");
+
+    public async ValueTask StartFluids(string fluidName, string fluidRate, CancellationToken ct)
+    {
+        if (VitalsDraft.ParseDec(fluidRate ?? "") is not decimal rate || rate <= 0 || rate > Domain.Case.MaxFluidRate || string.IsNullOrWhiteSpace(fluidName))
+        {
+            await SaveError.UpdateAsync(_ => Loc.F("Fluids_Invalid", "Enter a fluid and a rate above 0 and up to {0} mL/kg/h.", Domain.Case.MaxFluidRate), ct);
+            return;
+        }
+        var at = Clock.Now;
+        await SaveAsync(c => c.IsSigned ? c : c.WithFluidsStarted(fluidName, rate, at), ct);
+    }
+
+    public async ValueTask StopFluids(CancellationToken ct)
+    {
+        var at = Clock.Now;
+        await SaveAsync(c => c.IsSigned ? c : c.WithFluidsStopped(at), ct);
     }
 
     /// <summary>Records a pain score (button "0" to "4") at the current time, while the case is in recovery.</summary>

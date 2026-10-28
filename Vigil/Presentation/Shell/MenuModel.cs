@@ -11,6 +11,8 @@ public partial record MenuModel(MenuContext Context, INavigator Navigator, ICase
 
     private IFeed<string> Surname { get; } = Feed.Async(async ct => { await Task.Yield(); return Preferences.ClinicianName; }, Preferences.Changed);
 
+    private IFeed<string> Initials { get; } = Feed.Async(async ct => { await Task.Yield(); return ShellSection.Initials(Preferences.ClinicianFirstName, Preferences.ClinicianName); }, Preferences.Changed);
+
     // Delivered as a feed: a value already present when the Sidebar binds reaches the nav items before their templates
     // exist, so utu:VisualStateManagerExtensions has no Active state to go to yet.
     private IFeed<string> Current { get; } = Feed.Async(async ct => { await Task.Yield(); return Context.Section; });
@@ -26,7 +28,7 @@ public partial record MenuModel(MenuContext Context, INavigator Navigator, ICase
     public IFeed<bool> HasLive => Cases.Select(c => ShellSection.Live(c) > 0);
 
     public IFeed<string> ClinicianName => Surname.Select(ShellSection.ClinicianLabel);
-    public IFeed<string> ClinicianInitials => Surname.Select(ShellSection.Initials);
+    public IFeed<string> ClinicianInitials => Initials;
 
     /// <summary>The drawer always shows the full sidebar.</summary>
     public bool IsExpanded => true;

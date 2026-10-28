@@ -2,7 +2,10 @@ using System.Globalization;
 
 namespace Vigil.Presentation;
 
-/// <summary>The new-case form. Numbers stay text while typing so partial input ("18.") is never rejected.</summary>
+/// <summary>
+/// The new-case form. Numbers and times stay text while typing so partial input ("18.", "14:") is never rejected.
+/// The scheduling fields are optional: a walk-in case has no room, slot or fasting time.
+/// </summary>
 public partial record CaseDraft(
     string Name,
     int SpeciesIndex,
@@ -12,7 +15,12 @@ public partial record CaseDraft(
     string Owner,
     string Procedure,
     string Veterinarian,
-    string Technician)
+    string Technician,
+    string OperatingRoom = "",
+    string PlannedStartText = "",
+    string PlannedMinutesText = "",
+    string FastingSinceText = "",
+    bool ParentNotified = false)
 {
     public static CaseDraft Empty { get; } = new("", 0, "", "", "", "", "", "", "");
 
@@ -49,12 +57,56 @@ public partial record CaseDraft(
         {
             errors.Add(Loc.T("NewCase_TechRequired", "Enter the technician running anesthesia."));
         }
+        if (!string.IsNullOrWhiteSpace(PlannedStartText) && ParseTime(PlannedStartText) is null)
+        {
+            errors.Add(Loc.T("NewCase_StartTime", "Planned start is a time like 14:00."));
+        }
+        if (!string.IsNullOrWhiteSpace(PlannedMinutesText) && (int.TryParse(PlannedMinutesText.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var minutes) ? minutes is < 5 or > 600 : true))
+        {
+            errors.Add(Loc.T("NewCase_Duration", "Planned length is 5 to 600 minutes."));
+        }
+        if (!string.IsNullOrWhiteSpace(PlannedMinutesText) && string.IsNullOrWhiteSpace(PlannedStartText))
+        {
+            errors.Add(Loc.T("NewCase_DurationNeedsStart", "Enter a planned start for the planned length."));
+        }
+        if (!string.IsNullOrWhiteSpace(FastingSinceText) && ParseTime(FastingSinceText) is null)
+        {
+            errors.Add(Loc.T("NewCase_FastingTime", "Fasting since is a time like 20:00."));
+        }
         return errors.ToImmutable();
     }
 
     public Case ToCase(DateTimeOffset now) => Case.New(
         new Patient(Name.Trim(), Species, Breed.Trim(), Math.Round(WeightKg ?? 0, 1), AgeYears ?? 0, Owner.Trim()),
-        Procedure.Trim(), Veterinarian.Trim(), Technician.Trim(), now);
+        Procedure.Trim(), Veterinarian.Trim(), Technician.Trim(), now) with
+    {
+        OperatingRoom = OperatingRoom.Trim(),
+        PlannedStart = ParseTime(PlannedStartText) is TimeSpan start ? On(now, start) : null,
+        PlannedMinutes = int.TryParse(PlannedMinutesText.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var minutes) ? minutes : null,
+        FastingSince = ParseTime(FastingSinceText) is TimeSpan fast ? LastAt(now, fast) : null,
+        ParentNotifiedAt = ParentNotified ? now : null,
+    };
+
+    /// <summary>"14:00", "14h00", "1400" and "9:5" are times of day; anything else is not.</summary>
+    public static TimeSpan? ParseTime(string text)
+    {
+        var t = text.Trim().ToLowerInvariant().Replace('h', ':').Replace('.', ':');
+        if (!t.Contains(':') && t.Length is 3 or 4 && t.All(char.IsAsciiDigit))
+        {
+            t = t[..^2] + ":" + t[^2..];
+        }
+        var parts = t.Split(':');
+        return parts.Length == 2
+            && int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out var h) && h is >= 0 and <= 23
+            && (parts[1].Length == 0 ? 0 : int.TryParse(parts[1], NumberStyles.None, CultureInfo.InvariantCulture, out var m) ? m : -1) is var min && min is >= 0 and <= 59
+            ? new TimeSpan(h, min, 0)
+            : null;
+    }
+
+    private static DateTimeOffset On(DateTimeOffset now, TimeSpan time) => new(now.Date + time, now.Offset);
+
+    /// <summary>Fasting starts before the visit: a time later than now was last night.</summary>
+    private static DateTimeOffset LastAt(DateTimeOffset now, TimeSpan time) => On(now, time) is var at && at > now ? at.AddDays(-1) : at;
 
     private static decimal? ParseDecimal(string text)
     {

@@ -185,6 +185,32 @@ public partial record Case(
     public Case WithDischargeCallDone(DateTimeOffset at) =>
         DischargeCall is { IsDone: false } call ? this with { DischargeCall = call with { DoneAt = at } } : this;
 
+    /// <summary>Highest fluid rate the record accepts, in mL/kg/h (shock boluses are given as doses, not runs).</summary>
+    public const decimal MaxFluidRate = 30m;
+
+    /// <summary>
+    /// Starts a fluid run at <paramref name="at"/>. A run already going is stopped at the same moment, so a rate change
+    /// reads as one run ending and the next starting.
+    /// </summary>
+    public Case WithFluidsStarted(string name, decimal rateMlKgH, DateTimeOffset at)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("A fluid needs a name.", nameof(name));
+        }
+        if (rateMlKgH is <= 0 or > MaxFluidRate)
+        {
+            throw new ArgumentOutOfRangeException(nameof(rateMlKgH), rateMlKgH, $"Fluid rate is above 0 and at most {MaxFluidRate} mL/kg/h.");
+        }
+        var stopped = WithFluidsStopped(at);
+        return stopped with { Fluids = stopped.Fluids.Add(new FluidRun(name.Trim(), rateMlKgH, at, null)) };
+    }
+
+    /// <summary>Stops the running fluid at <paramref name="at"/>; a case with none running is unchanged.</summary>
+    public Case WithFluidsStopped(DateTimeOffset at) => Fluids.Any(f => f.IsRunning)
+        ? this with { Fluids = Fluids.Select(f => f.IsRunning ? f with { StoppedAt = at } : f).ToImmutableList() }
+        : this;
+
     public static Case New(Patient patient, string procedure, string veterinarian, string technician, DateTimeOffset now) =>
         new(Guid.NewGuid(), patient, procedure, veterinarian, technician, now, CaseStatus.Scheduled, PreopCheck.Empty,
             null, null, ImmutableList<VitalsReading>.Empty, ImmutableList<DoseGiven>.Empty, RecoveryLog.Empty, null, null);

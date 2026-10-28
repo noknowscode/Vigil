@@ -69,13 +69,21 @@ public static class ShellSection
         ? Loc.T("Shell_Clinician", "Clinician")
         : Loc.F("Shell_Doctor", "Dr. {0}", surname.Trim());
 
-    /// <summary>Avatar initials: the first letters of up to two words of the name ("Okafor" gives "O").</summary>
-    public static string Initials(string surname)
+    /// <summary>
+    /// Avatar initials: first name and surname initials ("Amara", "Okafor" gives "AO"). Without a first name, the first
+    /// letters of up to two words of the surname ("Okafor" gives "O").
+    /// </summary>
+    public static string Initials(string firstName, string surname)
     {
+        static string First(string s) => char.ToUpper(s.Trim()[0], System.Globalization.CultureInfo.CurrentCulture).ToString();
         var words = surname.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        return words.Length == 0
-            ? Loc.T("Shell_ClinicianInitial", "C")
-            : string.Concat(words.Take(2).Select(w => char.ToUpper(w[0], System.Globalization.CultureInfo.CurrentCulture)));
+        return (string.IsNullOrWhiteSpace(firstName), words.Length) switch
+        {
+            (false, > 0) => First(firstName) + First(words[^1]),
+            (false, 0) => First(firstName),
+            (true, > 0) => string.Concat(words.Take(2).Select(First)),
+            _ => Loc.T("Shell_ClinicianInitial", "C"),
+        };
     }
 }
 
