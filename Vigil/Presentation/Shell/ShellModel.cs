@@ -57,8 +57,19 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
     {
         if (BoardDestination.Surgery(await Store.GetAllAsync(ct)) is { } live)
         {
-            await Navigator.NavigateRouteAsync(this, "Record", qualifier: ClearToFrame, data: new CaseRef(live.Id), cancellation: ct);
+            await OpenRecordAsync(new CaseRef(live.Id), ct);
         }
+    }
+
+    /// <summary>
+    /// Opens a record from the shell as Today/Record with a cleared frame: Back returns to Today, and the frame always
+    /// creates a new RecordPage. Navigating Record to Record (Anesthesia or New patient while a record is open) reused
+    /// the open page with the new model, and its FeedView kept showing the previous patient under the new name.
+    /// </summary>
+    private async ValueTask OpenRecordAsync(CaseRef record, CancellationToken ct)
+    {
+        await Go(ShellSection.Today, ct);
+        await Navigator.NavigateRouteAsync(this, "Record", qualifier: Qualifiers.Nested, data: record, cancellation: ct);
     }
 
     /// <summary>Opens the New case sheet; on Create, opens the new record in the content frame.</summary>
@@ -67,7 +78,7 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
         var result = await Navigator.NavigateRouteForResultAsync<CaseRef>(this, "!NewCase", cancellation: ct).AsResult();
         if (result.SomeOrDefault() is CaseRef created)
         {
-            await Navigator.NavigateRouteAsync(this, "Record", qualifier: Qualifiers.Nested, data: created, cancellation: ct);
+            await OpenRecordAsync(created, ct);
         }
     }
 
