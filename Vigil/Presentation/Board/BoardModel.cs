@@ -28,6 +28,7 @@ public partial record CaseSummary(
     public string Initials => string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(x => x[0]));
     public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
     public bool IsActive => Status is CaseStatus.Anesthetized or CaseStatus.Recovery;
+    public string AccessibleName => $"{Name}, {StatusText}. {Procedure}. {TimeText}";
 
     public static CaseSummary From(Case c, DateTimeOffset now)
     {
@@ -81,6 +82,7 @@ public partial record LiveCase(
     string LastReading,
     string Others) : CaseRef(Id)
 {
+    public string AccessibleName => Loc.F("Board_LiveName", "Open active surgical record: {0}, {1}. {2} {3}", Name, Procedure, NextLabel, NextText);
     public bool IsOverdue => Due == DueState.Overdue;
     public bool IsWaiting => !IsOverdue;
     public bool HasOthers => Others.Length > 0;

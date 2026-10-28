@@ -64,7 +64,6 @@
   <data name="Board_6.Text" xml:space="preserve"><value>A little more comfort. A lot of care.</value></data>
   <data name="Board_7.Content" xml:space="preserve"><value>＋  New patient</value></data>
   <data name="Board_7.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>New patient record</value></data>
-  <data name="Board_8.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Open active surgical record</value></data>
   <data name="Board_9.Text" xml:space="preserve"><value>IN SURGERY</value></data>
   <data name="Board_AddedTime" xml:space="preserve"><value>Added {0:HH:mm}</value></data>
   <data name="Board_AlsoUnder" xml:space="preserve"><value>Also under anesthesia: {0}</value></data>
@@ -72,6 +71,7 @@
   <data name="Board_EndedTime" xml:space="preserve"><value>Ended {0:HH:mm}</value></data>
   <data name="Board_ExtubatedTime" xml:space="preserve"><value>Extubated {0:HH:mm}</value></data>
   <data name="Board_LastReading" xml:space="preserve"><value>Last {0:HH:mm} · HR {1} · SpO₂ {2} · MAP {3}</value></data>
+  <data name="Board_LiveName" xml:space="preserve"><value>Open active surgical record: {0}, {1}. {2} {3}</value></data>
   <data name="Board_OpenPatient" xml:space="preserve"><value>Open {0}’s care workspace</value></data>
   <data name="Board_SelectPatient" xml:space="preserve"><value>Add a patient to open their care workspace</value></data>
   <data name="Board_SignedTime" xml:space="preserve"><value>Signed {0:HH:mm}</value></data>

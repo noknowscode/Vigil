@@ -457,5 +457,6 @@
   "Your pet's visit record is open. The team is working through the preparation checklist.": "Le dossier de visite de votre animal est ouvert. L'équipe suit la liste de vérification de la préparation.",
   "owner {0}": "propriétaire {0}",
   "{0:0.#} y": "{0:0.#} an",
-  "{0} preparing   ·   {1} in surgery   ·   {2} recovering": "{0} en préparation   ·   {1} en chirurgie   ·   {2} au réveil"
+  "{0} preparing   ·   {1} in surgery   ·   {2} recovering": "{0} en préparation   ·   {1} en chirurgie   ·   {2} au réveil",
+  "Open active surgical record: {0}, {1}. {2} {3}": "Ouvrir le dossier chirurgical actif : {0}, {1}. {2} {3}"
 }

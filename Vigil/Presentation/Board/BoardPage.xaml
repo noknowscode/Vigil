@@ -85,7 +85,7 @@
         </Grid>
         <mvux:FeedView Source="{Binding Live}" RefreshingState="None" IsTabStop="False">
           <mvux:FeedView.ValueTemplate><DataTemplate>
-            <Button x:Uid="Board_8" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" Style="{StaticResource CloverPatientCard}" HorizontalAlignment="Stretch" AutomationProperties.Name="Open active surgical record">
+            <Button uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" Style="{StaticResource CloverPatientCard}" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding Data.AccessibleName}">
               <Grid Padding="10" SizeChanged="OnLiveBandSizeChanged" RowDefinitions="Auto,Auto" RowSpacing="10" ColumnSpacing="20" CornerRadius="23" Background="{ThemeResource CloverLiveBand}">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="1.2*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
                                 <Border Background="{ThemeResource CloverGlass}" CornerRadius="15" Padding="12" BorderBrush="{ThemeResource CloverGlassEdge}" BorderThickness="1">
@@ -113,7 +113,7 @@
             <muxc:ItemsRepeater x:Uid="Board_13" ItemsSource="{Binding Data}" AutomationProperties.Name="Patient cards">
               <muxc:ItemsRepeater.Layout><muxc:UniformGridLayout MaximumRowsOrColumns="3" ItemsStretch="Fill" MinItemWidth="280" MinColumnSpacing="20" MinRowSpacing="24" /></muxc:ItemsRepeater.Layout>
               <muxc:ItemsRepeater.ItemTemplate><DataTemplate>
-                <Button Style="{StaticResource CloverPatientCard}" HorizontalAlignment="Stretch" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding}" AutomationProperties.Name="{Binding Name}">
+                <Button Style="{StaticResource CloverPatientCard}" HorizontalAlignment="Stretch" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding}" AutomationProperties.Name="{Binding AccessibleName}">
                   <StackPanel>
                     <Grid Height="236" CornerRadius="23,23,0,0" Background="{ThemeResource CloverSky}">
                       <controls:PetBackdrop Photo="{Binding Photo}" />

@@ -64,7 +64,6 @@
   <data name="Board_6.Text" xml:space="preserve"><value>Plus de douceur. Beaucoup de soins.</value></data>
   <data name="Board_7.Content" xml:space="preserve"><value>＋  Nouveau patient</value></data>
   <data name="Board_7.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Nouveau dossier patient</value></data>
-  <data name="Board_8.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Ouvrir le dossier chirurgical actif</value></data>
   <data name="Board_9.Text" xml:space="preserve"><value>EN CHIRURGIE</value></data>
   <data name="Board_AddedTime" xml:space="preserve"><value>Ajouté {0:HH:mm}</value></data>
   <data name="Board_AlsoUnder" xml:space="preserve"><value>Aussi sous anesthésie : {0}</value></data>
@@ -72,6 +71,7 @@
   <data name="Board_EndedTime" xml:space="preserve"><value>Terminé {0:HH:mm}</value></data>
   <data name="Board_ExtubatedTime" xml:space="preserve"><value>Extubé {0:HH:mm}</value></data>
   <data name="Board_LastReading" xml:space="preserve"><value>Dernière {0:HH:mm} · FC {1} · SpO₂ {2} · PAM {3}</value></data>
+  <data name="Board_LiveName" xml:space="preserve"><value>Ouvrir le dossier chirurgical actif : {0}, {1}. {2} {3}</value></data>
   <data name="Board_OpenPatient" xml:space="preserve"><value>Ouvrir les soins de {0}</value></data>
   <data name="Board_SelectPatient" xml:space="preserve"><value>Ajouter un patient pour ouvrir ses soins</value></data>
   <data name="Board_SignedTime" xml:space="preserve"><value>Signé {0:HH:mm}</value></data>
