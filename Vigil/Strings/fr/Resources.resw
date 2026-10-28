@@ -18,7 +18,6 @@
   <data name="Alarm_High" xml:space="preserve"><value>▲ élevé</value></data>
   <data name="Alarm_Low" xml:space="preserve"><value>▼ bas</value></data>
   <data name="Asa_NotSet" xml:space="preserve"><value>ASA —</value></data>
-  <data name="Board_1.Text" xml:space="preserve"><value>clover</value></data>
   <data name="Board_10.Text" xml:space="preserve"><value>Dossier actif indisponible. Réessayez la liste des patients ci-dessous.</value></data>
   <data name="Board_11.Content" xml:space="preserve"><value>Aujourd'hui</value></data>
   <data name="Board_11.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Afficher les dossiers du jour</value></data>
@@ -32,19 +31,13 @@
   <data name="Board_18.Content" xml:space="preserve"><value>Réessayer</value></data>
   <data name="Board_18.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Réessayer la lecture des dossiers</value></data>
   <data name="Board_19.Text" xml:space="preserve"><value>PHOTO NON AJOUTÉE</value></data>
-  <data name="Board_2.Content" xml:space="preserve"><value>Patients du jour</value></data>
-  <data name="Board_2.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Patients du jour</value></data>
   <data name="Board_20.Text" xml:space="preserve"><value>Les soins continuent.  ·  Clover</value></data>
   <data name="Board_21.Text" xml:space="preserve"><value>Écoulé · h:mm</value></data>
-  <data name="Board_22.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Ouvrir l’agenda du jour</value></data>
   <data name="Board_23.Text" xml:space="preserve"><value>LES SOINS AU FIL DU JOUR</value></data>
-  <data name="Board_24.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Fermer l’agenda</value></data>
   <data name="Board_25.Text" xml:space="preserve"><value>L’agenda du jour</value></data>
   <data name="Board_27.Text" xml:space="preserve"><value>ESPÈCE</value></data>
   <data name="Board_28.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Chargement de l’agenda</value></data>
   <data name="Board_29.Text" xml:space="preserve"><value>Impossible de charger l’agenda.</value></data>
-  <data name="Board_3.Content" xml:space="preserve"><value>Soins du patient</value></data>
-  <data name="Board_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Ouvrir les soins du patient actuel</value></data>
   <data name="Board_30.Content" xml:space="preserve"><value>Réessayer</value></data>
   <data name="Board_31.Text" xml:space="preserve"><value>RACE</value></data>
   <data name="Board_32.Text" xml:space="preserve"><value>Aucun rappel d’observation pour le moment.</value></data>
@@ -55,15 +48,12 @@
   <data name="Board_37.Text" xml:space="preserve"><value>Les espaces indiquent l’absence de soins consignés.</value></data>
   <data name="Board_38.Text" xml:space="preserve"><value>POIDS</value></data>
   <data name="Board_39.Text" xml:space="preserve"><value>ÂGE</value></data>
-  <data name="Board_4.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Paramètres</value></data>
   <data name="Board_40.Text" xml:space="preserve"><value>PROPRIÉTAIRE</value></data>
   <data name="Board_41.Text" xml:space="preserve"><value>INTERVENTION</value></data>
   <data name="Board_42.Text" xml:space="preserve"><value>PÉRIODES CONSIGNÉES</value></data>
   <data name="Board_43.Text" xml:space="preserve"><value>Anesthésie</value></data>
   <data name="Board_44.Text" xml:space="preserve"><value>Réveil</value></data>
   <data name="Board_5.Text" xml:space="preserve"><value>Patients du jour</value></data>
-  <data name="Board_7.Content" xml:space="preserve"><value>＋  Nouveau patient</value></data>
-  <data name="Board_7.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Nouveau dossier patient</value></data>
   <data name="Board_9.Text" xml:space="preserve"><value>EN CHIRURGIE</value></data>
   <data name="Board_AddedTime" xml:space="preserve"><value>Ajouté {0:HH:mm}</value></data>
   <data name="Board_AlsoUnder" xml:space="preserve"><value>Aussi sous anesthésie : {0}</value></data>
@@ -71,8 +61,6 @@
   <data name="Board_ExtubatedTime" xml:space="preserve"><value>Extubé {0:HH:mm}</value></data>
   <data name="Board_LastReading" xml:space="preserve"><value>Dernière {0:HH:mm} · FC {1} · SpO₂ {2} · PAM {3}</value></data>
   <data name="Board_LiveName" xml:space="preserve"><value>Ouvrir le dossier chirurgical actif : {0}, {1}. {2} {3}</value></data>
-  <data name="Board_OpenPatient" xml:space="preserve"><value>Ouvrir les soins de {0}</value></data>
-  <data name="Board_SelectPatient" xml:space="preserve"><value>Ajouter un patient pour ouvrir ses soins</value></data>
   <data name="Board_SignedTime" xml:space="preserve"><value>Signé {0:HH:mm}</value></data>
   <data name="Board_UnderTime" xml:space="preserve"><value>Sous anesthésie {0}</value></data>
   <data name="Clock_Next" xml:space="preserve"><value>prochaine {0}</value></data>
@@ -226,6 +214,14 @@
   <data name="Patient_OneYear" xml:space="preserve"><value>1 an</value></data>
   <data name="Patient_OwnerShort" xml:space="preserve"><value>propriétaire {0}</value></data>
   <data name="Patient_VisitWeight" xml:space="preserve"><value>Poids consigné lors de la visite du {0:dd MMM yyyy}</value></data>
+  <data name="Patients_1.Text" xml:space="preserve"><value>Patients</value></data>
+  <data name="Patients_2.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Tous les patients</value></data>
+  <data name="Patients_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Chargement des patients</value></data>
+  <data name="Patients_4.Text" xml:space="preserve"><value>Aucun patient sur cet appareil. Utilisez Nouveau patient dans la barre latérale pour ouvrir un dossier.</value></data>
+  <data name="Patients_5.Text" xml:space="preserve"><value>Impossible de lire les dossiers enregistrés.</value></data>
+  <data name="Patients_6.Content" xml:space="preserve"><value>Réessayer</value></data>
+  <data name="Patients_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Réessayer la lecture des dossiers</value></data>
+  <data name="Patients_Summary" xml:space="preserve"><value>{0} à la clinique · {1} sur cet appareil</value></data>
   <data name="Plane_Deep" xml:space="preserve"><value>Profond</value></data>
   <data name="Plane_Light" xml:space="preserve"><value>Léger</value></data>
   <data name="Plane_Surgical" xml:space="preserve"><value>Chirurgical</value></data>
@@ -431,8 +427,6 @@
   <data name="Ruler_Since" xml:space="preserve"><value>Depuis {0:HH:mm}</value></data>
   <data name="SettingsAbout.Text" xml:space="preserve"><value>Clover est une application de référence Uno Platform. Les concentrations, plages de doses et seuils d'alarme sont des données d'exemple, non destinées à un usage clinique.</value></data>
   <data name="SettingsAppearance.Text" xml:space="preserve"><value>Apparence</value></data>
-  <data name="SettingsBack.Label" xml:space="preserve"><value>Tableau</value></data>
-  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retour au tableau</value></data>
   <data name="SettingsClearAll.Content" xml:space="preserve"><value>Effacer tous les dossiers</value></data>
   <data name="SettingsClinicianHelp.Text" xml:space="preserve"><value>Le tableau vous salue comme Dr Okafor. Laissez vide pour une salutation simple. Enregistré sur cette tablette seulement.</value></data>
   <data name="SettingsClinicianName.Header" xml:space="preserve"><value>Votre nom de famille</value></data>
@@ -468,6 +462,57 @@
   <data name="Settings_SampleConfirm" xml:space="preserve"><value>Remplacer tous les dossiers de cette tablette par la journée chirurgicale d'exemple?</value></data>
   <data name="Settings_SampleLoaded" xml:space="preserve"><value>Journée d'exemple chargée : 5 dossiers, dont un sous anesthésie.</value></data>
   <data name="Settings_SampleTitle" xml:space="preserve"><value>Charger une journée d'exemple</value></data>
+  <data name="Shell_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Ouvrir le menu</value></data>
+  <data name="Shell_2.Text" xml:space="preserve"><value>clover</value></data>
+  <data name="Shell_Clinician" xml:space="preserve"><value>Clinicien</value></data>
+  <data name="Shell_ClinicianInitial" xml:space="preserve"><value>C</value></data>
+  <data name="Shell_Doctor" xml:space="preserve"><value>Dʳ {0}</value></data>
+  <data name="Sidebar_1.Text" xml:space="preserve"><value>clover</value></data>
+  <data name="Sidebar_10.Content" xml:space="preserve"><value>Déployer la barre latérale</value></data>
+  <data name="Sidebar_11.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Nouveau patient</value></data>
+  <data name="Sidebar_12.Content" xml:space="preserve"><value>Nouveau patient</value></data>
+  <data name="Sidebar_13.Text" xml:space="preserve"><value>Nouveau patient</value></data>
+  <data name="Sidebar_14.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Aujourd'hui</value></data>
+  <data name="Sidebar_15.Content" xml:space="preserve"><value>Aujourd'hui</value></data>
+  <data name="Sidebar_16.Text" xml:space="preserve"><value>Aujourd'hui</value></data>
+  <data name="Sidebar_17.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Patients</value></data>
+  <data name="Sidebar_18.Content" xml:space="preserve"><value>Patients</value></data>
+  <data name="Sidebar_19.Text" xml:space="preserve"><value>Patients</value></data>
+  <data name="Sidebar_2.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Réduire la barre latérale</value></data>
+  <data name="Sidebar_20.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Agenda</value></data>
+  <data name="Sidebar_21.Content" xml:space="preserve"><value>Agenda</value></data>
+  <data name="Sidebar_22.Text" xml:space="preserve"><value>Agenda</value></data>
+  <data name="Sidebar_23.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Anesthésie</value></data>
+  <data name="Sidebar_24.Content" xml:space="preserve"><value>Anesthésie</value></data>
+  <data name="Sidebar_25.Text" xml:space="preserve"><value>Anesthésie</value></data>
+  <data name="Sidebar_26.Content" xml:space="preserve"><value>Bientôt disponible</value></data>
+  <data name="Sidebar_27.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Dossiers, bientôt disponible</value></data>
+  <data name="Sidebar_28.Text" xml:space="preserve"><value>Dossiers</value></data>
+  <data name="Sidebar_29.Content" xml:space="preserve"><value>Bientôt disponible</value></data>
+  <data name="Sidebar_3.Content" xml:space="preserve"><value>Réduire la barre latérale</value></data>
+  <data name="Sidebar_30.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Messages, bientôt disponible</value></data>
+  <data name="Sidebar_31.Text" xml:space="preserve"><value>Messages</value></data>
+  <data name="Sidebar_32.Content" xml:space="preserve"><value>Bientôt disponible</value></data>
+  <data name="Sidebar_33.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Rapports, bientôt disponible</value></data>
+  <data name="Sidebar_34.Text" xml:space="preserve"><value>Rapports</value></data>
+  <data name="Sidebar_35.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Paramètres</value></data>
+  <data name="Sidebar_36.Content" xml:space="preserve"><value>Paramètres</value></data>
+  <data name="Sidebar_37.Text" xml:space="preserve"><value>Paramètres</value></data>
+  <data name="Sidebar_38.Content" xml:space="preserve"><value>Bientôt disponible</value></data>
+  <data name="Sidebar_39.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Centre d'aide, bientôt disponible</value></data>
+  <data name="Sidebar_4.Content" xml:space="preserve"><value>Bientôt disponible</value></data>
+  <data name="Sidebar_40.Text" xml:space="preserve"><value>Centre d'aide</value></data>
+  <data name="Sidebar_41.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Surveillance, bientôt disponible</value></data>
+  <data name="Sidebar_42.Content" xml:space="preserve"><value>Bientôt disponible</value></data>
+  <data name="Sidebar_43.Text" xml:space="preserve"><value>Surveillance active</value></data>
+  <data name="Sidebar_44.Text" xml:space="preserve"><value>Vétérinaire</value></data>
+  <data name="Sidebar_45.Content" xml:space="preserve"><value>Bientôt disponible</value></data>
+  <data name="Sidebar_46.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Menu du compte, bientôt disponible</value></data>
+  <data name="Sidebar_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Changer de clinique, bientôt disponible</value></data>
+  <data name="Sidebar_6.Text" xml:space="preserve"><value>CP</value></data>
+  <data name="Sidebar_7.Text" xml:space="preserve"><value>Clinique Plateau</value></data>
+  <data name="Sidebar_8.Text" xml:space="preserve"><value>2 salles · Montréal</value></data>
+  <data name="Sidebar_9.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Déployer la barre latérale</value></data>
   <data name="SignOff_1.Content" xml:space="preserve"><value>Signer</value></data>
   <data name="SignOff_10.Content" xml:space="preserve"><value>J'ai révisé ce dossier d'anesthésie et il est complet.</value></data>
   <data name="SignOff_11.Text" xml:space="preserve"><value>La signature rend le dossier en lecture seule sur cet appareil. Il s'agit d'un nom saisi sur une tablette partagée, pas d'une signature électronique.</value></data>
@@ -500,6 +545,12 @@
   <data name="Strip_LegendBp" xml:space="preserve"><value>PA</value></data>
   <data name="Strip_LegendHr" xml:space="preserve"><value>FC</value></data>
   <data name="Strip_Summary" xml:space="preserve"><value>Bande des signes vitaux : {0} lectures, dernière à {1:HH:mm} : fréquence cardiaque {2}, pression artérielle {3} sur {4}, SpO2 {5}. Utilisez la vue Tableau pour toutes les valeurs.</value></data>
+  <data name="TopBarCluster_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Recherche, bientôt disponible</value></data>
+  <data name="TopBarCluster_2.Content" xml:space="preserve"><value>Bientôt disponible</value></data>
+  <data name="TopBarCluster_3.Text" xml:space="preserve"><value>Rechercher patients, propriétaires, dossiers</value></data>
+  <data name="TopBarCluster_4.Text" xml:space="preserve"><value>Ctrl K</value></data>
+  <data name="TopBarCluster_5.Content" xml:space="preserve"><value>Bientôt disponible</value></data>
+  <data name="TopBarCluster_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Alertes, bientôt disponible</value></data>
   <data name="Validation_Number" xml:space="preserve"><value>{0} doit être un nombre.</value></data>
   <data name="Validation_OneVital" xml:space="preserve"><value>Entrez au moins un signe vital.</value></data>
   <data name="Validation_WholeNumber" xml:space="preserve"><value>{0} doit être un nombre entier.</value></data>

@@ -1,0 +1,34 @@
+<!--
+  Top bar right cluster (docs/design/shell-and-tokens.md §9), placed in the Today and Patient care headers:
+  search field 340 x 40 with the "Ctrl K" keycap, and the alerts bell 40 x 40 with its unread dot. Both are
+  disabled "Coming soon" (SPEC-v2 decision 1): there is no search or alert feed yet.
+-->
+<UserControl x:Class="Vigil.Controls.TopBarCluster"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <StackPanel Orientation="Horizontal" Spacing="10">
+    <Grid x:Uid="TopBarCluster_1" Background="Transparent" AutomationProperties.Name="Search, coming soon">
+      <ToolTipService.ToolTip><ToolTip x:Uid="TopBarCluster_2" Content="Coming soon" /></ToolTipService.ToolTip>
+      <Border Style="{StaticResource SearchFieldSurface}">
+        <Grid ColumnDefinitions="18,*,Auto" ColumnSpacing="10">
+          <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconSearch}" VerticalAlignment="Center" />
+          <TextBlock x:Uid="TopBarCluster_3" Grid.Column="1" Text="Search patients, owners, records" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+          <Border Grid.Column="2" Style="{StaticResource Keycap}" VerticalAlignment="Center">
+            <TextBlock x:Uid="TopBarCluster_4" Text="Ctrl K" Style="{StaticResource TypeMonoAxis}" />
+          </Border>
+        </Grid>
+      </Border>
+    </Grid>
+    <Grid Background="Transparent" Width="40" Height="40">
+      <ToolTipService.ToolTip><ToolTip x:Uid="TopBarCluster_5" Content="Coming soon" /></ToolTipService.ToolTip>
+      <Button x:Uid="TopBarCluster_6" Style="{StaticResource ButtonIconSecondary}" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="Alerts, coming soon">
+        <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconBell}" Foreground="{ThemeResource InkBrush}" />
+      </Button>
+      <!-- Unread dot: 8 px at top 8 / right 9, ringed 2 px in the surface colour. -->
+      <Grid Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,6,7,0" IsHitTestVisible="False">
+        <Ellipse Fill="{ThemeResource Surface1Brush}" />
+        <Ellipse Width="8" Height="8" Fill="{ThemeResource PhaseErrorSolidBrush}" />
+      </Grid>
+    </Grid>
+  </StackPanel>
+</UserControl>

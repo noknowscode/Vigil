@@ -112,7 +112,7 @@ public partial class App : Application
 #endif
                 return host;
             },
-            initialRoute: "Board"
+            initialRoute: "Main"
         );
 #if DESKTOP
 #if DEBUG
@@ -190,9 +190,12 @@ public partial class App : Application
     private static void RegisterRoutes(IViewRegistry views, IRouteRegistry routes)
     {
         views.Register(
+            new ViewMap<ShellPage, ShellModel>(),
             new ViewMap<BoardPage, BoardModel>(),
+            new ViewMap<PatientsPage, PatientsModel>(),
             new ViewMap<AgendaPage, AgendaModel>(),
             new ViewMap<NewCasePage, NewCaseModel>(ResultData: typeof(CaseRef)),
+            new DataViewMap<Presentation.MenuFlyout, MenuModel, MenuContext>(ResultData: typeof(MenuChoice)),
             new DataViewMap<RecordPage, RecordModel, CaseRef>(),
             new DataViewMap<ParentPreviewPage, ParentPreviewModel, CaseRef>(),
             new DataViewMap<DosePage, DoseModel, CaseRef>(),
@@ -200,16 +203,23 @@ public partial class App : Application
             new ViewMap<SettingsPage, SettingsModel>()
         );
 
+        // Main = ShellPage (sidebar + content Frame). Sidebar destinations and detail pages all open in that Frame,
+        // so the sidebar stays; the sidebar drives it through ShellModel.Go ("./-/<route>").
         routes.Register(
-            new RouteMap("Board", View: views.FindByViewModel<BoardModel>(), IsDefault: true,
-                // Fills the AgendaDock region; the same route opens as a flyout with "!Agenda" below 1120 px.
-                Nested: [new RouteMap("Agenda", View: views.FindByViewModel<AgendaModel>(), IsDefault: true)]),
-            new RouteMap("NewCase", View: views.FindByViewModel<NewCaseModel>()),
-            new RouteMap("Record", View: views.FindByViewModel<RecordModel>()),
-            new RouteMap("ParentPreview", View: views.FindByViewModel<ParentPreviewModel>()),
-            new RouteMap("Dose", View: views.FindByViewModel<DoseModel>()),
-            new RouteMap("SignOff", View: views.FindByViewModel<SignOffModel>()),
-            new RouteMap("Settings", View: views.FindByViewModel<SettingsModel>())
+            new RouteMap("Main", View: views.FindByViewModel<ShellModel>(), IsDefault: true,
+                Nested:
+                [
+                    new RouteMap("Today", View: views.FindByViewModel<BoardModel>(), IsDefault: true),
+                    new RouteMap("Patients", View: views.FindByViewModel<PatientsModel>()),
+                    new RouteMap("Agenda", View: views.FindByViewModel<AgendaModel>()),
+                    new RouteMap("Record", View: views.FindByViewModel<RecordModel>()),
+                    new RouteMap("ParentPreview", View: views.FindByViewModel<ParentPreviewModel>()),
+                    new RouteMap("Dose", View: views.FindByViewModel<DoseModel>()),
+                    new RouteMap("SignOff", View: views.FindByViewModel<SignOffModel>()),
+                    new RouteMap("Settings", View: views.FindByViewModel<SettingsModel>()),
+                    new RouteMap("NewCase", View: views.FindByViewModel<NewCaseModel>()),
+                    new RouteMap("Menu", View: views.FindByViewModel<MenuModel>()),
+                ])
         );
     }
 }

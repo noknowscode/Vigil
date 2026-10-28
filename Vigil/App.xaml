@@ -24,6 +24,10 @@
         <ResourceDictionary Source="ms-appx:///Styles/VitalsPalette.xaml" />
         <ResourceDictionary Source="ms-appx:///Themes/Controls.xaml" />
         <ResourceDictionary Source="ms-appx:///Themes/Clover.xaml" />
+        <!-- v2 tokens: brushes, radii, type ramp, buttons, nav item, badges; icons (Lucide geometry) first, Tokens uses them -->
+        <ResourceDictionary Source="ms-appx:///Themes/Icons.xaml" />
+        <ResourceDictionary Source="ms-appx:///Themes/Tokens.xaml" />
+        <ResourceDictionary Source="ms-appx:///Presentation/Board/CaseCards.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>

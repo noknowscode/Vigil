@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:utu="using:Uno.Toolkit.UI"
-      Background="{ThemeResource BackgroundBrush}">
+      Background="Transparent">
 
   <!-- A utility screen: a plain list, no anchor. -->
   <Grid utu:SafeArea.Insets="VisibleBounds">
@@ -12,14 +12,8 @@
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <utu:NavigationBar x:Uid="SettingsTitle" Content="Settings" Background="{ThemeResource BackgroundBrush}">
-      <utu:NavigationBar.MainCommand>
-        <AppBarButton x:Uid="SettingsBack" Label="Board" AutomationProperties.Name="Back to the board">
-          <AppBarButton.Icon>
-            <SymbolIcon Symbol="Back" />
-          </AppBarButton.Icon>
-        </AppBarButton>
-      </utu:NavigationBar.MainCommand>
+    <!-- A sidebar destination: the title bar has no back command (the sidebar is the way out). -->
+    <utu:NavigationBar x:Uid="SettingsTitle" Content="Settings" Background="Transparent">
     </utu:NavigationBar>
 
     <ScrollViewer Grid.Row="1">

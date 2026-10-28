@@ -148,15 +148,6 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
         .Combine(Cases, Now)
         .Select(x => LiveCase.From(x.Item1, x.Item2, Preferences.ReadingInterval)!);
 
-    public IFeed<bool> CanOpenPatient => Cases.Select(cases => cases.Count > 0);
-    public IFeed<string> PatientTabHint => Cases.Select(cases => BoardDestination.Patient(cases) is { } c
-        ? Loc.F("Board_OpenPatient", "Open {0}’s care workspace", c.Patient.Name)
-        : Loc.T("Board_SelectPatient", "Add a patient to open their care workspace"));
-    public async ValueTask OpenPatient(CancellationToken ct)
-    {
-        if (BoardDestination.Patient(await Store.GetAllAsync(ct)) is { } c)
-            await Navigator.NavigateRouteAsync(this, "Record", data: new CaseRef(c.Id), cancellation: ct);
-    }
     public void Retry() => Store.Reload();
 
     /// <summary>Opens the New case sheet; on Create, opens the new record with the board behind it (Back returns here).</summary>

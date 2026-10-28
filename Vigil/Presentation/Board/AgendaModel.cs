@@ -5,8 +5,8 @@ using Vigil.Services;
 namespace Vigil.Presentation;
 
 /// <summary>
-/// Today's agenda: the care ruler, patients in preparation and the next observation reminder. One page, two hosts:
-/// docked in the board's AgendaDock region from 1120 px, and opened as a "!Agenda" flyout below that.
+/// Today's agenda: the care ruler, patients in preparation and the next observation reminder.
+/// A sidebar destination in the shell frame (route Main/Agenda).
 /// </summary>
 public partial record AgendaModel(ICaseStore Store, IClock Clock, IPreferences Preferences)
 {
