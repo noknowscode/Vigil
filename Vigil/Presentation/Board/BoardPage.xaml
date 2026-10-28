@@ -86,15 +86,14 @@
         <mvux:FeedView Source="{Binding Live}" RefreshingState="None" IsTabStop="False">
           <mvux:FeedView.ValueTemplate><DataTemplate>
             <Button x:Uid="Board_8" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" Style="{StaticResource CloverPatientCard}" HorizontalAlignment="Stretch" AutomationProperties.Name="Open active surgical record">
-              <Grid Padding="10" SizeChanged="OnLiveBandSizeChanged" RowDefinitions="Auto,Auto" RowSpacing="10" ColumnSpacing="20" CornerRadius="23">
+              <Grid Padding="10" SizeChanged="OnLiveBandSizeChanged" RowDefinitions="Auto,Auto" RowSpacing="10" ColumnSpacing="20" CornerRadius="23" Background="{ThemeResource CloverLiveBand}">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="1.2*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
-                <Grid.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#E5E2FA" Offset="0" /><GradientStop Color="#DAEBF3" Offset="0.55" /><GradientStop Color="#DFEEDC" Offset="1" /></LinearGradientBrush></Grid.Background>
-                <Border Background="#F2FFFEF9" CornerRadius="15" Padding="12" BorderBrush="#EFFFFFFF" BorderThickness="1">
-                  <StackPanel Spacing="2"><TextBlock x:Uid="Board_9" Text="IN SURGERY" Style="{StaticResource CloverLabel}" FontSize="9" LineHeight="16" Foreground="#41604A" /><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverHeading}" Foreground="#203B2B" FontSize="26" /><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource CloverBody}" Foreground="#41604A" FontSize="13" /><TextBlock Text="{Binding Data.Others}" Style="{StaticResource CloverBody}" Foreground="#41604A" Visibility="{Binding Data.HasOthers}" /></StackPanel>
+                                <Border Background="{ThemeResource CloverGlass}" CornerRadius="15" Padding="12" BorderBrush="{ThemeResource CloverGlassEdge}" BorderThickness="1">
+                  <StackPanel Spacing="2"><TextBlock x:Uid="Board_9" Text="IN SURGERY" Style="{StaticResource CloverLabel}" FontSize="9" LineHeight="16" Foreground="{ThemeResource CloverLiveInk}" /><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverHeading}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="26" /><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource CloverLiveInk}" FontSize="13" /><TextBlock Text="{Binding Data.Others}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource CloverLiveInk}" Visibility="{Binding Data.HasOthers}" /></StackPanel>
                 </Border>
                 <Grid Grid.Column="1" ColumnDefinitions="*,*" ColumnSpacing="16" VerticalAlignment="Center" Margin="8,6,10,6">
-                  <StackPanel Spacing="5"><TextBlock x:Uid="Board_21" Text="Elapsed · h:mm" FontSize="10" Foreground="#41604A" /><TextBlock Text="{Binding Data.Elapsed}" Style="{StaticResource CodeTextStyle}" FontSize="30" Foreground="#244936" /></StackPanel>
-                  <StackPanel Grid.Column="1" Spacing="7"><TextBlock Text="{Binding Data.NextLabel}" FontSize="11" Foreground="#41604A" Visibility="{Binding Data.IsWaiting}" /><TextBlock Text="{Binding Data.NextLabel}" FontSize="11" Foreground="#B3261E" Visibility="{Binding Data.IsOverdue}" /><TextBlock Text="{Binding Data.NextText}" Style="{StaticResource CodeTextStyle}" FontSize="25" Foreground="#244936" /></StackPanel>
+                  <StackPanel Spacing="5"><TextBlock x:Uid="Board_21" Text="Elapsed · h:mm" FontSize="10" Foreground="{ThemeResource CloverLiveInk}" /><TextBlock Text="{Binding Data.Elapsed}" Style="{StaticResource CodeTextStyle}" FontSize="30" Foreground="{ThemeResource PrimaryBrush}" /></StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="7"><TextBlock Text="{Binding Data.NextLabel}" FontSize="11" Foreground="{ThemeResource CloverLiveInk}" Visibility="{Binding Data.IsWaiting}" /><TextBlock Text="{Binding Data.NextLabel}" FontSize="11" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /><TextBlock Text="{Binding Data.NextText}" Style="{StaticResource CodeTextStyle}" FontSize="25" Foreground="{ThemeResource PrimaryBrush}" /></StackPanel>
                 </Grid>
               </Grid>
             </Button>
@@ -119,8 +118,8 @@
                     <Grid Height="236" CornerRadius="23,23,0,0" Background="{ThemeResource CloverSky}">
                       <controls:PetBackdrop Photo="{Binding Photo}" />
                       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" Visibility="{Binding HasNoPhoto}">
-                        <TextBlock Text="{Binding Initials}" Style="{StaticResource CloverDisplay}" FontSize="70" HorizontalAlignment="Center" Foreground="#244936" />
-                        <TextBlock x:Uid="Board_19" Text="PHOTO NOT ADDED" Style="{StaticResource CloverLabel}" Foreground="#41604A" />
+                        <TextBlock Text="{Binding Initials}" Style="{StaticResource CloverDisplay}" FontSize="70" HorizontalAlignment="Center" Foreground="{ThemeResource OnSurfaceBrush}" />
+                        <TextBlock x:Uid="Board_19" Text="PHOTO NOT ADDED" Style="{StaticResource CloverLabel}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                       </StackPanel>
                       <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" CornerRadius="16" Background="{ThemeResource CloverGlass}" Padding="12,7">
                         <TextBlock Text="{Binding StatusText}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="12" />

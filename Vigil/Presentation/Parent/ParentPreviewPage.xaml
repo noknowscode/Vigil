@@ -15,7 +15,7 @@
                 <StackPanel>
                   <Grid Height="248" CornerRadius="23,23,0,0" Background="{ThemeResource CloverSky}">
                     <controls:PetBackdrop Photo="{Binding Data.Photo}" />
-                    <TextBlock Text="{Binding Data.Initial}" Style="{StaticResource CloverDisplay}" Foreground="#244936" FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Data.HasNoPhoto}" />
+                    <TextBlock Text="{Binding Data.Initial}" Style="{StaticResource CloverDisplay}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Data.HasNoPhoto}" />
                     <Border CornerRadius="16" Background="{ThemeResource CloverGlass}" Padding="12,7" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16"><TextBlock Text="{Binding Data.Status}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="12" /></Border>
                   </Grid>
                   <StackPanel Padding="22" Spacing="8"><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverDisplay}" FontSize="38" /><TextBlock Text="{Binding Data.Breed}" Style="{StaticResource CloverBody}" /><TextBlock Text="{Binding Data.Updated}" Style="{StaticResource CloverLabel}" CharacterSpacing="0" FontSize="11" /></StackPanel>

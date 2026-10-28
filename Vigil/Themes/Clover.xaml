@@ -11,6 +11,13 @@
       <SolidColorBrush x:Key="CloverCream" Color="#F4EBDD" />
       <SolidColorBrush x:Key="CloverGlass" Color="#ECFFFEF9" />
       <SolidColorBrush x:Key="CloverSage" Color="#E8EDE2" />
+      <!-- Photo panels: placeholder fill drawn by PetBackdrop, and the live surgery band. -->
+      <SolidColorBrush x:Key="CloverPhotoBase" Color="#DFEAF0" />
+      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#D4E2CD" />
+      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#F0E7D6" />
+      <SolidColorBrush x:Key="CloverGlassEdge" Color="#EFFFFFFF" />
+      <SolidColorBrush x:Key="CloverLiveInk" Color="#41604A" />
+      <LinearGradientBrush x:Key="CloverLiveBand" StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#E5E2FA" Offset="0" /><GradientStop Color="#DAEBF3" Offset="0.55" /><GradientStop Color="#DFEEDC" Offset="1" /></LinearGradientBrush>
 </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="CloverCanvas" Color="#111A15" />
@@ -18,11 +25,17 @@
       <SolidColorBrush x:Key="CloverLavenderEdge" Color="#454A62" />
       <SolidColorBrush x:Key="CloverMint" Color="#244536" />
       <SolidColorBrush x:Key="CloverMintEdge" Color="#375C49" />
-      <SolidColorBrush x:Key="CloverLime" Color="#384C2C" />
+      <SolidColorBrush x:Key="CloverLime" Color="#28361F" />
       <SolidColorBrush x:Key="CloverSky" Color="#253F47" />
       <SolidColorBrush x:Key="CloverCream" Color="#3A342B" />
       <SolidColorBrush x:Key="CloverGlass" Color="#EF1A2820" />
       <SolidColorBrush x:Key="CloverSage" Color="#2B3C31" />
+      <SolidColorBrush x:Key="CloverPhotoBase" Color="#1F2F35" />
+      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#24372A" />
+      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#332E26" />
+      <SolidColorBrush x:Key="CloverGlassEdge" Color="#26FFFFFF" />
+      <SolidColorBrush x:Key="CloverLiveInk" Color="#94A39C" />
+      <LinearGradientBrush x:Key="CloverLiveBand" StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#262A3D" Offset="0" /><GradientStop Color="#1E3137" Offset="0.55" /><GradientStop Color="#203325" Offset="1" /></LinearGradientBrush>
 </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
   <FontFamily x:Key="CloverFont">ms-appx:///Assets/Fonts/PublicSans.ttf</FontFamily>

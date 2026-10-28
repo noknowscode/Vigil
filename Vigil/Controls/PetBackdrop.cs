@@ -11,12 +11,13 @@ public sealed partial class PetBackdrop : SKCanvasElement
     public static readonly DependencyProperty PhotoProperty = DependencyProperty.Register(nameof(Photo), typeof(string), typeof(PetBackdrop), new PropertyMetadata(null, (d, _) => ((PetBackdrop)d).LoadPhoto()));
     public static readonly DependencyProperty PulseProperty = DependencyProperty.Register(nameof(Pulse), typeof(long), typeof(PetBackdrop), new PropertyMetadata(0L, (d, _) => ((PetBackdrop)d).StartPulse()));
     public static readonly DependencyProperty ReduceMotionProperty = DependencyProperty.Register(nameof(ReduceMotion), typeof(bool), typeof(PetBackdrop), new PropertyMetadata(false, (d, _) => ((PetBackdrop)d).StartPulse()));
-    public static readonly DependencyProperty HeroProperty = DependencyProperty.Register(nameof(Hero), typeof(bool), typeof(PetBackdrop), new PropertyMetadata(false, (d, _) => ((PetBackdrop)d).Invalidate()));
+    public static readonly DependencyProperty HeroProperty = DependencyProperty.Register(nameof(Hero), typeof(bool), typeof(PetBackdrop), new PropertyMetadata(false, (d, _) => { var b = (PetBackdrop)d; b.ResolveInks(); b.Invalidate(); }));
     private SKBitmap? _bitmap;
     private DispatcherQueueTimer? _timer;
     private int _loadVersion;
     private bool _loaded;
     private float _blur;
+    private SKColor _base, _blobA, _blobB;
     public string? Photo { get => (string?)GetValue(PhotoProperty); set => SetValue(PhotoProperty, value); }
     public long Pulse { get => (long)GetValue(PulseProperty); set => SetValue(PulseProperty, value); }
     public bool ReduceMotion { get => (bool)GetValue(ReduceMotionProperty); set => SetValue(ReduceMotionProperty, value); }
@@ -24,8 +25,22 @@ public sealed partial class PetBackdrop : SKCanvasElement
     public PetBackdrop()
     {
         IsHitTestVisible = false;
-        Loaded += (_, _) => { _loaded = true; LoadPhoto(); StartPulse(); };
+        Loaded += (_, _) => { _loaded = true; ResolveInks(); LoadPhoto(); StartPulse(); };
+        ActualThemeChanged += (_, _) => { ResolveInks(); Invalidate(); };
         Unloaded += (_, _) => { _loaded = false; ++_loadVersion; _timer?.Stop(); _bitmap?.Dispose(); _bitmap = null; _blur = 0; };
+    }
+    // The hero keeps its light panel in both themes: its text inks are fixed dark colours over the photo.
+    private void ResolveInks()
+    {
+        var theme = Hero ? ElementTheme.Light : ActualTheme;
+        _base = Ink("CloverPhotoBase", theme);
+        _blobA = Ink("CloverPhotoBlobA", theme);
+        _blobB = Ink("CloverPhotoBlobB", theme);
+    }
+    private static SKColor Ink(string key, ElementTheme theme)
+    {
+        var c = ThemePalette.Resolve(key, theme, Microsoft.UI.Colors.Gray);
+        return new SKColor(c.R, c.G, c.B, c.A);
     }
     private async void LoadPhoto()
     {
@@ -70,7 +85,7 @@ public sealed partial class PetBackdrop : SKCanvasElement
     protected override void RenderOverride(SKCanvas canvas, Size area)
     {
         var w = (float)area.Width; var h = (float)area.Height;
-        canvas.Clear(SKColor.Parse("#DFEAF0"));
+        canvas.Clear(_base);
         using var paint = new SKPaint { IsAntialias = true };
         using var filter = _blur > .1f ? SKImageFilter.CreateBlur(_blur, _blur, SKShaderTileMode.Clamp) : null;
         paint.ImageFilter = filter;
@@ -104,9 +119,9 @@ public sealed partial class PetBackdrop : SKCanvasElement
         }
         else
         {
-            paint.Color = SKColor.Parse("#D4E2CD");
+            paint.Color = _blobA;
             canvas.DrawOval(new SKRect(-w*.18f,h*.27f,w*.7f,h*1.3f),paint);
-            paint.Color = SKColor.Parse("#F0E7D6");
+            paint.Color = _blobB;
             canvas.DrawOval(new SKRect(w*.55f,-h*.3f,w*1.3f,h*.6f),paint);
         }
         if (Hero)
