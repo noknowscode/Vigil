@@ -138,4 +138,11 @@ public class TodayViewTests
         CardColumnsLayout.ColumnsFor(655, 320, 24, 3).Should().Be(1);
         CardColumnsLayout.ColumnsFor(2400, 320, 24, 3).Should().Be(3);
     }
+
+    [Test]
+    public void SidebarPatientsCountIsEveryoneOnTodaysBoard()
+    {
+        ShellSection.OnBoardToday(Proto.Day, Proto.Now).Should().Be(4);
+        ShellSection.InClinic(Proto.Day).Should().Be(3);
+    }
 }

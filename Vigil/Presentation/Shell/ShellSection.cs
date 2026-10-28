@@ -55,6 +55,9 @@ public static class ShellSection
     /// <summary>Cases still in the clinic: everything not yet signed out.</summary>
     public static int InClinic(IEnumerable<Case> cases) => cases.Count(c => c.Status != CaseStatus.Signed);
 
+    /// <summary>Everyone on today's board (the Today "All" tab): the sidebar Patients count.</summary>
+    public static int OnBoardToday(IEnumerable<Case> cases, DateTimeOffset now) => cases.Count(c => Vigil.Presentation.Today.Matches(c, CardFilter.All, now));
+
     /// <summary>Cases under anesthesia right now.</summary>
     public static int Live(IEnumerable<Case> cases) => cases.Count(c => c.Status == CaseStatus.Anesthetized);
 

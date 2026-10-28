@@ -5,7 +5,7 @@ namespace Vigil.Presentation;
 /// <see cref="ShellModel"/>; every choice closes the drawer and hands the route back to the shell, which owns the
 /// content frame (<see cref="ShellModel.OpenMenu"/>).
 /// </summary>
-public partial record MenuModel(MenuContext Context, INavigator Navigator, ICaseStore Store, IPreferences Preferences)
+public partial record MenuModel(MenuContext Context, INavigator Navigator, ICaseStore Store, IPreferences Preferences, IClock Clock)
 {
     private IFeed<IImmutableList<Case>> Cases { get; } = Feed.Async(async ct => (IImmutableList<Case>)await Store.GetAllAsync(ct), Store.Changed);
 
@@ -21,7 +21,7 @@ public partial record MenuModel(MenuContext Context, INavigator Navigator, ICase
     public IFeed<string> AnesthesiaState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Anesthesia));
     public IFeed<string> SettingsState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Settings));
 
-    public IFeed<string> PatientsCount => Cases.Select(c => ShellSection.CountText(ShellSection.InClinic(c)));
+    public IFeed<string> PatientsCount => Cases.Select(c => ShellSection.CountText(ShellSection.OnBoardToday(c, Clock.Now)));
     public IFeed<string> AnesthesiaCount => Cases.Select(c => ShellSection.CountText(ShellSection.Live(c)));
     public IFeed<bool> HasLive => Cases.Select(c => ShellSection.Live(c) > 0);
 

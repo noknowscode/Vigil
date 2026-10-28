@@ -6,7 +6,7 @@ namespace Vigil.Presentation;
 /// FrameNavigator drops a request for a route already in its stack, so plain region navigation strands a second
 /// visit (uno-runtime-gotchas, "FrameNavigator ignores a route already in its FullRoute").
 /// </summary>
-public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, ICaseStore Store, IPreferences Preferences)
+public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, ICaseStore Store, IPreferences Preferences, IClock Clock)
 {
     private const string ClearToFrame = Qualifiers.Nested + Qualifiers.ClearBackStack;
 
@@ -32,7 +32,7 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
     public IFeed<string> AnesthesiaState => Section.Select(s => ShellSection.StateFor(s, ShellSection.Anesthesia));
     public IFeed<string> SettingsState => Section.Select(s => ShellSection.StateFor(s, ShellSection.Settings));
 
-    public IFeed<string> PatientsCount => Cases.Select(c => ShellSection.CountText(ShellSection.InClinic(c)));
+    public IFeed<string> PatientsCount => Cases.Select(c => ShellSection.CountText(ShellSection.OnBoardToday(c, Clock.Now)));
     public IFeed<string> AnesthesiaCount => Cases.Select(c => ShellSection.CountText(ShellSection.Live(c)));
     public IFeed<bool> HasLive => Cases.Select(c => ShellSection.Live(c) > 0);
 
