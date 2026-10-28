@@ -78,6 +78,31 @@ public partial record DoseGiven(
 public partial record RecoveryLog(DateTimeOffset? ExtubatedAt, DateTimeOffset? SternalAt, int? PainScore, decimal? TempC, string Notes)
 {
     public static RecoveryLog Empty { get; } = new(null, null, null, null, "");
+
+    /// <summary>Timed pain scores in recovery (one every 15 minutes is due). <see cref="PainScore"/> stays for export.</summary>
+    public ImmutableList<Domain.PainScore> PainScores { get; init => field = value ?? []; } = [];
+}
+
+public partial record PainScore(DateTimeOffset At, int Score);
+
+/// <summary>A fluid infusion, e.g. LRS at 5 mL/kg/h. Running while <see cref="StoppedAt"/> is null.</summary>
+public partial record FluidRun(string Name, decimal RateMlKgH, DateTimeOffset StartedAt, DateTimeOffset? StoppedAt)
+{
+    public bool IsRunning => StoppedAt is null;
+
+    /// <summary>"LRS 5 mL/kg/h".</summary>
+    public string Label => $"{Name} {RateMlKgH:0.##} mL/kg/h";
+}
+
+public enum LabState { Pending, Ready, Reviewed }
+
+/// <summary>A lab panel. <see cref="At"/> is when the result is expected (Pending) or due for review (Ready).</summary>
+public partial record LabResult(string Panel, LabState State, DateTimeOffset At);
+
+/// <summary>The follow-up call to the pet parent after discharge.</summary>
+public partial record DischargeCall(DateTimeOffset DueAt, DateTimeOffset? DoneAt)
+{
+    public bool IsDone => DoneAt is not null;
 }
 
 public partial record Case(
@@ -98,6 +123,32 @@ public partial record Case(
     DateTimeOffset? SignedAt)
 {
     public bool IsSigned => Status == CaseStatus.Signed;
+
+    // v2 fields. All optional with defaults, so a case file written before v2 still loads. The JSON source generator
+    // assigns default(T) to an init property missing from the file, so reference types fall back in the setter.
+
+    /// <summary>"OR 1"; empty when no room is assigned.</summary>
+    public string OperatingRoom { get; init => field = value ?? ""; } = "";
+
+    public DateTimeOffset? PlannedStart { get; init; }
+
+    public int? PlannedMinutes { get; init; }
+
+    /// <summary>Set when preparation starts (Booked → Prep).</summary>
+    public DateTimeOffset? PrepStartedAt { get; init; }
+
+    /// <summary>Set when the patient goes home (Home stage).</summary>
+    public DateTimeOffset? DischargedAt { get; init; }
+
+    public ImmutableList<FluidRun> Fluids { get; init => field = value ?? []; } = [];
+
+    public ImmutableList<LabResult> Labs { get; init => field = value ?? []; } = [];
+
+    public DischargeCall? DischargeCall { get; init; }
+
+    public DateTimeOffset? FastingSince { get; init; }
+
+    public DateTimeOffset? ParentNotifiedAt { get; init; }
 
     public static Case New(Patient patient, string procedure, string veterinarian, string technician, DateTimeOffset now) =>
         new(Guid.NewGuid(), patient, procedure, veterinarian, technician, now, CaseStatus.Scheduled, PreopCheck.Empty,

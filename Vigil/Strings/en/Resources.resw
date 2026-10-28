@@ -63,6 +63,13 @@
   <data name="Board_LiveName" xml:space="preserve"><value>Open active surgical record: {0}, {1}. {2} {3}</value></data>
   <data name="Board_SignedTime" xml:space="preserve"><value>Signed {0:HH:mm}</value></data>
   <data name="Board_UnderTime" xml:space="preserve"><value>Under {0}</value></data>
+  <data name="CareTime_OnePatient" xml:space="preserve"><value>1 patient</value></data>
+  <data name="CareTime_OneProcedure" xml:space="preserve"><value>1 procedure</value></data>
+  <data name="CareTime_Patients" xml:space="preserve"><value>{0} patients</value></data>
+  <data name="CareTime_Procedures" xml:space="preserve"><value>{0} procedures</value></data>
+  <data name="CareTime_Summary" xml:space="preserve"><value>{0} across {1} patients today</value></data>
+  <data name="CareTime_SummaryOne" xml:space="preserve"><value>{0} across 1 patient today</value></data>
+  <data name="CareTime_Tooltip" xml:space="preserve"><value>{0}: {1}, {2}% of care time</value></data>
   <data name="Clock_Next" xml:space="preserve"><value>next {0}</value></data>
   <data name="Clock_Overdue" xml:space="preserve"><value>overdue {0}</value></data>
   <data name="Common_Cancel" xml:space="preserve"><value>Cancel</value></data>
@@ -99,9 +106,15 @@
   <data name="Dose_OutOfRangeConfirmed" xml:space="preserve"><value>Out of range, confirmed</value></data>
   <data name="Drugs_None" xml:space="preserve"><value>No doses recorded</value></data>
   <data name="Drugs_NoneDetail" xml:space="preserve"><value>Medication history stays with this visit.</value></data>
+  <data name="DueAction_Call" xml:space="preserve"><value>Call</value></data>
+  <data name="DueAction_Prepare" xml:space="preserve"><value>Prepare</value></data>
+  <data name="DueAction_Record" xml:space="preserve"><value>Record</value></data>
+  <data name="DueAction_Review" xml:space="preserve"><value>Review</value></data>
+  <data name="DueAction_Score" xml:space="preserve"><value>Score</value></data>
   <data name="Due_Next" xml:space="preserve"><value>Next reading</value></data>
   <data name="Due_None" xml:space="preserve"><value>No reading due</value></data>
   <data name="Due_Overdue" xml:space="preserve"><value>Reading overdue</value></data>
+  <data name="Duration_HoursMinutes" xml:space="preserve"><value>{0}h {1}m</value></data>
   <data name="Error_InduceFirst" xml:space="preserve"><value>Induce before recording vitals.</value></data>
   <data name="Error_NotSaved" xml:space="preserve"><value>Not saved: {0}</value></data>
   <data name="Export_Cancelled" xml:space="preserve"><value>Export cancelled.</value></data>
@@ -116,6 +129,9 @@
   <data name="Greeting_EveningNamed" xml:space="preserve"><value>Good evening, Dr. {0}</value></data>
   <data name="Greeting_Morning" xml:space="preserve"><value>Good morning</value></data>
   <data name="Greeting_MorningNamed" xml:space="preserve"><value>Good morning, Dr. {0}</value></data>
+  <data name="Insight_OnPlan" xml:space="preserve"><value>Prep ran {0} minutes on average today, on plan.</value></data>
+  <data name="Insight_Over" xml:space="preserve"><value>Prep ran {0} minutes on average today, {1} minutes over plan.</value></data>
+  <data name="Insight_Under" xml:space="preserve"><value>Prep ran {0} minutes on average today, {1} minutes under plan.</value></data>
   <data name="LiveBand_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Open the live record</value></data>
   <data name="LiveBand_2.Text" xml:space="preserve"><value>UNDER ANESTHESIA</value></data>
   <data name="LiveBand_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Elapsed anesthesia time</value></data>
@@ -159,6 +175,10 @@
   <data name="NewCase_TechRequired" xml:space="preserve"><value>Enter the technician running anesthesia.</value></data>
   <data name="NewCase_VetRequired" xml:space="preserve"><value>Enter the veterinarian.</value></data>
   <data name="NewCase_WeightRequired" xml:space="preserve"><value>Enter a weight between 0.1 and 150 kg: every dose is calculated from it.</value></data>
+  <data name="Next_Fasting" xml:space="preserve"><value>Fasting since {0:HH:mm}</value></data>
+  <data name="Next_Notified" xml:space="preserve"><value>notified {0:HH:mm}</value></data>
+  <data name="Next_Title" xml:space="preserve"><value>Next surgery · {0}</value></data>
+  <data name="Next_Until" xml:space="preserve"><value>until {0:HH:mm}</value></data>
   <data name="Pane_Dose" xml:space="preserve"><value>Administer dose</value></data>
   <data name="Pane_Drugs" xml:space="preserve"><value>Medication record</value></data>
   <data name="Pane_History" xml:space="preserve"><value>Visit history</value></data>
@@ -222,6 +242,14 @@
   <data name="Patients_6.Content" xml:space="preserve"><value>Retry</value></data>
   <data name="Patients_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
   <data name="Patients_Summary" xml:space="preserve"><value>{0} in clinic · {1} on this device</value></data>
+  <data name="Phase_Anesthesia" xml:space="preserve"><value>Anesthesia</value></data>
+  <data name="Phase_Now" xml:space="preserve"><value>now</value></data>
+  <data name="Phase_Planned" xml:space="preserve"><value>Planned</value></data>
+  <data name="Phase_PlannedPrep" xml:space="preserve"><value>Planned prep</value></data>
+  <data name="Phase_PlannedSurgery" xml:space="preserve"><value>Planned surgery</value></data>
+  <data name="Phase_Prep" xml:space="preserve"><value>Prep</value></data>
+  <data name="Phase_Recovery" xml:space="preserve"><value>Recovery</value></data>
+  <data name="Phase_Waiting" xml:space="preserve"><value>Waiting</value></data>
   <data name="Plane_Deep" xml:space="preserve"><value>Deep</value></data>
   <data name="Plane_Light" xml:space="preserve"><value>Light</value></data>
   <data name="Plane_Surgical" xml:space="preserve"><value>Surgical</value></data>
@@ -420,6 +448,7 @@
   <data name="Recovery_SinceEnded" xml:space="preserve"><value>since anesthesia ended (not extubated)</value></data>
   <data name="Recovery_SinceExtubation" xml:space="preserve"><value>since extubation</value></data>
   <data name="Recovery_Sternal" xml:space="preserve"><value>Sternal {0:HH:mm}</value></data>
+  <data name="Redose_Title" xml:space="preserve"><value>{0} redose</value></data>
   <data name="Ruler_Anaesthesia" xml:space="preserve"><value>Anaesthesia</value></data>
   <data name="Ruler_Empty" xml:space="preserve"><value>Care intervals appear after anaesthesia begins.</value></data>
   <data name="Ruler_Now" xml:space="preserve"><value>Now</value></data>
@@ -537,6 +566,12 @@
   <data name="Species_Canine" xml:space="preserve"><value>Canine</value></data>
   <data name="Species_Feline" xml:space="preserve"><value>Feline</value></data>
   <data name="Species_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="Stage_Accessible" xml:space="preserve"><value>Stage {0} of {1}: {2}</value></data>
+  <data name="Stage_Booked" xml:space="preserve"><value>Booked</value></data>
+  <data name="Stage_Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Stage_Prep" xml:space="preserve"><value>Prep</value></data>
+  <data name="Stage_Recovery" xml:space="preserve"><value>Recovery</value></data>
+  <data name="Stage_Surgery" xml:space="preserve"><value>Surgery</value></data>
   <data name="Status_Anesthetized" xml:space="preserve"><value>Under anesthesia</value></data>
   <data name="Status_Recovery" xml:space="preserve"><value>Recovery</value></data>
   <data name="Status_Scheduled" xml:space="preserve"><value>Scheduled</value></data>
@@ -545,6 +580,26 @@
   <data name="Strip_LegendBp" xml:space="preserve"><value>BP</value></data>
   <data name="Strip_LegendHr" xml:space="preserve"><value>HR</value></data>
   <data name="Strip_Summary" xml:space="preserve"><value>Vitals strip: {0} readings, last at {1:HH:mm}: heart rate {2}, blood pressure {3} over {4}, SpO2 {5}. Use the Table view for every value.</value></data>
+  <data name="Task_Bloodwork" xml:space="preserve"><value>Bloodwork review</value></data>
+  <data name="Task_DischargeCall" xml:space="preserve"><value>Discharge call</value></data>
+  <data name="Task_Due" xml:space="preserve"><value>Due</value></data>
+  <data name="Task_Every" xml:space="preserve"><value>every {0} min</value></data>
+  <data name="Task_InMinutes" xml:space="preserve"><value>In {0} min</value></data>
+  <data name="Task_InMinutesLower" xml:space="preserve"><value>in {0} min</value></data>
+  <data name="Task_Late" xml:space="preserve"><value>Late</value></data>
+  <data name="Task_Nothing" xml:space="preserve"><value>Nothing due</value></data>
+  <data name="Task_Observations" xml:space="preserve"><value>Record observations</value></data>
+  <data name="Task_OneTaskBefore" xml:space="preserve"><value>1 task before {0:HH:mm}</value></data>
+  <data name="Task_Overdue" xml:space="preserve"><value>Overdue {0}</value></data>
+  <data name="Task_OverdueCount" xml:space="preserve"><value>{0} overdue</value></data>
+  <data name="Task_OverdueLower" xml:space="preserve"><value>overdue {0}</value></data>
+  <data name="Task_PainScore" xml:space="preserve"><value>Pain score</value></data>
+  <data name="Task_PetParent" xml:space="preserve"><value>Pet parent</value></data>
+  <data name="Task_PreopBloodwork" xml:space="preserve"><value>Pre-op bloodwork</value></data>
+  <data name="Task_ResultsReady" xml:space="preserve"><value>Results ready</value></data>
+  <data name="Task_Scheduled" xml:space="preserve"><value>Scheduled</value></data>
+  <data name="Task_Strip" xml:space="preserve"><value>{0}-minute strip</value></data>
+  <data name="Task_TasksBefore" xml:space="preserve"><value>{0} tasks before {1:HH:mm}</value></data>
   <data name="TopBarCluster_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Search, coming soon</value></data>
   <data name="TopBarCluster_2.Content" xml:space="preserve"><value>Coming soon</value></data>
   <data name="TopBarCluster_3.Text" xml:space="preserve"><value>Search patients, owners, records</value></data>

@@ -32,7 +32,7 @@ public class CaseStoreTests
         await SeedAsync(Store());
 
         var reloaded = await Store().GetAllAsync(CancellationToken.None);
-        reloaded.Should().HaveCount(5);
+        reloaded.Should().HaveCount(4);
         var bella = reloaded.Single(c => c.Patient.Name == "Bella");
         bella.Readings.Should().HaveCount(14);
         bella.Doses.Should().HaveCount(4);

@@ -12,7 +12,7 @@ public class GreetingTests
         var greeting = BoardGreeting.From(SampleDay.Create(Afternoon), Afternoon, Interval, "Okafor");
         greeting.Title.Should().Be("Good afternoon, Dr. Okafor");
         greeting.Lead.Should().Be("1 patient in surgery.");
-        greeting.Rest.Should().Be(" Bella's reading is overdue · 2 in preparation · 1 recovering · 1 signed today.");
+        greeting.Rest.Should().Be(" Bella's reading is overdue · 1 in preparation · 1 recovering · 1 signed today.");
     }
 
     [Test]
@@ -29,7 +29,7 @@ public class GreetingTests
     {
         var day = SampleDay.Create(Afternoon).Where(c => c.Status != CaseStatus.Anesthetized).ToList();
         var greeting = BoardGreeting.From(day, Afternoon, Interval, "");
-        greeting.Lead.Should().Be("2 waiting for preparation.");
+        greeting.Lead.Should().Be("1 waiting for preparation.");
         greeting.Rest.Should().Be(" 1 recovering · 1 signed today.");
     }
 
