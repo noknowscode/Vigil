@@ -183,9 +183,9 @@ substitutions in UQ).
 
 - Disabled-but-visible Records, Messages, Reports, Help center, clinic switcher, search and bell show features the
   app does not have (user chose this; capability rule flags it). Revisit before any release.
-- Monitoring: the state designs (signal lost on a card, "Monitoring paused · Last sync · Retry") assume a live
-  connection to a patient monitor. Vigil has none and says it is not a live monitor. Build a monitor-connection
-  service (which device/protocol?), or keep the pill disabled and drop the signal-lost / paused states?
+- Monitoring (default applied 2026-10-28, user did not choose): no monitor connection is built. The "Monitoring on"
+  pill renders disabled like the other screen-less items; the "Monitor signal lost" card state and the "Monitoring
+  paused" pill are omitted. Revisit if a monitor integration (device/protocol) is wanted.
 - Dark-theme values are derived, not designed.
 - Negative tracking on mono numbers is dropped on Skia.
 - Phone layout (< 760) is not in the prototypes; the drawer-sidebar behaviour is our design.
