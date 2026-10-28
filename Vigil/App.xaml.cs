@@ -70,7 +70,7 @@ public partial class App : Application
                 {
                     var fault = FaultInjection.FromEnvironment();
                     services.AddSingleton<IFaultInjection>(fault);
-                    services.AddSingleton<IClock, SystemClock>();
+                    services.AddSingleton<IClock>(_ => PreviewClock() ?? new SystemClock());
                     services.AddSingleton<DoseFeedback>();
                     services.AddSingleton<IPreferences>(_ => new Preferences(
                         Path.Combine(DataRoot(), "preferences.json")));
@@ -160,7 +160,16 @@ public partial class App : Application
     {
         var seed = Environment.GetCommandLineArgs()
             .FirstOrDefault(a => a.StartsWith("--vigil-seed=", StringComparison.OrdinalIgnoreCase))?.Split('=', 2)[1];
-        if (Environment.GetCommandLineArgs().Contains("--clover-preview")) seed = "sample";
+        if (Environment.GetCommandLineArgs().Contains("--clover-preview"))
+        {
+            // The design preview reproduces the prototype: sample day, Dr. Okafor (preview data folder only).
+            seed = "sample";
+            var prefs = services.GetRequiredService<IPreferences>();
+            if (string.IsNullOrWhiteSpace(prefs.ClinicianName))
+            {
+                await prefs.SetClinicianNameAsync("Okafor", CancellationToken.None);
+            }
+        }
         if (seed is null)
         {
             return;
@@ -177,6 +186,21 @@ public partial class App : Application
         }
     }
 #endif
+
+    /// <summary>Verification hook: <c>--vigil-now=12:42:26</c> (or <c>--clover-preview</c>) pins the wall time the app starts at.</summary>
+    private static IClock? PreviewClock()
+    {
+#if DEBUG
+        var args = Environment.GetCommandLineArgs();
+        var at = args.FirstOrDefault(a => a.StartsWith("--vigil-now=", StringComparison.OrdinalIgnoreCase))?.Split('=', 2)[1]
+            ?? (args.Contains("--clover-preview") ? "12:42:26" : null);
+        if (at is not null && TimeSpan.TryParse(at, System.Globalization.CultureInfo.InvariantCulture, out var time))
+        {
+            return ShiftedClock.At(time);
+        }
+#endif
+        return null;
+    }
 
     private static string DataRoot()
     {

@@ -64,7 +64,8 @@ public static class CarePhases
     /// <summary>
     /// Ordered spans for one case: Waiting (booking → prep, induction or now), Prep (prep start → induction or now),
     /// Anesthesia (induction → end or now), Recovery (end → sign-off/discharge or now), and, for a booked case whose
-    /// planned start is still ahead, Planned prep and Planned surgery. Times are in <paramref name="now"/>'s offset.
+    /// planned start is still ahead, Planned prep and Planned surgery (the case's own planned prep, else the practice's).
+    /// Times are in <paramref name="now"/>'s offset.
     /// </summary>
     public static ImmutableList<PhaseSpan> Of(Case c, DateTimeOffset now, int plannedPrepMinutes = 25)
     {
@@ -98,7 +99,7 @@ public static class CarePhases
         {
             if (c.PrepStartedAt is null)
             {
-                var prepFrom = planned.AddMinutes(-plannedPrepMinutes);
+                var prepFrom = planned.AddMinutes(-(c.PlannedPrepMinutes ?? plannedPrepMinutes));
                 Add(CarePhaseKind.Planned, prepFrom < now ? now : prepFrom, planned, CarePhaseKind.Prep);
             }
             Add(CarePhaseKind.Planned, planned, planned.AddMinutes(c.PlannedMinutes ?? DefaultPlannedMinutes), CarePhaseKind.Anesthesia);

@@ -55,7 +55,7 @@ public class CarePhasesTests
         CarePhases.Of(Proto.Named("Pepper"), Proto.Now).Select(Times).Should().Equal("Prep 08:00-08:32", "Anesthesia 08:32-09:27", "Recovery 09:27-10:07");
         CarePhases.Of(Proto.Named("Milo"), Proto.Now).Select(Times).Should().Equal("Prep 09:30-10:02", "Anesthesia 10:02-12:08", "Recovery 12:08-now");
         CarePhases.Of(Proto.Named("Bella"), Proto.Now).Select(Times).Should().Equal("Prep 11:00-11:30", "Anesthesia 11:30-now");
-        CarePhases.Of(Proto.Named("Oscar"), Proto.Now, 30).Select(Times).Should().Equal(
+        CarePhases.Of(Proto.Named("Oscar"), Proto.Now).Select(Times).Should().Equal(
             "Waiting 12:27-now", "Planned:Prep 13:30-14:00", "Planned:Anesthesia 14:00-15:00");
     }
 
@@ -112,7 +112,7 @@ public class CarePhasesTests
     [Test]
     public void WindowSpansWholeHoursAroundTheDay()
     {
-        var spans = Proto.Day.SelectMany(c => CarePhases.Of(c, Proto.Now, 30));
+        var spans = Proto.Day.SelectMany(c => CarePhases.Of(c, Proto.Now));
         CarePhases.Window(spans, Proto.Now).Should().Be((Proto.At(8, 0), Proto.At(15, 0)));
     }
 }
@@ -229,8 +229,9 @@ public class NextSurgeryTests
         next.Subtitle.Should().Be("Mass removal, left flank · OR 1");
         next.CountdownText.Should().Be("1:18");
         next.UntilText.Should().Be("until 14:00");
-        next.PrepStartsAt.Should().Be(next.PlannedStart.AddMinutes(-25));
-        next.PrepStartsSub.Should().Be("in 53 min");
+        next.PrepStartsAt.Should().Be(next.PlannedStart.AddMinutes(-30), "Oscar's own planned prep (30) overrides the practice's 25");
+        next.PrepStartsText.Should().Be("13:30");
+        next.PrepStartsSub.Should().Be("in 48 min");
         next.FastingText.Should().Be("Fasting since 06:00");
         next.NotifiedText.Should().Be("notified 12:30");
         next.BloodworkReady.Should().BeTrue();
@@ -247,6 +248,15 @@ public class NextSurgeryTests
         var preparing = NextSurgery.Of([oscar with { PrepStartedAt = Proto.Now.AddMinutes(-3) }], Proto.Now, 25)!;
         preparing.PrepStartsAt.Should().Be(Proto.Now.AddMinutes(-3));
         preparing.PrepStarted.Should().BeTrue();
+    }
+
+    [Test]
+    public void ThePracticePlannedPrepAppliesWhenTheCaseHasNone()
+    {
+        var oscar = Proto.Named("Oscar") with { PlannedPrepMinutes = null };
+        NextSurgery.Of([oscar], Proto.Now, 25)!.PrepStartsText.Should().Be("13:35");
+        CarePhases.Of(oscar, Proto.Now, 25).Single(s => s.Plans == CarePhaseKind.Prep).Start.Should().Be(Proto.At(13, 35));
+        CarePhases.Of(Proto.Named("Oscar"), Proto.Now, 25).Single(s => s.Plans == CarePhaseKind.Prep).Start.Should().Be(Proto.At(13, 30));
     }
 }
 

@@ -134,6 +134,9 @@ public partial record Case(
 
     public int? PlannedMinutes { get; init; }
 
+    /// <summary>Planned preparation for this case, overriding the practice's <c>PlannedPrepMinutes</c> (gantt slot, prep start).</summary>
+    public int? PlannedPrepMinutes { get; init; }
+
     /// <summary>Set when preparation starts (Booked → Prep).</summary>
     public DateTimeOffset? PrepStartedAt { get; init; }
 

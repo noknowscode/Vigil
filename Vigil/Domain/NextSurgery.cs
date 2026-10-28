@@ -5,7 +5,7 @@ namespace Vigil.Domain;
 
 /// <summary>
 /// The hero's "no surgery in progress" state: the next booked case by planned start, with its countdown,
-/// prep start (planned start minus the practice's planned prep time), fasting and pet-parent notice.
+/// prep start (planned start minus the case's planned prep time, else the practice's), fasting and pet-parent notice.
 /// </summary>
 public partial record NextSurgery(Case Case, DateTimeOffset PlannedStart, DateTimeOffset PrepStartsAt, DateTimeOffset Now)
 {
@@ -63,7 +63,7 @@ public partial record NextSurgery(Case Case, DateTimeOffset PlannedStart, DateTi
             .Select(c =>
             {
                 var start = c.PlannedStart!.Value.ToOffset(now.Offset);
-                return new NextSurgery(c, start, c.PrepStartedAt?.ToOffset(now.Offset) ?? start.AddMinutes(-plannedPrepMinutes), now);
+                return new NextSurgery(c, start, c.PrepStartedAt?.ToOffset(now.Offset) ?? start.AddMinutes(-(c.PlannedPrepMinutes ?? plannedPrepMinutes)), now);
             })
             .FirstOrDefault();
 }

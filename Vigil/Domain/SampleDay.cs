@@ -27,6 +27,7 @@ public static class SampleDay
             OperatingRoom = "OR 1",
             PlannedStart = planned,
             PlannedMinutes = 60,
+            PlannedPrepMinutes = 30,
             FastingSince = now.AddHours(-6).AddMinutes(-42),
             ParentNotifiedAt = now.AddMinutes(-12),
             Labs = [new LabResult("CBC and chemistry panel", LabState.Ready, Minute(now.AddMinutes(33)))],
