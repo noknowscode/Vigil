@@ -155,7 +155,7 @@ public partial class App : Application
         timer.Start();
     }
 
-    /// <summary>Verification hook: <c>--vigil-seed=sample</c> loads the sample day, <c>--vigil-seed=empty</c> clears the store.</summary>
+    /// <summary>Verification hook: <c>--vigil-seed=sample</c> loads the sample day, <c>--vigil-seed=empty</c> clears the store, <c>--vigil-seed=next</c> loads it without the case in surgery.</summary>
     private static async Task SeedForVerificationAsync(IServiceProvider services)
     {
         var seed = Environment.GetCommandLineArgs()
@@ -163,7 +163,7 @@ public partial class App : Application
         if (Environment.GetCommandLineArgs().Contains("--clover-preview"))
         {
             // The design preview reproduces the prototype: sample day, Dr. Okafor (preview data folder only).
-            seed = "sample";
+            seed ??= "sample";
             var prefs = services.GetRequiredService<IPreferences>();
             if (string.IsNullOrWhiteSpace(prefs.ClinicianName))
             {
@@ -177,9 +177,10 @@ public partial class App : Application
         var store = services.GetRequiredService<ICaseStore>();
         var clock = services.GetRequiredService<IClock>();
         await store.ClearAsync(CancellationToken.None);
-        if (seed == "sample")
+        if (seed is "sample" or "next")
         {
-            foreach (var c in SampleDay.Create(clock.Now))
+            // "next": the sample day without the case in surgery, for the hero's "Next surgery" state.
+            foreach (var c in SampleDay.Create(clock.Now).Where(c => seed == "sample" || c.Status != CaseStatus.Anesthetized))
             {
                 await store.SaveAsync(c, CancellationToken.None);
             }

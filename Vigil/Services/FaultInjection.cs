@@ -9,7 +9,7 @@ public interface IFaultInjection
 {
     int SlowMs { get; }
 
-    /// <summary>True once for <c>store-read-once</c>, always for <c>store-read</c>.</summary>
+    /// <summary>True once for <c>store-read-once</c>, for the first N reads with <c>store-read-xN</c>, always for <c>store-read</c>.</summary>
     bool ConsumeReadFault();
 
     bool WriteFault { get; }
@@ -45,6 +45,12 @@ public sealed class FaultInjection : IFaultInjection
         if (_fault.Contains("store-read-once", StringComparison.OrdinalIgnoreCase))
         {
             return Interlocked.Increment(ref _readFaults) == 1;
+        }
+        // store-read-xN: the shell and the page each read the store at launch, so a single failure only reaches one of them.
+        var times = System.Text.RegularExpressions.Regex.Match(_fault, @"store-read-x(\d+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        if (times.Success)
+        {
+            return Interlocked.Increment(ref _readFaults) <= int.Parse(times.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
         }
         return _fault.Equals("store-read", StringComparison.OrdinalIgnoreCase);
     }
