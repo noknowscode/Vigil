@@ -53,10 +53,11 @@ public sealed partial class CareRuler : UserControl
             var height = Math.Max(day.Height + 44, slots.Count > 0 ? slots.Max(s => s.Top + s.Height) + 34 : 160);
             Height = height; _surface.Width = width; _surface.Height = height;
             _ticks.Children.Clear(); _present.Children.Clear();
-            var text = Ink("OnSurfaceBrush", "#203B2B");
-            var quiet = Ink("OnSurfaceVariantBrush", "#5E6B61");
-            var line = Ink("OutlineBrush", "#D9DED2");
-            var primary = Ink("PrimaryBrush", "#244936");
+            // Color keys, not *Brush: only the colours sit in theme dictionaries, so a brush key resolves to the Light value under Theatre.
+            var text = Ink("OnSurfaceColor", "#203B2B");
+            var quiet = Ink("OnSurfaceVariantColor", "#5E6B61");
+            var line = Ink("OutlineColor", "#D9DED2");
+            var primary = Ink("PrimaryColor", "#244936");
             Place(_ticks, new Border { Width = 1, Height = day.Height, Background = line }, 43, 22);
             for (var q = 0; q <= (day.End - day.Start).TotalMinutes / 15; q++)
             {
@@ -112,7 +113,7 @@ public sealed partial class CareRuler : UserControl
             var nowY = day.NowTop + 22;
             Place(_present, new Border { Width = width - 43, Height = 1.5, Background = primary }, 43, nowY);
             Place(_present, new Ellipse { Width = 6, Height = 6, Fill = primary }, 40, nowY - 2.5);
-            var marker = new Border { Background = primary, CornerRadius = new CornerRadius(5), Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), 12, Ink("OnPrimaryBrush", "#FFFEF9")) };
+            var marker = new Border { Background = primary, CornerRadius = new CornerRadius(5), Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), 12, Ink("OnPrimaryColor", "#FFFEF9")) };
             Place(_present, marker, 0, nowY - 10);
         }
         finally { _drawing = false; }
