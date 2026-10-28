@@ -66,6 +66,36 @@
         <GradientStop Color="#DCEAF0" Offset="0.52" />
         <GradientStop Color="#D5ECE0" Offset="1" />
       </LinearGradientBrush>
+      <!-- Today (today-dashboard-values.md §1, shell-and-tokens.md §2.1) -->
+      <SolidColorBrush x:Key="HeroEdgeBrush" Color="#DDE3EE" />
+      <SolidColorBrush x:Key="GlassShellBrush" Color="#80FFFFFF" />
+      <SolidColorBrush x:Key="GlassEdgeBrush" Color="#CCFFFFFF" />
+      <SolidColorBrush x:Key="GanttTrackBrush" Color="#73FFFFFF" />
+      <SolidColorBrush x:Key="OnInkBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="SegmentTrackEdgeBrush" Color="#E8E8EA" />
+      <SolidColorBrush x:Key="TrayEdgeBrush" Color="#E6E6E8" />
+      <SolidColorBrush x:Key="BookedEdgeBrush" Color="#E0E0E3" />
+      <SolidColorBrush x:Key="PhasePrepSoftBorderBrush" Color="#F1D2AE" />
+      <SolidColorBrush x:Key="PhaseHomeStepBrush" Color="#DCE7E0" />
+      <!-- 135deg repeating stripes: Absolute mapping, end point (p/√2, p/√2) for a period of p px; hard stops. -->
+      <LinearGradientBrush x:Key="PlannedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+        <GradientStop Color="#BFFFFFFF" Offset="0" /><GradientStop Color="#BFFFFFFF" Offset="0.75" />
+        <GradientStop Color="#381B212F" Offset="0.75" /><GradientStop Color="#381B212F" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="BookedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="4.243,4.243">
+        <GradientStop Color="#F4F4F3" Offset="0" /><GradientStop Color="#F4F4F3" Offset="0.8333" />
+        <GradientStop Color="#E8E8EB" Offset="0.8333" /><GradientStop Color="#E8E8EB" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="StepDoneHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+        <GradientStop Color="#DCDCE0" Offset="0" /><GradientStop Color="#DCDCE0" Offset="0.25" />
+        <GradientStop Color="#F0F0F1" Offset="0.25" /><GradientStop Color="#F0F0F1" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="KnobBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" /><GradientStop Color="#EDEDEF" Offset="1" />
+      </LinearGradientBrush>
+      <SolidColorBrush x:Key="KnobEdgeBrush" Color="#D4D4D8" />
+      <SolidColorBrush x:Key="LinkUnderlineBrush" Color="#4D1B212F" />
+      <SolidColorBrush x:Key="SkeletonBrush" Color="#ECECEE" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="InkBrush" Color="#E6E7EA" />
@@ -120,6 +150,34 @@
         <GradientStop Color="#1C2A30" Offset="0.52" />
         <GradientStop Color="#17372A" Offset="1" />
       </LinearGradientBrush>
+      <SolidColorBrush x:Key="HeroEdgeBrush" Color="#2A3340" />
+      <SolidColorBrush x:Key="GlassShellBrush" Color="#0FFFFFFF" />
+      <SolidColorBrush x:Key="GlassEdgeBrush" Color="#1FFFFFFF" />
+      <SolidColorBrush x:Key="GanttTrackBrush" Color="#14FFFFFF" />
+      <SolidColorBrush x:Key="OnInkBrush" Color="#121417" />
+      <SolidColorBrush x:Key="SegmentTrackEdgeBrush" Color="#2A2D33" />
+      <SolidColorBrush x:Key="TrayEdgeBrush" Color="#2A2D33" />
+      <SolidColorBrush x:Key="BookedEdgeBrush" Color="#2F3238" />
+      <SolidColorBrush x:Key="PhasePrepSoftBorderBrush" Color="#5A3D1F" />
+      <SolidColorBrush x:Key="PhaseHomeStepBrush" Color="#24392D" />
+      <LinearGradientBrush x:Key="PlannedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+        <GradientStop Color="#1FFFFFFF" Offset="0" /><GradientStop Color="#1FFFFFFF" Offset="0.75" />
+        <GradientStop Color="#59FFFFFF" Offset="0.75" /><GradientStop Color="#59FFFFFF" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="BookedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="4.243,4.243">
+        <GradientStop Color="#202328" Offset="0" /><GradientStop Color="#202328" Offset="0.8333" />
+        <GradientStop Color="#2C2F35" Offset="0.8333" /><GradientStop Color="#2C2F35" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="StepDoneHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+        <GradientStop Color="#45484F" Offset="0" /><GradientStop Color="#45484F" Offset="0.25" />
+        <GradientStop Color="#26292E" Offset="0.25" /><GradientStop Color="#26292E" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="KnobBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#3A3D44" Offset="0" /><GradientStop Color="#2A2D33" Offset="1" />
+      </LinearGradientBrush>
+      <SolidColorBrush x:Key="KnobEdgeBrush" Color="#4A4D55" />
+      <SolidColorBrush x:Key="LinkUnderlineBrush" Color="#4DE6E7EA" />
+      <SolidColorBrush x:Key="SkeletonBrush" Color="#2A2D33" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

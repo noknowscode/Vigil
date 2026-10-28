@@ -18,21 +18,7 @@
   <data name="Alarm_High" xml:space="preserve"><value>▲ high</value></data>
   <data name="Alarm_Low" xml:space="preserve"><value>▼ low</value></data>
   <data name="Asa_NotSet" xml:space="preserve"><value>ASA —</value></data>
-  <data name="Board_10.Text" xml:space="preserve"><value>Active case unavailable. Retry the patient list below.</value></data>
-  <data name="Board_11.Content" xml:space="preserve"><value>Today</value></data>
-  <data name="Board_11.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Show today's cases</value></data>
-  <data name="Board_12.Content" xml:space="preserve"><value>All records</value></data>
-  <data name="Board_12.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Show all cases</value></data>
-  <data name="Board_13.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Patient cards</value></data>
-  <data name="Board_14.Text" xml:space="preserve"><value>No cases today. Start the first one.</value></data>
-  <data name="Board_15.Text" xml:space="preserve"><value>A case holds one anesthetic procedure: pre-op check, doses, vitals every five minutes, recovery and sign-off.</value></data>
-  <data name="Board_16.Content" xml:space="preserve"><value>New case</value></data>
-  <data name="Board_17.Text" xml:space="preserve"><value>Couldn't read saved records.</value></data>
-  <data name="Board_18.Content" xml:space="preserve"><value>Retry</value></data>
-  <data name="Board_18.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
   <data name="Board_19.Text" xml:space="preserve"><value>PHOTO NOT ADDED</value></data>
-  <data name="Board_20.Text" xml:space="preserve"><value>Care, continued.  ·  Clover</value></data>
-  <data name="Board_21.Text" xml:space="preserve"><value>Elapsed · h:mm</value></data>
   <data name="Board_23.Text" xml:space="preserve"><value>CARE, THROUGH THE DAY</value></data>
   <data name="Board_25.Text" xml:space="preserve"><value>Today's agenda</value></data>
   <data name="Board_27.Text" xml:space="preserve"><value>SPECIES</value></data>
@@ -53,16 +39,16 @@
   <data name="Board_42.Text" xml:space="preserve"><value>RECORDED INTERVALS</value></data>
   <data name="Board_43.Text" xml:space="preserve"><value>Anaesthesia</value></data>
   <data name="Board_44.Text" xml:space="preserve"><value>Recovery</value></data>
-  <data name="Board_5.Text" xml:space="preserve"><value>Today's patients</value></data>
-  <data name="Board_9.Text" xml:space="preserve"><value>IN SURGERY</value></data>
   <data name="Board_AddedTime" xml:space="preserve"><value>Added {0:HH:mm}</value></data>
-  <data name="Board_AlsoUnder" xml:space="preserve"><value>Also under anesthesia: {0}</value></data>
   <data name="Board_EndedTime" xml:space="preserve"><value>Ended {0:HH:mm}</value></data>
   <data name="Board_ExtubatedTime" xml:space="preserve"><value>Extubated {0:HH:mm}</value></data>
-  <data name="Board_LastReading" xml:space="preserve"><value>Last {0:HH:mm} · HR {1} · SpO₂ {2} · MAP {3}</value></data>
-  <data name="Board_LiveName" xml:space="preserve"><value>Open active surgical record: {0}, {1}. {2} {3}</value></data>
   <data name="Board_SignedTime" xml:space="preserve"><value>Signed {0:HH:mm}</value></data>
   <data name="Board_UnderTime" xml:space="preserve"><value>Under {0}</value></data>
+  <data name="Card_AsaPending" xml:space="preserve"><value>ASA pending</value></data>
+  <data name="Card_HideDetails" xml:space="preserve"><value>Hide details</value></data>
+  <data name="Card_OneYear" xml:space="preserve"><value>1 yr</value></data>
+  <data name="Card_ShowDetails" xml:space="preserve"><value>Show details</value></data>
+  <data name="Card_Years" xml:space="preserve"><value>{0:0.#} yrs</value></data>
   <data name="CareTime_OnePatient" xml:space="preserve"><value>1 patient</value></data>
   <data name="CareTime_OneProcedure" xml:space="preserve"><value>1 procedure</value></data>
   <data name="CareTime_Patients" xml:space="preserve"><value>{0} patients</value></data>
@@ -112,7 +98,10 @@
   <data name="DueAction_Review" xml:space="preserve"><value>Review</value></data>
   <data name="DueAction_Score" xml:space="preserve"><value>Score</value></data>
   <data name="Due_Next" xml:space="preserve"><value>Next reading</value></data>
+  <data name="Due_NextPrep" xml:space="preserve"><value>Next: {0} prep at {1}</value></data>
   <data name="Due_None" xml:space="preserve"><value>No reading due</value></data>
+  <data name="Due_NothingBefore" xml:space="preserve"><value>Nothing due before {0:HH:mm}</value></data>
+  <data name="Due_NothingPlanned" xml:space="preserve"><value>Nothing else is planned today.</value></data>
   <data name="Due_Overdue" xml:space="preserve"><value>Reading overdue</value></data>
   <data name="Duration_HoursMinutes" xml:space="preserve"><value>{0}h {1}m</value></data>
   <data name="Error_InduceFirst" xml:space="preserve"><value>Induce before recording vitals.</value></data>
@@ -123,12 +112,30 @@
   <data name="Export_Saved" xml:space="preserve"><value>Saved {0}.</value></data>
   <data name="Flag_High" xml:space="preserve"><value>▲ High</value></data>
   <data name="Flag_Low" xml:space="preserve"><value>▼ Low</value></data>
+  <data name="Gantt_Accessible" xml:space="preserve"><value>Care through the day, {0} to {1}. {2}</value></data>
+  <data name="Gantt_Now" xml:space="preserve"><value>Now {0:HH:mm}</value></data>
   <data name="Greeting_Afternoon" xml:space="preserve"><value>Good afternoon</value></data>
   <data name="Greeting_AfternoonNamed" xml:space="preserve"><value>Good afternoon, Dr. {0}</value></data>
   <data name="Greeting_Evening" xml:space="preserve"><value>Good evening</value></data>
   <data name="Greeting_EveningNamed" xml:space="preserve"><value>Good evening, Dr. {0}</value></data>
   <data name="Greeting_Morning" xml:space="preserve"><value>Good morning</value></data>
   <data name="Greeting_MorningNamed" xml:space="preserve"><value>Good morning, Dr. {0}</value></data>
+  <data name="Hero_Ago" xml:space="preserve"><value>{0} ago</value></data>
+  <data name="Hero_BloodworkReady" xml:space="preserve"><value>Bloodwork ready</value></data>
+  <data name="Hero_In" xml:space="preserve"><value>in {0}</value></data>
+  <data name="Hero_InSurgery" xml:space="preserve"><value>In surgery · {0}</value></data>
+  <data name="Hero_Induced" xml:space="preserve"><value>Induced</value></data>
+  <data name="Hero_LastReading" xml:space="preserve"><value>Last reading</value></data>
+  <data name="Hero_LastValues" xml:space="preserve"><value>HR {0} · SpO₂ {1}%</value></data>
+  <data name="Hero_Late" xml:space="preserve"><value>{0} late</value></data>
+  <data name="Hero_NextDue" xml:space="preserve"><value>Next due</value></data>
+  <data name="Hero_NextReading" xml:space="preserve"><value>Next reading in {0}</value></data>
+  <data name="Hero_PetParent" xml:space="preserve"><value>Pet parent</value></data>
+  <data name="Hero_PrepStarted" xml:space="preserve"><value>started</value></data>
+  <data name="Hero_PrepStarts" xml:space="preserve"><value>Prep starts</value></data>
+  <data name="Hero_ReadingOverdue" xml:space="preserve"><value>Reading overdue {0}</value></data>
+  <data name="Hero_Team" xml:space="preserve"><value>Team</value></data>
+  <data name="Hero_UnderAnesthesia" xml:space="preserve"><value>under anesthesia</value></data>
   <data name="Insight_OnPlan" xml:space="preserve"><value>Prep ran {0} minutes on average today, on plan.</value></data>
   <data name="Insight_Over" xml:space="preserve"><value>Prep ran {0} minutes on average today, {1} minutes over plan.</value></data>
   <data name="Insight_Under" xml:space="preserve"><value>Prep ran {0} minutes on average today, {1} minutes under plan.</value></data>
@@ -228,6 +235,14 @@
   <data name="Parent_StatusRecovery" xml:space="preserve"><value>In recovery</value></data>
   <data name="Parent_StatusSurgery" xml:space="preserve"><value>In surgery</value></data>
   <data name="Parent_Updated" xml:space="preserve"><value>Last milestone · {0:dd MMM, HH:mm}</value></data>
+  <data name="PatientCard_2.Text" xml:space="preserve"><value>Procedure</value></data>
+  <data name="PatientCard_3.Text" xml:space="preserve"><value>Weight</value></data>
+  <data name="PatientCard_4.Text" xml:space="preserve"><value>Pet parent</value></data>
+  <data name="PatientCard_5.Text" xml:space="preserve"><value>Booked</value></data>
+  <data name="PatientCard_6.Text" xml:space="preserve"><value>Prep</value></data>
+  <data name="PatientCard_7.Text" xml:space="preserve"><value>Surgery</value></data>
+  <data name="PatientCard_8.Text" xml:space="preserve"><value>Recovery</value></data>
+  <data name="PatientCard_9.Text" xml:space="preserve"><value>Home</value></data>
   <data name="Patient_AgeShort" xml:space="preserve"><value>{0:0.#} y</value></data>
   <data name="Patient_AgeYears" xml:space="preserve"><value>{0:0.#} years</value></data>
   <data name="Patient_NotRecorded" xml:space="preserve"><value>Not recorded</value></data>
@@ -259,15 +274,17 @@
   <data name="Readings_LastRecorded" xml:space="preserve"><value>Last recorded {0:dd MMM · HH:mm}</value></data>
   <data name="Readings_None" xml:space="preserve"><value>No readings yet</value></data>
   <data name="Recap_AllSigned" xml:space="preserve"><value>Every record from today is signed.</value></data>
+  <data name="Recap_BookedCount" xml:space="preserve"><value>{0} booked</value></data>
+  <data name="Recap_BookedLead" xml:space="preserve"><value>{0} booked for today.</value></data>
+  <data name="Recap_InPreparation" xml:space="preserve"><value>{0} in preparation.</value></data>
   <data name="Recap_InSurgery" xml:space="preserve"><value>{0} patients in surgery.</value></data>
   <data name="Recap_OneInSurgery" xml:space="preserve"><value>1 patient in surgery.</value></data>
   <data name="Recap_Overdue" xml:space="preserve"><value>{0}'s reading is overdue</value></data>
-  <data name="Recap_Preparing" xml:space="preserve"><value>{0} waiting for preparation.</value></data>
   <data name="Recap_PreparingCount" xml:space="preserve"><value>{0} in preparation</value></data>
   <data name="Recap_Quiet" xml:space="preserve"><value>No patients on the board yet.</value></data>
   <data name="Recap_Recovering" xml:space="preserve"><value>{0} in recovery.</value></data>
   <data name="Recap_RecoveringCount" xml:space="preserve"><value>{0} recovering</value></data>
-  <data name="Recap_SignedCount" xml:space="preserve"><value>{0} signed today</value></data>
+  <data name="Recap_SignedOutCount" xml:space="preserve"><value>{0} signed out today</value></data>
   <data name="Record_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Back to today's patients</value></data>
   <data name="Record_10.Text" xml:space="preserve"><value>WEIGHT</value></data>
   <data name="Record_100.Content" xml:space="preserve"><value>Review record</value></data>
@@ -576,9 +593,15 @@
   <data name="Status_Recovery" xml:space="preserve"><value>Recovery</value></data>
   <data name="Status_Scheduled" xml:space="preserve"><value>Scheduled</value></data>
   <data name="Status_Signed" xml:space="preserve"><value>Signed</value></data>
+  <data name="Strip_Anesthesia" xml:space="preserve"><value>ANESTHESIA</value></data>
+  <data name="Strip_Booked" xml:space="preserve"><value>BOOKED</value></data>
   <data name="Strip_Empty" xml:space="preserve"><value>Vitals strip: no readings yet.</value></data>
+  <data name="Strip_Home" xml:space="preserve"><value>SIGNED OUT</value></data>
   <data name="Strip_LegendBp" xml:space="preserve"><value>BP</value></data>
   <data name="Strip_LegendHr" xml:space="preserve"><value>HR</value></data>
+  <data name="Strip_NotStarted" xml:space="preserve"><value>Not started</value></data>
+  <data name="Strip_Prep" xml:space="preserve"><value>IN PREP</value></data>
+  <data name="Strip_Recovery" xml:space="preserve"><value>IN RECOVERY</value></data>
   <data name="Strip_Summary" xml:space="preserve"><value>Vitals strip: {0} readings, last at {1:HH:mm}: heart rate {2}, blood pressure {3} over {4}, SpO2 {5}. Use the Table view for every value.</value></data>
   <data name="Task_Bloodwork" xml:space="preserve"><value>Bloodwork review</value></data>
   <data name="Task_DischargeCall" xml:space="preserve"><value>Discharge call</value></data>
@@ -600,6 +623,65 @@
   <data name="Task_Scheduled" xml:space="preserve"><value>Scheduled</value></data>
   <data name="Task_Strip" xml:space="preserve"><value>{0}-minute strip</value></data>
   <data name="Task_TasksBefore" xml:space="preserve"><value>{0} tasks before {1:HH:mm}</value></data>
+  <data name="TodayPage_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record observations</value></data>
+  <data name="TodayPage_10.Text" xml:space="preserve"><value>Prep</value></data>
+  <data name="TodayPage_11.Text" xml:space="preserve"><value>Anesthesia</value></data>
+  <data name="TodayPage_12.Text" xml:space="preserve"><value>Recovery</value></data>
+  <data name="TodayPage_13.Text" xml:space="preserve"><value>Waiting</value></data>
+  <data name="TodayPage_14.Text" xml:space="preserve"><value>Planned</value></data>
+  <data name="TodayPage_15.Text" xml:space="preserve"><value>Under care today</value></data>
+  <data name="TodayPage_16.Text" xml:space="preserve"><value>0h 0m</value></data>
+  <data name="TodayPage_17.Text" xml:space="preserve"><value>No care recorded yet today. The timeline fills in as patients are prepared.</value></data>
+  <data name="TodayPage_18.Text" xml:space="preserve"><value>Couldn't build today's timeline.</value></data>
+  <data name="TodayPage_19.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
+  <data name="TodayPage_2.Text" xml:space="preserve"><value>Record</value></data>
+  <data name="TodayPage_20.Text" xml:space="preserve"><value>Retry</value></data>
+  <data name="TodayPage_21.Text" xml:space="preserve"><value>Today's patients</value></data>
+  <data name="TodayPage_22.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Filter patients</value></data>
+  <data name="TodayPage_23.Content" xml:space="preserve"><value>All records</value></data>
+  <data name="TodayPage_24.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Patient cards</value></data>
+  <data name="TodayPage_25.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>New patient</value></data>
+  <data name="TodayPage_26.Text" xml:space="preserve"><value>New patient</value></data>
+  <data name="TodayPage_27.Text" xml:space="preserve"><value>Open agenda</value></data>
+  <data name="TodayPage_28.Text" xml:space="preserve"><value>Couldn't read saved records.</value></data>
+  <data name="TodayPage_29.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
+  <data name="TodayPage_3.Text" xml:space="preserve"><value>Start prep</value></data>
+  <data name="TodayPage_30.Text" xml:space="preserve"><value>Retry</value></data>
+  <data name="TodayPage_31.Text" xml:space="preserve"><value>Due next</value></data>
+  <data name="TodayPage_32.Content" xml:space="preserve"><value>Open agenda</value></data>
+  <data name="TodayPage_33.Text" xml:space="preserve"><value>Due</value></data>
+  <data name="TodayPage_34.Text" xml:space="preserve"><value>Task</value></data>
+  <data name="TodayPage_35.Text" xml:space="preserve"><value>Status</value></data>
+  <data name="TodayPage_36.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Due next</value></data>
+  <data name="TodayPage_37.Text" xml:space="preserve"><value>All caught up</value></data>
+  <data name="TodayPage_38.Text" xml:space="preserve"><value>Couldn't work out what is due.</value></data>
+  <data name="TodayPage_39.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
+  <data name="TodayPage_4.Text" xml:space="preserve"><value>Nothing in surgery</value></data>
+  <data name="TodayPage_40.Text" xml:space="preserve"><value>Retry</value></data>
+  <data name="TodayPage_41.Text" xml:space="preserve"><value>Where care time went</value></data>
+  <data name="TodayPage_42.Content" xml:space="preserve"><value>Coming soon</value></data>
+  <data name="TodayPage_43.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Open the care time report, coming soon</value></data>
+  <data name="TodayPage_44.Content" xml:space="preserve"><value>Coming soon</value></data>
+  <data name="TodayPage_45.Content" xml:space="preserve"><value>See the prep checklist</value></data>
+  <data name="TodayPage_45.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>See the prep checklist, coming soon</value></data>
+  <data name="TodayPage_46.Text" xml:space="preserve"><value>No care time recorded yet today.</value></data>
+  <data name="TodayPage_47.Text" xml:space="preserve"><value>Couldn't total today's care time.</value></data>
+  <data name="TodayPage_48.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
+  <data name="TodayPage_49.Text" xml:space="preserve"><value>Retry</value></data>
+  <data name="TodayPage_5.Text" xml:space="preserve"><value>No surgery is running and none is booked for later today.</value></data>
+  <data name="TodayPage_6.Text" xml:space="preserve"><value>Couldn't read the case in surgery.</value></data>
+  <data name="TodayPage_7.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
+  <data name="TodayPage_8.Text" xml:space="preserve"><value>Retry</value></data>
+  <data name="TodayPage_9.Text" xml:space="preserve"><value>Under care today</value></data>
+  <data name="Today_FilterAll" xml:space="preserve"><value>All</value></data>
+  <data name="Today_FilterInClinic" xml:space="preserve"><value>In clinic</value></data>
+  <data name="Today_FilterSignedOut" xml:space="preserve"><value>Signed out</value></data>
+  <data name="Today_NoneBody" xml:space="preserve"><value>New patients and today's bookings appear here.</value></data>
+  <data name="Today_NoneInClinic" xml:space="preserve"><value>No patients in the clinic right now.</value></data>
+  <data name="Today_NoneInClinicBody" xml:space="preserve"><value>Everyone booked today has gone home.</value></data>
+  <data name="Today_NoneSignedOut" xml:space="preserve"><value>No one has gone home yet today.</value></data>
+  <data name="Today_NoneSignedOutBody" xml:space="preserve"><value>Signed-out patients appear here.</value></data>
+  <data name="Today_NoneTitle" xml:space="preserve"><value>No one is booked in for today yet.</value></data>
   <data name="TopBarCluster_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Search, coming soon</value></data>
   <data name="TopBarCluster_2.Content" xml:space="preserve"><value>Coming soon</value></data>
   <data name="TopBarCluster_3.Text" xml:space="preserve"><value>Search patients, owners, records</value></data>
