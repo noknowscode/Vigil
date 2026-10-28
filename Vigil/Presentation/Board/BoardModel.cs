@@ -147,12 +147,6 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
         .Combine(Cases, Now)
         .Select(x => LiveCase.From(x.Item1, x.Item2, Preferences.ReadingInterval)!);
 
-    public IFeed<BoardAgenda> Agenda => Feed.Combine(Cases, Now.Select(n => n.Date)).Select(x => BoardAgenda.From(x.Item1, Clock.Now));
-    public IFeed<AgendaReminder> AgendaNext => Feed.Combine(Cases, Now).Select(x => AgendaReminder.From(x.Item1, x.Item2, Preferences.ReadingInterval)!);
-    public IFeed<CareDay> CareRhythm => Feed.Combine(Cases, Now.Select(n => new DateTimeOffset(n.Year, n.Month, n.Day, n.Hour, n.Minute, 0, n.Offset))).Select(x => CareDay.From(x.Item1, Clock.Now));
-    public IFeed<string> AgendaClock => Now.Select(n => n.ToString("HH:mm"));
-    public IFeed<string> AgendaDate => Now.Select(n => n.ToString("ddd, d MMM"));
-
     public IFeed<bool> CanOpenPatient => Cases.Select(cases => cases.Count > 0);
     public IFeed<string> PatientTabHint => Cases.Select(cases => BoardDestination.Patient(cases) is { } c
         ? Loc.F("Board_OpenPatient", "Open {0}’s care workspace", c.Patient.Name)

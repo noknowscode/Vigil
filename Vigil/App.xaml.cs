@@ -188,6 +188,7 @@ public partial class App : Application
     {
         views.Register(
             new ViewMap<BoardPage, BoardModel>(),
+            new ViewMap<AgendaPage, AgendaModel>(),
             new ViewMap<NewCasePage, NewCaseModel>(ResultData: typeof(CaseRef)),
             new DataViewMap<RecordPage, RecordModel, CaseRef>(),
             new DataViewMap<ParentPreviewPage, ParentPreviewModel, CaseRef>(),
@@ -197,7 +198,9 @@ public partial class App : Application
         );
 
         routes.Register(
-            new RouteMap("Board", View: views.FindByViewModel<BoardModel>(), IsDefault: true),
+            new RouteMap("Board", View: views.FindByViewModel<BoardModel>(), IsDefault: true,
+                // Fills the AgendaDock region; the same route opens as a flyout with "!Agenda" below 1120 px.
+                Nested: [new RouteMap("Agenda", View: views.FindByViewModel<AgendaModel>(), IsDefault: true)]),
             new RouteMap("NewCase", View: views.FindByViewModel<NewCaseModel>()),
             new RouteMap("Record", View: views.FindByViewModel<RecordModel>()),
             new RouteMap("ParentPreview", View: views.FindByViewModel<ParentPreviewModel>()),
