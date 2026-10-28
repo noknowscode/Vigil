@@ -1,20 +1,24 @@
 <!--
-  The sidebar as a left drawer below 760 px (route "!Menu"): a Flyout view, so the navigation flyout uses this
-  instance and its Toolkit drawer presenter. MenuModel hands each choice back to the shell.
+  The sidebar below 760 px (route "!Menu"): a Flyout view, so the navigation flyout uses this instance and its
+  presenter. It opens under the frame header's menu button. MenuModel hands each choice back to the shell.
+  The Toolkit LeftDrawerFlyoutPresenterStyle was tried first: with the default placement it rendered beside the
+  button, clipped; with Placement="Full" nothing showed (Toolkit 9.1.3, desktop). Unresolved Questions in the report.
 -->
 <Flyout x:Class="Vigil.Presentation.MenuFlyout"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Vigil.Controls"
-        xmlns:utu="using:Uno.Toolkit.UI"
-        Placement="Full">
+        Placement="BottomEdgeAlignedLeft">
   <Flyout.FlyoutPresenterStyle>
-    <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource LeftDrawerFlyoutPresenterStyle}">
-      <Setter Property="utu:DrawerFlyoutPresenter.DrawerLength" Value="272" />
+    <Style TargetType="FlyoutPresenter">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="MaxWidth" Value="320" />
+      <Setter Property="MaxHeight" Value="2000" />
+      <Setter Property="CornerRadius" Value="22" />
       <Setter Property="Background" Value="{ThemeResource PageBrush}" />
+      <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
     </Style>
   </Flyout.FlyoutPresenterStyle>
-  <Grid Background="{ThemeResource PageBrush}">
-    <controls:Sidebar />
-  </Grid>
+  <controls:Sidebar Width="256" />
 </Flyout>
