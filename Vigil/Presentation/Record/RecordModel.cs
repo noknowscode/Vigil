@@ -50,12 +50,29 @@ public partial record CaseView(
     public string LastMap { get; init; } = "—";
     public string LastRr { get; init; } = "—";
     public string Alert { get; init; } = "";
+    public StatusCard Care { get; init; } = null!;
+    public RecordChart Chart { get; init; } = null!;
+    public Spark HrSpark { get; init; } = Spark.Empty;
+    public Spark SpO2Spark { get; init; } = Spark.Empty;
+    public string ProcedureMeta { get; init; } = "";
+    public string OverdueTitle { get; init; } = "";
+    public string OverdueDetail { get; init; } = "";
+    public NextDoseText NextDose { get; init; } = NextDoseText.None;
+    public FluidsText Fluids { get; init; } = FluidsText.None;
+    public string CirculationDetail => Loc.F("Record_BpMap", "BP {0} · MAP {1}", LastBp, LastMap);
+    public string RespirationDetail => Loc.F("Record_EtCo2Rr", "EtCO₂ {0} mmHg · RR {1}", LastEtCo2, LastRr);
+    public bool HasNoReadings => ReadingCount == 0;
+
+    /// <summary>Pane behind the active record-nav item (the open pane, else Vitals; Preparation before induction).</summary>
+    public string ActiveSection { get; init; } = "Monitor";
     public bool HasAlert => Alert.Length > 0;
     public bool IsOverdue => IsAnesthetized && DueStateName == nameof(DueState.Overdue);
     public string MedicationSummary => HasNoDoses ? Loc.T("Drugs_None", "No doses recorded") : Doses[0].Drug;
     public string MedicationDetail => HasNoDoses ? Loc.T("Drugs_NoneDetail", "Medication history stays with this visit.") : $"{Doses[0].Volume} · {Doses[0].Route} · {Doses[0].Time}";
     public string Initials => string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(x => x[0]));
-    public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
+    public bool HasPhoto => !string.IsNullOrEmpty(HeroPhoto);
+    public bool HasNoPhoto => !HasPhoto;
+    public string PhotoName => Loc.F("Record_PhotoName", "{0}, {1}", Name, Breed);
 
     public bool IsRecovery => Status == CaseStatus.Recovery;
 
@@ -101,7 +118,11 @@ public partial record CaseView(
         _ => 0,
     };
 
-    public static CaseView From(Case c, DateTimeOffset now, TimeSpan interval)
+    public static CaseView From(Case c, DateTimeOffset now, TimeSpan interval) => From(c, now, interval, [], null);
+
+    /// <param name="formulary">Drugs with their redose intervals (Next dose card).</param>
+    /// <param name="openPane">The open side pane, or null: picks the active record-nav item.</param>
+    public static CaseView From(Case c, DateTimeOffset now, TimeSpan interval, IReadOnlyList<Drug> formulary, string? openPane)
     {
         var p = c.Patient;
         var due = Schedule.State(c, interval, now);
@@ -142,7 +163,17 @@ public partial record CaseView(
             Photo = PatientMedia.Photo(p), HeroPhoto = PatientMedia.Hero(p),
             Breed = string.IsNullOrWhiteSpace(p.Breed) ? Loc.Species(p.Species) : p.Breed,
             AgeOwner = $"{(p.AgeYears == 1 ? Loc.T("Patient_OneYear", "1 year") : Loc.F("Patient_AgeYears", "{0:0.#} years", p.AgeYears))} · {p.Owner}",
-            WeightDate = Loc.F("Weight_RecordedOn", "Recorded {0:dd MMM yyyy}", c.CreatedAt), VisitDate = $"{c.CreatedAt:dd MMM yyyy}",
+            WeightDate = Loc.F("Weight_RecordedAt", "Recorded {0:d MMM, HH:mm}", c.CreatedAt.ToOffset(now.Offset)), VisitDate = $"{c.CreatedAt:dd MMM yyyy}",
+            Care = StatusCard.From(c, now, interval),
+            Chart = RecordChart.From(c, now, interval),
+            HrSpark = Spark.From(c.Readings.Where(r => r.Hr is not null).Select(r => r.Hr!.Value).TakeLast(13).ToList(), 2.4),
+            SpO2Spark = Spark.From(c.Readings.Where(r => r.SpO2 is not null).Select(r => r.SpO2!.Value).TakeLast(13).ToList(), 4),
+            ProcedureMeta = RecordText.ProcedureMeta(c, now),
+            OverdueTitle = RecordText.OverdueTitle(c, now, interval),
+            OverdueDetail = RecordText.OverdueDetail(c, now, interval),
+            NextDose = RecordText.NextDose(c, now, formulary),
+            Fluids = RecordText.Fluids(c),
+            ActiveSection = openPane ?? (Stage.Of(c) is CareStage.Booked or CareStage.Prep ? "Preop" : "Monitor"),
             LastHr = c.Readings.LastOrDefault()?.Hr?.ToString() ?? "—",
             LastSpo2 = c.Readings.LastOrDefault()?.SpO2?.ToString() ?? "—",
             LastBp = c.Readings.LastOrDefault() is { } bp ? $"{bp.Sys?.ToString() ?? "—"}/{bp.Dia?.ToString() ?? "—"}" : "—",
@@ -207,7 +238,29 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     private IFeed<DateTimeOffset> Now { get; } = Feed.AsyncEnumerable(Clock.Ticks);
 
-    public IFeed<CaseView> Case => Feed.Combine(Source, Now).Select(x => CaseView.From(x.Item1, x.Item2, Preferences.ReadingInterval));
+    private IFeed<IImmutableList<Drug>> Drugs { get; } = Feed.Async(async ct => (IImmutableList<Drug>)await Formulary.GetDrugsAsync(ct));
+
+    // Pane and PaneOpen are states (always a value), so they join the combine without None propagation; the template
+    // reads the active nav item from Data (Parent.State does not resolve reliably inside a FeedView template).
+    public IFeed<CaseView> Case => Feed.Combine(Source, Now, Drugs, Pane, PaneOpen).Select(x =>
+        CaseView.From(x.Item1, x.Item2, Preferences.ReadingInterval, x.Item3, x.Item5 ? x.Item4 : null));
+
+    /// <summary>Patient name for the breadcrumb (outside the FeedView, so it shows in every state).</summary>
+    public IFeed<string> Name => Source.Select(c => c.Patient.Name);
+
+    /// <summary>Back: the previous page; when the frame has no history (opened from the sidebar or New patient), Today.</summary>
+    public async ValueTask GoBack(CancellationToken ct)
+    {
+        var response = await Navigator.NavigateBackAsync(this, cancellation: ct);
+        if (response?.Success != true)
+        {
+            await Navigator.NavigateRouteAsync(this, "-/" + ShellSection.Today, cancellation: ct);
+        }
+    }
+
+    /// <summary>Breadcrumb "Patients": the Patients list, as a sidebar pick would open it.</summary>
+    public async ValueTask OpenPatients(CancellationToken ct) =>
+        await Navigator.NavigateRouteAsync(this, "-/" + ShellSection.Patients, cancellation: ct);
 
     public IFeed<string> Title => Source.Select(c => $"{c.Patient.Name} · {c.Patient.WeightKg:0.0} kg · {c.Procedure}");
 

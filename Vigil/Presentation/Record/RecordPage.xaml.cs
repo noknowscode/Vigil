@@ -7,7 +7,6 @@ public sealed partial class RecordPage : Page
     public RecordPage()
     {
         InitializeComponent();
-        Loaded += (_, _) => DispatcherQueue.TryEnqueue(() => RecordTabs.SelectedItem = CareTab);
     }
     private void OnWorkspaceSizeChanged(object sender, SizeChangedEventArgs e)
     {

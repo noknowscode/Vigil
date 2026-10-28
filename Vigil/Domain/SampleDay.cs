@@ -42,16 +42,18 @@ public static class SampleDay
     private static Case Live(DateTimeOffset now)
     {
         var induced = now.AddMinutes(-72).AddSeconds(-26);
+        // The prototype's anesthesia record: 13 readings every 5 minutes from 11:36 to 12:36 (patient-care-values.md §3.4).
         var readings = ImmutableList.CreateBuilder<VitalsReading>();
-        var hr = new[] { 104, 98, 92, 90, 88, 92, 94, 90, 88, 86, 90, 92, 92, 94 };
+        int[] hr = [96, 94, 92, 90, 91, 93, 95, 94, 92, 93, 95, 96, 94];
+        int[] sys = [112, 108, 104, 102, 104, 106, 108, 110, 107, 106, 108, 110, 109];
+        int[] dia = [64, 62, 60, 58, 59, 60, 62, 63, 61, 60, 62, 64, 63];
+        int[] spo2 = [98, 98, 97, 97, 98, 97, 96, 97, 97, 98, 97, 97, 97];
         for (var i = 0; i < hr.Length; i++)
         {
-            var sys = 118 - i % 4 * 3;
-            var dia = 64 - i % 3 * 2;
-            readings.Add(new VitalsReading(induced.AddMinutes(5 * i + 1), hr[i], 12 - i % 3, 98 - i % 2, 38 + i % 4, sys, dia, null,
-                37.8m - i * 0.05m, 2.0m + (i > 2 ? 0.5m : 0), 1.0m, i < 2 ? Plane.Light : Plane.Surgical, i == 4 ? "First incision" : ""));
+            readings.Add(new VitalsReading(induced.AddMinutes(5 * i + 6), hr[i], 12 - (i + 1) % 3 * (i % 2), spo2[i], 38 + (i == hr.Length - 1 ? 0 : i % 3), sys[i], dia[i], null,
+                37.8m - i * 0.05m, 2.0m + (i > 2 ? 0.5m : 0), 1.0m, i < 2 ? Plane.Light : Plane.Surgical, i == 3 ? "First incision" : ""));
         }
-        var p = new Patient("Bella", Species.Canine, "English bulldog", 18.4m, 2m, "M. Lavoie") { PhotoAsset = "bella-english-bulldog.jpg", HeroAsset = "bella-outdoor-hero.jpg" };
+        var p = new Patient("Bella", Species.Canine, "English bulldog", 18.4m, 2m, "M. Lavoie") { PhotoAsset = "bella-english-bulldog.jpg", HeroAsset = "bella-field.jpg" };
         var c = Case.New(p, "Ovariohysterectomy (spay)", "Dr. Okafor", "S. Tremblay", induced.AddMinutes(-30));
         return c with
         {

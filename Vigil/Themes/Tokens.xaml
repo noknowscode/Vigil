@@ -61,6 +61,9 @@
       <SolidColorBrush x:Key="PhaseErrorSoftBrush" Color="#FBE6E2" />
       <SolidColorBrush x:Key="PhaseErrorSoftBorderBrush" Color="#F1C9C2" />
       <SolidColorBrush x:Key="LiveSoftInkBrush" Color="#3F5249" />
+      <!-- Patient care overdue banner (patient-care-values.md §1): icon tile and secondary text -->
+      <SolidColorBrush x:Key="AlertTileBrush" Color="#F6D2CC" />
+      <SolidColorBrush x:Key="AlertInkBrush" Color="#7A3B35" />
       <LinearGradientBrush x:Key="HeroGradientBrush" StartPoint="0,0.32" EndPoint="1,0.68">
         <GradientStop Color="#E5E8F9" Offset="0" />
         <GradientStop Color="#DCEAF0" Offset="0.52" />
@@ -145,6 +148,8 @@
       <SolidColorBrush x:Key="PhaseErrorSoftBrush" Color="#4A1712" />
       <SolidColorBrush x:Key="PhaseErrorSoftBorderBrush" Color="#6A2A23" />
       <SolidColorBrush x:Key="LiveSoftInkBrush" Color="#A9C2B5" />
+      <SolidColorBrush x:Key="AlertTileBrush" Color="#6A2A23" />
+      <SolidColorBrush x:Key="AlertInkBrush" Color="#E8B4AE" />
       <LinearGradientBrush x:Key="HeroGradientBrush" StartPoint="0,0.32" EndPoint="1,0.68">
         <GradientStop Color="#262B45" Offset="0" />
         <GradientStop Color="#1C2A30" Offset="0.52" />

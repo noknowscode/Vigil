@@ -34,7 +34,7 @@ public class CaseStoreTests
         var reloaded = await Store().GetAllAsync(CancellationToken.None);
         reloaded.Should().HaveCount(4);
         var bella = reloaded.Single(c => c.Patient.Name == "Bella");
-        bella.Readings.Should().HaveCount(14);
+        bella.Readings.Should().HaveCount(13);
         bella.Doses.Should().HaveCount(4);
         bella.Preop.Asa.Should().Be(2);
         bella.Status.Should().Be(CaseStatus.Anesthetized);

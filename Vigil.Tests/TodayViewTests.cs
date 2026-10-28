@@ -47,7 +47,7 @@ public class TodayViewTests
     public void SparklineScalesRecordedHeartRateIntoTheStrip()
     {
         var path = Today.Sparkline(Proto.Named("Bella").Readings);
-        path.Should().StartWith("M0,").And.EndWith(",2", "the last reading (94) is the highest of the last 12");
+        path.Should().StartWith("M0,").And.EndWith(",7.33", "the last reading (94) sits 2 bpm under the highest (96) of the last 12, range 90-96 in 16 px");
         path.Split('L').Should().HaveCount(12);
         Today.Sparkline([]).Should().BeEmpty();
     }

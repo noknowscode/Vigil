@@ -1,0 +1,126 @@
+<!--
+  Patient care record nav (patient-care-values.md §3.2): the sidebar's nav item (h40, radius 12, icon 18 + 14/20
+  Medium, gap 2) for Preparation, Vitals, Medical history, Lab results and Medications; each opens its side pane.
+  DataContext: the record FeedView's state (Data + Parent). The active item (Data.ActiveSection: the open pane, else
+  Vitals, Preparation before induction) gets the nav-on surface and a primary icon. The states live on this
+  UserControl's root, which exists before the binding delivers its first value; on a templated Button they would not
+  (the Button's template is applied after the value arrives, so the state never takes).
+-->
+<UserControl x:Class="Vigil.Controls.RecordNav"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utu="using:Uno.Toolkit.UI"
+             utu:VisualStateManagerExtensions.States="{Binding Data.ActiveSection}">
+  <StackPanel Spacing="2">
+    <VisualStateManager.VisualStateGroups>
+      <VisualStateGroup x:Name="ActiveStates">
+        <VisualState x:Name="None" />
+        <VisualState x:Name="Preop">
+          <VisualState.Setters>
+            <Setter Target="PreopSurface.Visibility" Value="Visible" />
+            <Setter Target="PreopIcon.Foreground" Value="{ThemeResource PrimaryBrush}" />
+          </VisualState.Setters>
+        </VisualState>
+        <VisualState x:Name="Monitor">
+          <VisualState.Setters>
+            <Setter Target="MonitorSurface.Visibility" Value="Visible" />
+            <Setter Target="MonitorIcon.Foreground" Value="{ThemeResource PrimaryBrush}" />
+          </VisualState.Setters>
+        </VisualState>
+        <VisualState x:Name="History">
+          <VisualState.Setters>
+            <Setter Target="HistorySurface.Visibility" Value="Visible" />
+            <Setter Target="HistoryIcon.Foreground" Value="{ThemeResource PrimaryBrush}" />
+          </VisualState.Setters>
+        </VisualState>
+        <VisualState x:Name="Labs">
+          <VisualState.Setters>
+            <Setter Target="LabsSurface.Visibility" Value="Visible" />
+            <Setter Target="LabsIcon.Foreground" Value="{ThemeResource PrimaryBrush}" />
+          </VisualState.Setters>
+        </VisualState>
+        <VisualState x:Name="Drugs">
+          <VisualState.Setters>
+            <Setter Target="DrugsSurface.Visibility" Value="Visible" />
+            <Setter Target="DrugsIcon.Foreground" Value="{ThemeResource PrimaryBrush}" />
+          </VisualState.Setters>
+        </VisualState>
+      </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+    <Grid>
+      <utu:ShadowContainer x:Name="PreopSurface" Visibility="Collapsed" Background="{ThemeResource Surface1Brush}" CornerRadius="12">
+        <utu:ShadowContainer.Shadows>
+          <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.06" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+        </utu:ShadowContainer.Shadows>
+        <!-- xaml-lint: allow card - tri-tone stroke of the active nav surface (nav-on) -->
+        <Border CornerRadius="12" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" />
+      </utu:ShadowContainer>
+      <Button x:Uid="RecordNav_1" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="Preop" AutomationProperties.Name="Preparation">
+        <Grid ColumnDefinitions="18,*">
+          <ContentControl x:Name="PreopIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconClipboardCheck}" />
+          <TextBlock x:Uid="RecordNav_2" Grid.Column="1" Text="Preparation" Style="{StaticResource TypeBodyMedium}" Margin="12,0,0,0" VerticalAlignment="Center" />
+        </Grid>
+      </Button>
+    </Grid>
+    <Grid>
+      <utu:ShadowContainer x:Name="MonitorSurface" Visibility="Collapsed" Background="{ThemeResource Surface1Brush}" CornerRadius="12">
+        <utu:ShadowContainer.Shadows>
+          <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.06" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+        </utu:ShadowContainer.Shadows>
+        <!-- xaml-lint: allow card - tri-tone stroke of the active nav surface (nav-on) -->
+        <Border CornerRadius="12" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" />
+      </utu:ShadowContainer>
+      <Button x:Uid="RecordNav_3" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="Monitor" AutomationProperties.Name="Vitals">
+        <Grid ColumnDefinitions="18,*">
+          <ContentControl x:Name="MonitorIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconActivity}" />
+          <TextBlock x:Uid="RecordNav_4" Grid.Column="1" Text="Vitals" Style="{StaticResource TypeBodyMedium}" Margin="12,0,0,0" VerticalAlignment="Center" />
+        </Grid>
+      </Button>
+    </Grid>
+    <Grid>
+      <utu:ShadowContainer x:Name="HistorySurface" Visibility="Collapsed" Background="{ThemeResource Surface1Brush}" CornerRadius="12">
+        <utu:ShadowContainer.Shadows>
+          <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.06" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+        </utu:ShadowContainer.Shadows>
+        <!-- xaml-lint: allow card - tri-tone stroke of the active nav surface (nav-on) -->
+        <Border CornerRadius="12" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" />
+      </utu:ShadowContainer>
+      <Button x:Uid="RecordNav_5" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="History" AutomationProperties.Name="Medical history">
+        <Grid ColumnDefinitions="18,*">
+          <ContentControl x:Name="HistoryIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconHistory}" />
+          <TextBlock x:Uid="RecordNav_6" Grid.Column="1" Text="Medical history" Style="{StaticResource TypeBodyMedium}" Margin="12,0,0,0" VerticalAlignment="Center" />
+        </Grid>
+      </Button>
+    </Grid>
+    <Grid>
+      <utu:ShadowContainer x:Name="LabsSurface" Visibility="Collapsed" Background="{ThemeResource Surface1Brush}" CornerRadius="12">
+        <utu:ShadowContainer.Shadows>
+          <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.06" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+        </utu:ShadowContainer.Shadows>
+        <!-- xaml-lint: allow card - tri-tone stroke of the active nav surface (nav-on) -->
+        <Border CornerRadius="12" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" />
+      </utu:ShadowContainer>
+      <Button x:Uid="RecordNav_7" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="Labs" AutomationProperties.Name="Lab results">
+        <Grid ColumnDefinitions="18,*">
+          <ContentControl x:Name="LabsIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconFlaskConical}" />
+          <TextBlock x:Uid="RecordNav_8" Grid.Column="1" Text="Lab results" Style="{StaticResource TypeBodyMedium}" Margin="12,0,0,0" VerticalAlignment="Center" />
+        </Grid>
+      </Button>
+    </Grid>
+    <Grid>
+      <utu:ShadowContainer x:Name="DrugsSurface" Visibility="Collapsed" Background="{ThemeResource Surface1Brush}" CornerRadius="12">
+        <utu:ShadowContainer.Shadows>
+          <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.06" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+        </utu:ShadowContainer.Shadows>
+        <!-- xaml-lint: allow card - tri-tone stroke of the active nav surface (nav-on) -->
+        <Border CornerRadius="12" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" />
+      </utu:ShadowContainer>
+      <Button x:Uid="RecordNav_9" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="Drugs" AutomationProperties.Name="Medications">
+        <Grid ColumnDefinitions="18,*">
+          <ContentControl x:Name="DrugsIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconPill}" />
+          <TextBlock x:Uid="RecordNav_10" Grid.Column="1" Text="Medications" Style="{StaticResource TypeBodyMedium}" Margin="12,0,0,0" VerticalAlignment="Center" />
+        </Grid>
+      </Button>
+    </Grid>
+  </StackPanel>
+</UserControl>
