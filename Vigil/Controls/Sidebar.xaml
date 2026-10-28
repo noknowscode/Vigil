@@ -216,18 +216,20 @@
     </Grid>
 
     <!-- User row: avatar initials, "Dr. <surname>" from Settings, role; account menu (disabled). -->
-    <Grid Grid.Row="7" Padding="8,6,4,0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+    <!-- No ColumnSpacing: it would still apply around the collapsed columns and widen the rail; the full-only parts carry the
+         10 px gap. The -2 margin keeps 8 + 34 px inside the 40 px rail; the account button's right margin restores pad R4. -->
+    <Grid Grid.Row="7" Padding="8,6,0,0" Margin="0,0,-2,0" ColumnDefinitions="Auto,*,Auto">
       <Border Style="{StaticResource AvatarCircle}">
         <TextBlock Text="{Binding ClinicianInitials}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" LineHeight="16" Foreground="{ThemeResource AvatarInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
       </Border>
       <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Wide=Visible, Layout={StaticResource ShellLayout}}">
-        <StackPanel Visibility="{Binding IsExpanded}" VerticalAlignment="Center">
+        <StackPanel Visibility="{Binding IsExpanded}" Margin="10,0,0,0" VerticalAlignment="Center">
           <TextBlock Text="{Binding ClinicianName}" Style="{StaticResource TypeBodyStrong}" TextTrimming="CharacterEllipsis" />
           <TextBlock x:Uid="Sidebar_44" Text="Veterinarian" Style="{StaticResource TypeCaption}" />
         </StackPanel>
       </Grid>
       <Grid Grid.Column="2" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Wide=Visible, Layout={StaticResource ShellLayout}}">
-        <Grid Visibility="{Binding IsExpanded}" Background="Transparent">
+        <Grid Visibility="{Binding IsExpanded}" Background="Transparent" Margin="10,0,6,0">
           <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_45" Content="Coming soon" /></ToolTipService.ToolTip>
           <Button x:Uid="Sidebar_46" Style="{StaticResource ButtonIconGhost}" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="Account menu, coming soon">
             <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconEllipsisVertical}" />
