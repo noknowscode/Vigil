@@ -65,7 +65,7 @@ public sealed partial class CareRuler : UserControl
                 Place(_ticks, new Border { Width = hour ? 10 : 5, Height = 1, Background = line }, hour ? 34 : 39, y);
                 if (hour)
                 {
-                    Place(_ticks, Label(day.Start.AddMinutes(q * 15).ToString("HH:mm"), 10, quiet, true), 0, y - 17);
+                    Place(_ticks, Label(day.Start.AddMinutes(q * 15).ToString("HH:mm"), 12, quiet, true), 0, y - 17);
                     Place(_ticks, new Border { Width = width - 52, Height = 1, Background = line, Opacity = .45 }, 52, y);
                 }
             }
@@ -92,23 +92,27 @@ public sealed partial class CareRuler : UserControl
                 name.FontWeight = Microsoft.UI.Text.FontWeights.SemiBold;
                 name.TextTrimming = TextTrimming.CharacterEllipsis;
                 content.Children.Add(name);
-                if (slot.Height >= 66) content.Children.Add(Label(span.PhaseLabel, 10, quiet));
-                var time = Label(span.Times, 10, quiet); time.TextTrimming = TextTrimming.CharacterEllipsis;
-                content.Children.Add(time);
+                // Short blocks fit the name only; the times stay in the tooltip and the accessible name.
+                if (slot.Height >= 76) content.Children.Add(Label(span.PhaseLabel, 12, quiet));
+                if (slot.Height >= 56)
+                {
+                    var time = Label(span.Times, 12, quiet); time.TextTrimming = TextTrimming.CharacterEllipsis;
+                    content.Children.Add(time);
+                }
                 button.Content = content;
                 AutomationProperties.SetName(button, span.AccessibleName);
                 ToolTipService.SetToolTip(button, span.AccessibleName);
             }
             if (day.IsEmpty)
             {
-                var empty = Label(Loc.T("Ruler_Empty", "Care intervals appear after anaesthesia begins."), 12, quiet);
+                var empty = Label(Loc.T("Ruler_Empty", "Care intervals appear after anaesthesia begins."), 13, quiet);
                 empty.TextWrapping = TextWrapping.Wrap; empty.Width = width - 72;
                 Place(_present, empty, 64, 36);
             }
             var nowY = day.NowTop + 22;
             Place(_present, new Border { Width = width - 43, Height = 1.5, Background = primary }, 43, nowY);
             Place(_present, new Ellipse { Width = 6, Height = 6, Fill = primary }, 40, nowY - 2.5);
-            var marker = new Border { Background = primary, CornerRadius = new CornerRadius(5), Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), 10, Ink("OnPrimaryBrush", "#FFFEF9")) };
+            var marker = new Border { Background = primary, CornerRadius = new CornerRadius(5), Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), 12, Ink("OnPrimaryBrush", "#FFFEF9")) };
             Place(_present, marker, 0, nowY - 10);
         }
         finally { _drawing = false; }

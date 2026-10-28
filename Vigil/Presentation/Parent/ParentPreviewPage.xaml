@@ -7,7 +7,7 @@
     </Grid>
     <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled">
       <StackPanel MaxWidth="460" Padding="16,20,16,32" Spacing="16">
-        <Border Background="{ThemeResource CloverSage}" CornerRadius="12" Padding="12"><TextBlock x:Uid="ParentPreview_4" Text="Clinic preview · remote sharing is not connected" Style="{StaticResource CloverBody}" FontSize="12" TextAlignment="Center" /></Border>
+        <Border Background="{ThemeResource CloverSage}" CornerRadius="12" Padding="12"><TextBlock x:Uid="ParentPreview_4" Text="Clinic preview · remote sharing is not connected" Style="{StaticResource CloverBody}" FontSize="13" TextAlignment="Center" /></Border>
         <mvux:FeedView x:Name="ParentFeed" Source="{Binding Patient}" RefreshingState="None" IsTabStop="False">
           <mvux:FeedView.ValueTemplate><DataTemplate>
             <StackPanel Spacing="16">
@@ -16,9 +16,9 @@
                   <Grid Height="248" CornerRadius="23,23,0,0" Background="{ThemeResource CloverSky}">
                     <controls:PetBackdrop Photo="{Binding Data.Photo}" />
                     <TextBlock Text="{Binding Data.Initial}" Style="{StaticResource CloverDisplay}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Data.HasNoPhoto}" />
-                    <Border CornerRadius="16" Background="{ThemeResource CloverGlass}" Padding="12,7" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16"><TextBlock Text="{Binding Data.Status}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="12" /></Border>
+                    <Border CornerRadius="16" Background="{ThemeResource CloverGlass}" Padding="12,7" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16"><TextBlock Text="{Binding Data.Status}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="13" /></Border>
                   </Grid>
-                  <StackPanel Padding="22" Spacing="8"><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverDisplay}" FontSize="38" /><TextBlock Text="{Binding Data.Breed}" Style="{StaticResource CloverBody}" /><TextBlock Text="{Binding Data.Updated}" Style="{StaticResource CloverLabel}" CharacterSpacing="0" FontSize="11" /></StackPanel>
+                  <StackPanel Padding="22" Spacing="8"><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverDisplay}" FontSize="38" /><TextBlock Text="{Binding Data.Breed}" Style="{StaticResource CloverBody}" /><TextBlock Text="{Binding Data.Updated}" Style="{StaticResource CloverLabel}" CharacterSpacing="0" FontSize="13" /></StackPanel>
                 </StackPanel>
               </Border>
               <Border Style="{StaticResource CloverCard}" Padding="22">
@@ -28,18 +28,18 @@
                   <ItemsControl ItemsSource="{Binding Data.Milestones}"><ItemsControl.ItemTemplate><DataTemplate>
                     <Grid ColumnDefinitions="32,*,Auto" Padding="0,12" ColumnSpacing="10" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="0,0,0,1">
                       <Border Width="28" Height="28" CornerRadius="14" Background="{ThemeResource CloverSage}" VerticalAlignment="Top"><TextBlock Text="{Binding Marker}" FontSize="17" Foreground="{ThemeResource PrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
-                      <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="{Binding Label}" Style="{StaticResource CloverTitle}" FontSize="14" /><TextBlock Text="{Binding Detail}" Style="{StaticResource CloverBody}" FontSize="12" /></StackPanel>
-                      <TextBlock Grid.Column="2" Text="{Binding Time}" Style="{StaticResource CloverBody}" FontSize="11" />
+                      <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="{Binding Label}" Style="{StaticResource CloverTitle}" FontSize="14" /><TextBlock Text="{Binding Detail}" Style="{StaticResource CloverBody}" FontSize="13" /></StackPanel>
+                      <TextBlock Grid.Column="2" Text="{Binding Time}" Style="{StaticResource CloverBody}" FontSize="13" />
                     </Grid>
                   </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
-                  <TextBlock x:Uid="ParentPreview_6" Text="Milestones are entered by the team. This is not a live monitor." Style="{StaticResource CloverBody}" FontSize="12" />
+                  <TextBlock x:Uid="ParentPreview_6" Text="Milestones are entered by the team. This is not a live monitor." Style="{StaticResource CloverBody}" FontSize="13" />
                 </StackPanel>
               </Border>
               <Border Style="{StaticResource CloverCard}" Background="{ThemeResource CloverLime}" Padding="22">
                 <StackPanel Spacing="12"><TextBlock x:Uid="ParentPreview_7" Text="WHAT HAPPENS NEXT" Style="{StaticResource CloverLabel}" /><TextBlock x:Uid="ParentPreview_8" Text="One step at a time." Style="{StaticResource CloverHeading}" FontSize="25" /><TextBlock Text="{Binding Data.Next}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
               </Border>
               <Expander x:Uid="ParentPreview_9" Header="Your visit &amp; care team" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"><StackPanel Spacing="10"><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource CloverTitle}" /><TextBlock Text="{Binding Data.Team}" Style="{StaticResource CloverBody}" /><TextBlock x:Uid="ParentPreview_10" Text="For a personal update, contact your clinic using the details on your appointment confirmation." Style="{StaticResource CloverBody}" /></StackPanel></Expander>
-              <TextBlock x:Uid="ParentPreview_11" Text="Care, continued. For the ones you love." Style="{StaticResource CloverBody}" FontSize="12" TextAlignment="Center" Margin="0,8" />
+              <TextBlock x:Uid="ParentPreview_11" Text="Care, continued. For the ones you love." Style="{StaticResource CloverBody}" FontSize="13" TextAlignment="Center" Margin="0,8" />
             </StackPanel>
           </DataTemplate></mvux:FeedView.ValueTemplate>
           <mvux:FeedView.ProgressTemplate><DataTemplate><ProgressRing x:Uid="ParentPreview_12" IsActive="True" Width="32" Height="32" AutomationProperties.Name="Loading care updates" /></DataTemplate></mvux:FeedView.ProgressTemplate>

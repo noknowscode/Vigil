@@ -17,15 +17,15 @@
 
           <Grid ColumnDefinitions="*,Auto"><TextBlock x:Uid="Board_23" Text="CARE, THROUGH THE DAY" Style="{StaticResource CloverLabel}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" /><Button x:Uid="Board_24" x:Name="AgendaClose" Grid.Column="1" Style="{StaticResource CloverQuiet}" Visibility="Collapsed" Click="OnCloseAgenda" AutomationProperties.Name="Close agenda"><FontIcon Glyph="&#xE711;" FontSize="16" Foreground="{ThemeResource PrimaryBrush}" /></Button></Grid>
           <TextBlock x:Uid="Board_25" Grid.Row="1" Text="Today's agenda" Style="{StaticResource CloverHeading}" FontSize="25" />
-          <Grid Grid.Row="2" ColumnDefinitions="*,Auto"><TextBlock Text="{Binding AgendaDate}" Style="{StaticResource CloverBody}" /><Border Grid.Column="1" Background="{ThemeResource CloverSage}" CornerRadius="12" Padding="10,3"><TextBlock Text="{Binding AgendaClock}" FontFamily="{StaticResource CodeFontFamily}" FontSize="12" Foreground="{ThemeResource PrimaryBrush}" /></Border></Grid>
+          <Grid Grid.Row="2" ColumnDefinitions="*,Auto"><TextBlock Text="{Binding AgendaDate}" Style="{StaticResource CloverBody}" /><Border Grid.Column="1" Background="{ThemeResource CloverSage}" CornerRadius="12" Padding="10,3"><TextBlock Text="{Binding AgendaClock}" FontFamily="{StaticResource CodeFontFamily}" FontSize="13" Foreground="{ThemeResource PrimaryBrush}" /></Border></Grid>
         </Grid>
         <ScrollViewer x:Name="AgendaScroll" Grid.Row="1" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
           <StackPanel Padding="8,6,8,24" Spacing="20">
             <mvux:FeedView x:Name="AgendaFeed" Source="{Binding CareRhythm}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch">
               <mvux:FeedView.ValueTemplate><DataTemplate>
                 <StackPanel Spacing="18">
-                  <Grid ColumnDefinitions="*,Auto"><TextBlock x:Uid="Board_42" Text="RECORDED INTERVALS" Style="{StaticResource CloverLabel}" FontSize="10" /><TextBlock Grid.Column="1" Text="{Binding Data.Range}" Style="{StaticResource CloverBody}" FontFamily="{StaticResource CodeFontFamily}" FontSize="10" /></Grid>
-                  <StackPanel Orientation="Horizontal" Spacing="14"><StackPanel Orientation="Horizontal" Spacing="6"><Border Width="10" Height="10" CornerRadius="3" Background="{ThemeResource CloverLavender}" BorderBrush="{ThemeResource CloverLavenderEdge}" BorderThickness="1" /><TextBlock x:Uid="Board_43" Text="Anaesthesia" Style="{StaticResource CloverBody}" FontSize="10" /></StackPanel><StackPanel Orientation="Horizontal" Spacing="6"><Border Width="10" Height="10" CornerRadius="3" Background="{ThemeResource CloverMint}" BorderBrush="{ThemeResource CloverMintEdge}" BorderThickness="1" /><TextBlock x:Uid="Board_44" Text="Recovery" Style="{StaticResource CloverBody}" FontSize="10" /></StackPanel></StackPanel>
+                  <Grid ColumnDefinitions="*,Auto"><TextBlock x:Uid="Board_42" Text="RECORDED INTERVALS" Style="{StaticResource CloverLabel}" FontSize="12" /><TextBlock Grid.Column="1" Text="{Binding Data.Range}" Style="{StaticResource CloverBody}" FontFamily="{StaticResource CodeFontFamily}" FontSize="12" /></Grid>
+                  <StackPanel Orientation="Horizontal" Spacing="14"><StackPanel Orientation="Horizontal" Spacing="6"><Border Width="10" Height="10" CornerRadius="3" Background="{ThemeResource CloverLavender}" BorderBrush="{ThemeResource CloverLavenderEdge}" BorderThickness="1" /><TextBlock x:Uid="Board_43" Text="Anaesthesia" Style="{StaticResource CloverBody}" FontSize="12" /></StackPanel><StackPanel Orientation="Horizontal" Spacing="6"><Border Width="10" Height="10" CornerRadius="3" Background="{ThemeResource CloverMint}" BorderBrush="{ThemeResource CloverMintEdge}" BorderThickness="1" /><TextBlock x:Uid="Board_44" Text="Recovery" Style="{StaticResource CloverBody}" FontSize="12" /></StackPanel></StackPanel>
                   <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled"><controls:CareRuler Data="{Binding Data}" /></ScrollViewer>
                 </StackPanel>
               </DataTemplate></mvux:FeedView.ValueTemplate>
@@ -35,17 +35,17 @@
             <mvux:FeedView Source="{Binding Agenda}" RefreshingState="None" IsTabStop="False">
               <mvux:FeedView.ValueTemplate><DataTemplate>
                 <StackPanel Spacing="10">
-                  <Grid ColumnDefinitions="*,Auto"><TextBlock x:Uid="Board_34" Text="IN PREPARATION" Style="{StaticResource CloverLabel}" /><TextBlock x:Uid="Board_35" Grid.Column="1" Text="UNTIMED" Style="{StaticResource CloverLabel}" FontSize="10" /></Grid>
+                  <Grid ColumnDefinitions="*,Auto"><TextBlock x:Uid="Board_34" Text="IN PREPARATION" Style="{StaticResource CloverLabel}" /><TextBlock x:Uid="Board_35" Grid.Column="1" Text="UNTIMED" Style="{StaticResource CloverLabel}" FontSize="12" /></Grid>
                   <muxc:ItemsRepeater ItemsSource="{Binding Data.Preparing}"><muxc:ItemsRepeater.ItemTemplate><DataTemplate>
                     <Button Style="{StaticResource CloverAgendaItem}" Background="{ThemeResource SurfaceBrush}" CornerRadius="22" Margin="0,0,0,8" Padding="12" HorizontalAlignment="Stretch" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding}" AutomationProperties.Name="{Binding AccessibleName}">
                       <Grid ColumnDefinitions="44,*,16" ColumnSpacing="11">
                         <Grid Width="44" Height="44" CornerRadius="22" Background="{ThemeResource CloverSage}" VerticalAlignment="Center"><controls:PetBackdrop Photo="{Binding Photo}" /><TextBlock Text="{Binding Initial}" Visibility="{Binding HasNoPhoto}" Foreground="{ThemeResource PrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" /></Grid>
-                        <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="{Binding Stage}" Style="{StaticResource CloverBody}" FontSize="10" LineHeight="14" /><TextBlock Text="{Binding Name}" FontFamily="{StaticResource CloverEditorialFont}" FontSize="22" Foreground="{ThemeResource OnSurfaceBrush}" /><TextBlock Text="{Binding Detail}" Style="{StaticResource CloverBody}" FontSize="11" LineHeight="16" /></StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="{Binding Stage}" Style="{StaticResource CloverBody}" FontSize="12" LineHeight="14" /><TextBlock Text="{Binding Name}" FontFamily="{StaticResource CloverEditorialFont}" FontSize="22" Foreground="{ThemeResource OnSurfaceBrush}" /><TextBlock Text="{Binding Detail}" Style="{StaticResource CloverBody}" FontSize="13" LineHeight="16" /></StackPanel>
                         <FontIcon Grid.Column="2" Glyph="&#xE72A;" FontSize="14" Foreground="{ThemeResource PrimaryBrush}" VerticalAlignment="Center" />
                       </Grid>
                     </Button>
                   </DataTemplate></muxc:ItemsRepeater.ItemTemplate></muxc:ItemsRepeater>
-                  <TextBlock x:Uid="Board_36" Text="No patients waiting for preparation." Style="{StaticResource CloverBody}" FontSize="12" Visibility="{Binding Data.NoPreparing}" />
+                  <TextBlock x:Uid="Board_36" Text="No patients waiting for preparation." Style="{StaticResource CloverBody}" FontSize="13" Visibility="{Binding Data.NoPreparing}" />
                 </StackPanel>
               </DataTemplate></mvux:FeedView.ValueTemplate>
               <mvux:FeedView.ErrorTemplate><DataTemplate><Border /></DataTemplate></mvux:FeedView.ErrorTemplate>
@@ -58,18 +58,18 @@
                   <Grid Padding="16,14" ColumnDefinitions="50,*,16" ColumnSpacing="12" MinHeight="92">
                     <Border Width="50" Height="50" CornerRadius="25" BorderBrush="{ThemeResource SurfaceBrush}" BorderThickness="2" VerticalAlignment="Center"><Grid CornerRadius="23" Background="{ThemeResource CloverCream}"><controls:PetBackdrop Photo="{Binding Data.Photo}" /><TextBlock Text="{Binding Data.Initial}" Visibility="{Binding Data.HasNoPhoto}" FontFamily="{StaticResource CloverEditorialFont}" FontSize="24" Foreground="{ThemeResource PrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" /></Grid></Border>
                     <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
-                      <StackPanel Orientation="Horizontal" Spacing="5"><FontIcon Glyph="&#xE7BA;" FontSize="11" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /><TextBlock Text="{Binding Data.Label}" FontSize="10" Foreground="{ThemeResource PrimaryBrush}" Visibility="{Binding Data.IsWaiting}" /><TextBlock Text="{Binding Data.Label}" FontSize="10" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /></StackPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="5"><FontIcon Glyph="&#xE7BA;" FontSize="13" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /><TextBlock Text="{Binding Data.Label}" FontSize="12" Foreground="{ThemeResource PrimaryBrush}" Visibility="{Binding Data.IsWaiting}" /><TextBlock Text="{Binding Data.Label}" FontSize="12" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /></StackPanel>
                       <TextBlock Text="{Binding Data.Name}" FontFamily="{StaticResource CloverEditorialFont}" FontSize="25" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis" />
-                      <TextBlock Text="{Binding Data.Detail}" Style="{StaticResource CloverBody}" FontSize="11" LineHeight="16" />
+                      <TextBlock Text="{Binding Data.Detail}" Style="{StaticResource CloverBody}" FontSize="13" LineHeight="16" />
                     </StackPanel>
                     <FontIcon Grid.Column="2" Glyph="&#xE72A;" FontSize="15" Foreground="{ThemeResource PrimaryBrush}" VerticalAlignment="Center" />
                   </Grid>
                 </Button>
               </DataTemplate></mvux:FeedView.ValueTemplate>
-              <mvux:FeedView.NoneTemplate><DataTemplate><TextBlock x:Uid="Board_32" Text="No observation reminders right now." Style="{StaticResource CloverBody}" FontSize="12" /></DataTemplate></mvux:FeedView.NoneTemplate>
-              <mvux:FeedView.ErrorTemplate><DataTemplate><TextBlock x:Uid="Board_33" Text="Observation reminders unavailable." Style="{StaticResource CloverBody}" FontSize="12" /></DataTemplate></mvux:FeedView.ErrorTemplate>
+              <mvux:FeedView.NoneTemplate><DataTemplate><TextBlock x:Uid="Board_32" Text="No observation reminders right now." Style="{StaticResource CloverBody}" FontSize="13" /></DataTemplate></mvux:FeedView.NoneTemplate>
+              <mvux:FeedView.ErrorTemplate><DataTemplate><TextBlock x:Uid="Board_33" Text="Observation reminders unavailable." Style="{StaticResource CloverBody}" FontSize="13" /></DataTemplate></mvux:FeedView.ErrorTemplate>
             </mvux:FeedView>
-        <Border Grid.Row="3" Padding="16,16" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineBrush}" Background="{ThemeResource CloverCanvas}"><StackPanel Orientation="Horizontal" Spacing="8"><controls:CareMark Width="16" Height="19" /><TextBlock x:Uid="Board_37" Text="Gaps indicate no recorded care." Style="{StaticResource CloverBody}" FontSize="11" /></StackPanel></Border>
+        <Border Grid.Row="3" Padding="16,16" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineBrush}" Background="{ThemeResource CloverCanvas}"><StackPanel Orientation="Horizontal" Spacing="8"><controls:CareMark Width="16" Height="19" /><TextBlock x:Uid="Board_37" Text="Gaps indicate no recorded care." Style="{StaticResource CloverBody}" FontSize="13" /></StackPanel></Border>
       </Grid>
     </Border>
       <Border x:Name="HomeShell" Grid.Column="1" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="1" CornerRadius="32">
@@ -89,11 +89,11 @@
               <Grid Padding="10" SizeChanged="OnLiveBandSizeChanged" RowDefinitions="Auto,Auto" RowSpacing="10" ColumnSpacing="20" CornerRadius="23" Background="{ThemeResource CloverLiveBand}">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="1.2*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
                                 <Border Background="{ThemeResource CloverGlass}" CornerRadius="15" Padding="12" BorderBrush="{ThemeResource CloverGlassEdge}" BorderThickness="1">
-                  <StackPanel Spacing="2"><TextBlock x:Uid="Board_9" Text="IN SURGERY" Style="{StaticResource CloverLabel}" FontSize="9" LineHeight="16" Foreground="{ThemeResource CloverLiveInk}" /><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverHeading}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="26" /><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource CloverLiveInk}" FontSize="13" /><TextBlock Text="{Binding Data.Others}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource CloverLiveInk}" Visibility="{Binding Data.HasOthers}" /></StackPanel>
+                  <StackPanel Spacing="2"><TextBlock x:Uid="Board_9" Text="IN SURGERY" Style="{StaticResource CloverLabel}" FontSize="12" LineHeight="16" Foreground="{ThemeResource CloverLiveInk}" /><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverHeading}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="26" /><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource CloverLiveInk}" FontSize="13" /><TextBlock Text="{Binding Data.Others}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource CloverLiveInk}" Visibility="{Binding Data.HasOthers}" /></StackPanel>
                 </Border>
                 <Grid Grid.Column="1" ColumnDefinitions="*,*" ColumnSpacing="16" VerticalAlignment="Center" Margin="8,6,10,6">
-                  <StackPanel Spacing="5"><TextBlock x:Uid="Board_21" Text="Elapsed · h:mm" FontSize="10" Foreground="{ThemeResource CloverLiveInk}" /><TextBlock Text="{Binding Data.Elapsed}" Style="{StaticResource CodeTextStyle}" FontSize="30" Foreground="{ThemeResource PrimaryBrush}" /></StackPanel>
-                  <StackPanel Grid.Column="1" Spacing="7"><TextBlock Text="{Binding Data.NextLabel}" FontSize="11" Foreground="{ThemeResource CloverLiveInk}" Visibility="{Binding Data.IsWaiting}" /><TextBlock Text="{Binding Data.NextLabel}" FontSize="11" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /><TextBlock Text="{Binding Data.NextText}" Style="{StaticResource CodeTextStyle}" FontSize="25" Foreground="{ThemeResource PrimaryBrush}" /></StackPanel>
+                  <StackPanel Spacing="5"><TextBlock x:Uid="Board_21" Text="Elapsed · h:mm" FontSize="12" Foreground="{ThemeResource CloverLiveInk}" /><TextBlock Text="{Binding Data.Elapsed}" Style="{StaticResource CodeTextStyle}" FontSize="30" Foreground="{ThemeResource PrimaryBrush}" /></StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="7"><TextBlock Text="{Binding Data.NextLabel}" FontSize="13" Foreground="{ThemeResource CloverLiveInk}" Visibility="{Binding Data.IsWaiting}" /><TextBlock Text="{Binding Data.NextLabel}" FontSize="13" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /><TextBlock Text="{Binding Data.NextText}" Style="{StaticResource CodeTextStyle}" FontSize="25" Foreground="{ThemeResource PrimaryBrush}" /></StackPanel>
                 </Grid>
               </Grid>
             </Button>
@@ -122,14 +122,14 @@
                         <TextBlock x:Uid="Board_19" Text="PHOTO NOT ADDED" Style="{StaticResource CloverLabel}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                       </StackPanel>
                       <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" CornerRadius="16" Background="{ThemeResource CloverGlass}" Padding="12,7">
-                        <TextBlock Text="{Binding StatusText}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="12" />
+                        <TextBlock Text="{Binding StatusText}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="13" />
                       </Border>
                       <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="14" Background="{ThemeResource CloverGlass}" Width="36" Height="36" CornerRadius="18"><FontIcon Glyph="&#xE8A7;" FontSize="14" Foreground="{ThemeResource PrimaryBrush}" /></Border>
                     </Grid>
                     <StackPanel Padding="20,18,20,20" Spacing="14">
                       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                         <TextBlock Text="{Binding Name}" FontFamily="{StaticResource CloverEditorialFont}" FontSize="32" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis" />
-                        <Border Grid.Column="1" Background="{ThemeResource CloverSage}" CornerRadius="10" Padding="8,4" VerticalAlignment="Center"><TextBlock Text="{Binding Asa}" FontFamily="{StaticResource CodeFontFamily}" FontSize="10" Foreground="{ThemeResource PrimaryBrush}" /></Border>
+                        <Border Grid.Column="1" Background="{ThemeResource CloverSage}" CornerRadius="10" Padding="8,4" VerticalAlignment="Center"><TextBlock Text="{Binding Asa}" FontFamily="{StaticResource CodeFontFamily}" FontSize="12" Foreground="{ThemeResource PrimaryBrush}" /></Border>
                       </Grid>
                       <Grid ColumnDefinitions=".8*,1.4*,.85*" ColumnSpacing="10">
                         <StackPanel Spacing="4"><TextBlock x:Uid="Board_27" Text="SPECIES" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding SpeciesText}" Style="{StaticResource CloverBody}" FontSize="13" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
@@ -137,13 +137,13 @@
                         <StackPanel Grid.Column="2" Spacing="4" ToolTipService.ToolTip="{Binding WeightDate}"><TextBlock x:Uid="Board_38" Text="WEIGHT" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Weight}" Style="{StaticResource CloverBody}" FontSize="13" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
                       </Grid>
                       <Grid ColumnDefinitions=".8*,2.25*" ColumnSpacing="10">
-                        <StackPanel Spacing="4"><TextBlock x:Uid="Board_39" Text="AGE" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Age}" Style="{StaticResource CloverBody}" FontSize="12" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
-                        <StackPanel Grid.Column="1" Spacing="4"><TextBlock x:Uid="Board_40" Text="PET PARENT" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Owner}" Style="{StaticResource CloverBody}" FontSize="12" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
+                        <StackPanel Spacing="4"><TextBlock x:Uid="Board_39" Text="AGE" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Age}" Style="{StaticResource CloverBody}" FontSize="13" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4"><TextBlock x:Uid="Board_40" Text="PET PARENT" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Owner}" Style="{StaticResource CloverBody}" FontSize="13" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
                       </Grid>
                       <Border BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="0,1,0,0" Padding="0,12,0,0">
                         <StackPanel Spacing="6"><TextBlock x:Uid="Board_41" Text="PROCEDURE" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Procedure}" FontFamily="{StaticResource CloverEditorialFont}" FontStyle="Italic" FontSize="19" LineHeight="25" TextWrapping="Wrap" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
                       </Border>
-                      <StackPanel Spacing="5"><TextBlock Text="{Binding TimeText}" Style="{StaticResource CloverLabel}" FontFamily="{StaticResource CodeFontFamily}" FontSize="10" CharacterSpacing="0" /><TextBlock Text="{Binding Team}" Style="{StaticResource CloverBody}" FontSize="11" /></StackPanel>
+                      <StackPanel Spacing="5"><TextBlock Text="{Binding TimeText}" Style="{StaticResource CloverLabel}" FontFamily="{StaticResource CodeFontFamily}" FontSize="12" CharacterSpacing="0" /><TextBlock Text="{Binding Team}" Style="{StaticResource CloverBody}" FontSize="13" /></StackPanel>
                     </StackPanel>
                   </StackPanel>
                 </Button>
@@ -229,7 +229,7 @@
           </mvux:FeedView.ErrorTemplate>
 
         </mvux:FeedView>
-        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Margin="0,8,0,0"><controls:CareMark Width="15" Height="17" /><TextBlock x:Uid="Board_20" Text="Care, continued.  ·  Clover" Style="{StaticResource CloverBody}" FontSize="12" /></StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Margin="0,8,0,0"><controls:CareMark Width="15" Height="17" /><TextBlock x:Uid="Board_20" Text="Care, continued.  ·  Clover" Style="{StaticResource CloverBody}" FontSize="13" /></StackPanel>
       </StackPanel>
     </ScrollViewer>
 
