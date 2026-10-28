@@ -75,7 +75,7 @@
         <TextBlock Text="/" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkFaintBrush}" VerticalAlignment="Center" />
         <TextBlock Text="{Binding Name}" Style="{StaticResource TypeBodyStrong}" VerticalAlignment="Center" />
       </StackPanel>
-      <controls:TopBarCluster Grid.Column="1" VerticalAlignment="Center" Visibility="{utu:Responsive Narrowest=Collapsed, Wide=Visible, Layout={StaticResource ShellLayout}}" />
+      <controls:TopBarCluster Grid.Column="1" VerticalAlignment="Center" Visibility="{utu:Responsive Narrowest=Collapsed, Normal=Visible, Layout={StaticResource ShellLayout}}" />
     </Grid>
     <muxc:InfoBar x:Uid="Record_3" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="40,0">
       <muxc:InfoBar.ActionButton><Button x:Uid="Record_4" Content="Dismiss" Command="{Binding DismissError}" /></muxc:InfoBar.ActionButton>
@@ -120,6 +120,7 @@
                         <!-- Record nav: the sidebar's nav item (h40, radius 12, icon 18 + 14/20 Medium); each opens its pane. -->
                         <controls:RecordNav Grid.Row="4" Margin="-4,20,0,0" />
                         <!-- Team chip: h32, pad 0 10, radius 10, surface, tri-tone; users 15 -->
+                        <!-- xaml-lint: allow card - 32 px team chip (prototype chip: radius 10, tri-tone edge), not a card surface -->
                         <Border Grid.Row="6" Height="32" Padding="10,0" CornerRadius="10" Background="{ThemeResource Surface1Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" HorizontalAlignment="Left">
                           <StackPanel Orientation="Horizontal" Spacing="8">
                             <ContentControl Style="{StaticResource LineIcon16}" Width="15" Height="15" Content="{StaticResource IconUsers}" VerticalAlignment="Center" />
@@ -139,6 +140,7 @@
                           </Rectangle>
                           <!-- xaml-lint: allow card - childless blur layer (Skia-native AcrylicBrush must have no children) -->
                           <Border CornerRadius="16">
+                            <!-- xaml-lint: allow hex - AcrylicBrush tint and fallback colours (Color values; the tint opacity is 0, the fallback matches MediaPlaceholderBrush) -->
                             <Border.Background><AcrylicBrush AlwaysUseFallback="False" media:AcrylicBrushExtensions.UseCompositionEffectBrush="False" TintColor="#808080" TintOpacity="0" TintLuminosityOpacity="0" FallbackColor="#E9E9EB" /></Border.Background>
                           </Border>
                           <Rectangle RadiusX="16" RadiusY="16" AutomationProperties.Name="{Binding Data.PhotoName}">
@@ -171,6 +173,7 @@
                       <!-- Status column 300: weight card, status card (flex 1), CTA 48 -->
                       <Grid Grid.Column="{utu:Responsive Narrowest=0, Wide=2, Layout={StaticResource ShellLayout}}" Grid.Row="{utu:Responsive Narrowest=2, Normal=1, Wide=0, Layout={StaticResource ShellLayout}}"
                             Grid.ColumnSpan="{utu:Responsive Narrowest=3, Wide=1, Layout={StaticResource ShellLayout}}" RowDefinitions="Auto,*,Auto" RowSpacing="8">
+                        <!-- xaml-lint: allow card - weight tile inside the hero tray (tri-tone gradient edge, exact radius 14 / padding 16 15) -->
                         <Border Padding="16,15,16,16" CornerRadius="14" Background="{ThemeResource Surface1Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
                           <StackPanel>
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
@@ -197,6 +200,7 @@
                 </utu:ShadowContainer>
 
                 <!-- 3. Overdue banner (role alert): min-h 64, pad 10 12 10 14, radius 16, error soft -->
+                <!-- xaml-lint: allow card - role=alert banner (error soft fill and border), not a card surface -->
                 <Border Margin="0,16,0,0" MinHeight="64" Padding="14,10,12,10" CornerRadius="16" Background="{ThemeResource PhaseErrorSoftBrush}" BorderBrush="{ThemeResource PhaseErrorSoftBorderBrush}" BorderThickness="1"
                         Visibility="{Binding Data.IsOverdue}" AutomationProperties.LiveSetting="Assertive" AutomationProperties.Name="{Binding Data.OverdueTitle}">
                   <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="14" RowSpacing="{utu:Responsive Narrowest=8, Normal=0, Layout={StaticResource ShellLayout}}">
@@ -230,6 +234,7 @@
                     </Button>
                   </StackPanel>
                 </Grid>
+                <!-- xaml-lint: allow card - transient acknowledgement chip -->
                 <Border Margin="0,12,0,0" Background="{ThemeResource PhaseAnesthesiaSoftBrush}" Padding="12,8" CornerRadius="12" HorizontalAlignment="Left" Visibility="{Binding Parent.ShowAcknowledgement}">
                   <StackPanel Orientation="Horizontal" Spacing="8"><controls:CareMark Width="18" Height="20" Acknowledge="{Binding Parent.ShowAcknowledgement}" ReduceMotion="{Binding Parent.ReduceMotion}" /><TextBlock x:Uid="Record_93" Text="Dose recorded · visual acknowledgement only" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" AutomationProperties.LiveSetting="Polite" /></StackPanel>
                 </Border>
@@ -259,6 +264,7 @@
                           <Grid Width="400" Height="188">
                             <Path Data="{Binding Data.Chart.DueBand}" Fill="{ThemeResource PhaseErrorSoftBrush}" />
                             <Path Data="{Binding Data.Chart.DueLine}" Stroke="{ThemeResource PhaseErrorSolidBrush}" StrokeThickness="1.5" StrokeDashArray="2,2" />
+                            <!-- xaml-lint: allow icon - chart gridlines in the 400 x 188 viewBox, not an icon -->
                             <Path Data="M34,12H378M34,38H378M34,64.5H378" Stroke="{ThemeResource DividerBrush}" StrokeThickness="1" />
                             <TextBlock Margin="0,6,0,0" Text="{Binding Data.Chart.Hr0}" Style="{StaticResource AxisY}" />
                             <TextBlock Margin="0,32,0,0" Text="{Binding Data.Chart.Hr1}" Style="{StaticResource AxisY}" />
@@ -266,6 +272,7 @@
                             <Path Data="{Binding Data.Chart.HrLine}" Stroke="{ThemeResource PhaseAnesthesiaSolidBrush}" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                             <Path Data="{Binding Data.Chart.HrPoints}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Stroke="{ThemeResource Surface1Brush}" StrokeThickness="2" />
                             <Path Data="{Binding Data.Chart.HrLast}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Stroke="{ThemeResource Surface1Brush}" StrokeThickness="2" />
+                            <!-- xaml-lint: allow icon - chart gridlines in the 400 x 188 viewBox, not an icon -->
                             <Path Data="M34,96.5H378M34,128H378M34,160H378" Stroke="{ThemeResource DividerBrush}" StrokeThickness="1" />
                             <TextBlock Margin="0,90,0,0" Text="{Binding Data.Chart.Bp0}" Style="{StaticResource AxisY}" />
                             <TextBlock Margin="0,122,0,0" Text="{Binding Data.Chart.Bp1}" Style="{StaticResource AxisY}" />
@@ -752,6 +759,7 @@
       <mvux:FeedView.ProgressTemplate>
         <DataTemplate>
           <StackPanel Padding="{utu:Responsive Narrowest='20,20,20,40', Normal='40,20,40,40', Layout={StaticResource ShellLayout}}" AutomationProperties.AccessibilityView="Raw">
+            <!-- xaml-lint: allow card - skeleton of the hero tray (same footprint as the loaded tray) -->
             <Border Height="{utu:Responsive Narrowest=720, Wide=452, Layout={StaticResource ShellLayout}}" CornerRadius="26" Padding="20" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
               <StackPanel Spacing="14">
                 <Rectangle Style="{StaticResource Skeleton}" Width="140" Height="28" />
@@ -762,6 +770,7 @@
             </Border>
             <Rectangle Style="{StaticResource Skeleton}" Margin="0,48,0,0" Width="320" Height="28" />
             <Rectangle Style="{StaticResource Skeleton}" Margin="0,6,0,0" Width="260" Height="20" />
+            <!-- xaml-lint: allow card - skeleton of the anesthesia record card -->
             <Border Margin="0,16,0,0" Height="292" CornerRadius="18" Background="{ThemeResource Surface1Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="20,18">
               <StackPanel Spacing="10">
                 <Rectangle Style="{StaticResource Skeleton}" Width="160" Height="20" />
@@ -776,6 +785,7 @@
       <mvux:FeedView.NoneTemplate>
         <DataTemplate>
           <StackPanel Padding="{utu:Responsive Narrowest='20,20,20,40', Normal='40,20,40,40', Layout={StaticResource ShellLayout}}">
+            <!-- xaml-lint: allow card - None state inside the hero tray footprint -->
             <Border MinHeight="452" CornerRadius="26" Padding="32" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
               <StackPanel Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock x:Uid="Record_105" Text="This record no longer exists." Style="{StaticResource TypeTitleM}" HorizontalAlignment="Center" AutomationProperties.LiveSetting="Polite" />
@@ -789,6 +799,7 @@
       <mvux:FeedView.ErrorTemplate>
         <DataTemplate>
           <StackPanel Padding="{utu:Responsive Narrowest='20,20,20,40', Normal='40,20,40,40', Layout={StaticResource ShellLayout}}">
+            <!-- xaml-lint: allow card - Error state inside the hero tray footprint -->
             <Border MinHeight="452" CornerRadius="26" Padding="32" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
               <StackPanel Spacing="12" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">

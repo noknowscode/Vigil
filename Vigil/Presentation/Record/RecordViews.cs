@@ -97,12 +97,13 @@ public sealed partial record RecordChart(
     public string Bp1 => BpTicks[1];
     public string Bp2 => BpTicks[2];
 
-    /// <summary>Start of the window: induction (or the first reading, or now) on a 15-minute tick; the window then slides to keep the due time in view.</summary>
+    /// <summary>Start of the window: induction (or the first reading, or now) on a 15-minute tick; it slides to keep the latest reading (and the due time under anesthesia) in view.</summary>
     public static DateTimeOffset WindowStart(Case c, DateTimeOffset now, TimeSpan interval)
     {
         var anchor = c.InducedAt ?? c.Readings.FirstOrDefault()?.At ?? now;
         var start = Floor15(anchor.ToOffset(now.Offset));
-        var latest = new[] { Schedule.NextDue(c, interval), c.Readings.LastOrDefault()?.At, c.Status == CaseStatus.Anesthetized ? now : null }
+        // The due time while anesthetized, else the last reading: the window moves with the record, not with the clock.
+        var latest = new[] { c.Status == CaseStatus.Anesthetized ? Schedule.NextDue(c, interval) : null, c.Readings.LastOrDefault()?.At }
             .Where(t => t is not null).Select(t => t!.Value).DefaultIfEmpty(start).Max();
         var end = Ceil15(latest.ToOffset(now.Offset));
         return end - start > Window ? end - Window : start;

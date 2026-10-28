@@ -38,8 +38,8 @@ public class RecordViewTests
     {
         var bella = Proto.Named("Bella");
         RecordChart.WindowStart(bella, Proto.Now, Proto.Interval).Should().Be(Proto.At(11, 30));
-        var later = Proto.Now.AddHours(1);
-        RecordChart.WindowStart(bella, later, Proto.Interval).Should().Be(Proto.At(12, 30), "now 13:42 rounds up to 13:45, minus 75 minutes");
+        RecordChart.WindowStart(bella, Proto.Now.AddMinutes(20), Proto.Interval).Should().Be(Proto.At(11, 30), "an overdue reading does not move the window");
+        RecordChart.WindowStart(Proto.Named("Milo"), Proto.Now, Proto.Interval).Should().Be(Proto.At(11, 0), "readings to 12:03 end the window at 12:15, 75 minutes after 11:00");
     }
 
     [Test]
