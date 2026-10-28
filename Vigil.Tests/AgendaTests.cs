@@ -11,7 +11,7 @@ public class AgendaTests
         var day = SampleDay.Create(Now);
         var agenda = BoardAgenda.From(day, Now);
         agenda.Events.Should().HaveCount(3).And.BeInAscendingOrder(x => x.At);
-        agenda.Preparing.Should().HaveCount(2).And.OnlyContain(x => x.Time == "—");
+        agenda.Preparing.Should().HaveCount(1).And.OnlyContain(x => x.Time == "—");
         var bella = day.Single(c => c.Patient.Name == "Bella");
         agenda.Events.Single(e => e.Id == bella.Id).At.Should().Be(bella.InducedAt);
     }
