@@ -1,8 +1,12 @@
 <Page x:Class="Vigil.Presentation.BoardPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:muxc="using:Microsoft.UI.Xaml.Controls" xmlns:controls="using:Vigil.Controls" xmlns:mvux="using:Uno.Extensions.Reactive.UI" xmlns:uen="using:Uno.Extensions.Navigation.UI" xmlns:utu="using:Uno.Toolkit.UI" Background="{ThemeResource CloverCanvas}">
-  <Grid x:Name="AppFrame" utu:SafeArea.Insets="VisibleBounds" Margin="20,8,20,20" RowDefinitions="Auto,*" SizeChanged="OnFrameSizeChanged" KeyDown="OnHomeKeyDown">
+  <Page.Resources>
+    <!-- Board thresholds: 600 frame margin, 660 live band stacks, 760 tabs drop to a second row, 1120 agenda docks. -->
+    <utu:ResponsiveLayout x:Key="BoardLayout" Narrowest="0" Narrow="600" Normal="660" Wide="760" Widest="1120" />
+  </Page.Resources>
+  <Grid x:Name="AppFrame" utu:SafeArea.Insets="VisibleBounds" Margin="{utu:Responsive Narrowest='8', Narrow='20,8,20,20', Layout={StaticResource BoardLayout}}" RowDefinitions="Auto,*" KeyDown="OnHomeKeyDown">
     <Grid x:Name="TopBar" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" RowSpacing="10" Padding="12,10,12,20">
       <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"><controls:CareMark Width="25" Height="29" /><TextBlock x:Uid="Board_1" Text="clover" Style="{StaticResource CloverHeading}" FontSize="28" /></StackPanel>
-      <Border x:Name="TopTabs" Grid.Column="1" Background="{ThemeResource CloverSage}" CornerRadius="14" Padding="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Border x:Name="TopTabs" Grid.Column="{utu:Responsive Narrowest=0, Wide=1, Layout={StaticResource BoardLayout}}" Grid.ColumnSpan="{utu:Responsive Narrowest=3, Wide=1, Layout={StaticResource BoardLayout}}" Grid.Row="{utu:Responsive Narrowest=1, Wide=0, Layout={StaticResource BoardLayout}}" Background="{ThemeResource CloverSage}" CornerRadius="14" Padding="4" HorizontalAlignment="Center" VerticalAlignment="Center">
         <utu:ChipGroup Style="{StaticResource FilterChipGroupStyle}" SelectionMode="Single">
           <utu:Chip x:Uid="Board_2" x:Name="HomeTab" Content="Today's patients" IsChecked="True" Click="OnShowPatients" AutomationProperties.Name="Today's patients" />
           <utu:Chip x:Uid="Board_3" Content="Patient care" Command="{Binding OpenPatient}" IsEnabled="{Binding CanOpenPatient}" ToolTipService.ToolTip="{Binding PatientTabHint}" AutomationProperties.Name="Open current patient care workspace" />
@@ -72,7 +76,7 @@
         <Border Grid.Row="3" Padding="16,16" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineBrush}" Background="{ThemeResource CloverCanvas}"><StackPanel Orientation="Horizontal" Spacing="8"><controls:CareMark Width="16" Height="19" /><TextBlock x:Uid="Board_37" Text="Gaps indicate no recorded care." Style="{StaticResource CloverBody}" FontSize="13" /></StackPanel></Border>
       </Grid>
     </Border>
-      <Border x:Name="HomeShell" Grid.Column="1" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="1" CornerRadius="32">
+      <Border x:Name="HomeShell" Grid.Column="1" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="1" CornerRadius="{utu:Responsive Narrowest=24, Wide=32, Layout={StaticResource BoardLayout}}">
     <ScrollViewer x:Name="PatientScroll" HorizontalScrollMode="Disabled">
       <StackPanel MaxWidth="1680" Padding="{utu:Responsive Narrow='20,28,20,40', Wide='28,26,26,40'}" Spacing="18">
         <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="12">
@@ -86,12 +90,12 @@
         <mvux:FeedView Source="{Binding Live}" RefreshingState="None" IsTabStop="False">
           <mvux:FeedView.ValueTemplate><DataTemplate>
             <Button uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" Style="{StaticResource CloverPatientCard}" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding Data.AccessibleName}">
-              <Grid Padding="10" SizeChanged="OnLiveBandSizeChanged" RowDefinitions="Auto,Auto" RowSpacing="10" ColumnSpacing="20" CornerRadius="23" Background="{ThemeResource CloverLiveBand}">
+              <Grid Padding="10" RowDefinitions="Auto,Auto" RowSpacing="10" ColumnSpacing="20" CornerRadius="23" Background="{ThemeResource CloverLiveBand}">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="1.2*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
-                                <Border Background="{ThemeResource CloverGlass}" CornerRadius="15" Padding="12" BorderBrush="{ThemeResource CloverGlassEdge}" BorderThickness="1">
+                                <Border Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1, Layout={StaticResource BoardLayout}}" Background="{ThemeResource CloverGlass}" CornerRadius="15" Padding="12" BorderBrush="{ThemeResource CloverGlassEdge}" BorderThickness="1">
                   <StackPanel Spacing="2"><TextBlock x:Uid="Board_9" Text="IN SURGERY" Style="{StaticResource CloverLabel}" FontSize="12" LineHeight="16" Foreground="{ThemeResource CloverLiveInk}" /><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverHeading}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="26" /><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource CloverLiveInk}" FontSize="13" /><TextBlock Text="{Binding Data.Others}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource CloverLiveInk}" Visibility="{Binding Data.HasOthers}" /></StackPanel>
                 </Border>
-                <Grid Grid.Column="1" ColumnDefinitions="*,*" ColumnSpacing="16" VerticalAlignment="Center" Margin="8,6,10,6">
+                <Grid Grid.Column="{utu:Responsive Narrowest=0, Normal=1, Layout={StaticResource BoardLayout}}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0, Layout={StaticResource BoardLayout}}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1, Layout={StaticResource BoardLayout}}" ColumnDefinitions="*,*" ColumnSpacing="16" VerticalAlignment="Center" Margin="8,6,10,6">
                   <StackPanel Spacing="5"><TextBlock x:Uid="Board_21" Text="Elapsed · h:mm" FontSize="12" Foreground="{ThemeResource CloverLiveInk}" /><TextBlock Text="{Binding Data.Elapsed}" Style="{StaticResource CodeTextStyle}" FontSize="30" Foreground="{ThemeResource PrimaryBrush}" /></StackPanel>
                   <StackPanel Grid.Column="1" Spacing="7"><TextBlock Text="{Binding Data.NextLabel}" FontSize="13" Foreground="{ThemeResource CloverLiveInk}" Visibility="{Binding Data.IsWaiting}" /><TextBlock Text="{Binding Data.NextLabel}" FontSize="13" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /><TextBlock Text="{Binding Data.NextText}" Style="{StaticResource CodeTextStyle}" FontSize="25" Foreground="{ThemeResource PrimaryBrush}" /></StackPanel>
                 </Grid>
