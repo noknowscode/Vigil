@@ -130,7 +130,7 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
     private IFeed<DateTimeOffset> Now { get; } = Feed.AsyncEnumerable(Clock.Ticks);
 
     public string TodayLabel => Clock.Now.ToString("dddd, d MMMM");
-    public IFeed<string> DaySummary => Cases.Select(cases => $"{cases.Count(c => c.Status == CaseStatus.Scheduled)} preparing   ·   {cases.Count(c => c.Status == CaseStatus.Anesthetized)} in surgery   ·   {cases.Count(c => c.Status == CaseStatus.Recovery)} recovering");
+    public IFeed<string> DaySummary => Cases.Select(cases => Loc.F("Board_DaySummary", "{0} preparing   ·   {1} in surgery   ·   {2} recovering", cases.Count(c => c.Status == CaseStatus.Scheduled), cases.Count(c => c.Status == CaseStatus.Anesthetized), cases.Count(c => c.Status == CaseStatus.Recovery)));
     public IState<BoardFilter> Filter => State.Value(this, () => BoardFilter.Today);
 
     public IListFeed<CaseSummary> Today => Feed

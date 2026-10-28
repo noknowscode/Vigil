@@ -52,8 +52,8 @@ public partial record CaseView(
     public string Alert { get; init; } = "";
     public bool HasAlert => Alert.Length > 0;
     public bool IsOverdue => IsAnesthetized && DueStateName == nameof(DueState.Overdue);
-    public string MedicationSummary => HasNoDoses ? "No doses recorded" : Doses[0].Drug;
-    public string MedicationDetail => HasNoDoses ? "Medication history stays with this visit." : $"{Doses[0].Volume} · {Doses[0].Route} · {Doses[0].Time}";
+    public string MedicationSummary => HasNoDoses ? Loc.T("Drugs_None", "No doses recorded") : Doses[0].Drug;
+    public string MedicationDetail => HasNoDoses ? Loc.T("Drugs_NoneDetail", "Medication history stays with this visit.") : $"{Doses[0].Volume} · {Doses[0].Route} · {Doses[0].Time}";
     public string Initials => string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(x => x[0]));
     public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
 
@@ -117,7 +117,7 @@ public partial record CaseView(
             CaseSummary.StatusLabel(c.Status),
             p.WeightKg,
             $"{p.WeightKg:0.0}",
-            string.Join(" · ", new[] { p.SpeciesAndBreed, p.AgeYears > 0 ? $"{p.AgeYears:0.#} y" : "", string.IsNullOrWhiteSpace(p.Owner) ? "" : $"owner {p.Owner}" }.Where(x => x.Length > 0)),
+            string.Join(" · ", new[] { p.SpeciesAndBreed, p.AgeYears > 0 ? Loc.F("Patient_AgeShort", "{0:0.#} y", p.AgeYears) : "", string.IsNullOrWhiteSpace(p.Owner) ? "" : Loc.F("Patient_OwnerShort", "owner {0}", p.Owner) }.Where(x => x.Length > 0)),
             c.Preop,
             Loc.F("Preop_Progress", "{0} of 5 checks", c.Preop.DoneCount),
             c.InducedAt is DateTimeOffset i ? Loc.F("Preop_InducedAt", "Induced at {0:HH:mm}", i) : Loc.T("Preop_NotInduced", "Not induced"),
@@ -131,7 +131,7 @@ public partial record CaseView(
             c.Readings.Count,
             strip,
             strip.Summary(p.Species),
-            c.Readings.Count > 0 ? $"Last recorded {c.Readings[^1].At:dd MMM · HH:mm}" : Loc.T("Readings_None", "No readings yet"),
+            c.Readings.Count > 0 ? Loc.F("Readings_LastRecorded", "Last recorded {0:dd MMM · HH:mm}", c.Readings[^1].At) : Loc.T("Readings_None", "No readings yet"),
             // A signed record stops its recovery clock at the signature.
             c.Recovery.ExtubatedAt is DateTimeOffset x ? Schedule.HoursMinutes((c.SignedAt ?? now) - x) : c.EndedAt is DateTimeOffset e ? Schedule.HoursMinutes((c.SignedAt ?? now) - e) : "—",
             c.Recovery.ExtubatedAt is not null ? Loc.T("Recovery_SinceExtubation", "since extubation") : c.EndedAt is not null ? Loc.T("Recovery_SinceEnded", "since anesthesia ended (not extubated)") : Loc.T("Recovery_NotEnded", "anesthesia not ended"),
@@ -142,7 +142,7 @@ public partial record CaseView(
             Photo = PatientMedia.Photo(p), HeroPhoto = PatientMedia.Hero(p),
             Breed = string.IsNullOrWhiteSpace(p.Breed) ? Loc.Species(p.Species) : p.Breed,
             AgeOwner = $"{(p.AgeYears == 1 ? Loc.T("Patient_OneYear", "1 year") : Loc.F("Patient_AgeYears", "{0:0.#} years", p.AgeYears))} · {p.Owner}",
-            WeightDate = $"Recorded {c.CreatedAt:dd MMM yyyy}", VisitDate = $"{c.CreatedAt:dd MMM yyyy}",
+            WeightDate = Loc.F("Weight_RecordedOn", "Recorded {0:dd MMM yyyy}", c.CreatedAt), VisitDate = $"{c.CreatedAt:dd MMM yyyy}",
             LastHr = c.Readings.LastOrDefault()?.Hr?.ToString() ?? "—",
             LastSpo2 = c.Readings.LastOrDefault()?.SpO2?.ToString() ?? "—",
             LastBp = c.Readings.LastOrDefault() is { } bp ? $"{bp.Sys?.ToString() ?? "—"}/{bp.Dia?.ToString() ?? "—"}" : "—",
@@ -190,7 +190,7 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
     public IFeed<bool> PaneRecovery => Pane.Select(x => x == "Recovery");
     public IFeed<bool> PaneHistory => Pane.Select(x => x == "History");
     public IFeed<bool> PaneLabs => Pane.Select(x => x == "Labs");
-    public IFeed<string> PaneTitle => Pane.Select(x => x switch { "Dose" => "Administer dose", "Preop" => "Preoperative preparation", "Drugs" => "Medication record", "Monitor" => "Record observations", "Recovery" => "Recovery & handover", "History" => "Visit history", _ => "Lab results" });
+    public IFeed<string> PaneTitle => Pane.Select(x => x switch { "Dose" => Loc.T("Pane_Dose", "Administer dose"), "Preop" => Loc.T("Pane_Preop", "Preoperative preparation"), "Drugs" => Loc.T("Pane_Drugs", "Medication record"), "Monitor" => Loc.T("Pane_Monitor", "Record observations"), "Recovery" => Loc.T("Pane_Recovery", "Recovery & handover"), "History" => Loc.T("Pane_History", "Visit history"), _ => Loc.T("Pane_Labs", "Lab results") });
     public async ValueTask OpenPane(string section, CancellationToken ct)
     {
         await Pane.UpdateAsync(_ => section, ct);

@@ -68,6 +68,7 @@
   <data name="Board_9.Text" xml:space="preserve"><value>EN CHIRURGIE</value></data>
   <data name="Board_AddedTime" xml:space="preserve"><value>Ajouté {0:HH:mm}</value></data>
   <data name="Board_AlsoUnder" xml:space="preserve"><value>Aussi sous anesthésie : {0}</value></data>
+  <data name="Board_DaySummary" xml:space="preserve"><value>{0} en préparation   ·   {1} en chirurgie   ·   {2} au réveil</value></data>
   <data name="Board_EndedTime" xml:space="preserve"><value>Terminé {0:HH:mm}</value></data>
   <data name="Board_ExtubatedTime" xml:space="preserve"><value>Extubé {0:HH:mm}</value></data>
   <data name="Board_LastReading" xml:space="preserve"><value>Dernière {0:HH:mm} · FC {1} · SpO₂ {2} · PAM {3}</value></data>
@@ -109,6 +110,8 @@
   <data name="Dose_ConfirmText" xml:space="preserve"><value>La plage de référence de {0} est {1}. {2:0.###} mg/kg correspond à {3}.</value></data>
   <data name="Dose_ConfirmTitle" xml:space="preserve"><value>Administrer {0:0.###} mg/kg?</value></data>
   <data name="Dose_OutOfRangeConfirmed" xml:space="preserve"><value>Hors plage, confirmé</value></data>
+  <data name="Drugs_None" xml:space="preserve"><value>Aucune dose consignée</value></data>
+  <data name="Drugs_NoneDetail" xml:space="preserve"><value>L'historique des médicaments reste associé à cette visite.</value></data>
   <data name="Due_Next" xml:space="preserve"><value>Prochaine lecture</value></data>
   <data name="Due_None" xml:space="preserve"><value>Aucune lecture due</value></data>
   <data name="Due_Overdue" xml:space="preserve"><value>Lecture en retard</value></data>
@@ -163,6 +166,13 @@
   <data name="NewCase_TechRequired" xml:space="preserve"><value>Entrez la technicienne ou le technicien responsable de l'anesthésie.</value></data>
   <data name="NewCase_VetRequired" xml:space="preserve"><value>Entrez le vétérinaire.</value></data>
   <data name="NewCase_WeightRequired" xml:space="preserve"><value>Entrez un poids entre 0,1 et 150 kg : chaque dose en dépend.</value></data>
+  <data name="Pane_Dose" xml:space="preserve"><value>Administrer une dose</value></data>
+  <data name="Pane_Drugs" xml:space="preserve"><value>Registre des médicaments</value></data>
+  <data name="Pane_History" xml:space="preserve"><value>Historique de la visite</value></data>
+  <data name="Pane_Labs" xml:space="preserve"><value>Résultats de laboratoire</value></data>
+  <data name="Pane_Monitor" xml:space="preserve"><value>Saisir les observations</value></data>
+  <data name="Pane_Preop" xml:space="preserve"><value>Préparation préopératoire</value></data>
+  <data name="Pane_Recovery" xml:space="preserve"><value>Réveil et transfert</value></data>
   <data name="ParentPreview_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retour au dossier patient</value></data>
   <data name="ParentPreview_10.Text" xml:space="preserve"><value>Pour des nouvelles personnalisées, contactez votre clinique aux coordonnées figurant sur votre confirmation de rendez-vous.</value></data>
   <data name="ParentPreview_11.Text" xml:space="preserve"><value>Les soins continuent. Pour ceux que vous aimez.</value></data>
@@ -178,9 +188,38 @@
   <data name="ParentPreview_7.Text" xml:space="preserve"><value>LA PROCHAINE ÉTAPE</value></data>
   <data name="ParentPreview_8.Text" xml:space="preserve"><value>Une étape à la fois.</value></data>
   <data name="ParentPreview_9.Header" xml:space="preserve"><value>Votre visite et votre équipe</value></data>
+  <data name="Parent_Complete" xml:space="preserve"><value>Terminé</value></data>
+  <data name="Parent_DescComplete" xml:space="preserve"><value>L'équipe a terminé le dossier d'anesthésie. Veuillez attendre ses instructions pour venir chercher votre animal.</value></data>
+  <data name="Parent_DescReady" xml:space="preserve"><value>Le dossier de visite de votre animal est ouvert. L'équipe suit la liste de vérification de la préparation.</value></data>
+  <data name="Parent_DescRecovery" xml:space="preserve"><value>L'anesthésie est terminée et l'équipe consigne les étapes du réveil.</value></data>
+  <data name="Parent_DescSurgery" xml:space="preserve"><value>L'équipe a consigné le début de l'anesthésie. La prochaine étape s'affichera quand le réveil sera consigné.</value></data>
+  <data name="Parent_MsAnaesthesia" xml:space="preserve"><value>Anesthésie</value></data>
+  <data name="Parent_MsAnaesthesiaDone" xml:space="preserve"><value>Début consigné par l'équipe de soins.</value></data>
+  <data name="Parent_MsAnaesthesiaPending" xml:space="preserve"><value>L'équipe consignera le début.</value></data>
+  <data name="Parent_MsCompleteDetail" xml:space="preserve"><value>Le congé est confirmé séparément.</value></data>
+  <data name="Parent_MsOpened" xml:space="preserve"><value>Visite ouverte</value></data>
+  <data name="Parent_MsOpenedDetail" xml:space="preserve"><value>La visite de votre animal est ouverte.</value></data>
+  <data name="Parent_MsPrep" xml:space="preserve"><value>Préparation</value></data>
+  <data name="Parent_MsPrepDone" xml:space="preserve"><value>Liste de vérification préopératoire terminée.</value></data>
+  <data name="Parent_MsPrepPending" xml:space="preserve"><value>Les vérifications préopératoires sont en cours.</value></data>
+  <data name="Parent_MsRecovery" xml:space="preserve"><value>Réveil</value></data>
+  <data name="Parent_MsRecoveryDone" xml:space="preserve"><value>L'anesthésie est terminée; le réveil a commencé.</value></data>
+  <data name="Parent_MsRecoveryPending" xml:space="preserve"><value>L'équipe consignera le réveil ici.</value></data>
+  <data name="Parent_NextComplete" xml:space="preserve"><value>La clinique confirmera quand votre animal pourra rentrer à la maison.</value></data>
+  <data name="Parent_NextReady" xml:space="preserve"><value>L'équipe consignera le début de l'anesthésie après la préparation.</value></data>
+  <data name="Parent_NextRecovery" xml:space="preserve"><value>Attendez les instructions de l'équipe pour venir chercher votre animal. La durée du réveil varie.</value></data>
+  <data name="Parent_NextSurgery" xml:space="preserve"><value>L'équipe vous informera quand le réveil commencera.</value></data>
+  <data name="Parent_Pending" xml:space="preserve"><value>En attente</value></data>
+  <data name="Parent_StatusComplete" xml:space="preserve"><value>Dossier terminé</value></data>
+  <data name="Parent_StatusReady" xml:space="preserve"><value>En préparation</value></data>
+  <data name="Parent_StatusRecovery" xml:space="preserve"><value>Au réveil</value></data>
+  <data name="Parent_StatusSurgery" xml:space="preserve"><value>En chirurgie</value></data>
+  <data name="Parent_Updated" xml:space="preserve"><value>Dernière étape · {0:dd MMM, HH:mm}</value></data>
+  <data name="Patient_AgeShort" xml:space="preserve"><value>{0:0.#} an</value></data>
   <data name="Patient_AgeYears" xml:space="preserve"><value>{0:0.#} ans</value></data>
   <data name="Patient_NotRecorded" xml:space="preserve"><value>Non consigné</value></data>
   <data name="Patient_OneYear" xml:space="preserve"><value>1 an</value></data>
+  <data name="Patient_OwnerShort" xml:space="preserve"><value>propriétaire {0}</value></data>
   <data name="Patient_VisitWeight" xml:space="preserve"><value>Poids consigné lors de la visite du {0:dd MMM yyyy}</value></data>
   <data name="Plane_Deep" xml:space="preserve"><value>Profond</value></data>
   <data name="Plane_Light" xml:space="preserve"><value>Léger</value></data>
@@ -188,6 +227,7 @@
   <data name="Preop_InducedAt" xml:space="preserve"><value>Induit à {0:HH:mm}</value></data>
   <data name="Preop_NotInduced" xml:space="preserve"><value>Non induit</value></data>
   <data name="Preop_Progress" xml:space="preserve"><value>{0} sur 5 vérifications</value></data>
+  <data name="Readings_LastRecorded" xml:space="preserve"><value>Dernière lecture {0:dd MMM · HH:mm}</value></data>
   <data name="Readings_None" xml:space="preserve"><value>Aucune lecture pour l'instant</value></data>
   <data name="Record_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retour aux patients du jour</value></data>
   <data name="Record_10.Text" xml:space="preserve"><value>POIDS</value></data>
@@ -450,4 +490,5 @@
   <data name="Vital_Systolic" xml:space="preserve"><value>Systolique</value></data>
   <data name="Vital_Temperature" xml:space="preserve"><value>Température</value></data>
   <data name="Vital_Vaporizer" xml:space="preserve"><value>Vaporisateur</value></data>
+  <data name="Weight_RecordedOn" xml:space="preserve"><value>Consigné le {0:dd MMM yyyy}</value></data>
 </root>
