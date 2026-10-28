@@ -65,6 +65,24 @@ public class CaseStoreTests
     }
 
     [Test]
+    public async Task SignedRecordsStillTakeTheDischargeCallButNothingWithIt()
+    {
+        var store = Store();
+        var signed = SampleDay.Create(DateTimeOffset.Now).Single(c => c.IsSigned);
+        await store.SaveAsync(signed, CancellationToken.None);
+        var at = DateTimeOffset.Now;
+
+        var mixed = async () => await store.UpdateAsync(signed.Id, c => c.WithDischargeCallDone(at) with { Procedure = "Changed" }, CancellationToken.None);
+        await mixed.Should().ThrowAsync<SignedRecordException>();
+        await store.UpdateAsync(signed.Id, c => c.WithDischargeCallDone(at), CancellationToken.None);
+
+        var stored = (await store.GetAsync(signed.Id, CancellationToken.None))!;
+        stored.DischargeCall!.DoneAt.Should().Be(at);
+        stored.Procedure.Should().Be(signed.Procedure);
+        stored.IsSigned.Should().BeTrue();
+    }
+
+    [Test]
     public async Task ReadFaultOnceThenRecovers()
     {
         await Store().SaveAsync(SampleDay.Create(DateTimeOffset.Now)[0], CancellationToken.None);

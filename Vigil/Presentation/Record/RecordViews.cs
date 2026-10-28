@@ -251,7 +251,7 @@ public sealed partial record StatusCard(
                     Loc.F("Care_At", "at {0}", T(c.SignedAt ?? c.DischargedAt)), Today.Clock(Schedule.Elapsed(c, now)),
                     Loc.T("Care_SignedBy", "Signed by"), c.SignedBy ?? "—",
                     Loc.T("Care_Readings", "Readings"), $"{c.Readings.Count}",
-                    "", Loc.T("Care_CtaHome", "Review record"), "History");
+                    "", Loc.T("Care_CtaHome", "Review record"), "Recovery");
         }
     }
 }

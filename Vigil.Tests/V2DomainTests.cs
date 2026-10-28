@@ -200,6 +200,42 @@ public class DueTasksTests
     }
 
     [Test]
+    public void ReviewingTheReadyPanelClearsTheTaskAndTicksThePreopCheck()
+    {
+        var oscar = Proto.Named("Oscar");
+        Rows([oscar]).Should().ContainSingle(r => r.Kind == DueTaskKind.Bloodwork);
+        var reviewed = oscar.WithLabReviewed(oscar.Labs[0].Panel);
+        reviewed.Labs[0].State.Should().Be(LabState.Reviewed);
+        reviewed.Preop.BloodworkReviewed.Should().BeTrue("before induction the review is the pre-op check");
+        Rows([reviewed]).Should().NotContain(r => r.Kind == DueTaskKind.Bloodwork);
+        var untouched = oscar.WithLabReviewed("Unknown panel");
+        untouched.Labs.Should().Equal(oscar.Labs);
+        untouched.Preop.Should().Be(oscar.Preop);
+    }
+
+    [Test]
+    public void TheDischargeCallIsDoneOnceAndLeavesDueNext()
+    {
+        var pepper = Proto.Named("Pepper");
+        var called = pepper.WithDischargeCallDone(Proto.Now);
+        called.DischargeCall!.DoneAt.Should().Be(Proto.Now);
+        Rows([called]).Should().BeEmpty();
+        called.WithDischargeCallDone(Proto.Now.AddMinutes(5)).DischargeCall!.DoneAt.Should().Be(Proto.Now, "the first call time stays");
+        Proto.Named("Bella").WithDischargeCallDone(Proto.Now).DischargeCall.Should().BeNull();
+    }
+
+    [Test]
+    public void DueNextActionsOpenTheRecordOnTheirTask()
+    {
+        Vigil.Presentation.DueRow Row(DueAction action) => Vigil.Presentation.DueRow.From(Rows([Proto.Named("Bella")])[0] with { Action = action });
+        Row(DueAction.Record).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Record" && r.Pane == "Monitor");
+        Row(DueAction.Score).Pane.Should().Be("Recovery");
+        Row(DueAction.Call).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Record" && r.Pane == "Recovery");
+        Row(DueAction.Review).Pane.Should().Be("Labs");
+        Row(DueAction.Prepare).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Dose" && r.Pane == null);
+    }
+
+    [Test]
     public void SummaryCountsAndHandlesEmpty()
     {
         DueTasks.Summary([]).Should().Be("Nothing due");

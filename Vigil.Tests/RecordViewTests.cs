@@ -94,7 +94,7 @@ public class RecordViewTests
         var oscar = View("Oscar").Care;
         $"{oscar.Tone} {oscar.Label} {oscar.Since} {oscar.Timer} {oscar.FirstValue} {oscar.CtaPane}".Should().Be("Neutral BOOKED starts 14:00 1:18 0 of 5 Preop");
         var pepper = View("Pepper").Care;
-        $"{pepper.Tone} {pepper.Label} {pepper.FirstValue} {pepper.CtaPane}".Should().Be("Neutral SIGNED OUT Dr. Bergeron History");
+        $"{pepper.Tone} {pepper.Label} {pepper.FirstValue} {pepper.CtaPane}".Should().Be("Neutral SIGNED OUT Dr. Bergeron Recovery");
         View("Oscar").Fluids.IsRunning.Should().BeFalse();
         View("Oscar").NextDose.Detail.Should().Be("No redose scheduled");
         View("Oscar").Chart.HasReadings.Should().BeFalse();

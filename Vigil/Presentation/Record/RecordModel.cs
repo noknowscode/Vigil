@@ -2,6 +2,9 @@ namespace Vigil.Presentation;
 
 public partial record ReadingRow(string Time, string Hr, string Rr, string SpO2, string EtCo2, string Bp, string Map, string Temp, string Plane, string Alarms, string Note);
 
+/// <summary>One lab panel in the Lab results pane.</summary>
+public partial record LabRow(string Panel, string StateText, bool IsReady);
+
 public partial record DoseRow(string Time, string Drug, string Dose, string Volume, string Route, string Flag);
 
 /// <summary>Read-only projection of a case for the record page, refreshed by store changes and the 1 Hz clock.</summary>
@@ -61,6 +64,13 @@ public partial record CaseView(
     public FluidsText Fluids { get; init; } = FluidsText.None;
     /// <summary>"Last score 1 at 12:35" under the pain score buttons.</summary>
     public string PainText { get; init; } = "";
+    public IImmutableList<LabRow> LabRows { get; init; } = ImmutableList<LabRow>.Empty;
+    public bool HasLabs => LabRows.Count > 0;
+    public bool HasNoLabs => !HasLabs;
+    /// <summary>"Discharge call to K. Gagnon · due 14:00" or "... · done 14:02"; empty when none is planned.</summary>
+    public string DischargeText { get; init; } = "";
+    public bool HasDischargeCall => DischargeText.Length > 0;
+    public bool CanCompleteCall { get; init; }
     public string CirculationDetail => Loc.F("Record_BpMap", "BP {0} · MAP {1}", LastBp, LastMap);
     public string RespirationDetail => Loc.F("Record_EtCo2Rr", "EtCO₂ {0} mmHg · RR {1}", LastEtCo2, LastRr);
     public bool HasNoReadings => ReadingCount == 0;
@@ -176,6 +186,18 @@ public partial record CaseView(
             OverdueDetail = RecordText.OverdueDetail(c, now, interval),
             NextDose = RecordText.NextDose(c, now, formulary),
             Fluids = RecordText.Fluids(c),
+            LabRows = c.Labs.Select(l => new LabRow(l.Panel, l.State switch
+            {
+                LabState.Ready => Loc.T("Lab_Ready", "Results ready"),
+                LabState.Reviewed => Loc.T("Lab_Reviewed", "Reviewed"),
+                _ => Loc.F("Lab_Pending", "Pending · expected {0:HH:mm}", l.At.ToOffset(now.Offset)),
+            }, l.State == LabState.Ready)).ToImmutableList(),
+            DischargeText = c.DischargeCall is { } call
+                ? call.DoneAt is DateTimeOffset done
+                    ? Loc.F("Discharge_Done", "Discharge call to {0} · done {1:HH:mm}", p.Owner, done.ToOffset(now.Offset))
+                    : Loc.F("Discharge_Due", "Discharge call to {0} · due {1:HH:mm}", p.Owner, call.DueAt.ToOffset(now.Offset))
+                : "",
+            CanCompleteCall = c.DischargeCall is { IsDone: false },
             PainText = c.Recovery.PainScores.LastOrDefault() is { } ps
                 ? Loc.F("Recovery_LastPain", "Last score {0} at {1:HH:mm}", ps.Score, ps.At.ToOffset(now.Offset))
                 : c.Recovery.PainScore is int legacy ? Loc.F("Recovery_PainOnly", "Last score {0}", legacy) : Loc.T("Recovery_NoPain", "Not scored yet"),
@@ -218,8 +240,9 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 #endif
 
     // The stored case; null (deleted or never existed) renders the None template.
-    public IState<bool> PaneOpen => State.Value(this, () => false);
-    public IState<string> Pane => State.Value(this, () => "Preop");
+    // A "Due next" action opens the record on its task's pane (CaseRefPane); everything else opens it closed.
+    public IState<bool> PaneOpen => State.Value(this, () => Ref is CaseRefPane);
+    public IState<string> Pane => State.Value(this, () => Ref is CaseRefPane open ? open.Pane : "Preop");
     public IFeed<bool> PanePreop => Pane.Select(x => x == "Preop");
     public IFeed<bool> PaneDose => Pane.Select(x => x == "Dose");
     public IFeed<bool> PaneDrugs => Pane.Select(x => x == "Drugs");
@@ -368,6 +391,17 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     public async ValueTask Sternal(CancellationToken ct) =>
         await SaveAsync(c => c.Status == CaseStatus.Recovery ? c with { Recovery = c.Recovery with { SternalAt = Clock.Now } } : c, ct);
+
+    /// <summary>Lab results: marks a ready panel as reviewed.</summary>
+    public async ValueTask ReviewLab(string panel, CancellationToken ct) =>
+        await SaveAsync(c => c.WithLabReviewed(panel), ct);
+
+    /// <summary>Recovery pane: the discharge call to the pet parent was made.</summary>
+    public async ValueTask CompleteDischargeCall(CancellationToken ct)
+    {
+        var at = Clock.Now;
+        await SaveAsync(c => c.WithDischargeCallDone(at), ct);
+    }
 
     /// <summary>Records a pain score (button "0" to "4") at the current time, while the case is in recovery.</summary>
     public async ValueTask ScorePain(string score, CancellationToken ct)

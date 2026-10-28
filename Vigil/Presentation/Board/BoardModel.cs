@@ -92,7 +92,7 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
 
     /// <summary>A "Due next" action: the record, the dose screen or sign-off for that case.</summary>
     public async ValueTask OpenTask(DueRow row, CancellationToken ct) =>
-        await Navigator.NavigateRouteAsync(this, row.Route, data: new CaseRef(row.CaseId), cancellation: ct);
+        await Navigator.NavigateRouteAsync(this, row.Route, data: row.Pane is { } pane ? new CaseRefPane(row.CaseId, pane) : new CaseRef(row.CaseId), cancellation: ct);
 
     /// <summary>Next surgery: "Start prep" moves the booked case to Prep (stamps <see cref="Case.PrepStartedAt"/>).</summary>
     public async ValueTask StartPrep(HeroCard hero, CancellationToken ct) =>

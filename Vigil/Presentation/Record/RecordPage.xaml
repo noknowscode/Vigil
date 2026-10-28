@@ -699,7 +699,7 @@
                       <!-- Pain score: each tap records a timed score (the 15-minute task resets even when the score is unchanged). -->
                       <StackPanel Spacing="8">
                         <TextBlock x:Uid="Record_159" Text="Pain score (0 none to 4 severe)" Style="{StaticResource TypeBodyS}" FontWeight="Medium" />
-                        <StackPanel Orientation="Horizontal" Spacing="8">
+                        <StackPanel Orientation="Horizontal" Spacing="8" Visibility="{Binding Data.CanEditRecovery}">
                           <Button x:Uid="Record_160" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="0" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="0" AutomationProperties.Name="Record pain score 0" />
                           <Button x:Uid="Record_161" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="1" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="1" AutomationProperties.Name="Record pain score 1" />
                           <Button x:Uid="Record_162" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="2" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="2" AutomationProperties.Name="Record pain score 2" />
@@ -721,6 +721,13 @@
                       <Button x:Uid="Record_79" Style="{StaticResource CloverSecondary}" Content="Copy summary" Command="{Binding Parent.CopySummary}" AutomationProperties.Name="Copy a text summary" />
                     </StackPanel>
                     <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{Binding Parent.Notice}" AutomationProperties.LiveSetting="Polite" />
+                  </StackPanel>
+
+                  <!-- Discharge call to the pet parent (a "Due next" task): recorded here once made. -->
+                  <StackPanel Spacing="8" Visibility="{Binding Data.HasDischargeCall}">
+                    <TextBlock x:Uid="Record_170" Style="{StaticResource TitleLarge}" Foreground="{ThemeResource OnSurfaceBrush}" Text="Discharge call" />
+                    <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{Binding Data.DischargeText}" TextWrapping="WrapWholeWords" />
+                    <Button x:Uid="Record_171" Style="{StaticResource CloverSecondary}" HorizontalAlignment="Left" MinWidth="220" Content="Call made" Visibility="{Binding Data.CanCompleteCall}" Command="{Binding Parent.CompleteDischargeCall}" AutomationProperties.Name="Record the discharge call as made" />
                   </StackPanel>
                 </StackPanel>
               </ScrollViewer>
@@ -753,7 +760,26 @@
                         </ItemsControl.ItemTemplate>
                       </ItemsControl>
                       </StackPanel></ScrollViewer>
-    <StackPanel Visibility="{Binding Parent.PaneLabs}" Padding="24" Spacing="16"><FontIcon Glyph="&#xE9F9;" FontSize="32" HorizontalAlignment="Left" Foreground="{ThemeResource PrimaryBrush}" /><TextBlock x:Uid="Record_134" Text="Lab results stay with your practice" Style="{StaticResource CloverHeading}" /><TextBlock x:Uid="Record_135" Text="This anaesthesia record stores the pre-op bloodwork check. Lab reports and reference values are not connected here." Style="{StaticResource CloverBody}" /><CheckBox x:Uid="Record_136" Content="Pre-op bloodwork reviewed" IsChecked="{Binding Data.Preop.BloodworkReviewed}" IsEnabled="False" /><Button x:Uid="Record_137" Content="View preparation" Command="{Binding Parent.OpenPane}" CommandParameter="Preop" Style="{StaticResource CloverSecondary}" HorizontalAlignment="Left" /></StackPanel>
+    <ScrollViewer Visibility="{Binding Parent.PaneLabs}"><StackPanel Padding="24" Spacing="16">
+      <TextBlock x:Uid="Record_165" Text="Lab panels for this visit" Style="{StaticResource CloverHeading}" />
+      <TextBlock x:Uid="Record_166" Text="Vigil tracks which panels are pending, ready and reviewed. The reports and their values stay in your lab system." Style="{StaticResource CloverBody}" TextWrapping="WrapWholeWords" />
+      <TextBlock x:Uid="Record_167" Text="No lab panels for this visit." Style="{StaticResource CloverBody}" Visibility="{Binding Data.HasNoLabs}" />
+      <ItemsControl x:Uid="Record_168" ItemsSource="{Binding Data.LabRows}" AutomationProperties.Name="Lab panels">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="local:LabRow">
+            <Grid Padding="0,10" ColumnSpacing="16" ColumnDefinitions="*,Auto" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="0,0,0,1">
+              <StackPanel Spacing="2" VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{x:Bind Panel}" />
+                <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind StateText}" />
+              </StackPanel>
+              <Button x:Uid="Record_169" Grid.Column="1" Style="{StaticResource CloverSecondary}" Content="Mark reviewed" Visibility="{x:Bind IsReady}" VerticalAlignment="Center"
+                      Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.ReviewLab}" CommandParameter="{x:Bind Panel}" AutomationProperties.Name="Mark the panel reviewed" />
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <Button x:Uid="Record_137" Content="View preparation" Command="{Binding Parent.OpenPane}" CommandParameter="Preop" Style="{StaticResource CloverSecondary}" HorizontalAlignment="Left" />
+    </StackPanel></ScrollViewer>
   </Grid>
 </Grid></SplitView.Pane>
         </SplitView></Grid>

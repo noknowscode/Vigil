@@ -95,6 +95,8 @@
   <data name="Count_OneDose" xml:space="preserve"><value>1 dose</value></data>
   <data name="Count_OneReading" xml:space="preserve"><value>1 reading</value></data>
   <data name="Count_Readings" xml:space="preserve"><value>{0} readings</value></data>
+  <data name="Discharge_Done" xml:space="preserve"><value>Discharge call to {0} · done {1:HH:mm}</value></data>
+  <data name="Discharge_Due" xml:space="preserve"><value>Discharge call to {0} · due {1:HH:mm}</value></data>
   <data name="Dose_1.Label" xml:space="preserve"><value>Cancel</value></data>
   <data name="Dose_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Close the dose sheet</value></data>
   <data name="Dose_10.Text" xml:space="preserve"><value>DRAW UP</value></data>
@@ -171,6 +173,9 @@
   <data name="Insight_OnPlan" xml:space="preserve"><value>Prep ran {0} minutes on average today, on plan.</value></data>
   <data name="Insight_Over" xml:space="preserve"><value>Prep ran {0} minutes on average today, {1} minutes over plan.</value></data>
   <data name="Insight_Under" xml:space="preserve"><value>Prep ran {0} minutes on average today, {1} minutes under plan.</value></data>
+  <data name="Lab_Pending" xml:space="preserve"><value>Pending · expected {0:HH:mm}</value></data>
+  <data name="Lab_Ready" xml:space="preserve"><value>Results ready</value></data>
+  <data name="Lab_Reviewed" xml:space="preserve"><value>Reviewed</value></data>
   <data name="LiveBand_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Open the live record</value></data>
   <data name="LiveBand_2.Text" xml:space="preserve"><value>UNDER ANESTHESIA</value></data>
   <data name="LiveBand_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Elapsed anesthesia time</value></data>
@@ -345,9 +350,6 @@
   <data name="Record_13.Text" xml:space="preserve"><value>Pre-anesthetic check</value></data>
   <data name="Record_132.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Close panel</value></data>
   <data name="Record_133.Text" xml:space="preserve"><value>Observations in this record</value></data>
-  <data name="Record_134.Text" xml:space="preserve"><value>Lab results stay with your practice</value></data>
-  <data name="Record_135.Text" xml:space="preserve"><value>This anaesthesia record stores the pre-op bloodwork check. Lab reports and reference values are not connected here.</value></data>
-  <data name="Record_136.Content" xml:space="preserve"><value>Pre-op bloodwork reviewed</value></data>
   <data name="Record_137.Content" xml:space="preserve"><value>View preparation</value></data>
   <data name="Record_14.Content" xml:space="preserve"><value>Fasted (food withheld per protocol)</value></data>
   <data name="Record_140.Text" xml:space="preserve"><value>DRUG · sample formulary, not for clinical use</value></data>
@@ -380,7 +382,16 @@
   <data name="Record_162.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record pain score 2</value></data>
   <data name="Record_163.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record pain score 3</value></data>
   <data name="Record_164.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record pain score 4</value></data>
+  <data name="Record_165.Text" xml:space="preserve"><value>Lab panels for this visit</value></data>
+  <data name="Record_166.Text" xml:space="preserve"><value>Vigil tracks which panels are pending, ready and reviewed. The reports and their values stay in your lab system.</value></data>
+  <data name="Record_167.Text" xml:space="preserve"><value>No lab panels for this visit.</value></data>
+  <data name="Record_168.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Lab panels</value></data>
+  <data name="Record_169.Content" xml:space="preserve"><value>Mark reviewed</value></data>
+  <data name="Record_169.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Mark the panel reviewed</value></data>
   <data name="Record_17.Content" xml:space="preserve"><value>Owner consent signed</value></data>
+  <data name="Record_170.Text" xml:space="preserve"><value>Discharge call</value></data>
+  <data name="Record_171.Content" xml:space="preserve"><value>Call made</value></data>
+  <data name="Record_171.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record the discharge call as made</value></data>
   <data name="Record_18.Content" xml:space="preserve"><value>Pre-anesthetic bloodwork reviewed</value></data>
   <data name="Record_19.Text" xml:space="preserve"><value>ASA physical status</value></data>
   <data name="Record_2.Content" xml:space="preserve"><value>Patients</value></data>

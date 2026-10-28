@@ -675,5 +675,17 @@
   "Record pain score 1": "Noter la douleur à 1",
   "Record pain score 2": "Noter la douleur à 2",
   "Record pain score 3": "Noter la douleur à 3",
-  "Record pain score 4": "Noter la douleur à 4"
+  "Record pain score 4": "Noter la douleur à 4",
+  "Call made": "Appel fait",
+  "Discharge call to {0} · done {1:HH:mm}": "Appel de congé à {0} · fait à {1:HH:mm}",
+  "Discharge call to {0} · due {1:HH:mm}": "Appel de congé à {0} · prévu à {1:HH:mm}",
+  "Lab panels": "Analyses de laboratoire",
+  "Lab panels for this visit": "Analyses de laboratoire de cette visite",
+  "Mark reviewed": "Marquer comme revu",
+  "Mark the panel reviewed": "Marquer l'analyse comme revue",
+  "No lab panels for this visit.": "Aucune analyse de laboratoire pour cette visite.",
+  "Pending · expected {0:HH:mm}": "En attente · prévu à {0:HH:mm}",
+  "Record the discharge call as made": "Noter l'appel de congé comme fait",
+  "Reviewed": "Revu",
+  "Vigil tracks which panels are pending, ready and reviewed. The reports and their values stay in your lab system.": "Vigil suit les analyses en attente, prêtes et revues. Les rapports et leurs valeurs restent dans votre système de laboratoire."
 }

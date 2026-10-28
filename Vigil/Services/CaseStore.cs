@@ -73,7 +73,7 @@ public sealed class JsonCaseStore : ICaseStore
         try
         {
             var cache = await LoadCoreAsync(ct);
-            if (cache.TryGetValue(value.Id, out var existing) && existing.IsSigned)
+            if (cache.TryGetValue(value.Id, out var existing) && existing.IsSigned && !existing.OnlyFollowUpDiffers(value))
             {
                 throw new SignedRecordException(value.Id);
             }
@@ -98,11 +98,11 @@ public sealed class JsonCaseStore : ICaseStore
             {
                 throw new KeyNotFoundException($"Case {id} does not exist.");
             }
-            if (existing.IsSigned)
+            updated = update(existing);
+            if (existing.IsSigned && !existing.OnlyFollowUpDiffers(updated))
             {
                 throw new SignedRecordException(id);
             }
-            updated = update(existing);
             await WriteAsync(updated, ct);
             _cache = cache.SetItem(id, updated);
         }

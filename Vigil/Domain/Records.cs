@@ -12,6 +12,9 @@ public enum DoseRoute { IV, IM, SC, PO }
 
 public partial record CaseRef(Guid Id);
 
+/// <summary>Opens a record with one of its side panes open ("Labs", "Recovery", ...): a "Due next" action lands on its task.</summary>
+public partial record CaseRefPane(Guid Id, string Pane) : CaseRef(Id);
+
 public partial record Patient(string Name, Species Species, string Breed, decimal WeightKg, decimal AgeYears, string Owner)
 {
     /// <summary>Bundled image identifiers for fictional demo records; absent on existing records.</summary>
@@ -160,6 +163,27 @@ public partial record Case(
     public DateTimeOffset? FastingSince { get; init; }
 
     public DateTimeOffset? ParentNotifiedAt { get; init; }
+
+    /// <summary>
+    /// Marks every Ready panel named <paramref name="panel"/> as reviewed (the "Bloodwork review" task clears). Before
+    /// induction it also ticks the pre-op "bloodwork reviewed" check, which is the same act.
+    /// </summary>
+    public Case WithLabReviewed(string panel) => this with
+    {
+        Labs = Labs.Select(l => l.Panel == panel && l.State == LabState.Ready ? l with { State = LabState.Reviewed } : l).ToImmutableList(),
+        Preop = Status == CaseStatus.Scheduled && Labs.Any(l => l.Panel == panel && l.State == LabState.Ready) ? Preop with { BloodworkReviewed = true } : Preop,
+    };
+
+    /// <summary>
+    /// A signed record is read-only except for the follow-up after it: the discharge call and the time the patient
+    /// went home. True when <paramref name="changed"/> differs from this record in those fields only.
+    /// </summary>
+    public bool OnlyFollowUpDiffers(Case changed) =>
+        this with { DischargeCall = changed.DischargeCall, DischargedAt = changed.DischargedAt } == changed;
+
+    /// <summary>Records the discharge call to the pet parent as made at <paramref name="at"/> (the "Discharge call" task clears).</summary>
+    public Case WithDischargeCallDone(DateTimeOffset at) =>
+        DischargeCall is { IsDone: false } call ? this with { DischargeCall = call with { DoneAt = at } } : this;
 
     public static Case New(Patient patient, string procedure, string veterinarian, string technician, DateTimeOffset now) =>
         new(Guid.NewGuid(), patient, procedure, veterinarian, technician, now, CaseStatus.Scheduled, PreopCheck.Empty,
