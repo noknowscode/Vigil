@@ -6,7 +6,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Vigil.Controls"
-        xmlns:utu="using:Uno.Toolkit.UI">
+        xmlns:utu="using:Uno.Toolkit.UI"
+        Placement="Full">
   <Flyout.FlyoutPresenterStyle>
     <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource LeftDrawerFlyoutPresenterStyle}">
       <Setter Property="utu:DrawerFlyoutPresenter.DrawerLength" Value="272" />

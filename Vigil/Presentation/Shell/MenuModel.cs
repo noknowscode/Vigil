@@ -11,11 +11,15 @@ public partial record MenuModel(MenuContext Context, INavigator Navigator, ICase
 
     private IFeed<string> Surname { get; } = Feed.Async(async ct => { await Task.Yield(); return Preferences.ClinicianName; }, Preferences.Changed);
 
-    public string TodayState => ShellSection.StateFor(Context.Section, ShellSection.Today);
-    public string PatientsState => ShellSection.StateFor(Context.Section, ShellSection.Patients);
-    public string AgendaState => ShellSection.StateFor(Context.Section, ShellSection.Agenda);
-    public string AnesthesiaState => ShellSection.StateFor(Context.Section, ShellSection.Anesthesia);
-    public string SettingsState => ShellSection.StateFor(Context.Section, ShellSection.Settings);
+    // Delivered as a feed: a value already present when the Sidebar binds reaches the nav items before their templates
+    // exist, so utu:VisualStateManagerExtensions has no Active state to go to yet.
+    private IFeed<string> Current { get; } = Feed.Async(async ct => { await Task.Yield(); return Context.Section; });
+
+    public IFeed<string> TodayState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Today));
+    public IFeed<string> PatientsState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Patients));
+    public IFeed<string> AgendaState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Agenda));
+    public IFeed<string> AnesthesiaState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Anesthesia));
+    public IFeed<string> SettingsState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Settings));
 
     public IFeed<string> PatientsCount => Cases.Select(c => ShellSection.CountText(ShellSection.InClinic(c)));
     public IFeed<string> AnesthesiaCount => Cases.Select(c => ShellSection.CountText(ShellSection.Live(c)));
