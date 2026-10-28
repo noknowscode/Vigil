@@ -373,7 +373,13 @@
   <data name="Record_157.Content" xml:space="preserve"><value>Change dose</value></data>
   <data name="Record_158.Content" xml:space="preserve"><value>Give anyway</value></data>
   <data name="Record_158.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Give the out-of-range dose anyway</value></data>
+  <data name="Record_159.Text" xml:space="preserve"><value>Pain score (0 none to 4 severe)</value></data>
   <data name="Record_16.Content" xml:space="preserve"><value>Anesthesia machine and circuit leak-checked</value></data>
+  <data name="Record_160.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record pain score 0</value></data>
+  <data name="Record_161.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record pain score 1</value></data>
+  <data name="Record_162.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record pain score 2</value></data>
+  <data name="Record_163.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record pain score 3</value></data>
+  <data name="Record_164.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record pain score 4</value></data>
   <data name="Record_17.Content" xml:space="preserve"><value>Owner consent signed</value></data>
   <data name="Record_18.Content" xml:space="preserve"><value>Pre-anesthetic bloodwork reviewed</value></data>
   <data name="Record_19.Text" xml:space="preserve"><value>ASA physical status</value></data>
@@ -448,8 +454,6 @@
   <data name="Record_71.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record extubation now</value></data>
   <data name="Record_72.Content" xml:space="preserve"><value>Sternal now</value></data>
   <data name="Record_72.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Record sternal recumbency now</value></data>
-  <data name="Record_73.Header" xml:space="preserve"><value>Pain score (0 none to 4 severe)</value></data>
-  <data name="Record_74.Content" xml:space="preserve"><value>Not scored</value></data>
   <data name="Record_75.Header" xml:space="preserve"><value>Temperature (°C)</value></data>
   <data name="Record_76.Header" xml:space="preserve"><value>Notes</value></data>
   <data name="Record_77.Content" xml:space="preserve"><value>Sign off</value></data>
@@ -489,7 +493,10 @@
   <data name="Record_Planned" xml:space="preserve"><value>Planned {0}</value></data>
   <data name="Record_Started" xml:space="preserve"><value>Started {0}</value></data>
   <data name="Recovery_Extubated" xml:space="preserve"><value>Extubated {0:HH:mm}</value></data>
+  <data name="Recovery_LastPain" xml:space="preserve"><value>Last score {0} at {1:HH:mm}</value></data>
+  <data name="Recovery_NoPain" xml:space="preserve"><value>Not scored yet</value></data>
   <data name="Recovery_NotEnded" xml:space="preserve"><value>anesthesia not ended</value></data>
+  <data name="Recovery_PainOnly" xml:space="preserve"><value>Last score {0}</value></data>
   <data name="Recovery_SignedBy" xml:space="preserve"><value>Signed by {0} at {1:HH:mm}. The record is read-only.</value></data>
   <data name="Recovery_SinceEnded" xml:space="preserve"><value>since anesthesia ended (not extubated)</value></data>
   <data name="Recovery_SinceExtubation" xml:space="preserve"><value>since extubation</value></data>

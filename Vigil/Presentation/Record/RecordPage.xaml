@@ -696,14 +696,18 @@
                           <TextBlock Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{Binding Data.SternalText}" />
                         </StackPanel>
                       </Grid>
-                      <muxc:RadioButtons x:Uid="Record_73" Header="Pain score (0 none to 4 severe)" MaxColumns="6" IsEnabled="{Binding Data.CanEditRecovery}" SelectedIndex="{Binding Parent.Recovery.PainIndex, Mode=TwoWay}">
-                        <RadioButton x:Uid="Record_74" Content="Not scored" />
-                        <RadioButton Content="0" />
-                        <RadioButton Content="1" />
-                        <RadioButton Content="2" />
-                        <RadioButton Content="3" />
-                        <RadioButton Content="4" />
-                      </muxc:RadioButtons>
+                      <!-- Pain score: each tap records a timed score (the 15-minute task resets even when the score is unchanged). -->
+                      <StackPanel Spacing="8">
+                        <TextBlock x:Uid="Record_159" Text="Pain score (0 none to 4 severe)" Style="{StaticResource TypeBodyS}" FontWeight="Medium" />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <Button x:Uid="Record_160" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="0" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="0" AutomationProperties.Name="Record pain score 0" />
+                          <Button x:Uid="Record_161" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="1" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="1" AutomationProperties.Name="Record pain score 1" />
+                          <Button x:Uid="Record_162" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="2" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="2" AutomationProperties.Name="Record pain score 2" />
+                          <Button x:Uid="Record_163" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="3" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="3" AutomationProperties.Name="Record pain score 3" />
+                          <Button x:Uid="Record_164" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="4" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="4" AutomationProperties.Name="Record pain score 4" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding Data.PainText}" Style="{StaticResource TypeBodyS}" AutomationProperties.LiveSetting="Polite" />
+                      </StackPanel>
                       <TextBox x:Uid="Record_75" Header="Temperature (°C)" InputScope="Number" MaxWidth="240" HorizontalAlignment="Left" IsEnabled="{Binding Data.CanEditRecovery}" Text="{Binding Parent.Recovery.TempC, Mode=TwoWay}" />
                       <TextBox x:Uid="Record_76" Header="Notes" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80" IsEnabled="{Binding Data.CanEditRecovery}" Text="{Binding Parent.Recovery.Notes, Mode=TwoWay}" />
                     </StackPanel>

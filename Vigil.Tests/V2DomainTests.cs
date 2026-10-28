@@ -164,6 +164,17 @@ public class DueTasksTests
     }
 
     [Test]
+    public void RecordingAPainScoreMovesThePainTaskFifteenMinutesOn()
+    {
+        var unscored = Proto.Named("Milo") with { Recovery = Proto.Named("Milo").Recovery with { PainScores = [] } };
+        Rows([unscored]).Single().IsLate.Should().BeTrue();
+        var scored = unscored with { Recovery = unscored.Recovery.WithPainScore(1, Proto.Now) };
+        var row = Rows([scored]).Single();
+        row.DueAt.Should().Be(Proto.Now.AddMinutes(15));
+        row.IsLate.Should().BeFalse();
+    }
+
+    [Test]
     public void RedoseFollowsTheLastDoseAndOnlyRedosedDrugs()
     {
         var bella = Proto.Named("Bella");

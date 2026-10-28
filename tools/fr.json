@@ -667,5 +667,13 @@
   "starts {0}": "début {0}",
   "{0} of 4": "{0} sur 4",
   "{0} of 5": "{0} sur 5",
-  "{0}, {1}": "{0}, {1}"
+  "{0}, {1}": "{0}, {1}",
+  "Last score {0}": "Dernier score {0}",
+  "Last score {0} at {1:HH:mm}": "Dernier score {0} à {1:HH:mm}",
+  "Not scored yet": "Pas encore évalué",
+  "Record pain score 0": "Noter la douleur à 0",
+  "Record pain score 1": "Noter la douleur à 1",
+  "Record pain score 2": "Noter la douleur à 2",
+  "Record pain score 3": "Noter la douleur à 3",
+  "Record pain score 4": "Noter la douleur à 4"
 }

@@ -59,6 +59,8 @@ public partial record CaseView(
     public string OverdueDetail { get; init; } = "";
     public NextDoseText NextDose { get; init; } = NextDoseText.None;
     public FluidsText Fluids { get; init; } = FluidsText.None;
+    /// <summary>"Last score 1 at 12:35" under the pain score buttons.</summary>
+    public string PainText { get; init; } = "";
     public string CirculationDetail => Loc.F("Record_BpMap", "BP {0} · MAP {1}", LastBp, LastMap);
     public string RespirationDetail => Loc.F("Record_EtCo2Rr", "EtCO₂ {0} mmHg · RR {1}", LastEtCo2, LastRr);
     public bool HasNoReadings => ReadingCount == 0;
@@ -174,6 +176,9 @@ public partial record CaseView(
             OverdueDetail = RecordText.OverdueDetail(c, now, interval),
             NextDose = RecordText.NextDose(c, now, formulary),
             Fluids = RecordText.Fluids(c),
+            PainText = c.Recovery.PainScores.LastOrDefault() is { } ps
+                ? Loc.F("Recovery_LastPain", "Last score {0} at {1:HH:mm}", ps.Score, ps.At.ToOffset(now.Offset))
+                : c.Recovery.PainScore is int legacy ? Loc.F("Recovery_PainOnly", "Last score {0}", legacy) : Loc.T("Recovery_NoPain", "Not scored yet"),
             ActiveSection = openPane ?? (Stage.Of(c) is CareStage.Booked or CareStage.Prep ? "Preop" : "Monitor"),
             LastHr = c.Readings.LastOrDefault()?.Hr?.ToString() ?? "—",
             LastSpo2 = c.Readings.LastOrDefault()?.SpO2?.ToString() ?? "—",
@@ -363,6 +368,16 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     public async ValueTask Sternal(CancellationToken ct) =>
         await SaveAsync(c => c.Status == CaseStatus.Recovery ? c with { Recovery = c.Recovery with { SternalAt = Clock.Now } } : c, ct);
+
+    /// <summary>Records a pain score (button "0" to "4") at the current time, while the case is in recovery.</summary>
+    public async ValueTask ScorePain(string score, CancellationToken ct)
+    {
+        if (int.TryParse(score, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var value) && value is >= 0 and <= 4)
+        {
+            var at = Clock.Now;
+            await SaveAsync(c => c.Status == CaseStatus.Recovery ? c with { Recovery = c.Recovery.WithPainScore(value, at) } : c, ct);
+        }
+    }
 
     public async ValueTask Export(CancellationToken ct) => await HandOffAsync(Exporter.ExportCsvAsync, ct);
 

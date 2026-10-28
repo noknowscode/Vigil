@@ -373,7 +373,13 @@
   <data name="Record_157.Content" xml:space="preserve"><value>Modifier la dose</value></data>
   <data name="Record_158.Content" xml:space="preserve"><value>Administrer quand même</value></data>
   <data name="Record_158.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer la dose hors plage quand même</value></data>
+  <data name="Record_159.Text" xml:space="preserve"><value>Score de douleur (0 aucune à 4 sévère)</value></data>
   <data name="Record_16.Content" xml:space="preserve"><value>Appareil d'anesthésie et circuit vérifiés (étanchéité)</value></data>
+  <data name="Record_160.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 0</value></data>
+  <data name="Record_161.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 1</value></data>
+  <data name="Record_162.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 2</value></data>
+  <data name="Record_163.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 3</value></data>
+  <data name="Record_164.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 4</value></data>
   <data name="Record_17.Content" xml:space="preserve"><value>Consentement du propriétaire signé</value></data>
   <data name="Record_18.Content" xml:space="preserve"><value>Bilan sanguin préanesthésique révisé</value></data>
   <data name="Record_19.Text" xml:space="preserve"><value>Statut physique ASA</value></data>
@@ -448,8 +454,6 @@
   <data name="Record_71.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Consigner l'extubation maintenant</value></data>
   <data name="Record_72.Content" xml:space="preserve"><value>Sternal maintenant</value></data>
   <data name="Record_72.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Consigner le décubitus sternal maintenant</value></data>
-  <data name="Record_73.Header" xml:space="preserve"><value>Score de douleur (0 aucune à 4 sévère)</value></data>
-  <data name="Record_74.Content" xml:space="preserve"><value>Non évaluée</value></data>
   <data name="Record_75.Header" xml:space="preserve"><value>Température (°C)</value></data>
   <data name="Record_76.Header" xml:space="preserve"><value>Notes</value></data>
   <data name="Record_77.Content" xml:space="preserve"><value>Signer</value></data>
@@ -489,7 +493,10 @@
   <data name="Record_Planned" xml:space="preserve"><value>Prévue {0}</value></data>
   <data name="Record_Started" xml:space="preserve"><value>Commencée {0}</value></data>
   <data name="Recovery_Extubated" xml:space="preserve"><value>Extubé {0:HH:mm}</value></data>
+  <data name="Recovery_LastPain" xml:space="preserve"><value>Dernier score {0} à {1:HH:mm}</value></data>
+  <data name="Recovery_NoPain" xml:space="preserve"><value>Pas encore évalué</value></data>
   <data name="Recovery_NotEnded" xml:space="preserve"><value>anesthésie non terminée</value></data>
+  <data name="Recovery_PainOnly" xml:space="preserve"><value>Dernier score {0}</value></data>
   <data name="Recovery_SignedBy" xml:space="preserve"><value>Signé par {0} à {1:HH:mm}. Le dossier est en lecture seule.</value></data>
   <data name="Recovery_SinceEnded" xml:space="preserve"><value>depuis la fin de l'anesthésie (non extubé)</value></data>
   <data name="Recovery_SinceExtubation" xml:space="preserve"><value>depuis l'extubation</value></data>

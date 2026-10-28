@@ -81,6 +81,14 @@ public partial record RecoveryLog(DateTimeOffset? ExtubatedAt, DateTimeOffset? S
 
     /// <summary>Timed pain scores in recovery (one every 15 minutes is due). <see cref="PainScore"/> stays for export.</summary>
     public ImmutableList<Domain.PainScore> PainScores { get; init => field = value ?? []; } = [];
+
+    /// <summary>
+    /// Records a pain score (0 none to 4 severe) taken at <paramref name="at"/>: it joins the timed list (which resets the
+    /// 15-minute "Pain score" task even when the score is unchanged) and becomes the current score the export reads.
+    /// </summary>
+    public RecoveryLog WithPainScore(int score, DateTimeOffset at) => score is < 0 or > 4
+        ? throw new ArgumentOutOfRangeException(nameof(score), score, "Pain score is 0 to 4.")
+        : this with { PainScore = score, PainScores = PainScores.Add(new Domain.PainScore(at, score)) };
 }
 
 public partial record PainScore(DateTimeOffset At, int Score);
