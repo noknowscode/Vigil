@@ -55,6 +55,7 @@ public partial record AgendaReminder(Guid Id, string Name, string DueAt, string 
     public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
     public string AccessibleName => $"{Name}, {Label}. {Detail}";
     public bool IsWaiting => !IsOverdue;
+    public string OpenLabel => Loc.F("Agenda_OpenRecord", "Open {0}'s record", Name);
     public static AgendaReminder? From(IEnumerable<Case> cases, DateTimeOffset now, TimeSpan interval)
     {
         var next = cases.Where(c => c.Status == CaseStatus.Anesthetized)
@@ -64,6 +65,6 @@ public partial record AgendaReminder(Guid Id, string Name, string DueAt, string 
         var overdue = due < now;
         return new(next.Case.Id, next.Case.Patient.Name, due.ToOffset(now.Offset).ToString("HH:mm"),
             overdue ? Loc.T("Agenda_Overdue", "Observation overdue") : Loc.T("Agenda_Next", "Next observation"),
-            overdue ? Loc.F("Agenda_WasDue", "Due at {0:HH:mm} · open record", due.ToOffset(now.Offset)) : Loc.T("Agenda_Open", "Open record to add observations"), overdue) { Photo = PatientMedia.Photo(next.Case.Patient) };
+            overdue ? Loc.F("Agenda_DueAt", "Due at {0:HH:mm}", due.ToOffset(now.Offset)) : Loc.T("Agenda_Open", "Open record to add observations"), overdue) { Photo = PatientMedia.Photo(next.Case.Patient) };
     }
 }

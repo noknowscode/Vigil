@@ -18,9 +18,14 @@ public interface IPreferences
     ValueTask SetReadingIntervalAsync(int minutes, CancellationToken ct);
 
     ValueTask SetReduceMotionAsync(bool value, CancellationToken ct);
+
+    /// <summary>Surname for the board greeting ("Good morning, Dr. Okafor"); empty greets without a name.</summary>
+    string ClinicianName { get; }
+
+    ValueTask SetClinicianNameAsync(string name, CancellationToken ct);
 }
 
-internal sealed record PreferencesFile(int ReadingIntervalMinutes, bool ReduceMotion);
+internal sealed record PreferencesFile(int ReadingIntervalMinutes, bool ReduceMotion, string ClinicianName = "");
 
 [JsonSerializable(typeof(PreferencesFile))]
 internal partial class PreferencesJsonContext : JsonSerializerContext;
@@ -57,6 +62,10 @@ public sealed class Preferences : IPreferences
     public ValueTask SetReadingIntervalAsync(int minutes, CancellationToken ct) => SaveAsync(_value with { ReadingIntervalMinutes = minutes }, ct);
 
     public ValueTask SetReduceMotionAsync(bool value, CancellationToken ct) => SaveAsync(_value with { ReduceMotion = value }, ct);
+
+    public string ClinicianName => _value.ClinicianName ?? "";
+
+    public ValueTask SetClinicianNameAsync(string name, CancellationToken ct) => SaveAsync(_value with { ClinicianName = name.Trim() }, ct);
 
     /// <summary>The user's own setting, without the platform's.</summary>
     public bool ReduceMotionSetting => _value.ReduceMotion;

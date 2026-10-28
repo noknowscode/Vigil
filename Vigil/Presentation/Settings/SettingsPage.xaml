@@ -27,6 +27,14 @@
 
         <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
           <StackPanel Padding="20" Spacing="16">
+            <TextBlock x:Uid="SettingsGreetingTitle" Style="{StaticResource TitleLarge}" Foreground="{ThemeResource OnSurfaceBrush}" Text="Board greeting" />
+            <TextBox x:Uid="SettingsClinicianName" Header="Your surname" PlaceholderText="Okafor" Text="{Binding ClinicianName, Mode=TwoWay}" MaxLength="40" AutomationProperties.Name="Your surname for the board greeting" />
+            <TextBlock x:Uid="SettingsClinicianHelp" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="The board greets you as Dr. Okafor. Leave it empty for a plain greeting. Saved on this tablet only." />
+          </StackPanel>
+        </utu:CardContentControl>
+
+        <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
+          <StackPanel Padding="20" Spacing="16">
             <TextBlock x:Uid="SettingsAppearance" Style="{StaticResource TitleLarge}" Foreground="{ThemeResource OnSurfaceBrush}" Text="Appearance" />
             <muxc:RadioButtons x:Uid="SettingsTheme" Header="Theme" MaxColumns="{utu:Responsive Narrowest=1, Normal=3}" SelectedIndex="{Binding ThemeIndex, Mode=TwoWay}">
               <RadioButton x:Uid="SettingsThemeSystem" Content="System" />

@@ -35,6 +35,10 @@ public partial record SettingsModel(
     public IState<int> IntervalIndex => State.Value(this, () => Math.Max(0, Array.IndexOf(Services.Preferences.Intervals, (int)Preferences.ReadingInterval.TotalMinutes)))
         .ForEach(async (index, ct) => await Preferences.SetReadingIntervalAsync(Services.Preferences.Intervals[Math.Clamp(index, 0, 2)], ct));
 
+    /// <summary>Surname for the board greeting; saved when the field loses focus.</summary>
+    public IState<string> ClinicianName => State.Value(this, () => Preferences.ClinicianName)
+        .ForEach(async (name, ct) => await Preferences.SetClinicianNameAsync(name ?? "", ct));
+
     public IState<string> Notice => State.Value(this, () => "");
 
     public IState<string> LanguageNotice => State.Value(this, () => "");

@@ -3,8 +3,14 @@
     <!-- Board thresholds: 600 frame margin, 660 live band stacks, 760 tabs drop to a second row, 1120 agenda docks (below it opens as the !Agenda flyout). -->
     <utu:ResponsiveLayout x:Key="BoardLayout" Narrowest="0" Narrow="600" Normal="660" Wide="760" Widest="1120" />
   </Page.Resources>
-  <Grid x:Name="AppFrame" utu:SafeArea.Insets="VisibleBounds" Margin="{utu:Responsive Narrowest='8', Narrow='20,8,20,20', Layout={StaticResource BoardLayout}}" RowDefinitions="Auto,*">
-    <Grid x:Name="TopBar" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" RowSpacing="10" Padding="12,10,12,20">
+  <!-- Outer shell: page ground, a lighter rounded shell 24 px in (12 px under 600), and the white patient panel inset 12 px inside it. -->
+  <utu:CardContentControl x:Name="OuterShell" Style="{StaticResource StaticOutlinedCardStyle}" utu:SafeArea.Insets="VisibleBounds"
+                          Margin="{utu:Responsive Narrowest='12', Narrow='24', Layout={StaticResource BoardLayout}}"
+                          CornerRadius="{utu:Responsive Narrowest=24, Narrow=32, Layout={StaticResource BoardLayout}}"
+                          Background="{ThemeResource BackgroundBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="1"
+                          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+  <Grid x:Name="AppFrame" Padding="12" RowDefinitions="Auto,*">
+    <Grid x:Name="TopBar" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" RowSpacing="10" Padding="8,4,8,16">
       <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"><controls:CareMark Width="25" Height="29" /><TextBlock x:Uid="Board_1" Text="clover" Style="{StaticResource CloverHeading}" FontSize="28" /></StackPanel>
       <Border x:Name="TopTabs" Grid.Column="{utu:Responsive Narrowest=0, Wide=1, Layout={StaticResource BoardLayout}}" Grid.ColumnSpan="{utu:Responsive Narrowest=3, Wide=1, Layout={StaticResource BoardLayout}}" Grid.Row="{utu:Responsive Narrowest=1, Wide=0, Layout={StaticResource BoardLayout}}" Background="{ThemeResource CloverSage}" CornerRadius="14" Padding="4" HorizontalAlignment="Center" VerticalAlignment="Center">
         <utu:ChipGroup Style="{StaticResource FilterChipGroupStyle}" SelectionMode="Single">
@@ -18,16 +24,17 @@
     <!-- WORKAROUND(Nested default route into a collapsed region blocks startup navigation): the dock stays Visible and
          shrinks to 0 px and disabled below 1120 instead of collapsing; remove when the Agenda route loads into a collapsed region. -->
     <ContentControl x:Name="AgendaDock" Grid.Column="0" uen:Region.Attached="True" HorizontalAlignment="Left" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsTabStop="False" Width="{utu:Responsive Narrowest=0, Widest=352, Layout={StaticResource BoardLayout}}" IsEnabled="{utu:Responsive Narrowest=False, Widest=True, Layout={StaticResource BoardLayout}}" />
-      <Border x:Name="HomeShell" Grid.Column="{utu:Responsive Narrowest=0, Widest=1, Layout={StaticResource BoardLayout}}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1, Layout={StaticResource BoardLayout}}" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="1" CornerRadius="{utu:Responsive Narrowest=24, Wide=32, Layout={StaticResource BoardLayout}}">
+      <Border x:Name="HomeShell" Grid.Column="{utu:Responsive Narrowest=0, Widest=1, Layout={StaticResource BoardLayout}}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1, Layout={StaticResource BoardLayout}}" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="1" CornerRadius="24">
     <ScrollViewer x:Name="PatientScroll" HorizontalScrollMode="Disabled">
       <StackPanel MaxWidth="1680" Padding="{utu:Responsive Narrow='20,28,20,40', Wide='28,26,26,40'}" Spacing="18">
         <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="12">
           <StackPanel Spacing="8">
             <TextBlock Text="{Binding TodayLabel}" Style="{StaticResource CloverLabel}" />
-            <TextBlock x:Uid="Board_5" Text="Today's patients" Style="{StaticResource CloverDisplay}" FontSize="{utu:Responsive Narrowest=34, Wide=42}" />
-            <TextBlock x:Uid="Board_6" Text="A little more comfort. A lot of care." Style="{StaticResource CloverBody}" FontSize="16" />
+            <TextBlock Text="{Binding Greeting.Title}" Style="{StaticResource CloverDisplay}" FontSize="{utu:Responsive Narrowest=34, Wide=42}" TextWrapping="WrapWholeWords" />
+            <!-- Recap of the day: the most urgent fact in bold, then the other counts. -->
+            <TextBlock Style="{StaticResource CloverBody}" FontSize="16" TextWrapping="WrapWholeWords" AutomationProperties.LiveSetting="Off"><Run Text="{Binding Greeting.Lead}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" /><Run Text="{Binding Greeting.Rest}" /></TextBlock>
           </StackPanel>
-          <StackPanel Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center"><controls:CareGreeting Width="100" Height="94" Visibility="{utu:Responsive Narrowest=Collapsed, Wide=Visible}" /><Button x:Name="PatientNewButton" x:Uid="Board_7" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CloverPrimary}" Command="{Binding NewCase}" Content="＋  New patient" AutomationProperties.Name="New patient record" /></StackPanel>
+          <StackPanel Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center"><Button x:Name="PatientNewButton" x:Uid="Board_7" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CloverPrimary}" Command="{Binding NewCase}" Content="＋  New patient" AutomationProperties.Name="New patient record" /></StackPanel>
         </Grid>
         <mvux:FeedView Source="{Binding Live}" RefreshingState="None" IsTabStop="False">
           <mvux:FeedView.ValueTemplate><DataTemplate>
@@ -48,7 +55,7 @@
           <mvux:FeedView.ErrorTemplate><DataTemplate><TextBlock x:Uid="Board_10" Text="Active case unavailable. Retry the patient list below." Style="{StaticResource CloverBody}" /></DataTemplate></mvux:FeedView.ErrorTemplate>
         </mvux:FeedView>
         <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="12">
-          <TextBlock Text="{Binding DaySummary}" Style="{StaticResource CloverBody}" VerticalAlignment="Center" />
+          <TextBlock x:Uid="Board_5" Text="Today's patients" Style="{StaticResource CloverHeading}" FontSize="22" VerticalAlignment="Center" />
           <utu:ChipGroup Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Style="{StaticResource FilterChipGroupStyle}" SelectionMode="Single">
             <utu:Chip x:Uid="Board_11" Content="Today" IsChecked="True" Command="{Binding ShowToday}" AutomationProperties.Name="Show today's cases" />
             <utu:Chip x:Uid="Board_12" Content="All records" Command="{Binding ShowAll}" AutomationProperties.Name="Show all cases" />
@@ -182,4 +189,5 @@
       </Border>
     </Grid>
   </Grid>
+  </utu:CardContentControl>
 </Page>

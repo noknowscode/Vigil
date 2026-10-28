@@ -5,15 +5,16 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Agenda_Complete" xml:space="preserve"><value>Record completed</value></data>
+  <data name="Agenda_DueAt" xml:space="preserve"><value>Due at {0:HH:mm}</value></data>
   <data name="Agenda_Induced" xml:space="preserve"><value>Anaesthesia started</value></data>
   <data name="Agenda_Next" xml:space="preserve"><value>Next observation</value></data>
   <data name="Agenda_Open" xml:space="preserve"><value>Open record to add observations</value></data>
+  <data name="Agenda_OpenRecord" xml:space="preserve"><value>Open {0}'s record</value></data>
   <data name="Agenda_Overdue" xml:space="preserve"><value>Observation overdue</value></data>
   <data name="Agenda_Preparing" xml:space="preserve"><value>Preparing</value></data>
   <data name="Agenda_Ready" xml:space="preserve"><value>Pre-op complete</value></data>
   <data name="Agenda_Recovery" xml:space="preserve"><value>Recovery started</value></data>
   <data name="Agenda_Summary" xml:space="preserve"><value>{0} milestones · {1} preparing</value></data>
-  <data name="Agenda_WasDue" xml:space="preserve"><value>Due at {0:HH:mm} · open record</value></data>
   <data name="Alarm_High" xml:space="preserve"><value>▲ high</value></data>
   <data name="Alarm_Low" xml:space="preserve"><value>▼ low</value></data>
   <data name="Asa_NotSet" xml:space="preserve"><value>ASA —</value></data>
@@ -61,13 +62,11 @@
   <data name="Board_43.Text" xml:space="preserve"><value>Anaesthesia</value></data>
   <data name="Board_44.Text" xml:space="preserve"><value>Recovery</value></data>
   <data name="Board_5.Text" xml:space="preserve"><value>Today's patients</value></data>
-  <data name="Board_6.Text" xml:space="preserve"><value>A little more comfort. A lot of care.</value></data>
   <data name="Board_7.Content" xml:space="preserve"><value>＋  New patient</value></data>
   <data name="Board_7.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>New patient record</value></data>
   <data name="Board_9.Text" xml:space="preserve"><value>IN SURGERY</value></data>
   <data name="Board_AddedTime" xml:space="preserve"><value>Added {0:HH:mm}</value></data>
   <data name="Board_AlsoUnder" xml:space="preserve"><value>Also under anesthesia: {0}</value></data>
-  <data name="Board_DaySummary" xml:space="preserve"><value>{0} preparing   ·   {1} in surgery   ·   {2} recovering</value></data>
   <data name="Board_EndedTime" xml:space="preserve"><value>Ended {0:HH:mm}</value></data>
   <data name="Board_ExtubatedTime" xml:space="preserve"><value>Extubated {0:HH:mm}</value></data>
   <data name="Board_LastReading" xml:space="preserve"><value>Last {0:HH:mm} · HR {1} · SpO₂ {2} · MAP {3}</value></data>
@@ -123,6 +122,12 @@
   <data name="Export_Saved" xml:space="preserve"><value>Saved {0}.</value></data>
   <data name="Flag_High" xml:space="preserve"><value>▲ High</value></data>
   <data name="Flag_Low" xml:space="preserve"><value>▼ Low</value></data>
+  <data name="Greeting_Afternoon" xml:space="preserve"><value>Good afternoon</value></data>
+  <data name="Greeting_AfternoonNamed" xml:space="preserve"><value>Good afternoon, Dr. {0}</value></data>
+  <data name="Greeting_Evening" xml:space="preserve"><value>Good evening</value></data>
+  <data name="Greeting_EveningNamed" xml:space="preserve"><value>Good evening, Dr. {0}</value></data>
+  <data name="Greeting_Morning" xml:space="preserve"><value>Good morning</value></data>
+  <data name="Greeting_MorningNamed" xml:space="preserve"><value>Good morning, Dr. {0}</value></data>
   <data name="LiveBand_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Open the live record</value></data>
   <data name="LiveBand_2.Text" xml:space="preserve"><value>UNDER ANESTHESIA</value></data>
   <data name="LiveBand_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Elapsed anesthesia time</value></data>
@@ -229,6 +234,16 @@
   <data name="Preop_Progress" xml:space="preserve"><value>{0} of 5 checks</value></data>
   <data name="Readings_LastRecorded" xml:space="preserve"><value>Last recorded {0:dd MMM · HH:mm}</value></data>
   <data name="Readings_None" xml:space="preserve"><value>No readings yet</value></data>
+  <data name="Recap_AllSigned" xml:space="preserve"><value>Every record from today is signed.</value></data>
+  <data name="Recap_InSurgery" xml:space="preserve"><value>{0} patients in surgery.</value></data>
+  <data name="Recap_OneInSurgery" xml:space="preserve"><value>1 patient in surgery.</value></data>
+  <data name="Recap_Overdue" xml:space="preserve"><value>{0}'s reading is overdue</value></data>
+  <data name="Recap_Preparing" xml:space="preserve"><value>{0} waiting for preparation.</value></data>
+  <data name="Recap_PreparingCount" xml:space="preserve"><value>{0} in preparation</value></data>
+  <data name="Recap_Quiet" xml:space="preserve"><value>No patients on the board yet.</value></data>
+  <data name="Recap_Recovering" xml:space="preserve"><value>{0} in recovery.</value></data>
+  <data name="Recap_RecoveringCount" xml:space="preserve"><value>{0} recovering</value></data>
+  <data name="Recap_SignedCount" xml:space="preserve"><value>{0} signed today</value></data>
   <data name="Record_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Back to today's patients</value></data>
   <data name="Record_10.Text" xml:space="preserve"><value>WEIGHT</value></data>
   <data name="Record_100.Content" xml:space="preserve"><value>Review record</value></data>
@@ -419,8 +434,13 @@
   <data name="SettingsBack.Label" xml:space="preserve"><value>Board</value></data>
   <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Back to the board</value></data>
   <data name="SettingsClearAll.Content" xml:space="preserve"><value>Clear all records</value></data>
+  <data name="SettingsClinicianHelp.Text" xml:space="preserve"><value>The board greets you as Dr. Okafor. Leave it empty for a plain greeting. Saved on this tablet only.</value></data>
+  <data name="SettingsClinicianName.Header" xml:space="preserve"><value>Your surname</value></data>
+  <data name="SettingsClinicianName.PlaceholderText" xml:space="preserve"><value>Okafor</value></data>
+  <data name="SettingsClinicianName.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Your surname for the board greeting</value></data>
   <data name="SettingsData.Text" xml:space="preserve"><value>Records on this tablet</value></data>
   <data name="SettingsDataHelp.Text" xml:space="preserve"><value>Records are stored on this device only. They are not synced to other tablets or to the practice management system: export each signed record from its Recovery tab.</value></data>
+  <data name="SettingsGreetingTitle.Text" xml:space="preserve"><value>Board greeting</value></data>
   <data name="SettingsInterval.Header" xml:space="preserve"><value>Reading interval</value></data>
   <data name="SettingsInterval10.Content" xml:space="preserve"><value>10 min</value></data>
   <data name="SettingsInterval3.Content" xml:space="preserve"><value>3 min</value></data>

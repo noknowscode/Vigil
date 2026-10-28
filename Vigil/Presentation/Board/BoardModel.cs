@@ -132,7 +132,8 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
     private IFeed<DateTimeOffset> Now { get; } = Feed.AsyncEnumerable(Clock.Ticks);
 
     public string TodayLabel => Clock.Now.ToString("dddd, d MMMM");
-    public IFeed<string> DaySummary => Cases.Select(cases => Loc.F("Board_DaySummary", "{0} preparing   ·   {1} in surgery   ·   {2} recovering", cases.Count(c => c.Status == CaseStatus.Scheduled), cases.Count(c => c.Status == CaseStatus.Anesthetized), cases.Count(c => c.Status == CaseStatus.Recovery)));
+    // Re-read on the store signal and every tick, so the greeting turns over at noon and 18:00 and the recap follows the board.
+    public IFeed<BoardGreeting> Greeting => Feed.Combine(Cases, Now).Select(x => BoardGreeting.From(x.Item1, x.Item2, Preferences.ReadingInterval, Preferences.ClinicianName));
     public IState<BoardFilter> Filter => State.Value(this, () => BoardFilter.Today);
 
     public IListFeed<CaseSummary> Today => Feed
