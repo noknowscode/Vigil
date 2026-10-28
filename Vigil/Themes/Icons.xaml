@@ -50,6 +50,10 @@
   <x:String x:Key="IconCheck">M20 6 9 17l-5-5</x:String>
   <!-- chevron-down -->
   <x:String x:Key="IconChevronDown">m6 9 6 6 6-6</x:String>
+  <!-- x -->
+  <x:String x:Key="IconX">M18 6 6 18M6 6l12 12</x:String>
+  <!-- chevron-right -->
+  <x:String x:Key="IconChevronRight">m9 18 6-6-6-6</x:String>
   <!-- lightbulb -->
   <x:String x:Key="IconLightbulb">M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4</x:String>
   <!-- stethoscope -->

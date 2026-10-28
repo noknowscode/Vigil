@@ -1,50 +1,121 @@
-<Page x:Class="Vigil.Presentation.ParentPreviewPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mvux="using:Uno.Extensions.Reactive.UI" xmlns:uen="using:Uno.Extensions.Navigation.UI" xmlns:utu="using:Uno.Toolkit.UI" xmlns:controls="using:Vigil.Controls" Background="{ThemeResource BackgroundBrush}">
+<!--
+  Pet parent preview (route Main/ParentPreview, from the record). What a pet parent would see on their phone, drawn
+  in the v2 language at phone width (MaxWidth 460): wordmark header, the "not connected" notice, the patient card
+  (photo panel, serif name), the team's milestones, what happens next, and the visit details.
+-->
+<Page x:Class="Vigil.Presentation.ParentPreviewPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mvux="using:Uno.Extensions.Reactive.UI"
+      xmlns:uen="using:Uno.Extensions.Navigation.UI"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:controls="using:Vigil.Controls"
+      Background="Transparent">
   <Grid utu:SafeArea.Insets="VisibleBounds" RowDefinitions="Auto,*">
-    <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,10" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="0,0,0,1">
-      <Button x:Uid="ParentPreview_1" Style="{StaticResource CloverQuiet}" uen:Navigation.Request="-" AutomationProperties.Name="Back to patient record"><FontIcon Glyph="&#xE72B;" FontSize="18" /></Button>
-      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center"><controls:CareMark Width="22" Height="26" /><TextBlock x:Uid="ParentPreview_2" Text="clover" Style="{StaticResource CloverHeading}" FontSize="26" /></StackPanel>
-      <TextBlock x:Uid="ParentPreview_3" Grid.Column="2" Text="FOR YOU" Style="{StaticResource CloverLabel}" VerticalAlignment="Center" />
-    </Grid>
+    <!-- Back bar: the wordmark as the title; the Android back gesture comes with the NavigationBar. -->
+    <utu:NavigationBar Background="Transparent" Padding="{utu:Responsive Narrowest='8,8,20,0', Narrow='28,16,40,0'}">
+      <utu:NavigationBar.Content>
+        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <controls:CareMark Width="20" Height="23" />
+          <TextBlock x:Uid="ParentPreview_1" Text="clover" Style="{StaticResource TypeBrand}" />
+          <!-- xaml-lint: allow card - 20 px audience badge, display-only -->
+          <Border Style="{StaticResource BadgeNeutral}" VerticalAlignment="Center" Margin="8,0,0,0"><TextBlock x:Uid="ParentPreview_2" Text="For you" Style="{StaticResource TypeCaptionStrong}" /></Border>
+        </StackPanel>
+      </utu:NavigationBar.Content>
+      <utu:NavigationBar.MainCommand>
+        <AppBarButton x:Uid="ParentPreview_3" Label="Back" AutomationProperties.Name="Back to patient record" uen:Navigation.Request="-">
+          <AppBarButton.Icon><SymbolIcon Symbol="Back" /></AppBarButton.Icon>
+        </AppBarButton>
+      </utu:NavigationBar.MainCommand>
+    </utu:NavigationBar>
     <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled">
-      <StackPanel MaxWidth="460" Padding="16,20,16,32" Spacing="16">
-        <Border Background="{ThemeResource CloverSage}" CornerRadius="12" Padding="12"><TextBlock x:Uid="ParentPreview_4" Text="Clinic preview · remote sharing is not connected" Style="{StaticResource CloverBody}" FontSize="13" TextAlignment="Center" /></Border>
-        <mvux:FeedView x:Name="ParentFeed" Source="{Binding Patient}" RefreshingState="None" IsTabStop="False">
+      <StackPanel MaxWidth="460" Padding="16,16,16,40" Spacing="16">
+        <!-- xaml-lint: allow card - one-line notice pill, display-only -->
+        <Border Style="{StaticResource PillSurface}" HorizontalAlignment="Center">
+          <TextBlock x:Uid="ParentPreview_4" Text="Clinic preview · remote sharing is not connected" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource InkMutedBrush}" TextAlignment="Center" TextWrapping="WrapWholeWords" />
+        </Border>
+        <mvux:FeedView x:Name="ParentFeed" Source="{Binding Patient}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch">
           <mvux:FeedView.ValueTemplate><DataTemplate>
             <StackPanel Spacing="16">
-              <Border Style="{StaticResource CloverCard}" Padding="0" CornerRadius="24">
+              <utu:CardContentControl Style="{StaticResource PanelCardStyle}" Padding="6" CornerRadius="24">
                 <StackPanel>
-                  <Grid Height="248" CornerRadius="23,23,0,0" Background="{ThemeResource CloverSky}">
+                  <Grid Height="248" CornerRadius="19" Background="{ThemeResource MediaPlaceholderBrush}">
                     <controls:PetBackdrop Photo="{Binding Data.Photo}" />
-                    <TextBlock Text="{Binding Data.Initial}" Style="{StaticResource CloverDisplay}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Data.HasNoPhoto}" />
-                    <Border CornerRadius="16" Background="{ThemeResource CloverGlass}" Padding="12,7" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16"><TextBlock Text="{Binding Data.Status}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="13" /></Border>
+                    <TextBlock Text="{Binding Data.Initial}" Style="{StaticResource TypeDisplayTitleL}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Data.HasNoPhoto}" />
+                    <!-- xaml-lint: allow card - status pill over the photo, display-only -->
+                    <Border Style="{StaticResource PillSurface}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="12">
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Data.Status}" Style="{StaticResource TypeCaptionStrong}" />
+                      </StackPanel>
+                    </Border>
                   </Grid>
-                  <StackPanel Padding="22" Spacing="8"><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverDisplay}" FontSize="38" /><TextBlock Text="{Binding Data.Breed}" Style="{StaticResource CloverBody}" /><TextBlock Text="{Binding Data.Updated}" Style="{StaticResource CloverLabel}" CharacterSpacing="0" FontSize="13" /></StackPanel>
+                  <StackPanel Padding="16,18,16,14" Spacing="6">
+                    <TextBlock Text="{Binding Data.Name}" Style="{StaticResource TypeDisplayTitle}" />
+                    <TextBlock Text="{Binding Data.Breed}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" />
+                    <TextBlock Text="{Binding Data.Updated}" Style="{StaticResource TypeMonoMeta}" />
+                  </StackPanel>
                 </StackPanel>
-              </Border>
-              <Border Style="{StaticResource CloverCard}" Padding="22">
-                <StackPanel Spacing="16">
-                  <Grid ColumnDefinitions="*,Auto"><TextBlock x:Uid="ParentPreview_5" Text="A little closer, even apart." Style="{StaticResource CloverTitle}" /><controls:CareMark Grid.Column="1" Width="20" Height="23" /></Grid>
-                  <TextBlock Text="{Binding Data.Description}" Style="{StaticResource CloverBody}" />
-                  <ItemsControl ItemsSource="{Binding Data.Milestones}"><ItemsControl.ItemTemplate><DataTemplate>
-                    <Grid ColumnDefinitions="32,*,Auto" Padding="0,12" ColumnSpacing="10" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="0,0,0,1">
-                      <Border Width="28" Height="28" CornerRadius="14" Background="{ThemeResource CloverSage}" VerticalAlignment="Top"><TextBlock Text="{Binding Marker}" FontSize="17" Foreground="{ThemeResource PrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
-                      <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="{Binding Label}" Style="{StaticResource CloverTitle}" FontSize="14" /><TextBlock Text="{Binding Detail}" Style="{StaticResource CloverBody}" FontSize="13" /></StackPanel>
-                      <TextBlock Grid.Column="2" Text="{Binding Time}" Style="{StaticResource CloverBody}" FontSize="13" />
-                    </Grid>
-                  </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
-                  <TextBlock x:Uid="ParentPreview_6" Text="Milestones are entered by the team. This is not a live monitor." Style="{StaticResource CloverBody}" FontSize="13" />
+              </utu:CardContentControl>
+
+              <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
+                <StackPanel Spacing="12">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock x:Uid="ParentPreview_5" Text="A little closer, even apart." Style="{StaticResource TypeH3Card}" />
+                    <controls:CareMark Grid.Column="1" Width="16" Height="18" VerticalAlignment="Center" />
+                  </Grid>
+                  <TextBlock Text="{Binding Data.Description}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+                  <ItemsControl ItemsSource="{Binding Data.Milestones}">
+                    <ItemsControl.ItemTemplate><DataTemplate>
+                      <Grid ColumnDefinitions="28,*,Auto" Padding="0,12" ColumnSpacing="12" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
+                        <!-- xaml-lint: allow card - 28 px milestone marker disc -->
+                        <Border Width="28" Height="28" CornerRadius="14" Background="{ThemeResource PhaseAnesthesiaSoftBrush}" VerticalAlignment="Top">
+                          <TextBlock Text="{Binding Marker}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="2">
+                          <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyStrong}" TextWrapping="WrapWholeWords" />
+                          <TextBlock Text="{Binding Detail}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="{Binding Time}" Style="{StaticResource TypeMonoMeta}" />
+                      </Grid>
+                    </DataTemplate></ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <TextBlock x:Uid="ParentPreview_6" Text="Milestones are entered by the team. This is not a live monitor." Style="{StaticResource TypeCaption}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
-              </Border>
-              <Border Style="{StaticResource CloverCard}" Background="{ThemeResource CloverLime}" Padding="22">
-                <StackPanel Spacing="12"><TextBlock x:Uid="ParentPreview_7" Text="WHAT HAPPENS NEXT" Style="{StaticResource CloverLabel}" /><TextBlock x:Uid="ParentPreview_8" Text="One step at a time." Style="{StaticResource CloverHeading}" FontSize="25" /><TextBlock Text="{Binding Data.Next}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
-              </Border>
-              <Expander x:Uid="ParentPreview_9" Header="Your visit &amp; care team" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"><StackPanel Spacing="10"><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource CloverTitle}" /><TextBlock Text="{Binding Data.Team}" Style="{StaticResource CloverBody}" /><TextBlock x:Uid="ParentPreview_10" Text="For a personal update, contact your clinic using the details on your appointment confirmation." Style="{StaticResource CloverBody}" /></StackPanel></Expander>
-              <TextBlock x:Uid="ParentPreview_11" Text="Care, continued. For the ones you love." Style="{StaticResource CloverBody}" FontSize="13" TextAlignment="Center" Margin="0,8" />
+              </utu:CardContentControl>
+
+              <utu:CardContentControl Style="{StaticResource PanelCardStyle}" Background="{ThemeResource PhaseAnesthesiaSoftBrush}" BorderBrush="{ThemeResource PhaseAnesthesiaSoftBorderBrush}">
+                <StackPanel Spacing="8">
+                  <TextBlock x:Uid="ParentPreview_7" Text="WHAT HAPPENS NEXT" Style="{StaticResource TypeEyebrow}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" />
+                  <TextBlock x:Uid="ParentPreview_8" Text="One step at a time." Style="{StaticResource TypeTitleM}" />
+                  <TextBlock Text="{Binding Data.Next}" Style="{StaticResource TypeBody}" TextWrapping="WrapWholeWords" />
+                </StackPanel>
+              </utu:CardContentControl>
+
+              <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
+                <StackPanel Spacing="8">
+                  <TextBlock x:Uid="ParentPreview_9" Text="Your visit and care team" Style="{StaticResource TypeH3Card}" />
+                  <TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TypeBodyStrong}" TextWrapping="WrapWholeWords" />
+                  <TextBlock Text="{Binding Data.Team}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+                  <TextBlock x:Uid="ParentPreview_10" Text="For a personal update, contact your clinic using the details on your appointment confirmation." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+                </StackPanel>
+              </utu:CardContentControl>
+              <TextBlock x:Uid="ParentPreview_11" Text="Care, continued. For the ones you love." Style="{StaticResource TypeCaption}" Foreground="{ThemeResource InkMutedBrush}" TextAlignment="Center" Margin="0,8" />
             </StackPanel>
           </DataTemplate></mvux:FeedView.ValueTemplate>
-          <mvux:FeedView.ProgressTemplate><DataTemplate><ProgressRing x:Uid="ParentPreview_12" IsActive="True" Width="32" Height="32" AutomationProperties.Name="Loading care updates" /></DataTemplate></mvux:FeedView.ProgressTemplate>
-          <mvux:FeedView.NoneTemplate><DataTemplate><TextBlock x:Uid="ParentPreview_13" Text="This visit is no longer available on this device." Style="{StaticResource CloverBody}" /></DataTemplate></mvux:FeedView.NoneTemplate>
-          <mvux:FeedView.ErrorTemplate><DataTemplate><StackPanel Spacing="12"><TextBlock x:Uid="ParentPreview_14" Text="Care updates could not be loaded." Style="{StaticResource CloverTitle}" /><Button x:Uid="ParentPreview_15" Content="Try again" Style="{StaticResource CloverPrimary}" Command="{Binding DataContext.Retry, ElementName=ParentFeed}" /></StackPanel></DataTemplate></mvux:FeedView.ErrorTemplate>
+          <mvux:FeedView.ProgressTemplate><DataTemplate>
+            <StackPanel Spacing="16" AutomationProperties.AccessibilityView="Raw">
+              <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="360" RadiusX="24" RadiusY="24" />
+              <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="200" RadiusX="18" RadiusY="18" />
+            </StackPanel>
+          </DataTemplate></mvux:FeedView.ProgressTemplate>
+          <mvux:FeedView.NoneTemplate><DataTemplate><TextBlock x:Uid="ParentPreview_12" Text="This visit is no longer available on this device." Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" /></DataTemplate></mvux:FeedView.NoneTemplate>
+          <mvux:FeedView.ErrorTemplate><DataTemplate>
+            <StackPanel Spacing="12">
+              <TextBlock x:Uid="ParentPreview_13" Text="Care updates could not be loaded." Style="{StaticResource TypeH3Card}" />
+              <Button x:Uid="ParentPreview_14" Content="Try again" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=ParentFeed}" />
+            </StackPanel>
+          </DataTemplate></mvux:FeedView.ErrorTemplate>
         </mvux:FeedView>
       </StackPanel>
     </ScrollViewer>

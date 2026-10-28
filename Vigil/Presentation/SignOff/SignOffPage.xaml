@@ -1,9 +1,13 @@
+<!--
+  Sign off (route !SignOff from the record). v2 sheet: serif patient line, the record summary in a panel card with the
+  two mono stats as its anchor, then the signer card. The action bar stays pinned under the scroll area.
+-->
 <Page x:Class="Vigil.Presentation.SignOffPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mvux="using:Uno.Extensions.Reactive.UI"
       xmlns:utu="using:Uno.Toolkit.UI"
-      Background="{ThemeResource SurfaceBrush}">
+      Background="{ThemeResource PageBrush}">
 
   <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="640">
     <Grid.RowDefinitions>
@@ -12,9 +16,9 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <utu:NavigationBar x:Uid="SignOff_1" Content="Sign off" Background="{ThemeResource SurfaceBrush}">
+    <utu:NavigationBar Content="" Background="Transparent">
       <utu:NavigationBar.MainCommand>
-        <AppBarButton x:Uid="SignOff_2" Label="Cancel" AutomationProperties.Name="Close sign-off" Command="{Binding Cancel}">
+        <AppBarButton x:Uid="SignOff_1" Label="Cancel" AutomationProperties.Name="Close sign-off" Command="{Binding Cancel}">
           <AppBarButton.Icon>
             <SymbolIcon Symbol="Cancel" />
           </AppBarButton.Icon>
@@ -22,65 +26,79 @@
       </utu:NavigationBar.MainCommand>
     </utu:NavigationBar>
 
-    <ScrollViewer Grid.Row="1">
-      <StackPanel Padding="24,8,24,24" Spacing="20">
-        <mvux:FeedView x:Name="SummaryFeed" Source="{Binding Summary}" IsTabStop="False" RefreshingState="None" MinHeight="220">
+    <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled">
+      <StackPanel Padding="24,0,24,24" Spacing="16">
+        <mvux:FeedView x:Name="SummaryFeed" Source="{Binding Summary}" IsTabStop="False" RefreshingState="None" MinHeight="220" HorizontalContentAlignment="Stretch">
           <mvux:FeedView.ValueTemplate>
             <DataTemplate>
-              <StackPanel Spacing="12">
-                <TextBlock Style="{StaticResource TitleLarge}" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Patient}" />
-                <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{Binding Data.Procedure}" />
-                <!-- Anchor: the signed summary at display scale. -->
-                <StackPanel Orientation="Horizontal" Spacing="24">
-                  <StackPanel>
-                    <TextBlock x:Uid="SignOff_3" Style="{StaticResource DisplayLarge}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{Binding Data.Duration}" AutomationProperties.Name="Anesthesia duration" />
-                    <TextBlock x:Uid="SignOff_4" Style="{StaticResource LabelLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="ANESTHESIA" />
-                  </StackPanel>
-                  <StackPanel>
-                    <TextBlock x:Uid="SignOff_5" Style="{StaticResource DisplayLarge}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{Binding Data.Readings}" AutomationProperties.Name="Readings recorded" />
-                    <TextBlock x:Uid="SignOff_6" Style="{StaticResource LabelLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="READINGS" />
-                  </StackPanel>
+              <StackPanel Spacing="16">
+                <StackPanel Spacing="6" Margin="0,0,0,8">
+                  <TextBlock x:Uid="SignOff_2" Text="Sign off" Style="{StaticResource TypeDisplayTitle}" />
+                  <TextBlock Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Patient}" />
                 </StackPanel>
-                <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Counts}" />
-                <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{Binding Data.Recovery}" />
-                <TextBlock Style="{StaticResource TitleSmall}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Blocker}" />
+                <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
+                  <StackPanel Spacing="14">
+                    <TextBlock Style="{StaticResource TypeH3Card}" TextWrapping="WrapWholeWords" Text="{Binding Data.Procedure}" />
+                    <!-- Anchor: the signed summary as two mono stats. -->
+                    <StackPanel Orientation="Horizontal" Spacing="32">
+                      <StackPanel>
+                        <TextBlock x:Uid="SignOff_3" Text="Anesthesia" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" />
+                        <TextBlock x:Uid="SignOff_4" Style="{StaticResource TypeMonoStat}" Text="{Binding Data.Duration}" AutomationProperties.Name="Anesthesia duration" />
+                      </StackPanel>
+                      <StackPanel>
+                        <TextBlock x:Uid="SignOff_5" Text="Readings" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" />
+                        <TextBlock x:Uid="SignOff_6" Style="{StaticResource TypeMonoStat}" Text="{Binding Data.Readings}" AutomationProperties.Name="Readings recorded" />
+                      </StackPanel>
+                    </StackPanel>
+                    <StackPanel Spacing="4" Padding="0,14,0,0" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
+                      <TextBlock Style="{StaticResource TypeBody}" TextWrapping="WrapWholeWords" Text="{Binding Data.Counts}" />
+                      <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Recovery}" />
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Blocker}" />
+                  </StackPanel>
+                </utu:CardContentControl>
               </StackPanel>
             </DataTemplate>
           </mvux:FeedView.ValueTemplate>
           <mvux:FeedView.ProgressTemplate>
             <DataTemplate>
-              <StackPanel Spacing="12">
-                <Rectangle Width="320" Height="24" HorizontalAlignment="Left" RadiusX="6" RadiusY="6" Fill="{ThemeResource SurfaceVariantBrush}" />
-                <Rectangle Width="220" Height="18" HorizontalAlignment="Left" RadiusX="6" RadiusY="6" Fill="{ThemeResource SurfaceVariantBrush}" />
-                <Rectangle Width="260" Height="68" HorizontalAlignment="Left" RadiusX="6" RadiusY="6" Fill="{ThemeResource SurfaceVariantBrush}" />
+              <StackPanel Spacing="12" AutomationProperties.AccessibilityView="Raw">
+                <Rectangle Style="{StaticResource Skeleton}" Width="200" Height="40" HorizontalAlignment="Left" />
+                <Rectangle Style="{StaticResource Skeleton}" Width="320" Height="20" HorizontalAlignment="Left" />
+                <Rectangle Style="{StaticResource Skeleton}" Height="180" Margin="0,12,0,0" HorizontalAlignment="Stretch" />
               </StackPanel>
             </DataTemplate>
           </mvux:FeedView.ProgressTemplate>
           <mvux:FeedView.ErrorTemplate>
             <DataTemplate>
               <StackPanel Spacing="12">
-                <TextBlock x:Uid="SignOff_7" Style="{StaticResource TitleLarge}" Foreground="{ThemeResource OnSurfaceBrush}" Text="Couldn't read this record." />
-                <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding Message}" />
-                <Button x:Uid="SignOff_8" Style="{StaticResource CloverSecondary}" HorizontalAlignment="Left" Content="Retry"
+                <TextBlock x:Uid="SignOff_7" Style="{StaticResource TypeH3Card}" Text="Couldn't read this record." />
+                <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="{Binding Message}" />
+                <Button x:Uid="SignOff_8" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Content="Retry"
                         Command="{Binding DataContext.Retry, ElementName=SummaryFeed}" />
               </StackPanel>
             </DataTemplate>
           </mvux:FeedView.ErrorTemplate>
         </mvux:FeedView>
 
-        <TextBox x:Uid="SignOff_9" Header="Veterinarian"
-                 Text="{Binding Veterinarian, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 AutomationProperties.Name="Signing veterinarian" />
-        <CheckBox x:Uid="SignOff_10" Content="I have reviewed this anesthesia record and it is complete."
-                  IsChecked="{Binding Confirmed, Mode=TwoWay}" />
-        <TextBlock x:Uid="SignOff_11" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
-                   Text="Signing makes the record read-only on this device. This is a typed name on a shared tablet, not an electronic signature." />
+        <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
+          <StackPanel Spacing="14">
+            <TextBlock x:Uid="SignOff_9" Style="{StaticResource TypeEyebrow}" Text="SIGNED BY" />
+            <TextBox x:Uid="SignOff_10" Header="Veterinarian"
+                     Text="{Binding Veterinarian, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     AutomationProperties.Name="Signing veterinarian" />
+            <CheckBox x:Uid="SignOff_11" Content="I have reviewed this anesthesia record and it is complete."
+                      IsChecked="{Binding Confirmed, Mode=TwoWay}" />
+            <TextBlock x:Uid="SignOff_12" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords"
+                       Text="Signing makes the record read-only on this device. This is a typed name on a shared device, not an electronic signature." />
+          </StackPanel>
+        </utu:CardContentControl>
       </StackPanel>
     </ScrollViewer>
 
-    <StackPanel Grid.Row="2" Padding="24,12,24,24" Spacing="8">
-      <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Error}" />
-      <Button x:Uid="SignOff_12" Style="{StaticResource CloverPrimary}" HorizontalAlignment="Stretch" Content="Sign record"
+    <StackPanel Grid.Row="2" Padding="24,12,24,24" Spacing="8" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
+      <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Error}" />
+      <Button x:Uid="SignOff_13" Style="{StaticResource ButtonPrimaryXL}" Content="Sign record"
               Command="{Binding Sign}" AutomationProperties.Name="Sign the record" />
     </StackPanel>
   </Grid>

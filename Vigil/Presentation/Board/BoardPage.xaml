@@ -16,37 +16,6 @@
       xmlns:utu="using:Uno.Toolkit.UI"
       Background="Transparent">
   <Page.Resources>
-    <!-- Link (.lnk): 14/20 600 ink, underline rgba(27,33,47,.3) 4 px below, trailing arrow 16 / 2.
-         xaml-lint: allow template - underline colour and offset are not TextDecorations options -->
-    <Style x:Key="LinkButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
-      <Setter Property="Background" Value="Transparent" />
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="Padding" Value="0" />
-      <Setter Property="Foreground" Value="{ThemeResource InkBrush}" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="Button">
-            <Grid x:Name="Root" Background="Transparent">
-              <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                  <VisualState x:Name="Normal" />
-                  <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Underline.Fill" Value="{ThemeResource InkBrush}" /></VisualState.Setters></VisualState>
-                  <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Underline.Fill" Value="{ThemeResource InkBrush}" /></VisualState.Setters></VisualState>
-                  <VisualState x:Name="Disabled" />
-                </VisualStateGroup>
-              </VisualStateManager.VisualStateGroups>
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <Grid>
-                  <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource TypeBodyStrong}" Foreground="{TemplateBinding Foreground}" />
-                  <Rectangle x:Name="Underline" Height="1" VerticalAlignment="Bottom" Margin="0,0,0,-3" Fill="{ThemeResource LinkUnderlineBrush}" />
-                </Grid>
-                <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconArrowRight}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" />
-              </StackPanel>
-            </Grid>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
     <!-- Segmented control segment (.seg): 30 px, radius 8; the selected chrome lives in the content (seg-on shadow).
          xaml-lint: allow template - hover ink 5 % under a content-drawn selected surface -->
     <Style x:Key="SegmentButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
@@ -131,12 +100,6 @@
       <Setter Property="Width" Value="32" />
       <Setter Property="Height" Value="32" />
       <Setter Property="CornerRadius" Value="10" />
-    </Style>
-    <Style x:Key="Skeleton" TargetType="Rectangle">
-      <Setter Property="RadiusX" Value="6" />
-      <Setter Property="RadiusY" Value="6" />
-      <Setter Property="Fill" Value="{ThemeResource SkeletonBrush}" />
-      <Setter Property="HorizontalAlignment" Value="Left" />
     </Style>
     <Style x:Key="GanttName" TargetType="TextBlock" BasedOn="{StaticResource TypeBodyS}">
       <Setter Property="LineHeight" Value="16" />

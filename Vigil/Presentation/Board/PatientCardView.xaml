@@ -3,7 +3,8 @@
   by PatientCard.VisualStates through utu:VisualStateManagerExtensions (strip colour per stage, current stepper label,
   details open or closed); nothing is toggled in code-behind. The whole card opens the record (a transparent button
   under the content, the CSS "stretch link"); the Show details toggle sits above it and flips the model's per-card state.
-  Motion (shell-and-tokens.md §6): details fade in 240 ms after 60 ms (team line 160 ms), sliding from -8 px; chevron
+  Motion (shell-and-tokens.md §6): details rows grow over 300 ms (MaxHeight, collapse snaps), fade in 240 ms after 60 ms
+  (team line 160 ms), sliding from -8 px; chevron
   turns 180° in 300 ms, back in 200 ms; ease-standard (0.2,0 0,1). "Still" states skip it (Reduce motion).
 -->
 <UserControl x:Class="Vigil.Presentation.PatientCardView"
@@ -152,6 +153,9 @@
           </VisualState.Setters>
           <Storyboard>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ChevronTurn" Storyboard.TargetProperty="Angle"><SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="180" KeySpline="0.2,0 0,1" /></DoubleAnimationUsingKeyFrames>
+            <!-- Rows grow 0fr to 1fr: MaxHeight 0 to the three 44 px rows, then unclamped so a wrapped procedure fits. -->
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Details" Storyboard.TargetProperty="MaxHeight" EnableDependentAnimation="True"><DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0" /><SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="132" KeySpline="0.2,0 0,1" /><DiscreteDoubleKeyFrame KeyTime="0:0:0.31" Value="1000" /></DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Team" Storyboard.TargetProperty="MaxHeight" EnableDependentAnimation="True"><DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0" /><SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="20" KeySpline="0.2,0 0,1" /><DiscreteDoubleKeyFrame KeyTime="0:0:0.31" Value="1000" /></DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Details" Storyboard.TargetProperty="Opacity"><DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0" /><DiscreteDoubleKeyFrame KeyTime="0:0:0.06" Value="0" /><SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="1" KeySpline="0.2,0 0,1" /></DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="DetailsSlide" Storyboard.TargetProperty="Y"><DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="-8" /><DiscreteDoubleKeyFrame KeyTime="0:0:0.06" Value="-8" /><SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="0" KeySpline="0.2,0 0,1" /></DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Team" Storyboard.TargetProperty="Opacity"><DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0" /><DiscreteDoubleKeyFrame KeyTime="0:0:0.16" Value="0" /><SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1" KeySpline="0.2,0 0,1" /></DoubleAnimationUsingKeyFrames>

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:utu="using:Uno.Toolkit.UI"
              x:Name="Root">
-  <!-- One vital on the pad: label with its strip glyph, 64 px − / value / + for gloved taps, range flag as text. -->
+  <!-- One vital on the pad: label with its strip glyph, 48 px − / value / +, range flag as text. -->
   <Grid RowSpacing="4">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -16,25 +16,25 @@
     </Grid.ColumnDefinitions>
 
     <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="6">
-      <TextBlock Style="{StaticResource LabelLarge}"
+      <TextBlock Style="{StaticResource TypeEyebrow}"
                  Foreground="{Binding GlyphBrush, ElementName=Root}"
                  Text="{Binding Glyph, ElementName=Root}" />
-      <TextBlock Style="{StaticResource LabelLarge}"
-                 Foreground="{ThemeResource OnSurfaceBrush}"
+      <TextBlock Style="{StaticResource TypeEyebrow}"
+                 Foreground="{ThemeResource InkBrush}"
                  Text="{Binding Label, ElementName=Root}" />
-      <TextBlock Style="{StaticResource LabelMedium}"
-                 Foreground="{ThemeResource OnSurfaceVariantBrush}"
+      <TextBlock Style="{StaticResource TypeCaptionStrong}"
+                 Foreground="{ThemeResource InkMutedBrush}"
                  VerticalAlignment="Bottom"
                  Text="{Binding Unit, ElementName=Root}" />
-      <TextBlock Style="{StaticResource LabelLarge}"
+      <TextBlock Style="{StaticResource TypeEyebrow}"
                  Foreground="{ThemeResource ErrorBrush}"
                  Text="{Binding Flag, ElementName=Root}"
                  AutomationProperties.LiveSetting="Polite" />
     </StackPanel>
 
     <RepeatButton Grid.Row="1"
-                  Width="{utu:Responsive Narrowest=56, Normal=64}"
-                  Height="64"
+                  Width="48"
+                  Height="48"
                   Padding="0"
                   Delay="400"
                   Interval="120"
@@ -47,18 +47,18 @@
     <TextBox Grid.Row="1"
              Grid.Column="1"
              Margin="{utu:Responsive Narrowest='4,0', Normal='8,0'}"
-             MinHeight="64"
+             MinHeight="48"
              TextAlignment="Center"
              VerticalContentAlignment="Center"
-             FontFamily="{StaticResource HeadlineSmallFontFamily}"
-             FontSize="{StaticResource HeadlineMediumFontSize}"
+             FontFamily="{StaticResource FontMono}"
+             FontSize="20"
              InputScope="Number"
              Text="{Binding Text, ElementName=Root, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
              AutomationProperties.Name="{Binding AccessibleName, ElementName=Root}" />
     <RepeatButton Grid.Row="1"
                   Grid.Column="2"
-                  Width="{utu:Responsive Narrowest=56, Normal=64}"
-                  Height="64"
+                  Width="48"
+                  Height="48"
                   Padding="0"
                   Delay="400"
                   Interval="120"

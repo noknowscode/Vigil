@@ -15,6 +15,8 @@
       <SolidColorBrush x:Key="InkMutedBrush" Color="#5C616C" />
       <SolidColorBrush x:Key="IconMutedBrush" Color="#6B707B" />
       <SolidColorBrush x:Key="InkFaintBrush" Color="#A3A6AE" />
+      <!-- Form field outline: the lightest grey that keeps 3:1 against Surface1 (WCAG 1.4.11); no role sits there. -->
+      <SolidColorBrush x:Key="InputEdgeBrush" Color="#8E929B" />
       <SolidColorBrush x:Key="PageBrush" Color="#F3F3F2" />
       <SolidColorBrush x:Key="Surface1Brush" Color="#FCFBF9" />
       <SolidColorBrush x:Key="Surface2Brush" Color="#F8F8F7" />
@@ -99,12 +101,22 @@
       <SolidColorBrush x:Key="KnobEdgeBrush" Color="#D4D4D8" />
       <SolidColorBrush x:Key="LinkUnderlineBrush" Color="#4D1B212F" />
       <SolidColorBrush x:Key="SkeletonBrush" Color="#ECECEE" />
+          <!-- Care ruler (Agenda: anaesthesia mint, recovery lavender), CareMark dot and PetBackdrop placeholder. -->
+      <SolidColorBrush x:Key="CloverLavender" Color="#E5E8F9" />
+      <SolidColorBrush x:Key="CloverLavenderEdge" Color="#CDD3F3" />
+      <SolidColorBrush x:Key="CloverMint" Color="#D5ECE0" />
+      <SolidColorBrush x:Key="CloverMintEdge" Color="#B8DDC8" />
+      <SolidColorBrush x:Key="CloverLime" Color="#F3F3F2" />
+      <SolidColorBrush x:Key="CloverPhotoBase" Color="#E9E9EB" />
+      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#EDEDEF" />
+      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#F3F3F2" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="InkBrush" Color="#E6E7EA" />
       <SolidColorBrush x:Key="InkMutedBrush" Color="#A3A6AE" />
       <SolidColorBrush x:Key="IconMutedBrush" Color="#8E929B" />
       <SolidColorBrush x:Key="InkFaintBrush" Color="#6B707B" />
+      <SolidColorBrush x:Key="InputEdgeBrush" Color="#6B707B" />
       <SolidColorBrush x:Key="PageBrush" Color="#121417" />
       <SolidColorBrush x:Key="Surface1Brush" Color="#1A1D21" />
       <SolidColorBrush x:Key="Surface2Brush" Color="#202328" />
@@ -183,6 +195,15 @@
       <SolidColorBrush x:Key="KnobEdgeBrush" Color="#4A4D55" />
       <SolidColorBrush x:Key="LinkUnderlineBrush" Color="#4DE6E7EA" />
       <SolidColorBrush x:Key="SkeletonBrush" Color="#2A2D33" />
+          <!-- Care ruler (Agenda: anaesthesia mint, recovery lavender), CareMark dot and PetBackdrop placeholder. -->
+      <SolidColorBrush x:Key="CloverLavender" Color="#262B45" />
+      <SolidColorBrush x:Key="CloverLavenderEdge" Color="#3A4166" />
+      <SolidColorBrush x:Key="CloverMint" Color="#17372A" />
+      <SolidColorBrush x:Key="CloverMintEdge" Color="#24513D" />
+      <SolidColorBrush x:Key="CloverLime" Color="#1E2125" />
+      <SolidColorBrush x:Key="CloverPhotoBase" Color="#23262B" />
+      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#2A2D33" />
+      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#1E2125" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -193,6 +214,14 @@
   <FontFamily x:Key="FontSans">ms-appx:///Assets/Fonts/HankenGrotesk.ttf</FontFamily>
   <FontFamily x:Key="FontMono">ms-appx:///Assets/Fonts/MartianMono.ttf</FontFamily>
   <FontFamily x:Key="FontSerif">ms-appx:///Assets/Fonts/Newsreader.ttf</FontFamily>
+  <!-- Tracked copies (tools/track_fonts.py): the prototype's negative letter-spacing baked into the advance widths,
+       because Skia ignores CharacterSpacing. Txx = -0.0xx em. -->
+  <FontFamily x:Key="FontMonoT50">ms-appx:///Assets/Fonts/MartianMonoT50.ttf</FontFamily>
+  <FontFamily x:Key="FontMonoT30">ms-appx:///Assets/Fonts/MartianMonoT30.ttf</FontFamily>
+  <FontFamily x:Key="FontMonoT20">ms-appx:///Assets/Fonts/MartianMonoT20.ttf</FontFamily>
+  <FontFamily x:Key="FontSerifT20">ms-appx:///Assets/Fonts/NewsreaderT20.ttf</FontFamily>
+  <FontFamily x:Key="FontSerifT15">ms-appx:///Assets/Fonts/NewsreaderT15.ttf</FontFamily>
+  <FontFamily x:Key="FontSansT20">ms-appx:///Assets/Fonts/HankenGroteskT20.ttf</FontFamily>
 
   <!-- Radii (§3) -->
   <CornerRadius x:Key="Radius3">3</CornerRadius>
@@ -211,7 +240,7 @@
   <!-- Page frame (§7): content padding inside the frame's scroll area (CSS main padding 36 40 40 40). -->
   <Thickness x:Key="FramePadding">40,36,40,40</Thickness>
 
-  <!-- Type ramp (§1), named by role. CharacterSpacing is a no-op on Skia, so the negative tracking is not set. -->
+  <!-- Type ramp (§1), named by role. CharacterSpacing is a no-op on Skia: tracked roles use the FontXxxTnn copies. -->
   <Style x:Key="TypeBase" TargetType="TextBlock">
     <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
     <Setter Property="FontWeight" Value="Normal" />
@@ -220,12 +249,12 @@
     <Setter Property="TextWrapping" Value="NoWrap" />
   </Style>
   <Style x:Key="TypeDisplayTitleL" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
-    <Setter Property="FontFamily" Value="{StaticResource FontSerif}" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSerifT20}" />
     <Setter Property="FontSize" Value="56" />
     <Setter Property="LineHeight" Value="60" />
   </Style>
   <Style x:Key="TypeDisplayTitle" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
-    <Setter Property="FontFamily" Value="{StaticResource FontSerif}" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSerifT15}" />
     <Setter Property="FontSize" Value="40" />
     <Setter Property="LineHeight" Value="46" />
     <Setter Property="TextWrapping" Value="WrapWholeWords" />
@@ -234,13 +263,13 @@
     <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
     <Setter Property="FontWeight" Value="Medium" />
   </Style>
-  <Style x:Key="TypeMonoHero" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="64" /><Setter Property="LineHeight" Value="68" /></Style>
-  <Style x:Key="TypeMonoHeroS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="56" /><Setter Property="LineHeight" Value="60" /></Style>
-  <Style x:Key="TypeMonoVital" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="48" /><Setter Property="LineHeight" Value="52" /></Style>
-  <Style x:Key="TypeMonoStatL" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="30" /><Setter Property="LineHeight" Value="36" /></Style>
-  <Style x:Key="TypeMonoStat" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="28" /><Setter Property="LineHeight" Value="32" /></Style>
-  <Style x:Key="TypeMonoStatS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="24" /><Setter Property="LineHeight" Value="30" /></Style>
-  <Style x:Key="TypeMonoTimerCard" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="20" /><Setter Property="LineHeight" Value="24" /></Style>
+  <Style x:Key="TypeMonoHero" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT50}" /><Setter Property="FontSize" Value="64" /><Setter Property="LineHeight" Value="68" /></Style>
+  <Style x:Key="TypeMonoHeroS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT50}" /><Setter Property="FontSize" Value="56" /><Setter Property="LineHeight" Value="60" /></Style>
+  <Style x:Key="TypeMonoVital" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT50}" /><Setter Property="FontSize" Value="48" /><Setter Property="LineHeight" Value="52" /></Style>
+  <Style x:Key="TypeMonoStatL" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT30}" /><Setter Property="FontSize" Value="30" /><Setter Property="LineHeight" Value="36" /></Style>
+  <Style x:Key="TypeMonoStat" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT30}" /><Setter Property="FontSize" Value="28" /><Setter Property="LineHeight" Value="32" /></Style>
+  <Style x:Key="TypeMonoStatS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT30}" /><Setter Property="FontSize" Value="24" /><Setter Property="LineHeight" Value="30" /></Style>
+  <Style x:Key="TypeMonoTimerCard" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT20}" /><Setter Property="FontSize" Value="20" /><Setter Property="LineHeight" Value="24" /></Style>
   <Style x:Key="TypeMonoValue" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="18" /><Setter Property="LineHeight" Value="26" /></Style>
   <Style x:Key="TypeMonoValueS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="16" /><Setter Property="LineHeight" Value="22" /></Style>
   <Style x:Key="TypeMonoCell" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="14" /><Setter Property="LineHeight" Value="18" /></Style>
@@ -249,7 +278,7 @@
   <Style x:Key="TypeMonoMeta" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="12" /><Setter Property="LineHeight" Value="18" /><Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" /></Style>
   <Style x:Key="TypeMonoAxis" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="11" /><Setter Property="LineHeight" Value="16" /><Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" /></Style>
   <Style x:Key="TypeBrand" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
-    <Setter Property="FontSize" Value="24" /><Setter Property="LineHeight" Value="28" /><Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSansT20}" /><Setter Property="FontSize" Value="24" /><Setter Property="LineHeight" Value="28" /><Setter Property="FontWeight" Value="Medium" />
     <Setter Property="Foreground" Value="{ThemeResource PrimaryBrush}" />
   </Style>
   <Style x:Key="TypeH2Section" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="20" /><Setter Property="LineHeight" Value="28" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
@@ -435,6 +464,143 @@
     tri-tone border, the nav-on shadow and a primary icon (icons bind the presenter's Foreground).
     xaml-lint: allow template - route-driven Active state needs its own visual state group
   -->
+  <!-- Link (.lnk): 14/20 600 ink, underline rgba(27,33,47,.3) 4 px below, trailing arrow 16 / 2.
+       xaml-lint: allow template - underline colour and offset are not TextDecorations options -->
+  <Style x:Key="LinkButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Foreground" Value="{ThemeResource InkBrush}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid x:Name="Root" Background="Transparent">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Underline.Fill" Value="{ThemeResource InkBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Underline.Fill" Value="{ThemeResource InkBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled" />
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Grid>
+                <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource TypeBodyStrong}" Foreground="{TemplateBinding Foreground}" />
+                <Rectangle x:Name="Underline" Height="1" VerticalAlignment="Bottom" Margin="0,0,0,-3" Fill="{ThemeResource LinkUnderlineBrush}" />
+              </Grid>
+              <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconArrowRight}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <!-- A row that opens something (record card footers): content row, hover Surface2, radius 8. The negative margin at the
+       call site keeps the content aligned with the card text while the hover fill bleeds 8 px.
+       xaml-lint: allow template - row hover fill behind arbitrary row content -->
+  <Style x:Key="RowLinkButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="8,6" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource Surface2Brush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource PageBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled" />
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <ContentPresenter Padding="{TemplateBinding Padding}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="Center" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <!-- Panel card for the utility screens (Settings, Agenda, sheets): the record cards' surface. Surface1, tri-tone edge,
+       radius 18, padding 20, shadow xs (0 1 2 / 5 %). Static: no pressed overlay (see StaticOutlinedCardStyle).
+       xaml-lint: allow template - shadow xs and the gradient edge; the Material card templates draw neither -->
+  <Style x:Key="PanelCardStyle" TargetType="utu:CardContentControl" BasedOn="{StaticResource OutlinedCardContentControlStyle}">
+    <Setter Property="IsTabStop" Value="False" />
+    <Setter Property="Background" Value="{ThemeResource Surface1Brush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="18" />
+    <Setter Property="Padding" Value="20" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="utu:CardContentControl">
+          <utu:ShadowContainer Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+            <utu:ShadowContainer.Shadows>
+              <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+            </utu:ShadowContainer.Shadows>
+            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}">
+              <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Border>
+          </utu:ShadowContainer>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <!-- Help and explanatory copy: body 14/20, muted, wrapping. -->
+  <Style x:Key="TypeBodyMuted" TargetType="TextBlock" BasedOn="{StaticResource TypeBody}">
+    <Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" />
+    <Setter Property="TextWrapping" Value="WrapWholeWords" />
+  </Style>
+  <!-- Section eyebrow over a group of fields ("PATIENT", "SCHEDULE"): 12/16 semibold muted. -->
+  <Style x:Key="TypeEyebrow" TargetType="TextBlock" BasedOn="{StaticResource TypeCaptionStrong}">
+    <Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" />
+  </Style>
+  <!-- Loading placeholder bar (skeletons keep the loaded layout's footprint). The record page adds VerticalAlignment Top. -->
+  <Style x:Key="Skeleton" TargetType="Rectangle">
+    <Setter Property="RadiusX" Value="6" />
+    <Setter Property="RadiusY" Value="6" />
+    <Setter Property="Fill" Value="{ThemeResource SkeletonBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+  </Style>
+  <!-- Care ruler time block (CareRuler builds these in code): radius 9, hover outline primary, press 10 % primary.
+       xaml-lint: allow template - hover tint over a block whose fill is the phase colour -->
+  <Style x:Key="CloverTimeBlock" TargetType="Button">
+    <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource OutlineBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="9" />
+    <Setter Property="Padding" Value="9,8" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="UseSystemFocusVisuals" Value="True" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid>
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Shell.BorderBrush" Value="{ThemeResource PrimaryBrush}" /><Setter Target="Hover.Opacity" Value="0.04" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Hover.Opacity" Value="0.10" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled"><VisualState.Setters><Setter Target="Shell.Opacity" Value="0.5" /></VisualState.Setters></VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Border x:Name="Shell" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}">
+              <ContentPresenter Content="{TemplateBinding Content}" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="Stretch" />
+            </Border>
+            <Border x:Name="Hover" CornerRadius="{TemplateBinding CornerRadius}" Background="{ThemeResource PrimaryBrush}" Opacity="0" IsHitTestVisible="False" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
   <Style x:Key="NavItemButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
     <Setter Property="Height" Value="40" />
     <Setter Property="Padding" Value="12,0,0,0" />

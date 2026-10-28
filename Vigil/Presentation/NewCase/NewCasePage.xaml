@@ -1,19 +1,24 @@
+<!--
+  New patient sheet (route !NewCase, opened from the sidebar). v2 utility layout: serif title and muted subtitle, then
+  three panel cards (Patient, Procedure, Schedule). The Schedule card feeds Today's gantt and the Next surgery card;
+  every field in it is optional. The action bar stays pinned under the scroll area.
+-->
 <Page x:Class="Vigil.Presentation.NewCasePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:utu="using:Uno.Toolkit.UI"
-      Background="{ThemeResource SurfaceBrush}">
+      Background="{ThemeResource PageBrush}">
 
-  <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="560">
+  <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="640">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <utu:NavigationBar x:Uid="NewCase_1" Content="New case" Background="{ThemeResource SurfaceBrush}">
+    <utu:NavigationBar Content="" Background="Transparent">
       <utu:NavigationBar.MainCommand>
-        <AppBarButton x:Uid="NewCase_2" Label="Cancel"
+        <AppBarButton x:Uid="NewCase_1" Label="Cancel"
                       AutomationProperties.Name="Cancel new case"
                       Command="{Binding Cancel}">
           <AppBarButton.Icon>
@@ -23,87 +28,120 @@
       </utu:NavigationBar.MainCommand>
     </utu:NavigationBar>
 
-    <ScrollViewer Grid.Row="1">
-      <StackPanel Padding="24,8,24,24" Spacing="16">
-        <TextBlock x:Uid="NewCase_3" Style="{StaticResource LabelLarge}"
-                   Foreground="{ThemeResource OnSurfaceVariantBrush}"
-                   Text="PATIENT" />
-        <TextBox x:Uid="NewCase_4" Header="Name"
-                 Text="{Binding Draft.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 AutomationProperties.Name="Patient name" />
-        <Grid ColumnSpacing="12">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-          </Grid.ColumnDefinitions>
-          <ComboBox x:Uid="NewCase_5" x:Name="SpeciesBox"
-                    Header="Species"
-                    HorizontalAlignment="Stretch"
-                    SelectedIndex="{Binding Draft.SpeciesIndex, Mode=TwoWay}"
-                    AutomationProperties.Name="Species">
-            <ComboBoxItem x:Uid="NewCase_6" Content="Canine" />
-            <ComboBoxItem x:Uid="NewCase_7" Content="Feline" />
-            <ComboBoxItem x:Uid="NewCase_8" Content="Other" />
-          </ComboBox>
-          <TextBox x:Uid="NewCase_9" Grid.Column="1"
-                   Header="Breed"
-                   Text="{Binding Draft.Breed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                   AutomationProperties.Name="Breed" />
-        </Grid>
-        <Grid ColumnSpacing="12">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-          </Grid.ColumnDefinitions>
-          <TextBox x:Uid="NewCase_10" Header="Weight (kg)"
-                   InputScope="Number"
-                   Text="{Binding Draft.WeightText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                   AutomationProperties.Name="Weight in kilograms" />
-          <TextBox x:Uid="NewCase_11" Grid.Column="1"
-                   Header="Age (years)"
-                   InputScope="Number"
-                   Text="{Binding Draft.AgeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                   AutomationProperties.Name="Age in years" />
-        </Grid>
-        <TextBox x:Uid="NewCase_12" Header="Owner"
-                 Text="{Binding Draft.Owner, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 AutomationProperties.Name="Owner" />
+    <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled">
+      <StackPanel Padding="24,0,24,24" Spacing="16">
+        <StackPanel Spacing="6" Margin="0,0,0,8">
+          <TextBlock x:Uid="NewCase_2" Text="New patient" Style="{StaticResource TypeDisplayTitle}" />
+          <TextBlock x:Uid="NewCase_3" Text="Weight sets every dose, so it is the one number to get right." Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+        </StackPanel>
 
-        <TextBlock x:Uid="NewCase_13" Style="{StaticResource LabelLarge}"
-                   Foreground="{ThemeResource OnSurfaceVariantBrush}"
-                   Margin="0,8,0,0"
-                   Text="PROCEDURE" />
-        <TextBox x:Uid="NewCase_14" Header="Procedure"
-                 Text="{Binding Draft.Procedure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 AutomationProperties.Name="Procedure" />
-        <Grid ColumnSpacing="12">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-          </Grid.ColumnDefinitions>
-          <TextBox x:Uid="NewCase_15" Header="Veterinarian"
-                   Text="{Binding Draft.Veterinarian, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                   AutomationProperties.Name="Veterinarian" />
-          <TextBox x:Uid="NewCase_16" Grid.Column="1"
-                   Header="Technician"
-                   Text="{Binding Draft.Technician, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                   AutomationProperties.Name="Technician" />
-        </Grid>
+        <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
+          <StackPanel Spacing="14">
+            <TextBlock x:Uid="NewCase_4" Style="{StaticResource TypeEyebrow}" Text="PATIENT" />
+            <TextBox x:Uid="NewCase_5" Header="Name"
+                     Text="{Binding Draft.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     AutomationProperties.Name="Patient name" />
+            <Grid ColumnSpacing="12" ColumnDefinitions="*,*">
+              <ComboBox x:Uid="NewCase_6" x:Name="SpeciesBox"
+                        Header="Species"
+                        HorizontalAlignment="Stretch"
+                        SelectedIndex="{Binding Draft.SpeciesIndex, Mode=TwoWay}"
+                        AutomationProperties.Name="Species">
+                <ComboBoxItem x:Uid="NewCase_7" Content="Canine" />
+                <ComboBoxItem x:Uid="NewCase_8" Content="Feline" />
+                <ComboBoxItem x:Uid="NewCase_9" Content="Other" />
+              </ComboBox>
+              <TextBox x:Uid="NewCase_10" Grid.Column="1"
+                       Header="Breed"
+                       Text="{Binding Draft.Breed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="Breed" />
+            </Grid>
+            <Grid ColumnSpacing="12" ColumnDefinitions="*,*">
+              <TextBox x:Uid="NewCase_11" Header="Weight (kg)"
+                       InputScope="Number"
+                       Text="{Binding Draft.WeightText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="Weight in kilograms" />
+              <TextBox x:Uid="NewCase_12" Grid.Column="1"
+                       Header="Age (years)"
+                       InputScope="Number"
+                       Text="{Binding Draft.AgeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="Age in years" />
+            </Grid>
+            <TextBox x:Uid="NewCase_13" Header="Owner"
+                     Text="{Binding Draft.Owner, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     AutomationProperties.Name="Owner" />
+          </StackPanel>
+        </utu:CardContentControl>
+
+        <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
+          <StackPanel Spacing="14">
+            <TextBlock x:Uid="NewCase_14" Style="{StaticResource TypeEyebrow}" Text="PROCEDURE" />
+            <TextBox x:Uid="NewCase_15" Header="Procedure"
+                     Text="{Binding Draft.Procedure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     AutomationProperties.Name="Procedure" />
+            <Grid ColumnSpacing="12" ColumnDefinitions="*,*">
+              <TextBox x:Uid="NewCase_16" Header="Veterinarian"
+                       Text="{Binding Draft.Veterinarian, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="Veterinarian" />
+              <TextBox x:Uid="NewCase_17" Grid.Column="1"
+                       Header="Technician"
+                       Text="{Binding Draft.Technician, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="Technician" />
+            </Grid>
+          </StackPanel>
+        </utu:CardContentControl>
+
+        <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
+          <StackPanel Spacing="14">
+            <StackPanel Spacing="4">
+              <TextBlock x:Uid="NewCase_18" Style="{StaticResource TypeEyebrow}" Text="SCHEDULE" />
+              <TextBlock x:Uid="NewCase_19" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords"
+                         Text="Optional. A planned start puts the patient on Today's timeline and in the Next surgery card." />
+            </StackPanel>
+            <Grid ColumnSpacing="12" ColumnDefinitions="*,*,*">
+              <TextBox x:Uid="NewCase_20" Header="Room"
+                       PlaceholderText="OR 1"
+                       Text="{Binding Draft.OperatingRoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="Operating room" />
+              <TextBox x:Uid="NewCase_21" Grid.Column="1"
+                       Header="Planned start"
+                       PlaceholderText="14:00"
+                       Text="{Binding Draft.PlannedStartText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="Planned start time" />
+              <TextBox x:Uid="NewCase_22" Grid.Column="2"
+                       Header="Length (min)"
+                       InputScope="Number"
+                       PlaceholderText="60"
+                       Text="{Binding Draft.PlannedMinutesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="Planned length in minutes" />
+            </Grid>
+            <Grid ColumnSpacing="12" ColumnDefinitions="*,2*">
+              <TextBox x:Uid="NewCase_23" Header="Fasting since"
+                       PlaceholderText="20:00"
+                       Text="{Binding Draft.FastingSinceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="Fasting since, time of day" />
+              <CheckBox x:Uid="NewCase_24" Grid.Column="1" VerticalAlignment="Bottom"
+                        Content="Pet parent told the plan"
+                        IsChecked="{Binding Draft.ParentNotified, Mode=TwoWay}"
+                        AutomationProperties.Name="Pet parent has been told the plan" />
+            </Grid>
+          </StackPanel>
+        </utu:CardContentControl>
       </StackPanel>
     </ScrollViewer>
 
-    <StackPanel Grid.Row="2" Padding="24,12,24,24" Spacing="12">
-      <TextBlock x:Uid="NewCase_17" Style="{StaticResource BodySmall}"
+    <StackPanel Grid.Row="2" Padding="24,12,24,24" Spacing="12" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
+      <TextBlock x:Uid="NewCase_25" Style="{StaticResource TypeBodyS}"
                  Foreground="{ThemeResource ErrorBrush}"
                  TextWrapping="WrapWholeWords"
                  Text="{Binding ErrorText}"
                  AutomationProperties.LiveSetting="Assertive"
                  AutomationProperties.Name="Form errors" />
-      <TextBlock Style="{StaticResource BodySmall}"
+      <TextBlock Style="{StaticResource TypeBodyS}"
                  Foreground="{ThemeResource ErrorBrush}"
                  TextWrapping="WrapWholeWords"
                  Text="{Binding SaveError}" />
-      <Button x:Uid="NewCase_18" Style="{StaticResource CloverPrimary}"
+      <Button x:Uid="NewCase_26" Style="{StaticResource ButtonPrimaryXL}"
               HorizontalAlignment="Stretch"
               Content="Create case"
               AutomationProperties.Name="Create case"

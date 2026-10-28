@@ -3,10 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:controls="using:Vigil.Controls"
+      xmlns:local="using:Vigil.Presentation"
       xmlns:mvux="using:Uno.Extensions.Reactive.UI"
       xmlns:utu="using:Uno.Toolkit.UI"
       Background="Transparent">
-  <!-- Patients (sidebar destination): every case on this device as the board's patient cards. -->
+  <!-- Patients (sidebar destination): every case on this device as Today's patient cards (PatientCardView). -->
   <ScrollViewer HorizontalScrollMode="Disabled">
     <StackPanel Padding="{utu:Responsive Narrowest='20,28,20,40', Narrow='40,36,40,40'}" Spacing="24">
       <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="24" RowSpacing="16">
@@ -19,8 +20,11 @@
       <mvux:FeedView x:Name="PatientsFeed" Source="{Binding All}" VerticalContentAlignment="Top" RefreshingState="None" IsTabStop="False">
         <mvux:FeedView.ValueTemplate>
           <DataTemplate>
-            <muxc:ItemsRepeater x:Uid="Patients_2" ItemsSource="{Binding Data}" ItemTemplate="{StaticResource CaseCardTemplate}" AutomationProperties.Name="All patients">
-              <muxc:ItemsRepeater.Layout><muxc:UniformGridLayout MaximumRowsOrColumns="3" ItemsStretch="Fill" MinItemWidth="280" MinColumnSpacing="20" MinRowSpacing="24" /></muxc:ItemsRepeater.Layout>
+            <muxc:ItemsRepeater x:Uid="Patients_2" ItemsSource="{Binding Data}" AutomationProperties.Name="All patients">
+              <muxc:ItemsRepeater.Layout><controls:CardColumnsLayout MinColumnWidth="320" MaxColumns="3" ColumnSpacing="24" RowSpacing="24" /></muxc:ItemsRepeater.Layout>
+              <muxc:ItemsRepeater.ItemTemplate>
+                <DataTemplate><local:PatientCardView /></DataTemplate>
+              </muxc:ItemsRepeater.ItemTemplate>
             </muxc:ItemsRepeater>
           </DataTemplate>
         </mvux:FeedView.ValueTemplate>
