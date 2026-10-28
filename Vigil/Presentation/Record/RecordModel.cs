@@ -36,6 +36,27 @@ public partial record CaseView(
     string SternalText,
     string SignedText) : CaseRef(Id)
 {
+    public string? Photo { get; init; }
+    public string? HeroPhoto { get; init; }
+    public string Breed { get; init; } = "";
+    public string AgeOwner { get; init; } = "";
+    public string WeightDate { get; init; } = "";
+    public string VisitDate { get; init; } = "";
+    public string LastHr { get; init; } = "—";
+    public string LastSpo2 { get; init; } = "—";
+    public string LastBp { get; init; } = "—";
+    public string LastTemp { get; init; } = "—";
+    public string LastEtCo2 { get; init; } = "—";
+    public string LastMap { get; init; } = "—";
+    public string LastRr { get; init; } = "—";
+    public string Alert { get; init; } = "";
+    public bool HasAlert => Alert.Length > 0;
+    public bool IsOverdue => IsAnesthetized && DueStateName == nameof(DueState.Overdue);
+    public string MedicationSummary => HasNoDoses ? "No doses recorded" : Doses[0].Drug;
+    public string MedicationDetail => HasNoDoses ? "Medication history stays with this visit." : $"{Doses[0].Volume} · {Doses[0].Route} · {Doses[0].Time}";
+    public string Initials => string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(x => x[0]));
+    public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
+
     public bool IsRecovery => Status == CaseStatus.Recovery;
 
     /// <summary>"next 2:41" while waiting, "overdue 0:40" once late: the sign is in the words, not hidden by an absolute value.</summary>
@@ -59,6 +80,7 @@ public partial record CaseView(
     public bool IsAnesthetized => Status == CaseStatus.Anesthetized;
 
     public bool IsSigned => Status == CaseStatus.Signed;
+    public bool HasAnaesthesiaRecord => !IsScheduled;
 
     public bool CanInduce => IsScheduled && Preop.IsComplete;
 
@@ -109,13 +131,27 @@ public partial record CaseView(
             c.Readings.Count,
             strip,
             strip.Summary(p.Species),
-            c.Readings.Count > 0 ? Loc.F("Monitor_LastRecorded", "Last recorded {0:HH:mm}", c.Readings[^1].At) : Loc.T("Readings_None", "No readings yet"),
+            c.Readings.Count > 0 ? $"Last recorded {c.Readings[^1].At:dd MMM · HH:mm}" : Loc.T("Readings_None", "No readings yet"),
             // A signed record stops its recovery clock at the signature.
             c.Recovery.ExtubatedAt is DateTimeOffset x ? Schedule.HoursMinutes((c.SignedAt ?? now) - x) : c.EndedAt is DateTimeOffset e ? Schedule.HoursMinutes((c.SignedAt ?? now) - e) : "—",
             c.Recovery.ExtubatedAt is not null ? Loc.T("Recovery_SinceExtubation", "since extubation") : c.EndedAt is not null ? Loc.T("Recovery_SinceEnded", "since anesthesia ended (not extubated)") : Loc.T("Recovery_NotEnded", "anesthesia not ended"),
             c.Recovery.ExtubatedAt is DateTimeOffset ex ? Loc.F("Recovery_Extubated", "Extubated {0:HH:mm}", ex) : "",
             c.Recovery.SternalAt is DateTimeOffset st ? Loc.F("Recovery_Sternal", "Sternal {0:HH:mm}", st) : "",
-            c.SignedBy is { } by ? Loc.F("Recovery_SignedBy", "Signed by {0} at {1:HH:mm}. The record is read-only.", by, c.SignedAt) : "");
+            c.SignedBy is { } by ? Loc.F("Recovery_SignedBy", "Signed by {0} at {1:HH:mm}. The record is read-only.", by, c.SignedAt) : "")
+        {
+            Photo = PatientMedia.Photo(p), HeroPhoto = PatientMedia.Hero(p),
+            Breed = string.IsNullOrWhiteSpace(p.Breed) ? Loc.Species(p.Species) : p.Breed,
+            AgeOwner = $"{(p.AgeYears == 1 ? Loc.T("Patient_OneYear", "1 year") : Loc.F("Patient_AgeYears", "{0:0.#} years", p.AgeYears))} · {p.Owner}",
+            WeightDate = $"Recorded {c.CreatedAt:dd MMM yyyy}", VisitDate = $"{c.CreatedAt:dd MMM yyyy}",
+            LastHr = c.Readings.LastOrDefault()?.Hr?.ToString() ?? "—",
+            LastSpo2 = c.Readings.LastOrDefault()?.SpO2?.ToString() ?? "—",
+            LastBp = c.Readings.LastOrDefault() is { } bp ? $"{bp.Sys?.ToString() ?? "—"}/{bp.Dia?.ToString() ?? "—"}" : "—",
+            LastTemp = c.Readings.LastOrDefault()?.TempC?.ToString("0.0") ?? "—",
+            LastEtCo2 = c.Readings.LastOrDefault()?.EtCo2?.ToString() ?? "—",
+            LastMap = c.Readings.LastOrDefault()?.EffectiveMap?.ToString() ?? "—",
+            LastRr = c.Readings.LastOrDefault()?.Rr?.ToString() ?? "—",
+            Alert = c.Readings.LastOrDefault() is { } last ? Row(p.Species, last).Alarms : ""
+        };
     }
 
     private static ReadingRow Row(Species species, VitalsReading r)
@@ -138,13 +174,34 @@ public partial record CaseView(
         d.OutOfRangeConfirmed ? Loc.T("Dose_OutOfRangeConfirmed", "Out of range, confirmed") : "");
 }
 
-public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, IPreferences Preferences, IRecordExporter Exporter, INavigator Navigator)
+public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, IPreferences Preferences, IRecordExporter Exporter, INavigator Navigator, DoseFeedback Feedback, IFormulary Formulary)
 {
 #if DEBUG
     private readonly Diagnostics.LiveCounter _alive = new(nameof(RecordModel));
 #endif
 
     // The stored case; null (deleted or never existed) renders the None template.
+    public IState<bool> PaneOpen => State.Value(this, () => false);
+    public IState<string> Pane => State.Value(this, () => "Preop");
+    public IFeed<bool> PanePreop => Pane.Select(x => x == "Preop");
+    public IFeed<bool> PaneDose => Pane.Select(x => x == "Dose");
+    public IFeed<bool> PaneDrugs => Pane.Select(x => x == "Drugs");
+    public IFeed<bool> PaneMonitor => Pane.Select(x => x == "Monitor");
+    public IFeed<bool> PaneRecovery => Pane.Select(x => x == "Recovery");
+    public IFeed<bool> PaneHistory => Pane.Select(x => x == "History");
+    public IFeed<bool> PaneLabs => Pane.Select(x => x == "Labs");
+    public IFeed<string> PaneTitle => Pane.Select(x => x switch { "Dose" => "Administer dose", "Preop" => "Preoperative preparation", "Drugs" => "Medication record", "Monitor" => "Record observations", "Recovery" => "Recovery & handover", "History" => "Visit history", _ => "Lab results" });
+    public async ValueTask OpenPane(string section, CancellationToken ct)
+    {
+        await Pane.UpdateAsync(_ => section, ct);
+        await PaneOpen.UpdateAsync(_ => true, ct);
+    }
+    public async ValueTask ClosePane(CancellationToken ct) => await PaneOpen.UpdateAsync(_ => false, ct);
+    public async ValueTask OpenParentPreview(CancellationToken ct) => await Navigator.NavigateRouteAsync(this, "ParentPreview", data: new CaseRef(Ref.Id), cancellation: ct);
+    public async ValueTask OpenSignOff(CancellationToken ct) => await Navigator.NavigateRouteAsync(this, "!SignOff", data: new CaseRef(Ref.Id), cancellation: ct);
+    public IFeed<long> DosePulse => Now.Select(_ => Feedback.PulseFor(Ref.Id));
+    public IFeed<bool> ShowAcknowledgement => DosePulse.Select(x => x > 0);
+
     private IFeed<Case> Source { get; } = Feed<Case>.Async(
         async ct => await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(c) : Option.None<Case>(), Store.Changed);
 
@@ -221,6 +278,8 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
             ? c with { Status = CaseStatus.Anesthetized, InducedAt = Clock.Now }
             : c, ct);
         await Tab.UpdateAsync(_ => CaseView.MonitorTab, ct);
+
+        await PaneOpen.UpdateAsync(_ => false, ct);
     }
 
     public async ValueTask DismissError(CancellationToken ct) => await SaveError.UpdateAsync(_ => "", ct);
@@ -290,4 +349,43 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
             await SaveError.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", ex.Message), ct);
         }
     }
+
+    public IState<Drug> DoseSelected => State<Drug>.Empty(this).ForEach(async (drug, ct) =>
+    {
+        if (drug is null) return;
+        await DoseMgPerKg.UpdateAsync(_ => drug.DefaultMgPerKg.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture), ct);
+        await DoseRouteIndex.UpdateAsync(_ => (int)drug.DefaultRoute, ct);
+    });
+    public IListFeed<Drug> DoseDrugs => ListFeed.Async(async ct => (IImmutableList<Drug>)await Formulary.GetDrugsAsync(ct)).Selection(DoseSelected);
+    public IState<string> DoseMgPerKg => State.Value(this, () => "").ForEach(async (_, ct) => await DoseConfirming.UpdateAsync(_ => false, ct));
+    public IState<int> DoseRouteIndex => State.Value(this, () => 0);
+    public IFeed<DoseCalc> DoseCalculation => Feed.Combine(Source, DoseSelected, DoseMgPerKg).Select(x =>
+        VitalsDraft.ParseDec(x.Item3) is decimal mg && mg > 0 ? Dosing.Calculate(x.Item1.Patient.Species, x.Item1.Patient.WeightKg, x.Item2, mg) : null!);
+    public IState<string> DoseError => State.Value(this, () => "");
+    public IState<bool> DoseConfirming => State.Value(this, () => false);
+    public IFeed<bool> DoseNotConfirming => DoseConfirming.Select(x => !x);
+    public IFeed<string> DoseConfirmTitle => DoseCalculation.Select(c => Loc.F("Dose_ConfirmTitle", "Give {0:0.###} mg/kg?", c.MgPerKg));
+    public IFeed<string> DoseConfirmText => Feed.Combine(DoseCalculation, DoseSelected).Select(x => Loc.F("Dose_ConfirmText", "The reference range for {0} is {1}. {2:0.###} mg/kg is {3}.", x.Item2.Name, x.Item1.ReferenceText, x.Item1.MgPerKg, x.Item1.VolumeText));
+    public async ValueTask GiveDose(DoseCalc doseCalculation, Drug doseSelected, int doseRouteIndex, CancellationToken ct)
+    {
+        if (doseCalculation.IsOutOfRange) { await DoseConfirming.UpdateAsync(_ => true, ct); return; }
+        await SaveDrawerDose(doseCalculation, doseSelected, doseRouteIndex, ct);
+    }
+    public ValueTask GiveDoseAnyway(DoseCalc doseCalculation, Drug doseSelected, int doseRouteIndex, CancellationToken ct) => SaveDrawerDose(doseCalculation, doseSelected, doseRouteIndex, ct);
+    public async ValueTask ChangeRecordedDose(CancellationToken ct) => await DoseConfirming.UpdateAsync(_ => false, ct);
+    private async ValueTask SaveDrawerDose(DoseCalc calculation, Drug drug, int route, CancellationToken ct)
+    {
+        var dose = new DoseGiven(Guid.NewGuid(), Clock.Now, drug.Id, drug.Name, calculation.MgPerKg, calculation.MgPerMl, calculation.VolumeMl, (DoseRoute)Math.Clamp(route, 0, 3), calculation.IsOutOfRange);
+        try { await Store.UpdateAsync(Ref.Id, c => c with { Doses = c.Doses.Add(dose) }, ct); }
+        catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
+        {
+            await DoseError.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", ex.Message), ct);
+            return;
+        }
+        Feedback.Recorded(Ref.Id);
+        await DoseError.UpdateAsync(_ => "", ct);
+        await DoseConfirming.UpdateAsync(_ => false, ct);
+        await ClosePane(ct);
+    }
+
 }

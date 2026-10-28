@@ -103,7 +103,7 @@
                  Foreground="{ThemeResource ErrorBrush}"
                  TextWrapping="WrapWholeWords"
                  Text="{Binding SaveError}" />
-      <Button x:Uid="NewCase_18" Style="{StaticResource FilledButtonStyle}"
+      <Button x:Uid="NewCase_18" Style="{StaticResource CloverPrimary}"
               HorizontalAlignment="Stretch"
               Content="Create case"
               AutomationProperties.Name="Create case"

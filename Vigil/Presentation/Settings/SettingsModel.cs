@@ -24,7 +24,7 @@ public partial record SettingsModel(
             if (Localization.CurrentCulture.TwoLetterISOLanguageName != culture)
             {
                 await Localization.SetCurrentCultureAsync(new System.Globalization.CultureInfo(culture));
-                await LanguageNotice.UpdateAsync(_ => culture == "fr" ? "Langue enregistrée : redémarrez Vigil pour l'appliquer." : "Language saved: restart Vigil to apply it.", ct);
+                await LanguageNotice.UpdateAsync(_ => culture == "fr" ? "Langue enregistrée : redémarrez Clover pour l'appliquer." : "Language saved: restart Clover to apply it.", ct);
             }
         });
 

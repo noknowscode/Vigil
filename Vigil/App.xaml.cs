@@ -71,12 +71,13 @@ public partial class App : Application
                     var fault = FaultInjection.FromEnvironment();
                     services.AddSingleton<IFaultInjection>(fault);
                     services.AddSingleton<IClock, SystemClock>();
+                    services.AddSingleton<DoseFeedback>();
                     services.AddSingleton<IPreferences>(_ => new Preferences(
-                        Path.Combine(ApplicationData.Current.LocalFolder.Path, "preferences.json")));
+                        Path.Combine(DataRoot(), "preferences.json")));
                     services.AddSingleton<IFormulary, EmbeddedFormulary>();
                     services.AddSingleton<IRecordExporter, RecordExporter>();
                     services.AddSingleton<ICaseStore>(_ => new JsonCaseStore(
-                        Path.Combine(ApplicationData.Current.LocalFolder.Path, "cases"), fault));
+                        Path.Combine(DataRoot(), "cases"), fault));
                 })
                 .UseNavigation(
                     ReactiveViewModelMappings.ViewModelMappings,
@@ -98,6 +99,8 @@ public partial class App : Application
         }
 #endif
         MainWindow.SetWindowIcon();
+        MainWindow.Title = "Clover";
+
 
         Host = await MainWindow.InitializeNavigationAsync(
             async () =>
@@ -111,6 +114,19 @@ public partial class App : Application
             },
             initialRoute: "Board"
         );
+#if DESKTOP
+#if DEBUG
+        if (Environment.GetCommandLineArgs().Contains("--clover-preview"))
+            MainWindow.AppWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 1440, Height = 1000 });
+        var previewSize = Environment.GetCommandLineArgs().FirstOrDefault(a => a.StartsWith("--clover-size="));
+        if (previewSize is not null)
+        {
+            var size = previewSize.Split('=')[1].Split('x');
+            if (size.Length == 2 && int.TryParse(size[0], out var width) && int.TryParse(size[1], out var height))
+                MainWindow.AppWindow.Resize(new Windows.Graphics.SizeInt32 { Width = Math.Clamp(width, 320, 1920), Height = Math.Clamp(height, 480, 1200) });
+        }
+#endif
+#endif
     }
 
 #if DEBUG
@@ -141,6 +157,7 @@ public partial class App : Application
     {
         var seed = Environment.GetCommandLineArgs()
             .FirstOrDefault(a => a.StartsWith("--vigil-seed=", StringComparison.OrdinalIgnoreCase))?.Split('=', 2)[1];
+        if (Environment.GetCommandLineArgs().Contains("--clover-preview")) seed = "sample";
         if (seed is null)
         {
             return;
@@ -158,12 +175,22 @@ public partial class App : Application
     }
 #endif
 
+    private static string DataRoot()
+    {
+#if DEBUG
+        if (Environment.GetCommandLineArgs().Contains("--clover-preview"))
+            return Path.Combine(ApplicationData.Current.LocalFolder.Path, "clover-design-preview");
+#endif
+        return ApplicationData.Current.LocalFolder.Path;
+    }
+
     private static void RegisterRoutes(IViewRegistry views, IRouteRegistry routes)
     {
         views.Register(
             new ViewMap<BoardPage, BoardModel>(),
             new ViewMap<NewCasePage, NewCaseModel>(ResultData: typeof(CaseRef)),
             new DataViewMap<RecordPage, RecordModel, CaseRef>(),
+            new DataViewMap<ParentPreviewPage, ParentPreviewModel, CaseRef>(),
             new DataViewMap<DosePage, DoseModel, CaseRef>(),
             new DataViewMap<SignOffPage, SignOffModel, CaseRef>(),
             new ViewMap<SettingsPage, SettingsModel>()
@@ -173,6 +200,7 @@ public partial class App : Application
             new RouteMap("Board", View: views.FindByViewModel<BoardModel>(), IsDefault: true),
             new RouteMap("NewCase", View: views.FindByViewModel<NewCaseModel>()),
             new RouteMap("Record", View: views.FindByViewModel<RecordModel>()),
+            new RouteMap("ParentPreview", View: views.FindByViewModel<ParentPreviewModel>()),
             new RouteMap("Dose", View: views.FindByViewModel<DoseModel>()),
             new RouteMap("SignOff", View: views.FindByViewModel<SignOffModel>()),
             new RouteMap("Settings", View: views.FindByViewModel<SettingsModel>())

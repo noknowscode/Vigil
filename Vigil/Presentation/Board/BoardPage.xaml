@@ -1,216 +1,156 @@
-<Page x:Class="Vigil.Presentation.BoardPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-      xmlns:controls="using:Vigil.Controls"
-      xmlns:mvux="using:Uno.Extensions.Reactive.UI"
-      xmlns:uen="using:Uno.Extensions.Navigation.UI"
-      xmlns:utu="using:Uno.Toolkit.UI"
-      Background="{ThemeResource BackgroundBrush}">
+<Page x:Class="Vigil.Presentation.BoardPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:muxc="using:Microsoft.UI.Xaml.Controls" xmlns:controls="using:Vigil.Controls" xmlns:mvux="using:Uno.Extensions.Reactive.UI" xmlns:uen="using:Uno.Extensions.Navigation.UI" xmlns:utu="using:Uno.Toolkit.UI" Background="{ThemeResource CloverCanvas}">
+  <Grid x:Name="AppFrame" utu:SafeArea.Insets="VisibleBounds" Margin="20,8,20,20" RowDefinitions="Auto,*" SizeChanged="OnFrameSizeChanged" KeyDown="OnHomeKeyDown">
+    <Grid x:Name="TopBar" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" RowSpacing="10" Padding="12,10,12,20">
+      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"><controls:CareMark Width="25" Height="29" /><TextBlock x:Uid="Board_1" Text="clover" Style="{StaticResource CloverHeading}" FontSize="28" /></StackPanel>
+      <Border x:Name="TopTabs" Grid.Column="1" Background="{ThemeResource CloverSage}" CornerRadius="14" Padding="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <utu:ChipGroup Style="{StaticResource FilterChipGroupStyle}" SelectionMode="Single">
+          <utu:Chip x:Uid="Board_2" x:Name="HomeTab" Content="Today's patients" IsChecked="True" Click="OnShowPatients" AutomationProperties.Name="Today's patients" />
+          <utu:Chip x:Uid="Board_3" Content="Patient care" Command="{Binding OpenPatient}" IsEnabled="{Binding CanOpenPatient}" ToolTipService.ToolTip="{Binding PatientTabHint}" AutomationProperties.Name="Open current patient care workspace" />
+        </utu:ChipGroup>
+      </Border>
+      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4"><Button x:Uid="Board_22" x:Name="AgendaToggle" Style="{StaticResource CloverQuiet}" Click="OnOpenAgenda" AutomationProperties.Name="Open today's agenda"><FontIcon Glyph="&#xE787;" FontSize="20" /></Button><Button x:Uid="Board_4" Style="{StaticResource CloverQuiet}" uen:Navigation.Request="Settings" AutomationProperties.Name="Settings"><FontIcon Glyph="&#xE713;" FontSize="20" /></Button></StackPanel>
+    </Grid>
+    <Grid x:Name="HomeWorkspace" Grid.Row="1" ColumnDefinitions="352,*" ColumnSpacing="20" SizeChanged="OnHomeSizeChanged">
+    <Border x:Name="AgendaPanel" Grid.Column="0" CornerRadius="24" Background="{ThemeResource CloverCanvas}">
+      <Grid RowDefinitions="Auto,*,Auto,Auto">
+        <Grid Padding="16,24,16,20" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
 
-  <Grid utu:SafeArea.Insets="VisibleBounds">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
-
-    <utu:NavigationBar x:Uid="Board_1" Content="Vigil"
-                       Background="{ThemeResource BackgroundBrush}"
-                       AutomationProperties.Name="Vigil, today's surgical board">
-      <utu:NavigationBar.PrimaryCommands>
-        <AppBarButton x:Uid="Board_2" Label="Settings"
-                      AutomationProperties.Name="Settings"
-                      uen:Navigation.Request="Settings">
-          <AppBarButton.Icon>
-            <SymbolIcon Symbol="Setting" />
-          </AppBarButton.Icon>
-        </AppBarButton>
-      </utu:NavigationBar.PrimaryCommands>
-    </utu:NavigationBar>
-
-    <!-- Live case band: the board's anchor, full-bleed at every width. -->
-    <!-- xaml-lint: allow card - full-bleed band with hairline dividers, not a card -->
-    <Border Grid.Row="1"
-            Background="{ThemeResource SurfaceVariantBrush}"
-            BorderBrush="{ThemeResource OutlineBrush}"
-            BorderThickness="0,1">
-      <mvux:FeedView x:Name="LiveFeed"
-                     Source="{Binding Live}"
-                     MinHeight="240"
-                     RefreshingState="None"
-                     IsTabStop="False">
-        <mvux:FeedView.ValueTemplate>
-          <DataTemplate>
-            <controls:LiveBandView DataContext="{Binding Data}" />
-          </DataTemplate>
-        </mvux:FeedView.ValueTemplate>
-
-        <mvux:FeedView.ProgressTemplate>
-          <DataTemplate>
-            <!-- Skeleton of the band: label, title, display number, bar. -->
-            <StackPanel Padding="{utu:Responsive Narrow='16,16', Wide='32,20'}" Spacing="12">
-              <Rectangle Width="140" Height="14" HorizontalAlignment="Left" RadiusX="6" RadiusY="6" Fill="{ThemeResource OutlineBrush}" />
-              <Rectangle Width="260" Height="22" HorizontalAlignment="Left" RadiusX="6" RadiusY="6" Fill="{ThemeResource OutlineBrush}" />
-              <Rectangle Width="180" Height="60" HorizontalAlignment="Left" RadiusX="6" RadiusY="6" Fill="{ThemeResource OutlineBrush}" />
-              <Rectangle Height="4" RadiusX="2" RadiusY="2" Fill="{ThemeResource OutlineBrush}" />
-            </StackPanel>
-          </DataTemplate>
-        </mvux:FeedView.ProgressTemplate>
-
-        <mvux:FeedView.NoneTemplate>
-          <DataTemplate>
-            <StackPanel Padding="{utu:Responsive Narrow='16,16', Wide='32,20'}"
-                        Spacing="8"
-                        VerticalAlignment="Center">
-              <TextBlock x:Uid="Board_3" Style="{StaticResource LabelLarge}"
-                         Foreground="{ThemeResource OnSurfaceVariantBrush}"
-                         Text="UNDER ANESTHESIA" />
-              <TextBlock x:Uid="Board_4" Style="{StaticResource HeadlineMedium}"
-                         Foreground="{ThemeResource OnSurfaceBrush}"
-                         Text="No patient under anesthesia" />
-              <TextBlock x:Uid="Board_5" Style="{StaticResource BodySmall}"
-                         Foreground="{ThemeResource OnSurfaceVariantBrush}"
-                         TextWrapping="WrapWholeWords"
-                         Text="Induce a case from its Pre-op tab and it appears here with its reading countdown." />
-            </StackPanel>
-          </DataTemplate>
-        </mvux:FeedView.NoneTemplate>
-
-        <mvux:FeedView.ErrorTemplate>
-          <DataTemplate>
-            <StackPanel Padding="{utu:Responsive Narrow='16,16', Wide='32,20'}" Spacing="8" VerticalAlignment="Center">
-              <TextBlock x:Uid="Board_6" Style="{StaticResource LabelLarge}"
-                         Foreground="{ThemeResource OnSurfaceVariantBrush}"
-                         Text="UNDER ANESTHESIA" />
-              <TextBlock x:Uid="Board_7" Style="{StaticResource HeadlineMedium}"
-                         Foreground="{ThemeResource OnSurfaceVariantBrush}"
-                         Text="Live case unavailable" />
-            </StackPanel>
-          </DataTemplate>
-        </mvux:FeedView.ErrorTemplate>
-      </mvux:FeedView>
-    </Border>
-
-    <!-- Case list -->
-    <ScrollViewer Grid.Row="2">
-      <StackPanel Padding="{utu:Responsive Narrow='16,16,16,24', Wide='32,24,32,32'}" Spacing="16" MaxWidth="1280">
-        <Grid ColumnSpacing="12" RowSpacing="12">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-          </Grid.ColumnDefinitions>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-          </Grid.RowDefinitions>
-          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-            <TextBlock x:Uid="Board_8" Style="{StaticResource HeadlineMedium}"
-                       Foreground="{ThemeResource OnBackgroundBrush}"
-                       VerticalAlignment="Center"
-                       Text="Cases" />
-            <utu:ChipGroup Style="{StaticResource FilterChipGroupStyle}"
-                           SelectionMode="Single"
-                           VerticalAlignment="Center"
-                           Margin="8,0,0,0">
-              <utu:Chip x:Uid="Board_9" Content="Today" IsChecked="True" Command="{Binding ShowToday}" AutomationProperties.Name="Show today's cases" />
-              <utu:Chip x:Uid="Board_10" Content="All" Command="{Binding ShowAll}" AutomationProperties.Name="Show all cases" />
-            </utu:ChipGroup>
-          </StackPanel>
-          <Button x:Uid="Board_11" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"
-                  Grid.Column="{utu:Responsive Narrowest=0, Normal=1}"
-                  Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}"
-                  HorizontalAlignment="{utu:Responsive Narrowest=Stretch, Normal=Right}"
-                  Style="{StaticResource FilledButtonStyle}"
-                  Command="{Binding NewCase}"
-                  AutomationProperties.Name="New case">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <SymbolIcon Symbol="Add" />
-              <TextBlock x:Uid="Board_12" Text="New case" />
-            </StackPanel>
-          </Button>
+          <Grid ColumnDefinitions="*,Auto"><TextBlock x:Uid="Board_23" Text="CARE, THROUGH THE DAY" Style="{StaticResource CloverLabel}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" /><Button x:Uid="Board_24" x:Name="AgendaClose" Grid.Column="1" Style="{StaticResource CloverQuiet}" Visibility="Collapsed" Click="OnCloseAgenda" AutomationProperties.Name="Close agenda"><FontIcon Glyph="&#xE711;" FontSize="16" Foreground="{ThemeResource PrimaryBrush}" /></Button></Grid>
+          <TextBlock x:Uid="Board_25" Grid.Row="1" Text="Today's agenda" Style="{StaticResource CloverHeading}" FontSize="25" />
+          <Grid Grid.Row="2" ColumnDefinitions="*,Auto"><TextBlock Text="{Binding AgendaDate}" Style="{StaticResource CloverBody}" /><Border Grid.Column="1" Background="{ThemeResource CloverSage}" CornerRadius="12" Padding="10,3"><TextBlock Text="{Binding AgendaClock}" FontFamily="{StaticResource CodeFontFamily}" FontSize="12" Foreground="{ThemeResource PrimaryBrush}" /></Border></Grid>
         </Grid>
-
-        <mvux:FeedView x:Name="CasesFeed"
-                       Source="{Binding Today}"
-                       MinHeight="300"
-                       VerticalContentAlignment="Top"
-                       RefreshingState="None"
-                       IsTabStop="False">
-          <mvux:FeedView.ValueTemplate>
-            <DataTemplate>
-              <muxc:ItemsRepeater x:Uid="Board_13" ItemsSource="{Binding Data}"
-                                  uen:Navigation.Request="Record"
-                                  AutomationProperties.Name="Cases">
-                <muxc:ItemsRepeater.Layout>
-                  <!-- Two columns once each can be 360 wide: the layout derives columns from width (Responsive cannot attach to a non-FrameworkElement). -->
-                  <muxc:UniformGridLayout MaximumRowsOrColumns="2"
-                                          ItemsStretch="Fill"
-                                          MinItemWidth="360"
-                                          MinColumnSpacing="16"
-                                          MinRowSpacing="16" />
-                </muxc:ItemsRepeater.Layout>
-                <muxc:ItemsRepeater.ItemTemplate>
-                  <DataTemplate>
-                    <utu:CardContentControl Style="{StaticResource OutlinedCardContentControlStyle}"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Stretch"
-                                            IsTabStop="True"
-                                            AutomationProperties.Name="{Binding Name}">
-                      <Grid Padding="16" RowSpacing="4" ColumnSpacing="12">
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="*" />
-                          <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                          <RowDefinition Height="Auto" />
-                          <RowDefinition Height="Auto" />
-                          <RowDefinition Height="Auto" />
-                          <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource TitleLarge}"
-                                   Foreground="{ThemeResource OnSurfaceBrush}"
-                                   Text="{Binding Name}" />
-                        <TextBlock Grid.Column="1"
-                                   Style="{StaticResource CodeTextStyle}"
-                                   Foreground="{ThemeResource OnSurfaceVariantBrush}"
-                                   VerticalAlignment="Center"
-                                   Text="{Binding TimeText}" />
-                        <TextBlock Grid.Row="1"
-                                   Grid.ColumnSpan="2"
-                                   Style="{StaticResource BodySmall}"
-                                   Foreground="{ThemeResource OnSurfaceVariantBrush}"
-                                   TextTrimming="CharacterEllipsis"
-                                   Text="{Binding Signalment}" />
-                        <TextBlock Grid.Row="2"
-                                   Grid.ColumnSpan="2"
-                                   Style="{StaticResource BodyMedium}"
-                                   Foreground="{ThemeResource OnSurfaceBrush}"
-                                   TextTrimming="CharacterEllipsis"
-                                   Text="{Binding Procedure}" />
-                        <Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="0,8,0,0" ColumnSpacing="8">
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                          </Grid.ColumnDefinitions>
-                          <TextBlock Style="{StaticResource LabelLarge}"
-                                     Foreground="{ThemeResource OnSurfaceBrush}"
-                                     Text="{Binding StatusText}" />
-                          <TextBlock Grid.Column="1"
-                                     Style="{StaticResource BodySmall}"
-                                     Foreground="{ThemeResource OnSurfaceVariantBrush}"
-                                     HorizontalAlignment="Right"
-                                     TextTrimming="CharacterEllipsis"
-                                     Text="{Binding Team}" />
-                        </Grid>
+        <ScrollViewer x:Name="AgendaScroll" Grid.Row="1" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Padding="8,6,8,24" Spacing="20">
+            <mvux:FeedView x:Name="AgendaFeed" Source="{Binding CareRhythm}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch">
+              <mvux:FeedView.ValueTemplate><DataTemplate>
+                <StackPanel Spacing="18">
+                  <Grid ColumnDefinitions="*,Auto"><TextBlock x:Uid="Board_42" Text="RECORDED INTERVALS" Style="{StaticResource CloverLabel}" FontSize="10" /><TextBlock Grid.Column="1" Text="{Binding Data.Range}" Style="{StaticResource CloverBody}" FontFamily="{StaticResource CodeFontFamily}" FontSize="10" /></Grid>
+                  <StackPanel Orientation="Horizontal" Spacing="14"><StackPanel Orientation="Horizontal" Spacing="6"><Border Width="10" Height="10" CornerRadius="3" Background="{ThemeResource CloverLavender}" BorderBrush="{ThemeResource CloverLavenderEdge}" BorderThickness="1" /><TextBlock x:Uid="Board_43" Text="Anaesthesia" Style="{StaticResource CloverBody}" FontSize="10" /></StackPanel><StackPanel Orientation="Horizontal" Spacing="6"><Border Width="10" Height="10" CornerRadius="3" Background="{ThemeResource CloverMint}" BorderBrush="{ThemeResource CloverMintEdge}" BorderThickness="1" /><TextBlock x:Uid="Board_44" Text="Recovery" Style="{StaticResource CloverBody}" FontSize="10" /></StackPanel></StackPanel>
+                  <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled"><controls:CareRuler Data="{Binding Data}" /></ScrollViewer>
+                </StackPanel>
+              </DataTemplate></mvux:FeedView.ValueTemplate>
+              <mvux:FeedView.ProgressTemplate><DataTemplate><ProgressRing x:Uid="Board_28" Width="24" Height="24" IsActive="True" AutomationProperties.Name="Loading agenda" /></DataTemplate></mvux:FeedView.ProgressTemplate>
+              <mvux:FeedView.ErrorTemplate><DataTemplate><StackPanel Spacing="10"><TextBlock x:Uid="Board_29" Text="Agenda couldn't be loaded." Style="{StaticResource CloverBody}" /><Button x:Uid="Board_30" Content="Retry" Style="{StaticResource CloverSecondary}" Command="{Binding DataContext.Retry, ElementName=AgendaFeed}" /></StackPanel></DataTemplate></mvux:FeedView.ErrorTemplate>
+            </mvux:FeedView>
+            <mvux:FeedView Source="{Binding Agenda}" RefreshingState="None" IsTabStop="False">
+              <mvux:FeedView.ValueTemplate><DataTemplate>
+                <StackPanel Spacing="10">
+                  <Grid ColumnDefinitions="*,Auto"><TextBlock x:Uid="Board_34" Text="IN PREPARATION" Style="{StaticResource CloverLabel}" /><TextBlock x:Uid="Board_35" Grid.Column="1" Text="UNTIMED" Style="{StaticResource CloverLabel}" FontSize="10" /></Grid>
+                  <muxc:ItemsRepeater ItemsSource="{Binding Data.Preparing}"><muxc:ItemsRepeater.ItemTemplate><DataTemplate>
+                    <Button Style="{StaticResource CloverAgendaItem}" Background="{ThemeResource SurfaceBrush}" CornerRadius="22" Margin="0,0,0,8" Padding="12" HorizontalAlignment="Stretch" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding}" AutomationProperties.Name="{Binding AccessibleName}">
+                      <Grid ColumnDefinitions="44,*,16" ColumnSpacing="11">
+                        <Grid Width="44" Height="44" CornerRadius="22" Background="{ThemeResource CloverSage}" VerticalAlignment="Center"><controls:PetBackdrop Photo="{Binding Photo}" /><TextBlock Text="{Binding Initial}" Visibility="{Binding HasNoPhoto}" Foreground="{ThemeResource PrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" /></Grid>
+                        <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="{Binding Stage}" Style="{StaticResource CloverBody}" FontSize="10" LineHeight="14" /><TextBlock Text="{Binding Name}" FontFamily="{StaticResource CloverEditorialFont}" FontSize="22" Foreground="{ThemeResource OnSurfaceBrush}" /><TextBlock Text="{Binding Detail}" Style="{StaticResource CloverBody}" FontSize="11" LineHeight="16" /></StackPanel>
+                        <FontIcon Grid.Column="2" Glyph="&#xE72A;" FontSize="14" Foreground="{ThemeResource PrimaryBrush}" VerticalAlignment="Center" />
                       </Grid>
-                    </utu:CardContentControl>
-                  </DataTemplate>
-                </muxc:ItemsRepeater.ItemTemplate>
-              </muxc:ItemsRepeater>
-            </DataTemplate>
-          </mvux:FeedView.ValueTemplate>
-
+                    </Button>
+                  </DataTemplate></muxc:ItemsRepeater.ItemTemplate></muxc:ItemsRepeater>
+                  <TextBlock x:Uid="Board_36" Text="No patients waiting for preparation." Style="{StaticResource CloverBody}" FontSize="12" Visibility="{Binding Data.NoPreparing}" />
+                </StackPanel>
+              </DataTemplate></mvux:FeedView.ValueTemplate>
+              <mvux:FeedView.ErrorTemplate><DataTemplate><Border /></DataTemplate></mvux:FeedView.ErrorTemplate>
+            </mvux:FeedView>
+          </StackPanel>
+        </ScrollViewer>
+        <mvux:FeedView Grid.Row="2" Margin="6,12,6,12" Source="{Binding AgendaNext}" RefreshingState="None" IsTabStop="False">
+              <mvux:FeedView.ValueTemplate><DataTemplate>
+                <Button Style="{StaticResource CloverPatientCard}" CornerRadius="24" Background="{ThemeResource CloverLime}" BorderThickness="0" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding Data.AccessibleName}">
+                  <Grid Padding="16,14" ColumnDefinitions="50,*,16" ColumnSpacing="12" MinHeight="92">
+                    <Border Width="50" Height="50" CornerRadius="25" BorderBrush="{ThemeResource SurfaceBrush}" BorderThickness="2" VerticalAlignment="Center"><Grid CornerRadius="23" Background="{ThemeResource CloverCream}"><controls:PetBackdrop Photo="{Binding Data.Photo}" /><TextBlock Text="{Binding Data.Initial}" Visibility="{Binding Data.HasNoPhoto}" FontFamily="{StaticResource CloverEditorialFont}" FontSize="24" Foreground="{ThemeResource PrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" /></Grid></Border>
+                    <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                      <StackPanel Orientation="Horizontal" Spacing="5"><FontIcon Glyph="&#xE7BA;" FontSize="11" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /><TextBlock Text="{Binding Data.Label}" FontSize="10" Foreground="{ThemeResource PrimaryBrush}" Visibility="{Binding Data.IsWaiting}" /><TextBlock Text="{Binding Data.Label}" FontSize="10" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" /></StackPanel>
+                      <TextBlock Text="{Binding Data.Name}" FontFamily="{StaticResource CloverEditorialFont}" FontSize="25" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{Binding Data.Detail}" Style="{StaticResource CloverBody}" FontSize="11" LineHeight="16" />
+                    </StackPanel>
+                    <FontIcon Grid.Column="2" Glyph="&#xE72A;" FontSize="15" Foreground="{ThemeResource PrimaryBrush}" VerticalAlignment="Center" />
+                  </Grid>
+                </Button>
+              </DataTemplate></mvux:FeedView.ValueTemplate>
+              <mvux:FeedView.NoneTemplate><DataTemplate><TextBlock x:Uid="Board_32" Text="No observation reminders right now." Style="{StaticResource CloverBody}" FontSize="12" /></DataTemplate></mvux:FeedView.NoneTemplate>
+              <mvux:FeedView.ErrorTemplate><DataTemplate><TextBlock x:Uid="Board_33" Text="Observation reminders unavailable." Style="{StaticResource CloverBody}" FontSize="12" /></DataTemplate></mvux:FeedView.ErrorTemplate>
+            </mvux:FeedView>
+        <Border Grid.Row="3" Padding="16,16" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineBrush}" Background="{ThemeResource CloverCanvas}"><StackPanel Orientation="Horizontal" Spacing="8"><controls:CareMark Width="16" Height="19" /><TextBlock x:Uid="Board_37" Text="Gaps indicate no recorded care." Style="{StaticResource CloverBody}" FontSize="11" /></StackPanel></Border>
+      </Grid>
+    </Border>
+      <Border x:Name="HomeShell" Grid.Column="1" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="1" CornerRadius="32">
+    <ScrollViewer x:Name="PatientScroll" HorizontalScrollMode="Disabled">
+      <StackPanel MaxWidth="1680" Padding="{utu:Responsive Narrow='20,28,20,40', Wide='28,26,26,40'}" Spacing="18">
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <StackPanel Spacing="8">
+            <TextBlock Text="{Binding TodayLabel}" Style="{StaticResource CloverLabel}" />
+            <TextBlock x:Uid="Board_5" Text="Today's patients" Style="{StaticResource CloverDisplay}" FontSize="{utu:Responsive Narrowest=34, Wide=42}" />
+            <TextBlock x:Uid="Board_6" Text="A little more comfort. A lot of care." Style="{StaticResource CloverBody}" FontSize="16" />
+          </StackPanel>
+          <StackPanel Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center"><controls:CareGreeting Width="100" Height="94" Visibility="{utu:Responsive Narrowest=Collapsed, Wide=Visible}" /><Button x:Name="PatientNewButton" x:Uid="Board_7" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CloverPrimary}" Command="{Binding NewCase}" Content="＋  New patient" AutomationProperties.Name="New patient record" /></StackPanel>
+        </Grid>
+        <mvux:FeedView Source="{Binding Live}" RefreshingState="None" IsTabStop="False">
+          <mvux:FeedView.ValueTemplate><DataTemplate>
+            <Button x:Uid="Board_8" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" Style="{StaticResource CloverPatientCard}" HorizontalAlignment="Stretch" AutomationProperties.Name="Open active surgical record">
+              <Grid Padding="10" SizeChanged="OnLiveBandSizeChanged" RowDefinitions="Auto,Auto" RowSpacing="10" ColumnSpacing="20" CornerRadius="23">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="1.2*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                <Grid.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#E5E2FA" Offset="0" /><GradientStop Color="#DAEBF3" Offset="0.55" /><GradientStop Color="#DFEEDC" Offset="1" /></LinearGradientBrush></Grid.Background>
+                <Border Background="#F2FFFEF9" CornerRadius="15" Padding="12" BorderBrush="#EFFFFFFF" BorderThickness="1">
+                  <StackPanel Spacing="2"><TextBlock x:Uid="Board_9" Text="IN SURGERY" Style="{StaticResource CloverLabel}" FontSize="9" LineHeight="16" Foreground="#41604A" /><TextBlock Text="{Binding Data.Name}" Style="{StaticResource CloverHeading}" Foreground="#203B2B" FontSize="26" /><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource CloverBody}" Foreground="#41604A" FontSize="13" /><TextBlock Text="{Binding Data.Others}" Style="{StaticResource CloverBody}" Foreground="#41604A" Visibility="{Binding Data.HasOthers}" /></StackPanel>
+                </Border>
+                <Grid Grid.Column="1" ColumnDefinitions="*,*" ColumnSpacing="16" VerticalAlignment="Center" Margin="8,6,10,6">
+                  <StackPanel Spacing="5"><TextBlock x:Uid="Board_21" Text="Elapsed · h:mm" FontSize="10" Foreground="#41604A" /><TextBlock Text="{Binding Data.Elapsed}" Style="{StaticResource CodeTextStyle}" FontSize="30" Foreground="#244936" /></StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="7"><TextBlock Text="{Binding Data.NextLabel}" FontSize="11" Foreground="#41604A" Visibility="{Binding Data.IsWaiting}" /><TextBlock Text="{Binding Data.NextLabel}" FontSize="11" Foreground="#B3261E" Visibility="{Binding Data.IsOverdue}" /><TextBlock Text="{Binding Data.NextText}" Style="{StaticResource CodeTextStyle}" FontSize="25" Foreground="#244936" /></StackPanel>
+                </Grid>
+              </Grid>
+            </Button>
+          </DataTemplate></mvux:FeedView.ValueTemplate>
+          <mvux:FeedView.NoneTemplate><DataTemplate><Border /></DataTemplate></mvux:FeedView.NoneTemplate>
+          <mvux:FeedView.ErrorTemplate><DataTemplate><TextBlock x:Uid="Board_10" Text="Active case unavailable. Retry the patient list below." Style="{StaticResource CloverBody}" /></DataTemplate></mvux:FeedView.ErrorTemplate>
+        </mvux:FeedView>
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <TextBlock Text="{Binding DaySummary}" Style="{StaticResource CloverBody}" VerticalAlignment="Center" />
+          <utu:ChipGroup Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Style="{StaticResource FilterChipGroupStyle}" SelectionMode="Single">
+            <utu:Chip x:Uid="Board_11" Content="Today" IsChecked="True" Command="{Binding ShowToday}" AutomationProperties.Name="Show today's cases" />
+            <utu:Chip x:Uid="Board_12" Content="All records" Command="{Binding ShowAll}" AutomationProperties.Name="Show all cases" />
+          </utu:ChipGroup>
+        </Grid>
+        <mvux:FeedView x:Name="CasesFeed" Source="{Binding Today}" MinHeight="300" VerticalContentAlignment="Top" RefreshingState="None" IsTabStop="False">
+          <mvux:FeedView.ValueTemplate><DataTemplate>
+            <muxc:ItemsRepeater x:Uid="Board_13" ItemsSource="{Binding Data}" AutomationProperties.Name="Patient cards">
+              <muxc:ItemsRepeater.Layout><muxc:UniformGridLayout MaximumRowsOrColumns="3" ItemsStretch="Fill" MinItemWidth="280" MinColumnSpacing="20" MinRowSpacing="24" /></muxc:ItemsRepeater.Layout>
+              <muxc:ItemsRepeater.ItemTemplate><DataTemplate>
+                <Button Style="{StaticResource CloverPatientCard}" HorizontalAlignment="Stretch" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding}" AutomationProperties.Name="{Binding Name}">
+                  <StackPanel>
+                    <Grid Height="236" CornerRadius="23,23,0,0" Background="{ThemeResource CloverSky}">
+                      <controls:PetBackdrop Photo="{Binding Photo}" />
+                      <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" Visibility="{Binding HasNoPhoto}">
+                        <TextBlock Text="{Binding Initials}" Style="{StaticResource CloverDisplay}" FontSize="70" HorizontalAlignment="Center" Foreground="#244936" />
+                        <TextBlock x:Uid="Board_19" Text="PHOTO NOT ADDED" Style="{StaticResource CloverLabel}" Foreground="#41604A" />
+                      </StackPanel>
+                      <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" CornerRadius="16" Background="{ThemeResource CloverGlass}" Padding="12,7">
+                        <TextBlock Text="{Binding StatusText}" Style="{StaticResource CloverBody}" Foreground="{ThemeResource OnSurfaceBrush}" FontSize="12" />
+                      </Border>
+                      <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="14" Background="{ThemeResource CloverGlass}" Width="36" Height="36" CornerRadius="18"><FontIcon Glyph="&#xE8A7;" FontSize="14" Foreground="{ThemeResource PrimaryBrush}" /></Border>
+                    </Grid>
+                    <StackPanel Padding="20,18,20,20" Spacing="14">
+                      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <TextBlock Text="{Binding Name}" FontFamily="{StaticResource CloverEditorialFont}" FontSize="32" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis" />
+                        <Border Grid.Column="1" Background="{ThemeResource CloverSage}" CornerRadius="10" Padding="8,4" VerticalAlignment="Center"><TextBlock Text="{Binding Asa}" FontFamily="{StaticResource CodeFontFamily}" FontSize="10" Foreground="{ThemeResource PrimaryBrush}" /></Border>
+                      </Grid>
+                      <Grid ColumnDefinitions=".8*,1.4*,.85*" ColumnSpacing="10">
+                        <StackPanel Spacing="4"><TextBlock x:Uid="Board_27" Text="SPECIES" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding SpeciesText}" Style="{StaticResource CloverBody}" FontSize="13" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4"><TextBlock x:Uid="Board_31" Text="BREED" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Breed}" Style="{StaticResource CloverBody}" FontSize="13" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="4" ToolTipService.ToolTip="{Binding WeightDate}"><TextBlock x:Uid="Board_38" Text="WEIGHT" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Weight}" Style="{StaticResource CloverBody}" FontSize="13" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
+                      </Grid>
+                      <Grid ColumnDefinitions=".8*,2.25*" ColumnSpacing="10">
+                        <StackPanel Spacing="4"><TextBlock x:Uid="Board_39" Text="AGE" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Age}" Style="{StaticResource CloverBody}" FontSize="12" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4"><TextBlock x:Uid="Board_40" Text="PET PARENT" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Owner}" Style="{StaticResource CloverBody}" FontSize="12" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
+                      </Grid>
+                      <Border BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="0,1,0,0" Padding="0,12,0,0">
+                        <StackPanel Spacing="6"><TextBlock x:Uid="Board_41" Text="PROCEDURE" Style="{StaticResource CloverIdLabel}" /><TextBlock Text="{Binding Procedure}" FontFamily="{StaticResource CloverEditorialFont}" FontStyle="Italic" FontSize="19" LineHeight="25" TextWrapping="Wrap" Foreground="{ThemeResource OnSurfaceBrush}" /></StackPanel>
+                      </Border>
+                      <StackPanel Spacing="5"><TextBlock Text="{Binding TimeText}" Style="{StaticResource CloverLabel}" FontFamily="{StaticResource CodeFontFamily}" FontSize="10" CharacterSpacing="0" /><TextBlock Text="{Binding Team}" Style="{StaticResource CloverBody}" FontSize="11" /></StackPanel>
+                    </StackPanel>
+                  </StackPanel>
+                </Button>
+              </DataTemplate></muxc:ItemsRepeater.ItemTemplate>
+            </muxc:ItemsRepeater>
+          </DataTemplate></mvux:FeedView.ValueTemplate>
           <mvux:FeedView.ProgressTemplate>
             <DataTemplate>
               <!-- Skeleton: three case cards at the populated card's size. -->
@@ -247,6 +187,7 @@
             <DataTemplate>
               <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
                 <StackPanel Padding="24" Spacing="12" HorizontalAlignment="Left">
+                  <controls:CareGreeting Width="140" Height="124" HorizontalAlignment="Left" />
                   <TextBlock x:Uid="Board_14" Style="{StaticResource TitleLarge}"
                              Foreground="{ThemeResource OnSurfaceBrush}"
                              Text="No cases today. Start the first one." />
@@ -287,8 +228,13 @@
               </utu:CardContentControl>
             </DataTemplate>
           </mvux:FeedView.ErrorTemplate>
+
         </mvux:FeedView>
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Margin="0,8,0,0"><controls:CareMark Width="15" Height="17" /><TextBlock x:Uid="Board_20" Text="Care, continued.  ·  Clover" Style="{StaticResource CloverBody}" FontSize="12" /></StackPanel>
       </StackPanel>
     </ScrollViewer>
+
+      </Border>
+    </Grid>
   </Grid>
 </Page>

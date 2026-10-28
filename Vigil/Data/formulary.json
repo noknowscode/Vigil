@@ -1,5 +1,5 @@
 {
-  "note": "Sample reference data for the Vigil reference app. Not for clinical use: a practice supplies its own concentrations and ranges.",
+  "note": "Sample reference data for the Clover reference app. Not for clinical use: a practice supplies its own concentrations and ranges.",
   "drugs": [
     { "id": "dexmedetomidine", "name": "Dexmedetomidine", "drugClass": "Sedative", "mgPerMl": 0.5, "defaultMgPerKg": 0.005, "canineMinMgPerKg": 0.001, "canineMaxMgPerKg": 0.01, "felineMinMgPerKg": 0.001, "felineMaxMgPerKg": 0.015, "defaultRoute": "IM" },
     { "id": "acepromazine", "name": "Acepromazine", "drugClass": "Sedative", "mgPerMl": 10, "defaultMgPerKg": 0.02, "canineMinMgPerKg": 0.01, "canineMaxMgPerKg": 0.05, "felineMinMgPerKg": 0.01, "felineMaxMgPerKg": 0.05, "defaultRoute": "IM" },

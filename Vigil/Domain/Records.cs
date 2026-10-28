@@ -14,6 +14,10 @@ public partial record CaseRef(Guid Id);
 
 public partial record Patient(string Name, Species Species, string Breed, decimal WeightKg, decimal AgeYears, string Owner)
 {
+    /// <summary>Bundled image identifiers for fictional demo records; absent on existing records.</summary>
+    public string? PhotoAsset { get; init; }
+    public string? HeroAsset { get; init; }
+
     /// <summary>"Canine · Labrador retriever", skipping a blank breed.</summary>
     public string SpeciesAndBreed => string.IsNullOrWhiteSpace(Breed) ? Loc.Species(Species) : $"{Loc.Species(Species)} · {Breed}";
 }

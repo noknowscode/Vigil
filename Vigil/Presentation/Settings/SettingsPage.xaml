@@ -89,7 +89,7 @@
         </utu:CardContentControl>
 
         <TextBlock x:Uid="SettingsAbout" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
-                   Text="Vigil is an Uno Platform reference app. Drug concentrations, dose ranges and alarm thresholds are sample reference data, not for clinical use." />
+                   Text="Clover is an Uno Platform reference app. Drug concentrations, dose ranges and alarm thresholds are sample reference data, not for clinical use." />
       </StackPanel>
     </ScrollViewer>
   </Grid>

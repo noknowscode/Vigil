@@ -121,7 +121,7 @@
       </ScrollViewer>
 
       <Grid Grid.Row="2" Grid.ColumnSpan="2">
-        <Button x:Uid="Dose_18" Style="{StaticResource FilledButtonStyle}"
+        <Button x:Uid="Dose_18" Style="{StaticResource CloverPrimary}"
                 HorizontalAlignment="Stretch"
                 Content="Give dose"
                 Visibility="{Binding NotConfirming}"
@@ -144,8 +144,8 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
-              <Button x:Uid="Dose_19" Style="{StaticResource FilledButtonStyle}" HorizontalAlignment="Stretch" Content="Change dose" Command="{Binding ChangeDose}" />
-              <Button x:Uid="Dose_20" Grid.Column="1" Style="{StaticResource OutlinedButtonStyle}" HorizontalAlignment="Stretch" Content="Give anyway"
+              <Button x:Uid="Dose_19" Style="{StaticResource CloverPrimary}" HorizontalAlignment="Stretch" Content="Change dose" Command="{Binding ChangeDose}" />
+              <Button x:Uid="Dose_20" Grid.Column="1" Style="{StaticResource CloverSecondary}" HorizontalAlignment="Stretch" Content="Give anyway"
                       Command="{Binding GiveAnyway}" AutomationProperties.Name="Give the out-of-range dose anyway" />
             </Grid>
           </StackPanel>

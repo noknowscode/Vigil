@@ -10,9 +10,9 @@ public static class SampleDay
         var bella = Live(now);
         var milo = Recovering(now);
         var pepper = Signed(now);
-        var juniper = Case.New(new Patient("Juniper", Species.Canine, "Border collie", 21.6m, 7m, "R. Gagnon"),
+        var juniper = Case.New(new Patient("Juniper", Species.Canine, "Border collie", 21.6m, 7m, "R. Gagnon") { PhotoAsset = "juniper-profile.jpg" },
             "Dental cleaning, extractions", "Dr. Okafor", "S. Tremblay", now.AddMinutes(-20));
-        var oscar = Case.New(new Patient("Oscar", Species.Feline, "Maine coon", 6.8m, 4m, "L. Moreau"),
+        var oscar = Case.New(new Patient("Oscar", Species.Feline, "Maine coon", 6.8m, 4m, "L. Moreau") { PhotoAsset = "oscar-profile.jpg" },
             "Mass removal, left flank", "Dr. Okafor", "S. Tremblay", now.AddMinutes(-15));
         return [bella, milo, juniper, oscar, pepper];
     }
@@ -31,7 +31,7 @@ public static class SampleDay
             readings.Add(new VitalsReading(induced.AddMinutes(5 * i + 1), hr[i], 12 - i % 3, 98 - i % 2, 38 + i % 4, sys, dia, null,
                 37.8m - i * 0.05m, 2.0m + (i > 2 ? 0.5m : 0), 1.0m, i < 2 ? Plane.Light : Plane.Surgical, i == 4 ? "First incision" : ""));
         }
-        var p = new Patient("Bella", Species.Canine, "Labrador retriever", 18.4m, 2m, "M. Lavoie");
+        var p = new Patient("Bella", Species.Canine, "English bulldog", 18.4m, 2m, "M. Lavoie") { PhotoAsset = "bella-english-bulldog.jpg", HeroAsset = "bella-outdoor-hero.jpg" };
         var c = Case.New(p, "Ovariohysterectomy (spay)", "Dr. Okafor", "S. Tremblay", now.AddMinutes(-110));
         return c with
         {
@@ -55,7 +55,7 @@ public static class SampleDay
         var ended = now.AddMinutes(-35);
         var readings = Enumerable.Range(0, 25).Select(i => new VitalsReading(induced.AddMinutes(5 * i + 1), 150 - i % 5 * 4, 14, 97, 40, 112, 66, null,
             37.6m - i * 0.02m, 1.5m, 1.0m, Plane.Surgical, "")).ToImmutableList();
-        var p = new Patient("Milo", Species.Feline, "Domestic shorthair", 4.2m, 1m, "J. Roy");
+        var p = new Patient("Milo", Species.Feline, "Domestic shorthair", 4.2m, 1m, "J. Roy") { PhotoAsset = "milo-profile.jpg" };
         return Case.New(p, "Castration", "Dr. Bergeron", "A. Nguyen", now.AddMinutes(-200)) with
         {
             Status = CaseStatus.Recovery,

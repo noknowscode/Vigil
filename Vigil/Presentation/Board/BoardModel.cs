@@ -17,6 +17,16 @@ public partial record CaseSummary(
     string StatusText,
     string TimeText) : CaseRef(Id)
 {
+    public string SpeciesText { get; init; } = "";
+    public string Breed { get; init; } = "";
+    public string Weight { get; init; } = "";
+    public string Age { get; init; } = "";
+    public string Owner { get; init; } = "";
+    public string Asa { get; init; } = "";
+    public string WeightDate { get; init; } = "";
+    public string? Photo { get; init; }
+    public string Initials => string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(x => x[0]));
+    public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
     public bool IsActive => Status is CaseStatus.Anesthetized or CaseStatus.Recovery;
 
     public static CaseSummary From(Case c, DateTimeOffset now)
@@ -37,7 +47,15 @@ public partial record CaseSummary(
             $"{c.Veterinarian} · {c.Technician}",
             c.Status,
             StatusLabel(c.Status),
-            time);
+            time)
+        {
+            Photo = PatientMedia.Photo(p), SpeciesText = Loc.Species(p.Species),
+            Breed = string.IsNullOrWhiteSpace(p.Breed) ? Loc.T("Patient_NotRecorded", "Not recorded") : p.Breed,
+            Weight = $"{p.WeightKg:0.0} kg", Age = p.AgeYears == 1 ? Loc.T("Patient_OneYear", "1 year") : Loc.F("Patient_AgeYears", "{0:0.#} years", p.AgeYears),
+            Owner = string.IsNullOrWhiteSpace(p.Owner) ? Loc.T("Patient_NotRecorded", "Not recorded") : p.Owner,
+            Asa = c.Preop.AsaLabel,
+            WeightDate = Loc.F("Patient_VisitWeight", "Weight recorded with visit on {0:dd MMM yyyy}", c.CreatedAt)
+        };
     }
 
     public static string StatusLabel(CaseStatus s) => s switch
@@ -63,6 +81,8 @@ public partial record LiveCase(
     string LastReading,
     string Others) : CaseRef(Id)
 {
+    public bool IsOverdue => Due == DueState.Overdue;
+    public bool IsWaiting => !IsOverdue;
     public bool HasOthers => Others.Length > 0;
 
     /// <summary>Visual state name for <c>utu:VisualStateManagerExtensions.States</c>.</summary>
@@ -109,6 +129,8 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
 
     private IFeed<DateTimeOffset> Now { get; } = Feed.AsyncEnumerable(Clock.Ticks);
 
+    public string TodayLabel => Clock.Now.ToString("dddd, d MMMM");
+    public IFeed<string> DaySummary => Cases.Select(cases => $"{cases.Count(c => c.Status == CaseStatus.Scheduled)} preparing   ·   {cases.Count(c => c.Status == CaseStatus.Anesthetized)} in surgery   ·   {cases.Count(c => c.Status == CaseStatus.Recovery)} recovering");
     public IState<BoardFilter> Filter => State.Value(this, () => BoardFilter.Today);
 
     public IListFeed<CaseSummary> Today => Feed
@@ -123,6 +145,21 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
         .Combine(Cases, Now)
         .Select(x => LiveCase.From(x.Item1, x.Item2, Preferences.ReadingInterval)!);
 
+    public IFeed<BoardAgenda> Agenda => Feed.Combine(Cases, Now.Select(n => n.Date)).Select(x => BoardAgenda.From(x.Item1, Clock.Now));
+    public IFeed<AgendaReminder> AgendaNext => Feed.Combine(Cases, Now).Select(x => AgendaReminder.From(x.Item1, x.Item2, Preferences.ReadingInterval)!);
+    public IFeed<CareDay> CareRhythm => Feed.Combine(Cases, Now.Select(n => new DateTimeOffset(n.Year, n.Month, n.Day, n.Hour, n.Minute, 0, n.Offset))).Select(x => CareDay.From(x.Item1, Clock.Now));
+    public IFeed<string> AgendaClock => Now.Select(n => n.ToString("HH:mm"));
+    public IFeed<string> AgendaDate => Now.Select(n => n.ToString("ddd, d MMM"));
+
+    public IFeed<bool> CanOpenPatient => Cases.Select(cases => cases.Count > 0);
+    public IFeed<string> PatientTabHint => Cases.Select(cases => BoardDestination.Patient(cases) is { } c
+        ? Loc.F("Board_OpenPatient", "Open {0}’s care workspace", c.Patient.Name)
+        : Loc.T("Board_SelectPatient", "Add a patient to open their care workspace"));
+    public async ValueTask OpenPatient(CancellationToken ct)
+    {
+        if (BoardDestination.Patient(await Store.GetAllAsync(ct)) is { } c)
+            await Navigator.NavigateRouteAsync(this, "Record", data: new CaseRef(c.Id), cancellation: ct);
+    }
     public void Retry() => Store.Reload();
 
     /// <summary>Opens the New case sheet; on Create, opens the new record with the board behind it (Back returns here).</summary>
