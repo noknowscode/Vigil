@@ -1,42 +1,43 @@
-# HANDOFF — Vigil: Clover fixes, after the runtime pass
+# HANDOFF — Vigil: Clover redesign, greeting and agenda route
 Updated: 2026-10-28 (America/Montreal)
 
 ## Where we are
-The runtime pass over the audit fixes is done on `archive/local-2026-10-28` (clone at `C:\Users\Platform006\Vigil`).
-Board, record and parent preview were checked through the App MCP in light and dark at 1600, 1100, 700, 640 and 393, and in
-French at 393. Every Responsive band, the 48 px side buttons, the hero growth, the dark placeholders, the live band, the
-reminder card and the French strings passed. One defect turned up and was fixed in 62be117: in dark mode the agenda ruler's
-block names drew Light ink, because `CareRuler` resolved unthemed `*Brush` keys. Results table and captures:
-`docs/evidence/runtime-2026-10-28/RESULTS.md`. App preferences were reset to System theme and English afterwards.
+On `archive/local-2026-10-28`. This session: runtime pass (results `docs/evidence/runtime-2026-10-28/RESULTS.md`),
+dark ruler fix (62be117), agenda moved to its own `AgendaPage`/`AgendaModel` route, docked from 1120 and a `!Agenda`
+flyout below (599e73d), then the redesign (c3bc0ea): "Good morning, Dr. <surname>" greeting with a recap subtitle
+(surname in Settings), outer shell 24 px in, agenda as a card after the user's "Patient care" popover reference,
+illustration removed. All verified through the App MCP at 1600 and 1100, light and dark.
 
 ## Last verified state
-- Build: desktop 0 warnings, 0 errors. Tests 68/68. WASM/Android/iOS not rebuilt since the fixes.
-- Runtime: verified via uno-app (see RESULTS.md). Hot Reload was unavailable: the Uno Platform account is signed out.
-- Git: `archive/local-2026-10-28`, 62be117 + docs commit; not yet pushed.
-- Lint: gating 128 (CARD 21 · HEX 73 · BACKBAR 3 · CODEBEHIND 10 · OVERLAY 1 · RESPONSIVE 1 · ICON 19), none allowed.
+- Build: desktop 0 warnings, 0 errors. Tests 72/72 (GreetingTests added). WASM/Android/iOS not rebuilt.
+- Runtime: greeting with/without surname, recap, shell, docked and flyout agenda, record opened from both. Not run at 393.
+- Git: c3bc0ea local, not pushed (37a375e and earlier pushed).
+- Lint: gating 113 (CARD 16 · HEX 73 · BACKBAR 3 · CODEBEHIND 2 · OVERLAY 0 · RESPONSIVE 0 · ICON 19).
 
 ## Guidance applied
 | Skill / rule / decision | Applied at (file:line) |
 |---|---|
-| Ink resolved per element theme from themed `*Color` keys (gotchas, Theming) | `Vigil/Controls/CareRuler.cs:57` |
-| Skia theme snapshot on ActualThemeChanged (ThemePalette) | `Vigil/Controls/PetBackdrop.cs:36` |
-| uno-scaffolding Breakpoints: page ResponsiveLayout | `Vigil/Presentation/Board/BoardPage.xaml:4` |
+| uno-navigation: `!` route to a Page opens a flyout; nested default route fills a content region | `Vigil/App.xaml.cs` (Board Nested Agenda), `BoardPage.xaml` AgendaToggle |
+| Workaround protocol: collapsed region blocks startup navigation | `Vigil/Presentation/Board/BoardPage.xaml` (WORKAROUND above AgendaDock) |
+| Themed `*Color` keys for drawn ink | `Vigil/Controls/CareRuler.cs:57` |
+| Responsive on elements, not code-behind | `BoardPage.xaml` HomeShell Grid.Column/ColumnSpan, AgendaDock Width/IsEnabled |
 
 ## Next actions (in order)
-1. Ask the user: M3 agenda as a `!Agenda` flyout route (needs a Page + model split). This also clears the OVERLAY,
-   RESPONSIVE and most CODEBEHIND hits in `BoardPage.xaml.cs`.
-2. Normalize, one page at a time: FontSize literals to Clover type styles, hex to tokens, CARD to CardContentControl.
-3. Hold /quieter (gradient, glass, blur, taglines, mascot) for the user's decision. M4/M5 perf after.
-4. Rebuild WASM/Android/iOS heads once the next batch lands.
+1. Lint quick wins (77 of 113): delete the now-unused `Controls/CareGreeting.xaml(.cs)` (41; ask first, it deletes
+   files) and move the hex tokens from `Themes/Clover.xaml` into `Styles/CloverPalette.xaml` (36).
+2. Normalize RecordPage (23 hits), then Board/ParentPreview (11). Mark CareMark (brand mark) as an allowed exception.
+3. Runtime pass at 393 and in French for the greeting, recap and agenda card.
+4. Hold /quieter (gradient, glass, blur, taglines, mascot) for the user. M4/M5 perf after.
 
 ## Open questions
-- Below 600 px the record's five side buttons collapse by design. Are Vitals, Medical history, Lab results and Medications still reachable on a phone?
-- Switching the language back to English saves correctly but shows no "Language saved" notice (French shows it).
-- 48 px side buttons vs the project's 56 px glove rule (56 overflows the 520 px hero).
-- Record hero keeps fixed light inks in dark theme while its stats card goes dark. Give the hero dark inks too?
-- French strings are a Québec-register draft; native review before shipping?
-- 128 lint hits carry no `allow` reasons.
-- Sign in to Uno Platform to restore Hot Reload for the next UI session.
+- Add the collapsed-region gotcha to `~/.claude/rules/uno-runtime-gotchas.md` with a reduced repro, and file upstream?
+- The navigation flyout has no scrim; style it as a side drawer (DrawerFlyoutPresenter), or keep the default?
+- Agenda CTA is 56 px tall (glove rule) where the reference is about 44.
+- Record side buttons collapse under 600: are Vitals/History/Labs/Meds reachable on a phone?
+- "Language saved" notice missing when switching back to English.
+- 48 px record side buttons vs the 56 px glove rule. Record hero keeps light inks in dark theme.
+- French strings (incl. the greeting) are a Québec-register draft; native review before shipping?
+- Sign in to Uno Platform to restore Hot Reload.
 
 ## Relaunch
 ```
