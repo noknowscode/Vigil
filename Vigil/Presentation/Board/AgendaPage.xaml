@@ -12,7 +12,7 @@
         <TextBlock x:Uid="Board_23" Text="CARE, THROUGH THE DAY" Style="{StaticResource CloverLabel}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
         <TextBlock x:Uid="Board_25" Grid.Row="1" Text="Today's agenda" FontFamily="{StaticResource CloverEditorialFont}" FontSize="28" Foreground="{ThemeResource OnSurfaceBrush}" />
         <!-- xaml-lint: allow backbar - the X dismisses the !Agenda flyout; there is no page to go back from -->
-        <Button x:Uid="Board_24" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Top" Style="{StaticResource CloverQuiet}" Width="48" Height="48" Padding="0" CornerRadius="24" Background="{ThemeResource CloverSage}"
+        <Button x:Uid="Board_24" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Top" Style="{StaticResource CloverQuiet}" Width="40" Height="40" MinHeight="40" Padding="0" CornerRadius="20" Background="{ThemeResource CloverSage}"
                 Visibility="{utu:Responsive Narrowest=Visible, Widest=Collapsed, Layout={StaticResource AgendaLayout}}" uen:Navigation.Request="-" AutomationProperties.Name="Close agenda"><FontIcon Glyph="&#xE711;" FontSize="14" Foreground="{ThemeResource OnSurfaceBrush}" /></Button>
         <!-- xaml-lint: allow card - 13 px clock pill, display-only, not a surface -->
         <Grid Grid.Row="2" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto" Margin="0,4,8,0"><TextBlock Text="{Binding AgendaDate}" Style="{StaticResource CloverBody}" FontSize="13" VerticalAlignment="Center" /><Border Grid.Column="1" Background="{ThemeResource CloverSage}" CornerRadius="12" Padding="10,3"><TextBlock Text="{Binding AgendaClock}" FontFamily="{StaticResource CodeFontFamily}" FontSize="13" Foreground="{ThemeResource PrimaryBrush}" /></Border></Grid>
@@ -52,7 +52,7 @@
           </mvux:FeedView>
         </StackPanel>
       </ScrollViewer>
-      <!-- Next reminder: the patient row, the status line, then one dark call to action (56 px: the glove target). -->
+      <!-- Next reminder: the patient row, the status line, then one dark call to action (44 px, as in the reference). -->
       <mvux:FeedView Grid.Row="2" Margin="24,8,24,16" Source="{Binding AgendaNext}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch">
         <mvux:FeedView.ValueTemplate><DataTemplate>
           <StackPanel Spacing="12">
@@ -66,7 +66,7 @@
               </Grid>
             </utu:CardContentControl>
             <TextBlock Text="{Binding Data.Detail}" Style="{StaticResource CloverBody}" FontSize="13" Margin="4,0" />
-            <Button Style="{StaticResource CloverPrimary}" CornerRadius="14" HorizontalAlignment="Left" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" AutomationProperties.Name="{Binding Data.AccessibleName}">
+            <Button Style="{StaticResource CloverPrimary}" CornerRadius="12" MinHeight="44" Padding="20,10" HorizontalAlignment="Left" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" AutomationProperties.Name="{Binding Data.AccessibleName}">
               <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="{Binding Data.OpenLabel}" /><FontIcon Glyph="&#xE72A;" FontSize="14" /></StackPanel>
             </Button>
           </StackPanel>

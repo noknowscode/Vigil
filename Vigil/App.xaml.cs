@@ -116,6 +116,9 @@ public partial class App : Application
         );
 #if DESKTOP
 #if DEBUG
+        // Windows can restore the window maximized, and Resize does nothing on a maximized window: restore it first.
+        if (Environment.GetCommandLineArgs().Contains("--clover-preview") && MainWindow.AppWindow.Presenter is Microsoft.UI.Windowing.OverlappedPresenter { State: Microsoft.UI.Windowing.OverlappedPresenterState.Maximized } presenter)
+            presenter.Restore();
         if (Environment.GetCommandLineArgs().Contains("--clover-preview"))
             MainWindow.AppWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 1440, Height = 1000 });
         var previewSize = Environment.GetCommandLineArgs().FirstOrDefault(a => a.StartsWith("--clover-size="));
