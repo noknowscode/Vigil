@@ -1,40 +1,49 @@
-# HANDOFF — Vigil: Clover redesign audit
+# HANDOFF — Vigil: Clover fixes, runtime pass
 Updated: 2026-10-28 (America/Montreal)
 
 ## Where we are
-The Clover redesign (visible name "Clover", see `docs/design/CLOVER.md`) was archived as one commit on
-`archive/local-2026-10-28` and audited with `uno-audit`. Findings are in `docs/AUDIT-2026-10-27.md`.
-Only one fix was applied: the WASM crypto advisories (`WindowsCompatibilityVersion` 10.0.14), on this branch
-and on `main` (98c2ca4). `main` does not contain Clover. The repo now lives at `github.com/noknowscode/Vigil`.
+Working the impeccable/uno-audit recommendations in order on `archive/local-2026-10-28` (clone at
+`C:\Users\Platform006\Vigil`; the old `UnoProjects\Vigil` clone was removed). Done and pushed: dark-mode tokens
+for photo panels, live band and reminder card (afbfa09), 48 px record nav targets + hero MinHeight (6ce9259),
+12-13 px type floor (ab087ba), 32 strings localized (a2a13ae), composed accessible names (5384d27), board
+breakpoints to `{utu:Responsive}` with `BoardLayout` 600/660/760/1120 (a1e73a7). None of it has been run yet.
 
 ## Last verified state
-- Build: desktop 0 warnings, WASM 0 warnings; Android/iOS not built. Tests 68/68 (this branch), 50/50 (`main`).
-- Runtime: not verified (no App MCP pass on Clover in this session).
-- Git: this branch; `main` at 98c2ca4 pushed.
-- Lint: gating 134 (CARD 21 · HEX 74 · BACKBAR 3 · CODEBEHIND 12 · OVERLAY 1 · RESPONSIVE 4 · ICON 19), none allowed.
+- Build: desktop 0 warnings, 0 errors. Tests 68/68. WASM/Android/iOS not rebuilt since the fixes.
+- Runtime: not verified. The previous session's App MCP was rooted in the deleted folder.
+- Git: `archive/local-2026-10-28`, pushed.
+- Lint: gating 128 (CARD 21 · HEX 73 · BACKBAR 3 · CODEBEHIND 10 · OVERLAY 1 · RESPONSIVE 1 · ICON 19), none allowed.
 
 ## Guidance applied
 | Skill / rule / decision | Applied at (file:line) |
 |---|---|
-| Uno.Sdk documented override for an implicit package version | `Vigil/Vigil.csproj:31` |
-Read, not applied: uno-platform-agent, mvux, uno-navigation, uno-material, uno-toolkit, winui-xaml, dotnet-csharp (audit only).
+| uno-material: ThemeResource tokens with Light/Dark values | `Vigil/Themes/Clover.xaml` (CloverPhotoBase, CloverLiveBand) |
+| Skia theme snapshot on ActualThemeChanged (ThemePalette) | `Vigil/Controls/PetBackdrop.cs` (ResolveInks) |
+| uno-scaffolding Breakpoints: Responsive + page ResponsiveLayout | `Vigil/Presentation/Board/BoardPage.xaml` (BoardLayout) |
+| Loc.T/F + tools/fr.json | `Vigil/Presentation/Parent/ParentPreviewModel.cs` |
 
 ## Next actions (in order)
-1. Runtime pass (`uno-verify`): dark theme on board and record hero, French on record and parent preview, ruler rebuild rate.
-2. Fix batch 1 from the audit: French strings, dark-theme inks.
-3. Batch 2: remove dead `DoseModel`/`DosePage` or share one dose save path; test the drawer dose path with the `store-write` fault.
-4. Batches 3 and 4: board layout out of code-behind; cards, hex, font sizes to Toolkit, tokens and type styles.
+1. Runtime pass (uno-verify; user approved ~15 min of window time): `uno_app_start` with `--clover-preview`.
+   Board, record (open a card), parent preview; light and dark; widths 1600, 1100, 700, 640, 393. Check:
+   - dark: no-photo initials and placeholder are dark, reminder card text readable, live band dark gradient;
+   - Responsive bands: frame margin <600, live band stacks <660, tabs on second row <760, agenda docks >=1120;
+   - type floor: ruler blocks under 56 px show the name only, nothing clipped;
+   - record hero: five side buttons at 48 px, hero grows instead of clipping;
+   - French: switch language in Settings, check record pane titles and parent preview.
+2. M3 remainder: agenda as a `!Agenda` flyout route (needs a Page + model split; ask the user first).
+3. Normalize, one page at a time: FontSize literals to Clover type styles, hex to tokens, CARD to CardContentControl.
+4. Hold /quieter (gradient, glass, blur, taglines, mascot) for the user's decision. M4/M5 perf after.
 
 ## Open questions
-- Ship a serif font file, or accept the Georgia fallback off Windows?
-- Should ParentPreview be localized now?
-- Merge Clover to `main` at all, or keep it archived?
-- 134 lint hits carry no `allow` reasons.
+- 48 px side buttons vs the project's 56 px glove rule (56 overflows the 520 px hero).
+- Record hero stays light in dark theme (fixed dark inks). Give it dark inks too?
+- French strings are a Québec-register draft; native review before shipping?
+- 128 lint hits carry no `allow` reasons.
 
 ## Relaunch
 ```
-git clone https://github.com/noknowscode/Vigil && cd Vigil && git checkout archive/local-2026-10-28
+cd C:\Users\Platform006\Vigil ; git checkout archive/local-2026-10-28
 dotnet build Vigil/Vigil.csproj -p:VigilTargetFrameworks=net10.0-desktop ; dotnet test Vigil.Tests/Vigil.Tests.csproj
-uno_app_start  projectPath=Vigil/Vigil.csproj  tfm=net10.0-desktop  args=--clover-preview
+uno_app_start  projectPath=C:\Users\Platform006\Vigil\Vigil\Vigil.csproj  tfm=net10.0-desktop  args=--clover-preview
 Strings: python tools/localize.py --write   (fails on missing French)
 ```
