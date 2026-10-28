@@ -54,7 +54,18 @@ public sealed class JsonCaseStore : ICaseStore
 
     public async ValueTask<ImmutableList<Case>> GetAllAsync(CancellationToken ct) => Order(await LoadAsync(ct));
 
-    public async ValueTask<Case?> GetAsync(Guid id, CancellationToken ct) => (await LoadAsync(ct)).GetValueOrDefault(id);
+    public async ValueTask<Case?> GetAsync(Guid id, CancellationToken ct)
+    {
+        if (_fault.RecordDelayMs > 0)
+        {
+            await Task.Delay(_fault.RecordDelayMs, ct);
+        }
+        if (_fault.ConsumeRecordFault())
+        {
+            throw new StoreReadException("This record could not be read (injected fault).");
+        }
+        return (await LoadAsync(ct)).GetValueOrDefault(id);
+    }
 
     public async ValueTask SaveAsync(Case value, CancellationToken ct)
     {

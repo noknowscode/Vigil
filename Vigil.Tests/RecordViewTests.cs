@@ -53,8 +53,8 @@ public class RecordViewTests
         bella.SpO2Spark.Data.Should().Be("M4,12 L16.67,12 L29.33,16 L42,16 L54.67,12 L67.33,16 L80,20 L92.67,16 L105.33,16 L118,12 L130.67,16 L143.33,16 L156,16");
         Spark.From([97], 4).HasLine.Should().BeFalse();
         var flat = Spark.From([97, 97, 97], 4);
-        flat.Height.Should().BeApproximately(0.5, 0.001, "a flat line still has height to stretch");
-        flat.Data.Should().EndWith("M156,15.75 V16.25");
+        flat.Height.Should().BeApproximately(4, 0.001, "a flat line still has height to stretch");
+        flat.Data.Should().EndWith("M156,14 V18");
     }
 
     [Test]

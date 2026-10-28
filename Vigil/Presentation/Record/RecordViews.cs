@@ -43,11 +43,13 @@ public sealed partial record Spark(string Data, double Top, double Height, doubl
         var top = points.Min(p => p.Y);
         var bottom = points.Max(p => p.Y);
         var data = "M" + string.Join(" L", points.Select(p => Num($"{p.X:0.##},{p.Y:0.##}")));
-        if (bottom - top < 0.5)
+        if (bottom - top < 4)
         {
-            // A flat line has no height to stretch (and a zero-height Path draws nothing on Skia): give it 0.5 px.
-            top -= 0.25;
-            bottom += 0.25;
+            // A flat (or nearly flat) line has no height to stretch, and a Path shorter than its stroke draws nothing:
+            // pad the box to 4 px with a tick at the end point, hidden under the 8 px end dot.
+            var pad = (4 - (bottom - top)) / 2;
+            top -= pad;
+            bottom += pad;
             data += Num($" M156,{top:0.##} V{bottom:0.##}");
         }
         return new Spark(data, top, bottom - top, points[^1].Y);

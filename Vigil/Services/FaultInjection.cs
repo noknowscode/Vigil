@@ -13,6 +13,15 @@ public interface IFaultInjection
     bool ConsumeReadFault();
 
     bool WriteFault { get; }
+
+    /// <summary>
+    /// Single-case reads (the record page): true for the first N calls with <c>record-read-xN</c>. The record page
+    /// reads its case several times as it opens (feed and edit states), so N covers all of them; Retry reads again.
+    /// </summary>
+    bool ConsumeRecordFault() => false;
+
+    /// <summary>Delay before a single-case read with <c>record-slow</c> (4 s), to show the record skeleton.</summary>
+    int RecordDelayMs => 0;
 }
 
 public sealed class FaultInjection : IFaultInjection
@@ -39,6 +48,16 @@ public sealed class FaultInjection : IFaultInjection
     public int SlowMs { get; }
 
     public bool WriteFault => _fault.Contains("store-write", StringComparison.OrdinalIgnoreCase);
+
+    private int _recordFaults;
+
+    public bool ConsumeRecordFault()
+    {
+        var times = System.Text.RegularExpressions.Regex.Match(_fault, @"record-read-x(\d+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        return times.Success && Interlocked.Increment(ref _recordFaults) <= int.Parse(times.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    public int RecordDelayMs => _fault.Contains("record-slow", StringComparison.OrdinalIgnoreCase) ? 4000 : 0;
 
     public bool ConsumeReadFault()
     {

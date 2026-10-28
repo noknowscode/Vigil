@@ -299,7 +299,8 @@
                           <TextBlock x:Uid="Record_99" Text="Latest medication" Style="{StaticResource TypeBodyS}" FontWeight="Medium" VerticalAlignment="Center" />
                         </StackPanel>
                         <TextBlock Grid.Row="1" Margin="0,8,0,0" Text="{Binding Data.MedicationSummary}" Style="{StaticResource TypeTitleM}" TextTrimming="CharacterEllipsis" />
-                        <TextBlock Grid.Row="2" Text="{Binding Data.MedicationDetail}" Style="{StaticResource TypeMonoMeta}" TextWrapping="WrapWholeWords" />
+                        <TextBlock Grid.Row="2" Text="{Binding Data.MedicationDetail}" Style="{StaticResource TypeMonoMeta}" TextWrapping="WrapWholeWords" Visibility="{Binding Data.HasDoses}" />
+                        <TextBlock Grid.Row="2" Text="{Binding Data.MedicationDetail}" Style="{StaticResource TypeBodyS}" TextWrapping="WrapWholeWords" Visibility="{Binding Data.HasNoDoses}" />
                         <StackPanel Grid.Row="3" Margin="0,16,0,0" Padding="0,14,0,0" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
                           <TextBlock x:Uid="Record_100" Text="Next dose" Style="{StaticResource TypeBodyS}" />
                           <TextBlock Margin="0,2,0,0" Text="{Binding Data.NextDose.Time}" Style="{StaticResource TypeMonoStatS}" />

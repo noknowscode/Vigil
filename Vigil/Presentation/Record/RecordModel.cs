@@ -105,6 +105,7 @@ public partial record CaseView(
     public bool CanChange => !IsSigned;
 
     public bool HasNoDoses => Doses.Count == 0;
+    public bool HasDoses => !HasNoDoses;
 
     public const int MonitorTab = 2;
 
