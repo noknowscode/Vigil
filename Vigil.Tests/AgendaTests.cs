@@ -12,7 +12,7 @@ public class AgendaTests
         var agenda = BoardAgenda.From(day, Now);
         agenda.Events.Should().HaveCount(3).And.BeInAscendingOrder(x => x.At);
         agenda.Preparing.Should().HaveCount(1).And.OnlyContain(x => x.Time == "—");
-        var bella = day.Single(c => c.Patient.Name == "Bella");
+        var bella = day.Single(c => c.Patient.Name == "Knuckles");
         agenda.Events.Single(e => e.Id == bella.Id).At.Should().Be(bella.InducedAt);
     }
 
@@ -27,7 +27,7 @@ public class AgendaTests
     [Test]
     public void ReminderPrioritizesTheEarliestDeadlineAcrossPatients()
     {
-        var bella = SampleDay.Create(Now).Single(c => c.Patient.Name == "Bella");
+        var bella = SampleDay.Create(Now).Single(c => c.Patient.Name == "Knuckles");
         var later = bella with { Id = Guid.NewGuid(), Readings = [], InducedAt = Now };
         var reminder = AgendaReminder.From([later, bella], Now, TimeSpan.FromMinutes(5));
         reminder!.Id.Should().Be(bella.Id);

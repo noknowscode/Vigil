@@ -12,7 +12,7 @@ public class CloverTests
         try
         {
             var store = new JsonCaseStore(folder, new FaultInjection(null, 0));
-            var sample = SampleDay.Create(DateTimeOffset.Now).Single(c => c.Patient.Name == "Bella");
+            var sample = SampleDay.Create(DateTimeOffset.Now).Single(c => c.Patient.Name == "Knuckles");
             await store.SaveAsync(sample, CancellationToken.None);
             var file = Directory.GetFiles(folder, "*.json").Single();
             var json = JsonNode.Parse(await File.ReadAllTextAsync(file))!;
@@ -52,7 +52,7 @@ public class CloverTests
     [Test]
     public void MediaCannotResolveUnlistedFilesOrAssignImagesByPatientName()
     {
-        var patient = new Patient("Bella", Species.Canine, "English bulldog", 18.4m, 2m, "Owner");
+        var patient = new Patient("Knuckles", Species.Canine, "English bulldog", 18.4m, 2m, "Owner");
         PatientMedia.Photo(patient).Should().BeNull();
         PatientMedia.Photo(patient with { PhotoAsset = "../preferences.json" }).Should().BeNull();
     }

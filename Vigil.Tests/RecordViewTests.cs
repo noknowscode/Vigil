@@ -11,7 +11,7 @@ public class RecordViewTests
     [Test]
     public void ChartReproducesThePrototypeGeometry()
     {
-        var chart = RecordChart.From(Proto.Named("Bella"), Proto.Now, Proto.Interval);
+        var chart = RecordChart.From(Proto.Named("Knuckles"), Proto.Now, Proto.Interval);
         chart.XLabels.Should().Equal("11:30", "11:45", "12:00", "12:15", "12:30", "12:45");
         chart.HrTicks.Should().Equal("110", "95", "80");
         chart.BpTicks.Should().Equal("130", "85", "40");
@@ -36,7 +36,7 @@ public class RecordViewTests
     [Test]
     public void ChartWindowSlidesToKeepTheLatestTimeInView()
     {
-        var bella = Proto.Named("Bella");
+        var bella = Proto.Named("Knuckles");
         RecordChart.WindowStart(bella, Proto.Now, Proto.Interval).Should().Be(Proto.At(11, 30));
         RecordChart.WindowStart(bella, Proto.Now.AddMinutes(20), Proto.Interval).Should().Be(Proto.At(11, 30), "an overdue reading does not move the window");
         RecordChart.WindowStart(Proto.Named("Milo"), Proto.Now, Proto.Interval).Should().Be(Proto.At(11, 0), "readings to 12:03 end the window at 12:15, 75 minutes after 11:00");
@@ -45,7 +45,7 @@ public class RecordViewTests
     [Test]
     public void SparklinesLandOnThePrototypeCoordinates()
     {
-        var bella = View("Bella");
+        var bella = View("Knuckles");
         bella.HrSpark.Data.Should().Be("M4,8.8 L16.67,13.6 L29.33,18.4 L42,23.2 L54.67,20.8 L67.33,16 L80,11.2 L92.67,13.6 L105.33,18.4 L118,16 L130.67,11.2 L143.33,8.8 L156,13.6");
         bella.HrSpark.Top.Should().BeApproximately(8.8, 0.001);
         bella.HrSpark.Height.Should().BeApproximately(14.4, 0.001);
@@ -58,9 +58,9 @@ public class RecordViewTests
     }
 
     [Test]
-    public void BellaMatchesThePrototypeCopy()
+    public void KnucklesMatchesThePrototypeCopy()
     {
-        var v = View("Bella");
+        var v = View("Knuckles");
         v.Care.Chip.Should().Be("Under anesthesia");
         $"{v.Care.Label} {v.Care.Since} {v.Care.Timer}".Should().Be("UNDER ANESTHESIA since 11:30 1:12");
         $"{v.Care.FirstLabel} {v.Care.FirstValue} · {v.Care.SecondLabel} {v.Care.SecondValue}".Should().Be("Last reading 12:36 · Next due 12:41");
@@ -81,8 +81,8 @@ public class RecordViewTests
     [Test]
     public void RecordNavFollowsTheOpenPaneElseTheStage()
     {
-        View("Bella").ActiveSection.Should().Be("Monitor", "Vitals is the page itself while the patient is asleep");
-        View("Bella", "Drugs").ActiveSection.Should().Be("Drugs");
+        View("Knuckles").ActiveSection.Should().Be("Monitor", "Vitals is the page itself while the patient is asleep");
+        View("Knuckles", "Drugs").ActiveSection.Should().Be("Drugs");
         View("Oscar").ActiveSection.Should().Be("Preop", "before induction the record opens on preparation");
     }
 

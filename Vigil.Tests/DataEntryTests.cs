@@ -4,12 +4,12 @@ namespace Vigil.Tests;
 
 public class FluidTests
 {
-    private static Case Bella => Proto.Named("Bella");
+    private static Case Knuckles => Proto.Named("Knuckles");
 
     [Test]
     public void StoppingEndsTheRunAndTheCardSaysNoneRunning()
     {
-        var stopped = Bella.WithFluidsStopped(Proto.Now);
+        var stopped = Knuckles.WithFluidsStopped(Proto.Now);
         stopped.Fluids.Should().ContainSingle().Which.StoppedAt.Should().Be(Proto.Now);
         RecordText.Fluids(stopped).IsRunning.Should().BeFalse();
     }
@@ -17,7 +17,7 @@ public class FluidTests
     [Test]
     public void StartingWhileRunningIsARateChange()
     {
-        var changed = Bella.WithFluidsStarted("LRS", 10m, Proto.Now);
+        var changed = Knuckles.WithFluidsStarted("LRS", 10m, Proto.Now);
         changed.Fluids.Should().HaveCount(2);
         changed.Fluids[0].StoppedAt.Should().Be(Proto.Now);
         changed.Fluids[1].Should().Be(new FluidRun("LRS", 10m, Proto.Now, null));
@@ -34,9 +34,9 @@ public class FluidTests
     [Test]
     public void RateOutsideTheRangeOrNoNameIsRejected()
     {
-        FluentActions.Invoking(() => Bella.WithFluidsStarted("LRS", 0m, Proto.Now)).Should().Throw<ArgumentOutOfRangeException>();
-        FluentActions.Invoking(() => Bella.WithFluidsStarted("LRS", 31m, Proto.Now)).Should().Throw<ArgumentOutOfRangeException>();
-        FluentActions.Invoking(() => Bella.WithFluidsStarted(" ", 5m, Proto.Now)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => Knuckles.WithFluidsStarted("LRS", 0m, Proto.Now)).Should().Throw<ArgumentOutOfRangeException>();
+        FluentActions.Invoking(() => Knuckles.WithFluidsStarted("LRS", 31m, Proto.Now)).Should().Throw<ArgumentOutOfRangeException>();
+        FluentActions.Invoking(() => Knuckles.WithFluidsStarted(" ", 5m, Proto.Now)).Should().Throw<ArgumentException>();
     }
 }
 

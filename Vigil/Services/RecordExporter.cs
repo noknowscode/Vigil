@@ -6,7 +6,7 @@ namespace Vigil.Services;
 /// <summary>Hands a signed record to the practice: CSV through the system save picker, summary through the clipboard.</summary>
 public interface IRecordExporter
 {
-    /// <summary>Returns a user-facing outcome ("Saved Bella-2026-10-07.csv" or "Export cancelled").</summary>
+    /// <summary>Returns a user-facing outcome ("Saved Knuckles-2026-10-07.csv" or "Export cancelled").</summary>
     ValueTask<string> ExportCsvAsync(Case record, CancellationToken ct);
 
     ValueTask<string> CopySummaryAsync(Case record, CancellationToken ct);

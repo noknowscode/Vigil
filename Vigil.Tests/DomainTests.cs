@@ -93,7 +93,7 @@ public class ScheduleTests
     private static readonly TimeSpan Five = TimeSpan.FromMinutes(5);
 
     private static Case Anesthetized(params int[] readingMinutes) =>
-        Case.New(new Patient("Bella", Species.Canine, "Lab", 18.4m, 2m, "M"), "Spay", "Dr", "Tech", T0.AddHours(-1)) with
+        Case.New(new Patient("Knuckles", Species.Canine, "Lab", 18.4m, 2m, "M"), "Spay", "Dr", "Tech", T0.AddHours(-1)) with
         {
             Status = CaseStatus.Anesthetized,
             InducedAt = T0,
@@ -151,7 +151,7 @@ public class CsvExportTests
     [Test]
     public void CsvHasOneRowPerEventInTimeOrder()
     {
-        var c = SampleDay.Create(DateTimeOffset.Now).Single(x => x.Patient.Name == "Bella");
+        var c = SampleDay.Create(DateTimeOffset.Now).Single(x => x.Patient.Name == "Knuckles");
         var lines = CsvExport.ToCsv(c).Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         lines.Should().HaveCount(1 + c.Readings.Count + c.Doses.Count);
         lines[1].Should().Contain(",dose,").And.Contain("Dexmedetomidine");

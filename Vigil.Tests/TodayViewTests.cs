@@ -21,7 +21,7 @@ public class TodayViewTests
     {
         var cards = Today.Cards(Proto.Day, CardFilter.InClinic, None, Proto.Now, reduceMotion: false);
         cards.Select(c => $"{c.Name} | {c.Sub} | {c.Asa} | {c.StripLabel} {c.StripValue} | {c.VisualStates}").Should().Equal(
-            "Bella | English bulldog · 2 yrs | ASA II | ANESTHESIA 1:12 | Live,StageSurgery,Collapsed",
+            "Knuckles | English bulldog · 2 yrs | ASA II | ANESTHESIA 1:12 | Live,StageSurgery,Collapsed",
             "Milo | Domestic shorthair · 1 yr | ASA I | IN RECOVERY 0:34 | Recovery,StageRecovery,Collapsed",
             "Oscar | Maine coon · 4 yrs | ASA pending | BOOKED Not started | Booked,StageBooked,Collapsed");
         cards[2].AsaPending.Should().BeTrue();
@@ -36,7 +36,7 @@ public class TodayViewTests
     public void DetailsOpenPerCardAndReduceMotionUsesTheStillStates()
     {
         var day = Proto.Day;
-        var bella = day.Single(c => c.Patient.Name == "Bella");
+        var bella = day.Single(c => c.Patient.Name == "Knuckles");
         var cards = Today.Cards(day, CardFilter.InClinic, ImmutableHashSet.Create(bella.Id), Proto.Now, reduceMotion: true);
         cards[0].VisualStates.Should().Be("LiveStill,StageSurgery,ExpandedStill");
         cards[0].ToggleText.Should().Be("Hide details");
@@ -46,7 +46,7 @@ public class TodayViewTests
     [Test]
     public void SparklineScalesRecordedHeartRateIntoTheStrip()
     {
-        var path = Today.Sparkline(Proto.Named("Bella").Readings);
+        var path = Today.Sparkline(Proto.Named("Knuckles").Readings);
         path.Should().StartWith("M0,").And.EndWith(",7.33", "the last reading (94) sits 2 bpm under the highest (96) of the last 12, range 90-96 in 16 px");
         path.Split('L').Should().HaveCount(12);
         Today.Sparkline([]).Should().BeEmpty();
@@ -56,7 +56,7 @@ public class TodayViewTests
     public void GanttRowsSegmentsAndNowDots()
     {
         var timeline = CareTimeline.From(Proto.Day, Proto.Now, 25)!;
-        timeline.Rows.Select(r => r.Name).Should().Equal("Pepper", "Milo", "Bella", "Oscar");
+        timeline.Rows.Select(r => r.Name).Should().Equal("Pepper", "Milo", "Knuckles", "Oscar");
         timeline.Ticks.Select(t => t.Label).Should().Equal("08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00");
         timeline.NowText.Should().Be("Now 12:42");
         timeline.NowFraction.Should().BeApproximately(282.43 / 420, 0.001);
@@ -81,7 +81,7 @@ public class TodayViewTests
     {
         var live = HeroCard.From(Proto.Day, Proto.Now, Proto.Interval, 25)!;
         live.IsLive.Should().BeTrue();
-        live.Title.Should().Be("In surgery · Bella");
+        live.Title.Should().Be("In surgery · Knuckles");
         live.Subtitle.Should().Be("Ovariohysterectomy (spay) · OR 1");
         live.Timer.Should().Be("1:12");
         live.ChipText.Should().Be("Reading overdue 1:26");
@@ -89,7 +89,7 @@ public class TodayViewTests
         new[] { live.First, live.Second, live.Third }.Select(s => $"{s.Label} {s.Value} {s.Sub}").Should().Equal(
             "Induced 11:30 1h 12m ago", "Last reading 12:36 HR 94 · SpO₂ 97%", "Next due 12:41 1:26 late");
 
-        var next = HeroCard.From(Proto.Day.Where(c => c.Patient.Name != "Bella"), Proto.Now, Proto.Interval, 25)!;
+        var next = HeroCard.From(Proto.Day.Where(c => c.Patient.Name != "Knuckles"), Proto.Now, Proto.Interval, 25)!;
         next.IsNext.Should().BeTrue();
         next.Title.Should().Be("Next surgery · Oscar");
         next.Timer.Should().Be("1:18");

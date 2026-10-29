@@ -12,7 +12,7 @@ public class GreetingTests
         var greeting = BoardGreeting.From(SampleDay.Create(Afternoon), Afternoon, Interval, "Okafor");
         greeting.Title.Should().Be("Good afternoon, Dr. Okafor");
         greeting.Lead.Should().Be("1 patient in surgery.");
-        greeting.Rest.Should().Be(" Bella's reading is overdue · 1 recovering · 1 booked · 1 signed out today.");
+        greeting.Rest.Should().Be(" Knuckles's reading is overdue · 1 recovering · 1 booked · 1 signed out today.");
     }
 
     [Test]

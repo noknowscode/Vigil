@@ -22,7 +22,7 @@ public class StageTests
     [Test]
     public void SampleDayStagesMatchThePrototypeCards()
     {
-        Stage.Of(Proto.Named("Bella")).Should().Be(CareStage.Surgery);
+        Stage.Of(Proto.Named("Knuckles")).Should().Be(CareStage.Surgery);
         Stage.Of(Proto.Named("Milo")).Should().Be(CareStage.Recovery);
         Stage.Of(Proto.Named("Oscar")).Should().Be(CareStage.Booked);
         Stage.Of(Proto.Named("Pepper")).Should().Be(CareStage.Home);
@@ -54,7 +54,7 @@ public class CarePhasesTests
     {
         CarePhases.Of(Proto.Named("Pepper"), Proto.Now).Select(Times).Should().Equal("Prep 08:00-08:32", "Anesthesia 08:32-09:27", "Recovery 09:27-10:07");
         CarePhases.Of(Proto.Named("Milo"), Proto.Now).Select(Times).Should().Equal("Prep 09:30-10:02", "Anesthesia 10:02-12:08", "Recovery 12:08-now");
-        CarePhases.Of(Proto.Named("Bella"), Proto.Now).Select(Times).Should().Equal("Prep 11:00-11:30", "Anesthesia 11:30-now");
+        CarePhases.Of(Proto.Named("Knuckles"), Proto.Now).Select(Times).Should().Equal("Prep 11:00-11:30", "Anesthesia 11:30-now");
         CarePhases.Of(Proto.Named("Oscar"), Proto.Now).Select(Times).Should().Equal(
             "Waiting 12:27-now", "Planned:Prep 13:30-14:00", "Planned:Anesthesia 14:00-15:00");
     }
@@ -101,7 +101,7 @@ public class CarePhasesTests
     {
         var yesterday = CarePhases.Totals(SampleDay.Create(Proto.Now.AddDays(-1)), Proto.Now);
         yesterday.Rows.Single(r => r.Phase == CarePhaseKind.Prep).Duration.Should().Be(TimeSpan.Zero);
-        // Bella under anesthesia, Milo in recovery and Oscar waiting since yesterday: midnight to now each.
+        // Knuckles under anesthesia, Milo in recovery and Oscar waiting since yesterday: midnight to now each.
         var sinceMidnight = Proto.Now - new DateTimeOffset(Proto.Now.Date, Proto.Now.Offset);
         yesterday.Total.Should().Be(sinceMidnight * 3);
         yesterday.PatientCount.Should().Be(3);
@@ -127,9 +127,9 @@ public class DueTasksTests
     {
         var rows = Rows();
         rows.Select(r => $"{r.DueLabel} {r.Time} | {r.Title} | {r.PatientName} · {r.Meta} | {r.Status} | {r.Action}").Should().Equal(
-            "Late 12:41 | Record observations | Bella · Anesthesia · 5-minute strip | Overdue 1:26 | Record",
+            "Late 12:41 | Record observations | Knuckles · Anesthesia · 5-minute strip | Overdue 1:26 | Record",
             "Due 12:50 | Pain score | Milo · Recovery · every 15 min | In 8 min | Score",
-            $"Due 13:10 | Cefazolin redose | Bella · {4.05m.ToString("0.00", CultureInfo.CurrentCulture)} mL · IV | In 28 min | Prepare",
+            $"Due 13:10 | Cefazolin redose | Knuckles · {4.05m.ToString("0.00", CultureInfo.CurrentCulture)} mL · IV | In 28 min | Prepare",
             "Due 13:15 | Pre-op bloodwork | Oscar · CBC and chemistry panel | Results ready | Review",
             "Due 14:00 | Discharge call | Pepper · Pet parent · K. Gagnon | Scheduled | Call");
         rows.Select(r => r.Tone).Should().Equal(DueTone.Overdue, DueTone.Neutral, DueTone.Neutral, DueTone.Ready, DueTone.Neutral);
@@ -141,7 +141,7 @@ public class DueTasksTests
     [Test]
     public void ObservationsFollowTheReadingIntervalAndTurnLate()
     {
-        var bella = Proto.Named("Bella");
+        var bella = Proto.Named("Knuckles");
         var fresh = bella with { Readings = bella.Readings.Add(bella.Readings[^1] with { At = Proto.Now.AddMinutes(-1) }) };
         var row = Rows([fresh]).Single(r => r.Kind == DueTaskKind.Observations);
         row.IsLate.Should().BeFalse();
@@ -160,7 +160,7 @@ public class DueTasksTests
         late.DueAt.Should().Be(milo.EndedAt!.Value.AddMinutes(15));
         late.IsLate.Should().BeTrue();
         late.Status.Should().Be("Overdue 19:00");
-        Rows([Proto.Named("Bella")]).Should().NotContain(r => r.Kind == DueTaskKind.PainScore);
+        Rows([Proto.Named("Knuckles")]).Should().NotContain(r => r.Kind == DueTaskKind.PainScore);
     }
 
     [Test]
@@ -177,7 +177,7 @@ public class DueTasksTests
     [Test]
     public void RedoseFollowsTheLastDoseAndOnlyRedosedDrugs()
     {
-        var bella = Proto.Named("Bella");
+        var bella = Proto.Named("Knuckles");
         var redose = Rows([bella]).Single(r => r.Kind == DueTaskKind.Redose);
         redose.DueAt.Should().Be(Proto.At(13, 10));
         var again = bella with { Doses = bella.Doses.Add(bella.Doses.Single(d => d.DrugId == "cefazolin") with { At = Proto.At(12, 30) }) };
@@ -221,13 +221,13 @@ public class DueTasksTests
         called.DischargeCall!.DoneAt.Should().Be(Proto.Now);
         Rows([called]).Should().BeEmpty();
         called.WithDischargeCallDone(Proto.Now.AddMinutes(5)).DischargeCall!.DoneAt.Should().Be(Proto.Now, "the first call time stays");
-        Proto.Named("Bella").WithDischargeCallDone(Proto.Now).DischargeCall.Should().BeNull();
+        Proto.Named("Knuckles").WithDischargeCallDone(Proto.Now).DischargeCall.Should().BeNull();
     }
 
     [Test]
     public void DueNextActionsOpenTheRecordOnTheirTask()
     {
-        Vigil.Presentation.DueRow Row(DueAction action) => Vigil.Presentation.DueRow.From(Rows([Proto.Named("Bella")])[0] with { Action = action });
+        Vigil.Presentation.DueRow Row(DueAction action) => Vigil.Presentation.DueRow.From(Rows([Proto.Named("Knuckles")])[0] with { Action = action });
         Row(DueAction.Record).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Record" && r.Pane == "Monitor");
         Row(DueAction.Score).Pane.Should().Be("Recovery");
         Row(DueAction.Call).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Record" && r.Pane == "Recovery");
@@ -291,7 +291,7 @@ public class NextSurgeryTests
         var oscar = Proto.Named("Oscar");
         var earlier = oscar with { Id = Guid.NewGuid(), PlannedStart = Proto.Now.AddMinutes(20), Patient = oscar.Patient with { Name = "Luna" } };
         NextSurgery.Of([oscar, earlier], Proto.Now, 25)!.Case.Patient.Name.Should().Be("Luna");
-        NextSurgery.Of([oscar with { PlannedStart = null }, Proto.Named("Bella")], Proto.Now, 25).Should().BeNull();
+        NextSurgery.Of([oscar with { PlannedStart = null }, Proto.Named("Knuckles")], Proto.Now, 25).Should().BeNull();
         var preparing = NextSurgery.Of([oscar with { PrepStartedAt = Proto.Now.AddMinutes(-3) }], Proto.Now, 25)!;
         preparing.PrepStartsAt.Should().Be(Proto.Now.AddMinutes(-3));
         preparing.PrepStarted.Should().BeTrue();
@@ -312,8 +312,8 @@ public class SampleDayV2Tests
     [Test]
     public void SampleDayCarriesThePrototypeRecordFields()
     {
-        Proto.Day.Select(c => c.Patient.Name).Should().Equal("Bella", "Milo", "Oscar", "Pepper");
-        var bella = Proto.Named("Bella");
+        Proto.Day.Select(c => c.Patient.Name).Should().Equal("Knuckles", "Milo", "Oscar", "Pepper");
+        var bella = Proto.Named("Knuckles");
         bella.OperatingRoom.Should().Be("OR 1");
         bella.InducedAt!.Value.ToString("HH:mm").Should().Be("11:30");
         Schedule.HoursMinutes(Schedule.Elapsed(bella, Proto.Now)).Should().Be("01:12");
@@ -339,7 +339,7 @@ public class BackCompatTests
         var folder = Path.Combine(Path.GetTempPath(), "vigil-v2-tests", Guid.NewGuid().ToString("N"));
         try
         {
-            var bella = Proto.Named("Bella");
+            var bella = Proto.Named("Knuckles");
             await new JsonCaseStore(folder, new FaultInjection(null, 0)).SaveAsync(bella, CancellationToken.None);
             var file = Directory.GetFiles(folder, "*.json").Single();
             var json = JsonNode.Parse(await File.ReadAllTextAsync(file))!.AsObject();
@@ -377,7 +377,7 @@ public class BackCompatTests
             var loaded = await new JsonCaseStore(folder, new FaultInjection(null, 0)).GetAllAsync(CancellationToken.None);
             loaded.Single(c => c.Patient.Name == "Oscar").Should().BeEquivalentTo(Proto.Named("Oscar"), o => o.Excluding(c => c.Id).Excluding(c => c.Patient));
             loaded.Single(c => c.Patient.Name == "Milo").Recovery.PainScores.Should().HaveCount(2);
-            loaded.Single(c => c.Patient.Name == "Bella").Fluids.Single().RateMlKgH.Should().Be(5m);
+            loaded.Single(c => c.Patient.Name == "Knuckles").Fluids.Single().RateMlKgH.Should().Be(5m);
             loaded.Single(c => c.Patient.Name == "Pepper").DischargeCall.Should().NotBeNull();
         }
         finally { if (Directory.Exists(folder)) Directory.Delete(folder, true); }

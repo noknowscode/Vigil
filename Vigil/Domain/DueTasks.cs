@@ -44,7 +44,7 @@ public partial record DueTask(
         _ => Loc.T("DueAction_Call", "Call"),
     };
 
-    /// <summary>"Late 12:41, Record observations, Bella · Anesthesia · 5-minute strip, Overdue 1:26".</summary>
+    /// <summary>"Late 12:41, Record observations, Knuckles · Anesthesia · 5-minute strip, Overdue 1:26".</summary>
     public string AccessibleName => $"{DueLabel} {Time}, {Title}, {PatientName} · {Meta}, {Status}";
 }
 

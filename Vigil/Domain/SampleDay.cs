@@ -4,7 +4,7 @@ namespace Vigil.Domain;
 
 /// <summary>
 /// A believable surgical day for demos and screenshots (Settings › Load sample day). Times are relative to
-/// <c>now</c> and reproduce the v2 prototype when now is 12:42:26: Bella in OR 1 since 11:30, Milo recovering since
+/// <c>now</c> and reproduce the v2 prototype when now is 12:42:26: Knuckles in OR 1 since 11:30, Milo recovering since
 /// 12:08, Oscar booked for 14:00 and Pepper signed out at 10:07 with a discharge call at 14:00.
 /// </summary>
 public static class SampleDay
@@ -53,7 +53,7 @@ public static class SampleDay
             readings.Add(new VitalsReading(induced.AddMinutes(5 * i + 6), hr[i], 12 - (i + 1) % 3 * (i % 2), spo2[i], 38 + (i == hr.Length - 1 ? 0 : i % 3), sys[i], dia[i], null,
                 37.8m - i * 0.05m, 2.0m + (i > 2 ? 0.5m : 0), 1.0m, i < 2 ? Plane.Light : Plane.Surgical, i == 3 ? "First incision" : ""));
         }
-        var p = new Patient("Bella", Species.Canine, "English bulldog", 18.4m, 2m, "M. Lavoie") { PhotoAsset = "bella-english-bulldog.jpg", HeroAsset = "bella-field.jpg" };
+        var p = new Patient("Knuckles", Species.Canine, "English bulldog", 18.4m, 2m, "M. Lavoie") { PhotoAsset = "bella-english-bulldog.jpg", HeroAsset = "bella-field.jpg" };
         var c = Case.New(p, "Ovariohysterectomy (spay)", "Dr. Okafor", "S. Tremblay", induced.AddMinutes(-30));
         return c with
         {
