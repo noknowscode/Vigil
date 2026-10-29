@@ -54,7 +54,7 @@ User decisions (2026-10-28):
 | Capability (design) | Status | Note |
 |---|---|---|
 | Sidebar: Today, Patients, Agenda, Anesthesia, Settings | implemented | routes in the shell frame |
-| Sidebar: Records, Messages, Reports, Help center | substituted | disabled items, "Coming soon" (user decision 1) |
+| Sidebar: Records, Messages, Reports, Help center | substituted | disabled items, "Coming soon" (user decision 1); Messages is out of the MVP (user, 2026-10-28): stays in the sidebar, disabled, no screen planned |
 | Clinic switcher, search ⌘K, notification bell | substituted | disabled controls (decision 1) |
 | "Monitoring on · 1 min ago" | substituted | disabled styling; text "Monitoring off" would contradict design, see UQ |
 | User card | implemented | Settings surname + role "Veterinarian" |
@@ -181,7 +181,8 @@ substitutions in UQ).
 
 ## Unresolved Questions
 
-- Disabled-but-visible Records, Messages, Reports, Help center, clinic switcher, search and bell show features the
+- Messages: resolved 2026-10-28, not part of the MVP; it stays visible and disabled in the sidebar.
+- Disabled-but-visible Records, Reports, Help center, clinic switcher, search and bell show features the
   app does not have (user chose this; capability rule flags it). Revisit before any release.
 - Monitoring (default applied 2026-10-28, user did not choose): no monitor connection is built. The "Monitoring on"
   pill renders disabled like the other screen-less items; the "Monitor signal lost" card state and the "Monitoring

@@ -114,6 +114,10 @@ public partial class App : Application
             },
             initialRoute: "Main"
         );
+        if (Diagnostics.PageTimer.OutputPath is { } perfOutput)
+        {
+            _ = Diagnostics.PageTimer.RunAsync(MainWindow, Host.Services, perfOutput);
+        }
 #if DESKTOP
 #if DEBUG
         // Windows can restore the window maximized, and Resize does nothing on a maximized window: restore it first.
@@ -209,6 +213,9 @@ public partial class App : Application
 
     private static string DataRoot()
     {
+        // The page-change timing run keeps its sample day out of the real records.
+        if (Diagnostics.PageTimer.OutputPath is not null)
+            return Path.Combine(ApplicationData.Current.LocalFolder.Path, "vigil-perf");
 #if DEBUG
         if (Environment.GetCommandLineArgs().Contains("--clover-preview"))
             return Path.Combine(ApplicationData.Current.LocalFolder.Path, "clover-design-preview");
