@@ -1,41 +1,62 @@
-# HANDOFF — Vigil: v2 redesign (Today dashboard, Patient care, shell)
+# HANDOFF — Vigil: v2 follow-through (data entry, perf, screen restyle, polish)
 Updated: 2026-10-28 (America/Montreal)
 
 ## Where we are
-Building the v2 redesign from three references: `Downloads\Today · dashboard (C cards)-html`,
-`Downloads\Patient care · Bella-html`, and a states image (recorded in SPEC-v2 Interaction Brief). The spec is
-`SPEC-v2.md` (read it first) with exact values in `docs/design/{shell-and-tokens,today-dashboard-values,patient-care-values}.md`.
-Phase 1a done (85448bb): v2 palette, phase colours and font wiring app-wide. Branch `archive/local-2026-10-28`,
-pushed up to 592803b; 2e4c73b and 85448bb are local.
+The v2 redesign (SPEC-v2.md) is built; `docs/COMPLETENESS.md` graded it Complete with gaps (f09f8a3). This session
+closed most of the remaining Majors in code:
+- New patient now captures room, start, length, fasting and parent notified.
+- Fluids start and stop from the record's Medication pane.
+- The avatar shows two initials from a new first-name setting.
+- Settings, New patient, Sign off, Dose, Agenda, Parent preview, Patients and the record panes all use v2 styling.
+- The details expansion animates its height.
+- Tracked font copies replace the letter-spacing Skia ignores.
+- Clover.xaml, CaseCards, CareGreeting and LiveBandView were deleted.
+- A Release timing run measured page changes (docs/evidence/perf-2026-10-28/RESULTS.md).
+
+**None of the restyled screens has been seen at runtime yet.** The user approved only the two timing runs, not an
+App MCP pass.
 
 ## Last verified state
-- Build: desktop 0 warnings. Tests 72/72. Runtime: v2 tokens not yet run.
-- Fonts: manifests point at `Assets/Fonts/HankenGrotesk_{Regular,Medium,SemiBold}.ttf`, `MartianMono_Medium.ttf`,
-  `Newsreader_Regular.ttf` plus base copies `HankenGrotesk.ttf`, `MartianMono.ttf`, `Newsreader.ttf` (copy of the
-  400/500 file, like PublicSans.ttf). **The TTFs are missing**: the session could not download them. Run the
-  PowerShell one-liner in the chat (Google css2 with the Android 2.2 UA), check each starts with 00 01 00 00 and has
-  no `fvar`, add the three base copies, then delete PublicSans*, IBMPlexMono*, ArchivoNarrow* (no other references).
-- Lint: 113 gating before v2 work.
+- Build: desktop Debug and Release, 0 warnings. Tests 131/131.
+- Runtime: timing runs only (Release and Debug, no devserver). Release page changes reach first frame in 0.1–2.0 s;
+  startup takes 14.7 s to a settled Today. Both harness runs exited 0xE0434352 after `Application.Exit()`.
+- Git: `archive/local-2026-10-28`, last commit 5d330d8 (plus this handoff).
+- Lint: CARD 0 · HEX 0 · BACKBAR 0 · CODEBEHIND 2 (RecordPage pane SizeChanged/Escape) · ICON 2 (CareMark logo).
 
-## Next actions (in order) — SPEC-v2 Implementation Plan
-1. Fonts in place (above), run the app once, check type renders.
-2. Phase 2 domain: new Case fields with defaults (OperatingRoom, PlannedStart/Minutes, PrepStartedAt, DischargedAt,
-   Fluids, Labs, PainScores, DischargeCall, FastingSince, ParentNotifiedAt), formulary RedoseMinutes, preference
-   PlannedPrepMinutes; pure `Stage`, `CarePhases`, `DueTasks`, `CareInsight` with unit tests and a JSON back-compat
-   test; sample day matching the prototype.
-3. Phase 3 shell (ShellPage, sidebar with disabled items, top bar), routes under Main; remove the board AgendaDock.
-4. Phase 4 Today, Phase 5 Patient care, Phase 6 polish (dark, responsive, French, lint, parity), per SPEC-v2.
+## Guidance applied
+| Skill / rule / decision | Applied at (file:line) |
+|---|---|
+| uno-material lightweight keys (OutlinedTextBox*, ComboBox*) | Vigil/Themes/Controls.xaml:11 |
+| Card surfaces via CardContentControl (PanelCardStyle) | Vigil/Themes/Tokens.xaml (PanelCardStyle), Settings/NewCase/SignOff/Dose/Agenda/ParentPreview pages |
+| NavigationBar for back (lint BACKBAR) | Vigil/Presentation/Parent/ParentPreviewPage.xaml |
+| MVUX command parameters from states (StartFluids) | Vigil/Presentation/Record/RecordModel.cs (StartFluids) |
+| User: Messages out of MVP, stays disabled | SPEC-v2.md capability table |
+Read, not applied: none.
+
+## Next actions (in order)
+1. With the user's OK, run an App MCP visual pass covering:
+   - The restyled screens, in light and dark.
+   - The New patient Schedule card: create a case with a start time and confirm it appears in Today's gantt.
+   - Fluids: start, change the rate, then stop.
+   - The AO avatar.
+   - The details height animation.
+   - The tracked numbers against the prototype widths.
+   - Settings at 1600 and 700 px.
+2. Investigate the 0xE0434352 exit after `Application.Exit()` in PageTimer, and check that a normal window close
+   exits 0.
+3. Startup (14.7 s Release) and the first Settings visit (2.0 s): profile with `dotnet-trace`, or split the timing
+   into time to first frame.
+4. Re-run `uno-completeness-audit` and update `docs/COMPLETENESS.md`.
+5. Still open from the audit: Android/WASM runtime proof, a UI test suite, a drawer below 760 px, and press scale
+   under reduced motion.
 
 ## Open questions
-- Monitoring: the states image shows "Monitor signal lost" and "Monitoring paused · Last sync · Retry". Vigil has no
-  monitor link. Build a connection service (which device/protocol) or keep the pill disabled and drop those states?
-- See SPEC-v2 Unresolved Questions (disabled-but-visible features, derived dark values, Skia letter-spacing).
+- The disabled Records, Reports, Help, search, bell and Monitoring pill are still visible (Messages is resolved: not
+  in the MVP).
+- `PlannedPrepMinutes` has no Settings field. It is only the default of 25 minutes.
+- Native French review of the 48 new strings.
 
 ## Relaunch
-```
-cd C:\Users\Platform006\Vigil ; git checkout archive/local-2026-10-28
-dotnet build Vigil/Vigil.csproj -p:VigilTargetFrameworks=net10.0-desktop ; dotnet test Vigil.Tests/Vigil.Tests.csproj
-uno_app_start  projectPath=C:\Users\Platform006\Vigil\Vigil\Vigil.csproj  tfm=net10.0-desktop  args=--clover-preview --clover-size=1440x1000
-Before a rebuild: uno_app_close, then Get-Process Vigil | Stop-Process -Force (exe lock).
-Strings: python tools/localize.py --write   (fails on missing French; add French to tools/fr.json in insertion order)
-```
+cd C:\Users\Platform006\Vigil; dotnet build Vigil/Vigil.csproj -f net10.0-desktop
+Timing run: $env:VIGIL_PERF="<path>.csv"; Vigil\bin\Release\net10.0-desktop\Vigil.exe (exits by itself).
+App MCP: uno_app_start (Debug, devserver). Ask the user before any launch.

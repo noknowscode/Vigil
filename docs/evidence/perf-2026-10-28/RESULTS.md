@@ -1,7 +1,7 @@
 # Page-change timing, 2026-10-28
 
-Harness: `Vigil/Services/PageTimer.cs`, run with `VIGIL_PERF=<csv>` (own data folder `vigil-perf`, sample day,
-pinned to no clock). It drives the shell's own commands (no input injection): Today → Patients → Settings → Agenda →
+Harness: `Vigil/Services/PageTimer.cs`, run with `VIGIL_PERF=<csv>` (own data folder `vigil-perf`, sample day).
+It drives the shell's own commands (no input injection): Today → Patients → Settings → Agenda →
 Today → Record (Anesthesia) → Today, twice. Desktop Skia, Windows 11, Uno.Sdk 6.7.30, launched without the devserver.
 Columns are ms from the request: frame navigated, page Loaded, first rendered frame after Loaded, settled (element
 count unchanged for 1.5 s; the time of the last change, so late photo loads and clock-driven changes count).
