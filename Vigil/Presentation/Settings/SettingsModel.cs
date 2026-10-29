@@ -47,6 +47,8 @@ public partial record SettingsModel(
 
     public IState<string> LanguageNotice => State.Value(this, () => "");
 
+    public IFeed<bool> HasLanguageNotice => LanguageNotice.Select(s => !string.IsNullOrEmpty(s));
+
     public async ValueTask LoadSampleDay(CancellationToken ct)
     {
         if (!await ConfirmAsync(Loc.T("Settings_SampleConfirm", "Replace every record on this tablet with the sample surgical day?"), Loc.T("Settings_SampleTitle", "Load sample day"), Loc.T("Settings_SampleAction", "Replace records"), ct))

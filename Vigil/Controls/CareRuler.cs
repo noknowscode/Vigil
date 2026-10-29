@@ -64,9 +64,14 @@ public sealed partial class CareRuler : UserControl
                 var y = 22 + q * CareDay.PixelsPerHour / 4;
                 var hour = q % 4 == 0;
                 Place(_ticks, new Border { Width = hour ? 10 : 5, Height = 1, Background = line }, hour ? 34 : 39, y);
-                if (hour)
+                // An hour label the "Now" pill would cover is left out: the label spans y-17..y-1, the pill (22 px) now-10..now+12, plus 4 px air.
+                var now = day.NowTop + 22;
+                if (hour && (y <= now - 13 || y >= now + 33))
                 {
                     Place(_ticks, Label(day.Start.AddMinutes(q * 15).ToString("HH:mm"), 12, quiet, true), 0, y - 17);
+                }
+                if (hour)
+                {
                     Place(_ticks, new Border { Width = width - 52, Height = 1, Background = line, Opacity = .45 }, 52, y);
                 }
             }

@@ -29,8 +29,8 @@
                          Text="Today greets you as Dr. Okafor and the sidebar shows your initials. Leave both empty for a plain greeting." />
             </StackPanel>
             <Grid ColumnSpacing="12" ColumnDefinitions="*,*">
-              <TextBox x:Uid="Settings_5" Header="First name" PlaceholderText="Amara" Text="{Binding ClinicianFirstName, Mode=TwoWay}" MaxLength="40" AutomationProperties.Name="Your first name for the avatar initials" />
-              <TextBox x:Uid="Settings_6" Grid.Column="1" Header="Surname" PlaceholderText="Okafor" Text="{Binding ClinicianName, Mode=TwoWay}" MaxLength="40" AutomationProperties.Name="Your surname for the board greeting" />
+              <TextBox x:Uid="Settings_5" Header="First name" Text="{Binding ClinicianFirstName, Mode=TwoWay}" MaxLength="40" AutomationProperties.Name="Your first name for the avatar initials" />
+              <TextBox x:Uid="Settings_6" Grid.Column="1" Header="Surname" Text="{Binding ClinicianName, Mode=TwoWay}" MaxLength="40" AutomationProperties.Name="Your surname for the board greeting" />
             </Grid>
           </StackPanel>
         </utu:CardContentControl>
@@ -60,11 +60,14 @@
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="14">
             <TextBlock x:Uid="Settings_15" Style="{StaticResource TypeH3Card}" Text="Language" />
-            <muxc:RadioButtons x:Uid="Settings_16" Header="Language (applies after restart)" MaxColumns="2" SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}">
-              <RadioButton x:Uid="Settings_17" Content="English" />
-              <RadioButton x:Uid="Settings_18" Content="Français" />
-            </muxc:RadioButtons>
-            <TextBlock Style="{StaticResource TypeBodyS}" Text="{Binding LanguageNotice}" AutomationProperties.LiveSetting="Polite" />
+            <StackPanel>
+              <muxc:RadioButtons x:Uid="Settings_16" Header="Language (applies after restart)" MaxColumns="2" SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}">
+                <RadioButton x:Uid="Settings_17" Content="English" />
+                <RadioButton x:Uid="Settings_18" Content="Français" />
+              </muxc:RadioButtons>
+              <!-- Shown once the language changes (applies at the next start). -->
+              <TextBlock Style="{StaticResource TypeBodyS}" Text="{Binding LanguageNotice}" Visibility="{Binding HasLanguageNotice}" AutomationProperties.LiveSetting="Polite" />
+            </StackPanel>
           </StackPanel>
         </utu:CardContentControl>
 

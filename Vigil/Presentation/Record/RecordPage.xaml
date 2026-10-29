@@ -561,7 +561,7 @@
                   <StackPanel Spacing="8">
                     <Button x:Uid="Record_29" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" MinWidth="220" Content="Give premedication" Visibility="{Binding Data.IsScheduled}" Command="{Binding Parent.OpenPane}" CommandParameter="Dose" AutomationProperties.Name="Give premedication" />
                     <Button x:Uid="Record_30" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="220" Content="Induce" Visibility="{Binding Data.IsScheduled}" IsEnabled="{Binding Data.CanInduce}" Command="{Binding Parent.Induce}" AutomationProperties.Name="Induce anesthesia" />
-                    <TextBlock x:Uid="Record_31" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.IsScheduled}" Text="Complete the five checks and set the ASA status to induce. Induction starts the reading clock." />
+                    <TextBlock x:Uid="Record_31" TextWrapping="WrapWholeWords" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.IsScheduled}" Text="Complete the five checks and set the ASA status to induce. Induction starts the reading clock." />
                     <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{Binding Data.InducedText}" />
                   </StackPanel>
                 </StackPanel>
@@ -579,7 +579,7 @@
                       </StackPanel>
                     </Button>
                   </StackPanel>
-                  <TextBlock x:Uid="Record_35" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.HasNoDoses}" Text="No doses yet. Premedication, induction agents and antibiotics given for this case are listed here with their volume." />
+                  <TextBlock x:Uid="Record_35" TextWrapping="WrapWholeWords" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.HasNoDoses}" Text="No doses yet. Premedication, induction agents and antibiotics given for this case are listed here with their volume." />
                   <ItemsControl x:Uid="Record_36" ItemsSource="{Binding Data.Doses}" AutomationProperties.Name="Doses given">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate x:DataType="local:DoseRow">

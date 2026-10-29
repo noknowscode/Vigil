@@ -189,10 +189,9 @@
   <data name="NewCase_17.Header" xml:space="preserve"><value>Technician</value></data>
   <data name="NewCase_17.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Technician</value></data>
   <data name="NewCase_18.Text" xml:space="preserve"><value>SCHEDULE</value></data>
-  <data name="NewCase_19.Text" xml:space="preserve"><value>Optional. A planned start puts the patient on Today's timeline and in the Next surgery card.</value></data>
+  <data name="NewCase_19.Text" xml:space="preserve"><value>Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card.</value></data>
   <data name="NewCase_2.Text" xml:space="preserve"><value>New patient</value></data>
   <data name="NewCase_20.Header" xml:space="preserve"><value>Room</value></data>
-  <data name="NewCase_20.PlaceholderText" xml:space="preserve"><value>OR 1</value></data>
   <data name="NewCase_20.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Operating room</value></data>
   <data name="NewCase_21.Header" xml:space="preserve"><value>Planned start</value></data>
   <data name="NewCase_21.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Planned start time</value></data>
@@ -555,10 +554,8 @@
   <data name="Settings_3.Text" xml:space="preserve"><value>You</value></data>
   <data name="Settings_4.Text" xml:space="preserve"><value>Today greets you as Dr. Okafor and the sidebar shows your initials. Leave both empty for a plain greeting.</value></data>
   <data name="Settings_5.Header" xml:space="preserve"><value>First name</value></data>
-  <data name="Settings_5.PlaceholderText" xml:space="preserve"><value>Amara</value></data>
   <data name="Settings_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Your first name for the avatar initials</value></data>
   <data name="Settings_6.Header" xml:space="preserve"><value>Surname</value></data>
-  <data name="Settings_6.PlaceholderText" xml:space="preserve"><value>Okafor</value></data>
   <data name="Settings_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Your surname for the board greeting</value></data>
   <data name="Settings_7.Text" xml:space="preserve"><value>Appearance</value></data>
   <data name="Settings_8.Header" xml:space="preserve"><value>Theme</value></data>

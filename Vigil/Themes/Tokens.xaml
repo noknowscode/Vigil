@@ -110,6 +110,8 @@
       <SolidColorBrush x:Key="CloverPhotoBase" Color="#E9E9EB" />
       <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#EDEDEF" />
       <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#F3F3F2" />
+          <!-- Inset shadow (CSS inset 0 1px 3px) as a 4 px top shade inside rounded strips and status cards. -->
+      <LinearGradientBrush x:Key="InsetShadeBrush" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,4"><GradientStop Color="#1F000000" Offset="0" /><GradientStop Color="#00000000" Offset="1" /></LinearGradientBrush>
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="InkBrush" Color="#E6E7EA" />
@@ -204,6 +206,8 @@
       <SolidColorBrush x:Key="CloverPhotoBase" Color="#23262B" />
       <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#2A2D33" />
       <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#1E2125" />
+          <!-- Inset shadow (CSS inset 0 1px 3px) as a 4 px top shade inside rounded strips and status cards. -->
+      <LinearGradientBrush x:Key="InsetShadeBrush" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,4"><GradientStop Color="#4D000000" Offset="0" /><GradientStop Color="#00000000" Offset="1" /></LinearGradientBrush>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

@@ -96,28 +96,24 @@
             <StackPanel Spacing="4">
               <TextBlock x:Uid="NewCase_18" Style="{StaticResource TypeEyebrow}" Text="SCHEDULE" />
               <TextBlock x:Uid="NewCase_19" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords"
-                         Text="Optional. A planned start puts the patient on Today's timeline and in the Next surgery card." />
+                         Text="Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card." />
             </StackPanel>
             <Grid ColumnSpacing="12" ColumnDefinitions="*,*,*">
               <TextBox x:Uid="NewCase_20" Header="Room"
-                       PlaceholderText="OR 1"
                        Text="{Binding Draft.OperatingRoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Operating room" />
               <TextBox x:Uid="NewCase_21" Grid.Column="1"
                        Header="Planned start"
-                       PlaceholderText="14:00"
                        Text="{Binding Draft.PlannedStartText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Planned start time" />
               <TextBox x:Uid="NewCase_22" Grid.Column="2"
                        Header="Length (min)"
                        InputScope="Number"
-                       PlaceholderText="60"
                        Text="{Binding Draft.PlannedMinutesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Planned length in minutes" />
             </Grid>
             <Grid ColumnSpacing="12" ColumnDefinitions="*,2*">
               <TextBox x:Uid="NewCase_23" Header="Fasting since"
-                       PlaceholderText="20:00"
                        Text="{Binding Draft.FastingSinceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Fasting since, time of day" />
               <CheckBox x:Uid="NewCase_24" Grid.Column="1" VerticalAlignment="Bottom"
@@ -131,16 +127,18 @@
     </ScrollViewer>
 
     <StackPanel Grid.Row="2" Padding="24,12,24,24" Spacing="12" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
-      <TextBlock x:Uid="NewCase_25" Style="{StaticResource TypeBodyS}"
-                 Foreground="{ThemeResource ErrorBrush}"
-                 TextWrapping="WrapWholeWords"
-                 Text="{Binding ErrorText}"
-                 AutomationProperties.LiveSetting="Assertive"
-                 AutomationProperties.Name="Form errors" />
-      <TextBlock Style="{StaticResource TypeBodyS}"
-                 Foreground="{ThemeResource ErrorBrush}"
-                 TextWrapping="WrapWholeWords"
-                 Text="{Binding SaveError}" />
+      <StackPanel Spacing="4" Visibility="{Binding HasErrors}">
+        <TextBlock x:Uid="NewCase_25" Style="{StaticResource TypeBodyS}"
+                   Foreground="{ThemeResource ErrorBrush}"
+                   TextWrapping="WrapWholeWords"
+                   Text="{Binding ErrorText}"
+                   AutomationProperties.LiveSetting="Assertive"
+                   AutomationProperties.Name="Form errors" />
+        <TextBlock Style="{StaticResource TypeBodyS}"
+                   Foreground="{ThemeResource ErrorBrush}"
+                   TextWrapping="WrapWholeWords"
+                   Text="{Binding SaveError}" />
+      </StackPanel>
       <Button x:Uid="NewCase_26" Style="{StaticResource ButtonPrimaryXL}"
               HorizontalAlignment="Stretch"
               Content="Create case"

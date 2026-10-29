@@ -735,5 +735,6 @@
   "Weight sets every dose, so it is the one number to get right.": "Le poids détermine chaque dose : c'est le chiffre à ne pas manquer.",
   "You": "Vous",
   "Your first name for the avatar initials": "Votre prénom pour les initiales de l'avatar",
-  "Your visit and care team": "Votre visite et l'équipe de soins"
+  "Your visit and care team": "Votre visite et l'équipe de soins",
+  "Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card.": "Facultatif. Les heures s'écrivent comme 14:00. Une heure de début place le patient sur la ligne du temps d'Aujourd'hui et dans la fiche Prochaine chirurgie."
 }

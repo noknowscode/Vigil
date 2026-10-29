@@ -127,6 +127,9 @@ public partial record NewCaseModel(ICaseStore Store, IClock Clock, INavigator Na
 
     public IState<string> SaveError => State.Value(this, () => "");
 
+    /// <summary>The footer's error lines take no space until there is something to say.</summary>
+    public IFeed<bool> HasErrors => Feed.Combine(ErrorText, SaveError).Select(x => !string.IsNullOrEmpty(x.Item1) || !string.IsNullOrEmpty(x.Item2));
+
     public async ValueTask Create(CaseDraft draft, CancellationToken ct)
     {
         await Attempted.UpdateAsync(_ => true, ct);

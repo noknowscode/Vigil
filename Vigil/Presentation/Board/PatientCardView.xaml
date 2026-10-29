@@ -71,7 +71,7 @@
       <VisualStateGroup x:Name="StripStates">
         <VisualState x:Name="Live">
           <VisualState.Setters>
-            <Setter Target="StripShell.Background" Value="{ThemeResource PhaseAnesthesiaSoftBrush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource PhaseAnesthesiaSoftBrush}" />
             <Setter Target="StripGround.BorderBrush" Value="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" />
             <Setter Target="StripDot.Fill" Value="{ThemeResource PhaseAnesthesiaSolidBrush}" />
             <Setter Target="StripDot.Stroke" Value="{ThemeResource PhaseAnesthesiaSolidBrush}" />
@@ -93,7 +93,7 @@
         </VisualState>
         <VisualState x:Name="LiveStill">
           <VisualState.Setters>
-            <Setter Target="StripShell.Background" Value="{ThemeResource PhaseAnesthesiaSoftBrush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource PhaseAnesthesiaSoftBrush}" />
             <Setter Target="StripGround.BorderBrush" Value="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" />
             <Setter Target="StripDot.Fill" Value="{ThemeResource PhaseAnesthesiaSolidBrush}" />
             <Setter Target="StripDot.Stroke" Value="{ThemeResource PhaseAnesthesiaSolidBrush}" />
@@ -102,7 +102,7 @@
         </VisualState>
         <VisualState x:Name="Prep">
           <VisualState.Setters>
-            <Setter Target="StripShell.Background" Value="{ThemeResource PhasePrepSoftBrush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource PhasePrepSoftBrush}" />
             <Setter Target="StripGround.BorderBrush" Value="{ThemeResource PhasePrepSoftBorderBrush}" />
             <Setter Target="StripDot.Fill" Value="{ThemeResource PhasePrepSolidBrush}" />
             <Setter Target="StripDot.Stroke" Value="{ThemeResource PhasePrepSolidBrush}" />
@@ -111,7 +111,7 @@
         </VisualState>
         <VisualState x:Name="Recovery">
           <VisualState.Setters>
-            <Setter Target="StripShell.Background" Value="{ThemeResource PhaseRecoverySoftBrush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource PhaseRecoverySoftBrush}" />
             <Setter Target="StripGround.BorderBrush" Value="{ThemeResource PhaseRecoverySoftBorderBrush}" />
             <Setter Target="StripDot.Stroke" Value="{ThemeResource PhaseRecoverySolidBrush}" />
           </VisualState.Setters>
@@ -126,7 +126,7 @@
         </VisualState>
         <VisualState x:Name="Home">
           <VisualState.Setters>
-            <Setter Target="StripShell.Background" Value="{ThemeResource Surface2Brush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource Surface2Brush}" />
             <Setter Target="StripGround.BorderBrush" Value="{ThemeResource EdgeBrush}" />
             <Setter Target="StripDot.Stroke" Value="{ThemeResource InkFaintBrush}" />
             <Setter Target="StripLabel.Foreground" Value="{ThemeResource InkMutedBrush}" />
@@ -195,11 +195,11 @@
                     <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
                   </utu:ShadowContainer.Shadows>
                   <Grid Padding="6,6,14,6" ColumnSpacing="12" ColumnDefinitions="88,*" BorderBrush="{ThemeResource TrayEdgeBrush}" BorderThickness="0,0,0,1" CornerRadius="17,17,18,18">
-                    <!-- Photo 88 x 44, radius 12, placeholder #E9E9EB: an ImageBrush ground, because a Border's radius does not clip an Image child on Skia. -->
+                    <!-- Photo 88 x 44, radius 12, placeholder #E9E9EB, the whole picture fitted (Uniform, user 2026-10-29): an ImageBrush ground, because a Border's radius does not clip an Image child on Skia. -->
                     <Grid Width="88" Height="44">
                       <Rectangle RadiusX="12" RadiusY="12" Fill="{ThemeResource MediaPlaceholderBrush}" />
                       <Rectangle RadiusX="12" RadiusY="12" Visibility="{Binding HasPhoto}">
-                        <Rectangle.Fill><ImageBrush ImageSource="{Binding Photo}" Stretch="UniformToFill" /></Rectangle.Fill>
+                        <Rectangle.Fill><ImageBrush ImageSource="{Binding Photo}" Stretch="Uniform" /></Rectangle.Fill>
                       </Rectangle>
                       <TextBlock Text="{Binding Initials}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasNoPhoto}" />
                     </Grid>
@@ -250,15 +250,15 @@
                   </Grid>
                 </StackPanel>
 
-                <!-- Status strip: margin 6 6 0, h 44, pad 0 12, radius 12, inset shadow -->
-                <!-- The shell carries the solid ground and the inset shadow (inset 0 1 3 .12, painted over the ground);
-                     the edge and the booked hatch sit on top. -->
-                <utu:ShadowContainer x:Name="StripShell" Margin="6,6,6,0" Background="{ThemeResource Surface2Brush}" CornerRadius="12">
-                  <utu:ShadowContainer.Shadows>
-                    <utu:ShadowCollection><utu:Shadow IsInner="True" OffsetY="1" BlurRadius="3" Opacity="0.12" Color="Black" /></utu:ShadowCollection>
-                  </utu:ShadowContainer.Shadows>
-                <Grid Height="44">
-                  <!-- xaml-lint: allow card - status strip edge (and the booked hatch), recoloured per stage by the StripStates visual states -->
+                <!-- Status strip: margin 6 6 0, h 44, pad 0 12, radius 12, inset shadow (0 1 3 / 12 %).
+                     Fill, inset shade and edge are three rounded Borders: a filled ShadowContainer with an inner shadow
+                     painted its fill square on Skia, under the rounded edge. The edge carries the booked hatch. -->
+                <Grid x:Name="StripShell" Margin="6,6,6,0" Height="44">
+                  <!-- xaml-lint: allow card - status strip fill, recoloured per stage by the StripStates visual states -->
+                  <Border x:Name="StripFill" CornerRadius="12" Background="{ThemeResource Surface2Brush}" />
+                  <!-- xaml-lint: allow card - inset shade over the fill (CSS inset 0 1px 3px) -->
+                  <Border CornerRadius="12" Background="{ThemeResource InsetShadeBrush}" IsHitTestVisible="False" />
+                  <!-- xaml-lint: allow card - status strip edge (and the booked hatch), recoloured per stage -->
                   <Border x:Name="StripGround" CornerRadius="12" BorderThickness="1" Background="Transparent" BorderBrush="{ThemeResource EdgeBrush}" />
                   <Grid Padding="12,0" ColumnSpacing="12" ColumnDefinitions="*,Auto">
                     <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
@@ -280,7 +280,6 @@
                     </StackPanel>
                   </Grid>
                 </Grid>
-                </utu:ShadowContainer>
 
                 <!-- Stage stepper: pad 12 14, gap 6 -->
                 <StackPanel Padding="14,12" Spacing="6" AutomationProperties.Name="{Binding StageName}">

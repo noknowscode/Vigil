@@ -189,10 +189,9 @@
   <data name="NewCase_17.Header" xml:space="preserve"><value>Technicien(ne)</value></data>
   <data name="NewCase_17.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Technicien(ne)</value></data>
   <data name="NewCase_18.Text" xml:space="preserve"><value>HORAIRE</value></data>
-  <data name="NewCase_19.Text" xml:space="preserve"><value>Facultatif. Une heure de début place le patient sur la ligne du temps d'Aujourd'hui et dans la fiche Prochaine chirurgie.</value></data>
+  <data name="NewCase_19.Text" xml:space="preserve"><value>Facultatif. Les heures s'écrivent comme 14:00. Une heure de début place le patient sur la ligne du temps d'Aujourd'hui et dans la fiche Prochaine chirurgie.</value></data>
   <data name="NewCase_2.Text" xml:space="preserve"><value>Nouveau patient</value></data>
   <data name="NewCase_20.Header" xml:space="preserve"><value>Salle</value></data>
-  <data name="NewCase_20.PlaceholderText" xml:space="preserve"><value>Salle 1</value></data>
   <data name="NewCase_20.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Salle d'opération</value></data>
   <data name="NewCase_21.Header" xml:space="preserve"><value>Début prévu</value></data>
   <data name="NewCase_21.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Heure de début prévue</value></data>
@@ -555,10 +554,8 @@
   <data name="Settings_3.Text" xml:space="preserve"><value>Vous</value></data>
   <data name="Settings_4.Text" xml:space="preserve"><value>Aujourd'hui vous accueille comme Dr Okafor et la barre latérale affiche vos initiales. Laissez les deux vides pour un accueil sans nom.</value></data>
   <data name="Settings_5.Header" xml:space="preserve"><value>Prénom</value></data>
-  <data name="Settings_5.PlaceholderText" xml:space="preserve"><value>Amara</value></data>
   <data name="Settings_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Votre prénom pour les initiales de l'avatar</value></data>
   <data name="Settings_6.Header" xml:space="preserve"><value>Nom</value></data>
-  <data name="Settings_6.PlaceholderText" xml:space="preserve"><value>Okafor</value></data>
   <data name="Settings_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Votre nom de famille pour la salutation du tableau</value></data>
   <data name="Settings_7.Text" xml:space="preserve"><value>Apparence</value></data>
   <data name="Settings_8.Header" xml:space="preserve"><value>Thème</value></data>

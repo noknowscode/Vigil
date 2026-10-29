@@ -53,14 +53,14 @@
       </VisualStateGroup>
     </VisualStateManager.VisualStateGroups>
 
-    <!-- Surface: tone fill with the inset-strip shadow (inset 0 1px 3px rgba(0,0,0,.12)). -->
-    <utu:ShadowContainer x:Name="Surface" Background="{ThemeResource PhaseAnesthesiaSoftBrush}" CornerRadius="14">
-      <utu:ShadowContainer.Shadows>
-        <utu:ShadowCollection><utu:Shadow IsInner="True" OffsetY="1" BlurRadius="3" Opacity="0.12" Color="Black" /></utu:ShadowCollection>
-      </utu:ShadowContainer.Shadows>
-      <!-- xaml-lint: allow card - tone stroke over the ShadowContainer surface (state-driven fill and border) -->
-      <Border x:Name="Edge" CornerRadius="14" BorderThickness="1" BorderBrush="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" />
-    </utu:ShadowContainer>
+    <!-- Surface: tone fill, inset shade (inset 0 1px 3px rgba(0,0,0,.12)) and tone edge as rounded Borders (a filled
+         ShadowContainer with an inner shadow painted its fill square on Skia). -->
+    <!-- xaml-lint: allow card - state-driven tone fill -->
+    <Border x:Name="Surface" CornerRadius="14" Background="{ThemeResource PhaseAnesthesiaSoftBrush}" />
+    <!-- xaml-lint: allow card - inset shade over the fill -->
+    <Border CornerRadius="14" Background="{ThemeResource InsetShadeBrush}" IsHitTestVisible="False" />
+    <!-- xaml-lint: allow card - state-driven tone stroke -->
+    <Border x:Name="Edge" CornerRadius="14" BorderThickness="1" BorderBrush="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" />
 
     <Grid Padding="14,12" RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
