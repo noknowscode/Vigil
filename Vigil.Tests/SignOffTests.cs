@@ -12,6 +12,8 @@ public class SignOffTests
         var live = SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Anesthetized));
         live.CanSign.Should().BeFalse();
         live.Blocker.Should().Be("End anesthesia before signing.");
+        live.Duration.Should().Be("—");
+        SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Recovery)).Duration.Should().MatchRegex(@"^\d\d:\d\d$");
         SignOffSummary.From(day.Single(c => c.IsSigned)).Blocker.Should().StartWith("Already signed by");
     }
 
