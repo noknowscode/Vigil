@@ -215,17 +215,17 @@
   <Color x:Key="ShadowInkColor">#1B212F</Color>
 
   <!-- Fonts (§1). Weights resolve through the .ttf.manifest files (static instances per weight). -->
-  <FontFamily x:Key="FontSans">ms-appx:///Assets/Fonts/HankenGrotesk.ttf</FontFamily>
-  <FontFamily x:Key="FontMono">ms-appx:///Assets/Fonts/MartianMono.ttf</FontFamily>
-  <FontFamily x:Key="FontSerif">ms-appx:///Assets/Fonts/Newsreader.ttf</FontFamily>
+  <FontFamily x:Key="FontSans">ms-appx:///Assets/Fonts/HankenGrotesk.ttf#Hanken Grotesk</FontFamily>
+  <FontFamily x:Key="FontMono">ms-appx:///Assets/Fonts/MartianMono.ttf#Martian Mono</FontFamily>
+  <FontFamily x:Key="FontSerif">ms-appx:///Assets/Fonts/Newsreader.ttf#Newsreader</FontFamily>
   <!-- Tracked copies (tools/track_fonts.py): the prototype's negative letter-spacing baked into the advance widths,
        because Skia ignores CharacterSpacing. Txx = -0.0xx em. -->
-  <FontFamily x:Key="FontMonoT50">ms-appx:///Assets/Fonts/MartianMonoT50.ttf</FontFamily>
-  <FontFamily x:Key="FontMonoT30">ms-appx:///Assets/Fonts/MartianMonoT30.ttf</FontFamily>
-  <FontFamily x:Key="FontMonoT20">ms-appx:///Assets/Fonts/MartianMonoT20.ttf</FontFamily>
-  <FontFamily x:Key="FontSerifT20">ms-appx:///Assets/Fonts/NewsreaderT20.ttf</FontFamily>
-  <FontFamily x:Key="FontSerifT15">ms-appx:///Assets/Fonts/NewsreaderT15.ttf</FontFamily>
-  <FontFamily x:Key="FontSansT20">ms-appx:///Assets/Fonts/HankenGroteskT20.ttf</FontFamily>
+  <FontFamily x:Key="FontMonoT50">ms-appx:///Assets/Fonts/MartianMonoT50.ttf#Vigil Mono T50</FontFamily>
+  <FontFamily x:Key="FontMonoT30">ms-appx:///Assets/Fonts/MartianMonoT30.ttf#Vigil Mono T30</FontFamily>
+  <FontFamily x:Key="FontMonoT20">ms-appx:///Assets/Fonts/MartianMonoT20.ttf#Vigil Mono T20</FontFamily>
+  <FontFamily x:Key="FontSerifT20">ms-appx:///Assets/Fonts/NewsreaderT20.ttf#Vigil Serif T20</FontFamily>
+  <FontFamily x:Key="FontSerifT15">ms-appx:///Assets/Fonts/NewsreaderT15.ttf#Vigil Serif T15</FontFamily>
+  <FontFamily x:Key="FontSansT20">ms-appx:///Assets/Fonts/HankenGroteskT20.ttf#Vigil Sans T20</FontFamily>
 
   <!-- Radii (§3) -->
   <CornerRadius x:Key="Radius3">3</CornerRadius>

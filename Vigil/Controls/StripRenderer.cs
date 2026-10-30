@@ -17,6 +17,8 @@ internal sealed class StripRenderer : IDisposable
     private readonly SKPaint _text = new() { IsAntialias = true };
     private readonly SKFont _font = new() { Size = 12 };
     private readonly SKFont _small = new() { Size = 11 };
+    // SkiaSharp 4 obsoletes the SKPath mutators: glyph outlines are built here and detached per draw.
+    private readonly SKPathBuilder _path = new();
 
     public StripData Data { get; set; } = StripData.Empty;
 
@@ -118,11 +120,11 @@ internal sealed class StripRenderer : IDisposable
         }
         foreach (var (x, labels) in groups)
         {
-            using var tri = new SKPath();
-            tri.MoveTo(x - 5, 6);
-            tri.LineTo(x + 5, 6);
-            tri.LineTo(x, 14);
-            tri.Close();
+            _path.MoveTo(x - 5, 6);
+            _path.LineTo(x + 5, 6);
+            _path.LineTo(x, 14);
+            _path.Close();
+            using var tri = _path.Detach();
             _fill.Color = p.Drug;
             canvas.DrawPath(tri, _fill);
             _text.Color = p.Drug;
@@ -211,22 +213,22 @@ internal sealed class StripRenderer : IDisposable
     private void Chevron(SKCanvas canvas, float x, float y, bool down, SKColor color, float alpha)
     {
         _glyph.Color = color.WithAlpha((byte)(255 * alpha));
-        using var path = new SKPath();
         var dy = down ? -Glyph - 1 : Glyph + 1;
-        path.MoveTo(x - Glyph, y + dy);
-        path.LineTo(x, y);
-        path.LineTo(x + Glyph, y + dy);
+        _path.MoveTo(x - Glyph, y + dy);
+        _path.LineTo(x, y);
+        _path.LineTo(x + Glyph, y + dy);
+        using var path = _path.Detach();
         canvas.DrawPath(path, _glyph);
     }
 
     private void Cross(SKCanvas canvas, float x, float y, SKColor color, float alpha)
     {
         _glyph.Color = color.WithAlpha((byte)(255 * alpha));
-        using var path = new SKPath();
-        path.MoveTo(x - 4, y - 4);
-        path.LineTo(x + 4, y + 4);
-        path.MoveTo(x + 4, y - 4);
-        path.LineTo(x - 4, y + 4);
+        _path.MoveTo(x - 4, y - 4);
+        _path.LineTo(x + 4, y + 4);
+        _path.MoveTo(x + 4, y - 4);
+        _path.LineTo(x - 4, y + 4);
+        using var path = _path.Detach();
         canvas.DrawPath(path, _glyph);
     }
 
@@ -234,11 +236,11 @@ internal sealed class StripRenderer : IDisposable
     private void Marker(SKCanvas canvas, float x, float y, bool up, SKColor color, float alpha)
     {
         _fill.Color = color.WithAlpha((byte)(255 * alpha));
-        using var tri = new SKPath();
-        tri.MoveTo(x - 4, up ? y + 6 : y - 6);
-        tri.LineTo(x + 4, up ? y + 6 : y - 6);
-        tri.LineTo(x, up ? y - 1 : y + 1);
-        tri.Close();
+        _path.MoveTo(x - 4, up ? y + 6 : y - 6);
+        _path.LineTo(x + 4, up ? y + 6 : y - 6);
+        _path.LineTo(x, up ? y - 1 : y + 1);
+        _path.Close();
+        using var tri = _path.Detach();
         canvas.DrawPath(tri, _fill);
     }
 
@@ -253,5 +255,6 @@ internal sealed class StripRenderer : IDisposable
         _text.Dispose();
         _font.Dispose();
         _small.Dispose();
+        _path.Dispose();
     }
 }

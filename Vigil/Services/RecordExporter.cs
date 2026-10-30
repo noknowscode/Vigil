@@ -23,6 +23,10 @@ public sealed class RecordExporter : IRecordExporter
         {
             var picker = new FileSavePicker { SuggestedFileName = name, SuggestedStartLocation = PickerLocationId.DocumentsLibrary };
             picker.FileTypeChoices.Add("CSV", new List<string> { ".csv" });
+#if WINDOWS
+            // WinAppSDK pickers throw without an owner window.
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(UiThread.Window));
+#endif
             var file = await picker.PickSaveFileAsync();
             if (file is null)
             {

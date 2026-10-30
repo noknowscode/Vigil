@@ -87,11 +87,12 @@ public partial class App : Application
             );
         MainWindow = builder.Window;
         UiThread.Queue = MainWindow.DispatcherQueue;
+        UiThread.Window = MainWindow;
 #if DEBUG
         StartMemoryLog();
 #endif
 
-#if DEBUG
+#if DEBUG && !NO_UNO_STUDIO
         // UseStudio() carries the App MCP connection on desktop; headless capture runs opt out.
         if (Environment.GetEnvironmentVariable("APP_NO_HOTDESIGN") != "1")
         {
