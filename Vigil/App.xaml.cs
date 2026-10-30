@@ -135,9 +135,125 @@ public partial class App : Application
         }
 #endif
 #endif
+#if DEBUG
+        // After any --clover-size resize: a sheet opened before a resize would be dismissed by it.
+        await ApplyVerificationViewAsync();
+#endif
     }
 
 #if DEBUG
+    /// <summary>
+    /// Screenshot-matrix hooks. <c>--vigil-theme=light|dark</c> sets the window content's theme (the switch the theme
+    /// service flips). <c>--vigil-route=&lt;route&gt;[:&lt;pane&gt;]</c> opens a shell destination (Today, Patients, Agenda,
+    /// Settings), a case page (Record, Dose, ParentPreview) or a sheet (!NewCase, !SignOff, !Menu) the way the app's own
+    /// commands do: in the shell's content frame, with the case under anesthesia (or the first case) as data.
+    /// <c>Record:Monitor</c> opens the record on that pane; <c>--vigil-scroll=&lt;px&gt;</c> then scrolls the page. Each step
+    /// prints a <c>VERIFY</c> line to stderr. Sheets and panes close when the window resizes (light dismiss), so the
+    /// matrix opens them per width with <c>--clover-size</c> instead of live-resizing.
+    /// </summary>
+    private async Task ApplyVerificationViewAsync()
+    {
+        static string? Arg(string name) => Environment.GetCommandLineArgs()
+            .FirstOrDefault(a => a.StartsWith($"--vigil-{name}=", StringComparison.OrdinalIgnoreCase))?.Split('=', 2)[1];
+        try
+        {
+            if (Arg("theme") is { } theme && MainWindow?.Content is FrameworkElement themed)
+            {
+                themed.RequestedTheme = theme.Equals("dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Light;
+                Console.Error.WriteLine($"VERIFY theme={themed.RequestedTheme}");
+            }
+            if (Arg("route") is not { } spec || Host is null || MainWindow?.Content is not FrameworkElement root)
+            {
+                return;
+            }
+            // The shell owns the content frame; wait for it (and its navigator) before navigating in it.
+            ShellPage? shell = null;
+            INavigator? navigator = null;
+            for (var i = 0; i < 100 && navigator is null; i++)
+            {
+                await Task.Delay(100);
+                shell = Find<ShellPage>(root);
+                navigator = shell?.Navigator();
+            }
+            if (shell is null || navigator is null)
+            {
+                Console.Error.WriteLine($"VERIFY route={spec} failed: no shell navigator");
+                return;
+            }
+            var parts = spec.Split(':', 2);
+            var route = parts[0];
+            var name = route.TrimStart('!');
+            var cases = await Host.Services.GetRequiredService<ICaseStore>().GetAllAsync(CancellationToken.None);
+            var target = cases.FirstOrDefault(c => c.Status == CaseStatus.Anesthetized) ?? cases.FirstOrDefault();
+            object? data = name switch
+            {
+                "Record" or "Dose" or "SignOff" or "ParentPreview" when target is not null =>
+                    parts.Length == 2 ? new CaseRefPane(target.Id, parts[1]) : new CaseRef(target.Id),
+                "Menu" => new MenuContext(ShellSection.Today),
+                _ => null,
+            };
+            var qualifier = route.StartsWith('!') ? Qualifiers.None : name is "Today" or "Patients" or "Agenda" or "Settings"
+                ? Qualifiers.Nested + Qualifiers.ClearBackStack
+                : Qualifiers.Nested;
+            // Sheets wait for a result that never comes here: do not await them.
+            var navigation = navigator.NavigateRouteAsync(shell, route, qualifier: qualifier, data: data);
+            if (route.StartsWith('!'))
+            {
+                await Task.Delay(500);
+                Console.Error.WriteLine($"VERIFY route={spec} data={data} sheet=requested");
+                return;
+            }
+            var response = await navigation;
+            Console.Error.WriteLine($"VERIFY route={spec} data={data} success={response?.Success}");
+            // --vigil-scroll=<px>: scroll the page below the fold (the page's outermost vertical ScrollViewer).
+            if (Arg("scroll") is { } scroll && double.TryParse(scroll, System.Globalization.CultureInfo.InvariantCulture, out var offset))
+            {
+                await Task.Delay(3000);
+                // The page's own scroller is the one with the tallest content (panes and cards hold smaller ones).
+                var frame = Find<Frame>(shell);
+                var viewer = frame is null ? null : All<ScrollViewer>(frame).OrderByDescending(v => v.ExtentHeight).FirstOrDefault();
+                viewer?.ChangeView(null, offset, null, disableAnimation: true);
+                Console.Error.WriteLine($"VERIFY scroll={offset} viewer={viewer?.Name} extent={viewer?.ExtentHeight}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"VERIFY failed: {ex}");
+        }
+    }
+
+    private static IEnumerable<T> All<T>(DependencyObject parent) where T : DependencyObject
+    {
+        for (var i = 0; i < Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(parent, i);
+            if (child is T hit)
+            {
+                yield return hit;
+            }
+            foreach (var found in All<T>(child))
+            {
+                yield return found;
+            }
+        }
+    }
+
+    private static T? Find<T>(DependencyObject parent) where T : DependencyObject
+    {
+        if (parent is T hit)
+        {
+            return hit;
+        }
+        for (var i = 0; i < Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            if (Find<T>(Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(parent, i)) is { } found)
+            {
+                return found;
+            }
+        }
+        return null;
+    }
+
     /// <summary>
     /// Diagnosis hook for the break-it memory loop: <c>--vigil-memlog</c> prints the managed heap after a forced
     /// full collection every 10 s, which separates a real leak from a collector that has not run yet.
