@@ -5,8 +5,9 @@
   opens the side pane (SplitView) the page already had: preparation, vitals, history, labs, medications, dose,
   recovery and sign-off. FeedView states: Progress = skeleton of the tray and cards, None = record gone, Error =
   message + Retry (Store.Reload, bound by ElementName: the ErrorTemplate's DataContext is the exception).
-  Breakpoints (ShellLayout): below 1080 the hero stacks (identity + photo, status column below) and the cards go 2 x 2;
-  below 760 everything is one column.
+  Breakpoints (default, Styles/Layout.xaml): below Widest the hero stacks (identity + photo, status column below) and
+  the cards go 2 x 2; below Wide (phones and the 600-800 rail layout) everything is one column. At Widest the header and
+  body stop at ContentMaxWidth and centre.
 -->
 <Page x:Class="Vigil.Presentation.RecordPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:muxc="using:Microsoft.UI.Xaml.Controls" xmlns:mvux="using:Uno.Extensions.Reactive.UI" xmlns:utu="using:Uno.Toolkit.UI" xmlns:local="using:Vigil.Presentation" xmlns:controls="using:Vigil.Controls" xmlns:domain="using:Vigil.Domain" xmlns:media="using:Microsoft.UI.Xaml.Media" Background="Transparent">
   <Page.Resources>
@@ -59,25 +60,26 @@
       <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
     <Style x:Key="NavLabel" TargetType="TextBlock" BasedOn="{StaticResource TypeBodyMedium}">
-      <Setter Property="Margin" Value="12,0,0,0" />
+      <Setter Property="Margin" Value="{StaticResource GapStart12}" />
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
   </Page.Resources>
 
   <Grid utu:SafeArea.Insets="VisibleBounds" RowDefinitions="Auto,Auto,*">
     <!-- 1. Header: back, breadcrumb, top bar cluster (40 px). Outside the FeedView so it shows in every state. -->
-    <Grid Padding="{utu:Responsive Narrowest='20,28,20,0', Normal='40,36,40,0', Layout={StaticResource ShellLayout}}" ColumnDefinitions="*,Auto" ColumnSpacing="24">
-      <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+    <Grid Padding="{utu:Responsive Narrowest={StaticResource PageHeaderInsetNarrow}, Normal={StaticResource PageHeaderInsetNormal}}" ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space24}" MaxWidth="{StaticResource ContentMaxWidth}">
+      <!-- A grid, not a horizontal StackPanel, so a long patient name trims instead of running under the top bar. -->
+      <Grid ColumnDefinitions="Auto,Auto,Auto,*" ColumnSpacing="{StaticResource Space12}" VerticalAlignment="Center">
         <Button x:Uid="Record_1" Style="{StaticResource ButtonIconSecondary}" Command="{Binding GoBack}" AutomationProperties.Name="Back">
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconArrowLeft}" Foreground="{ThemeResource InkBrush}" />
         </Button>
-        <Button x:Uid="Record_2" Style="{StaticResource CrumbLink}" Content="Patients" Command="{Binding OpenPatients}" VerticalAlignment="Center" AutomationProperties.Name="Patients list" />
-        <TextBlock Text="/" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkFaintBrush}" VerticalAlignment="Center" />
-        <TextBlock Text="{Binding Name}" Style="{StaticResource TypeBodyStrong}" VerticalAlignment="Center" />
-      </StackPanel>
-      <controls:TopBarCluster Grid.Column="1" VerticalAlignment="Center" Visibility="{utu:Responsive Narrowest=Collapsed, Normal=Visible, Layout={StaticResource ShellLayout}}" />
+        <Button x:Uid="Record_2" Grid.Column="1" Style="{StaticResource CrumbLink}" Content="Patients" Command="{Binding OpenPatients}" VerticalAlignment="Center" AutomationProperties.Name="Patients list" />
+        <TextBlock Grid.Column="2" Text="/" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkFaintBrush}" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="3" Text="{Binding Name}" Style="{StaticResource TypeBodyStrong}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+      </Grid>
+      <controls:TopBarCluster Grid.Column="1" VerticalAlignment="Center" Visibility="{utu:Responsive Narrowest=Collapsed, Widest=Visible}" />
     </Grid>
-    <muxc:InfoBar x:Uid="Record_3" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="40,0">
+    <muxc:InfoBar x:Uid="Record_3" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{utu:Responsive Narrowest={StaticResource InsetX20}, Normal={StaticResource InsetX40}}">
       <muxc:InfoBar.ActionButton><Button x:Uid="Record_4" Content="Dismiss" Command="{Binding DismissError}" /></muxc:InfoBar.ActionButton>
     </muxc:InfoBar>
     <mvux:FeedView x:Name="CaseFeed" Grid.Row="2" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False">
@@ -85,44 +87,41 @@
         <SplitView PanePlacement="Right" DisplayMode="Overlay" OpenPaneLength="640" IsPaneOpen="{Binding Parent.PaneOpen, Mode=TwoWay}" PaneBackground="{ThemeResource BackgroundBrush}" SizeChanged="OnWorkspaceSizeChanged" PaneOpening="OnPaneOpening" PaneOpened="OnPaneOpened" PaneClosed="OnPaneClosed" KeyDown="OnWorkspaceKeyDown">
           <SplitView.Content>
             <ScrollViewer HorizontalScrollMode="Disabled">
-              <StackPanel Padding="{utu:Responsive Narrowest='20,20,20,40', Normal='40,20,40,40', Layout={StaticResource ShellLayout}}">
+              <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageBodyInsetNarrow}, Normal={StaticResource PageBodyInsetNormal}}" MaxWidth="{StaticResource ContentMaxWidth}">
 
                 <!-- 2. Hero tray: pad 8, radius 26, #F3F3F2, tri-tone, shadow xs; 236 | 1fr | 300, gap 8 -->
-                <utu:ShadowContainer Background="{ThemeResource PageBrush}" CornerRadius="26">
-                  <utu:ShadowContainer.Shadows>
-                    <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-                  </utu:ShadowContainer.Shadows>
+                <utu:ShadowContainer Background="{ThemeResource PageBrush}" CornerRadius="{StaticResource Radius26}" Shadows="{StaticResource ShadowXs}">
                   <!-- xaml-lint: allow card - tri-tone stroke over the ShadowContainer surface (gradient edge, exact shadow xs) -->
-                  <Border CornerRadius="26" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="8">
-                    <Grid ColumnDefinitions="236,*,300" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="{utu:Responsive Narrowest=8, Wide=0, Layout={StaticResource ShellLayout}}">
+                  <Border CornerRadius="{StaticResource Radius26}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="{StaticResource Inset8}">
+                    <Grid ColumnDefinitions="236,*,300" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="{StaticResource Space8}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space8}, Widest=0}">
 
                       <!-- Identity column: pad T12 R8 B4 L12 -->
-                      <Grid Padding="12,12,8,4" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto" Height="{utu:Responsive Narrowest=NaN, Normal=434, Layout={StaticResource ShellLayout}}"
-                            Grid.ColumnSpan="{utu:Responsive Narrowest=3, Normal=1, Layout={StaticResource ShellLayout}}">
+                      <Grid Padding="{StaticResource ChartInset}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto" Height="{utu:Responsive Narrowest=NaN, Wide=434}"
+                            Grid.ColumnSpan="{utu:Responsive Narrowest=3, Wide=1}">
                         <Grid HorizontalAlignment="Left" Height="28">
                           <Border Style="{StaticResource ChipLiveSoft}" Visibility="{Binding Data.Care.IsSurgery}">
-                            <StackPanel Orientation="Horizontal" Spacing="8"><Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Care.Chip}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" /></StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}"><Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Care.Chip}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" /></StackPanel>
                           </Border>
                           <Border Style="{StaticResource ChipLiveSoft}" Background="{ThemeResource PhaseRecoverySoftBrush}" BorderBrush="{ThemeResource PhaseRecoverySoftBorderBrush}" Visibility="{Binding Data.Care.IsRecovery}">
-                            <StackPanel Orientation="Horizontal" Spacing="8"><Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseRecoverySolidBrush}" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Care.Chip}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" /></StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}"><Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseRecoverySolidBrush}" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Care.Chip}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" /></StackPanel>
                           </Border>
                           <Border Style="{StaticResource ChipLiveSoft}" Background="{ThemeResource PhasePrepSoftBrush}" BorderBrush="{ThemeResource PhasePrepSoftBorderBrush}" Visibility="{Binding Data.Care.IsPrep}">
-                            <StackPanel Orientation="Horizontal" Spacing="8"><Ellipse Width="6" Height="6" Fill="{ThemeResource PhasePrepSolidBrush}" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Care.Chip}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhasePrepDeepBrush}" VerticalAlignment="Center" /></StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}"><Ellipse Width="6" Height="6" Fill="{ThemeResource PhasePrepSolidBrush}" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Care.Chip}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhasePrepDeepBrush}" VerticalAlignment="Center" /></StackPanel>
                           </Border>
                           <Border Style="{StaticResource ChipLiveSoft}" Background="{ThemeResource ChipNeutralBrush}" BorderBrush="{ThemeResource EdgeBrush}" Visibility="{Binding Data.Care.IsNeutral}">
-                            <StackPanel Orientation="Horizontal" Spacing="8"><Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseWaitingSolidBrush}" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Care.Chip}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" /></StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}"><Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseWaitingSolidBrush}" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Care.Chip}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" /></StackPanel>
                           </Border>
                         </Grid>
                         <!-- Newsreader sits 4 px lower than the browser places it at 56/60: pulled up, the row keeps its 14 px gap. -->
                         <TextBlock Grid.Row="1" Margin="0,10,0,4" Text="{Binding Data.Name}" Style="{StaticResource TypeDisplayTitleL}" TextTrimming="CharacterEllipsis" />
-                        <TextBlock Grid.Row="2" Margin="0,4,0,0" Text="{Binding Data.Breed}" Style="{StaticResource TypeBodyL}" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Row="2" Margin="{StaticResource GapTop4}" Text="{Binding Data.Breed}" Style="{StaticResource TypeBodyL}" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
                         <TextBlock Grid.Row="3" Text="{Binding Data.AgeOwner}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextTrimming="CharacterEllipsis" />
                         <!-- Record nav: the sidebar's nav item (h40, radius 12, icon 18 + 14/20 Medium); each opens its pane. -->
                         <controls:RecordNav Grid.Row="4" Margin="-4,20,0,0" />
                         <!-- Team chip: h32, pad 0 10, radius 10, surface, tri-tone; users 15 -->
                         <!-- xaml-lint: allow card - 32 px team chip (prototype chip: radius 10, tri-tone edge), not a card surface -->
-                        <Border Grid.Row="6" Height="32" Padding="10,0" CornerRadius="10" Background="{ThemeResource Surface1Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" HorizontalAlignment="Left">
-                          <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Border Grid.Row="6" Height="32" Padding="{StaticResource InsetX10}" CornerRadius="{StaticResource Radius10}" Background="{ThemeResource Surface1Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" HorizontalAlignment="Left">
+                          <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                             <ContentControl Style="{StaticResource LineIcon16}" Width="15" Height="15" Content="{StaticResource IconUsers}" VerticalAlignment="Center" />
                             <TextBlock Text="{Binding Data.Team}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" />
                           </StackPanel>
@@ -131,38 +130,32 @@
 
                       <!-- Photo panel 520 x 434, radius 16: blurred fill of the same photo (Skia AcrylicBrush over a stretched copy), the
                            photo contained on top, inset-photo shadow, "Pet-parent view" floating bottom right. -->
-                      <Grid Grid.Column="{utu:Responsive Narrowest=0, Normal=1, Layout={StaticResource ShellLayout}}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0, Layout={StaticResource ShellLayout}}"
-                            Grid.ColumnSpan="{utu:Responsive Narrowest=3, Normal=2, Wide=1, Layout={StaticResource ShellLayout}}" Height="{utu:Responsive Narrowest=280, Normal=434, Layout={StaticResource ShellLayout}}">
-                        <Rectangle RadiusX="16" RadiusY="16" Fill="{ThemeResource MediaPlaceholderBrush}" />
+                      <Grid Grid.Column="{utu:Responsive Narrowest=0, Wide=1}" Grid.Row="{utu:Responsive Narrowest=1, Wide=0}"
+                            Grid.ColumnSpan="{utu:Responsive Narrowest=3, Wide=2, Widest=1}" Height="{utu:Responsive Narrowest=280, Wide=434}">
+                        <Rectangle RadiusX="{StaticResource RectRadius16}" RadiusY="{StaticResource RectRadius16}" Fill="{ThemeResource MediaPlaceholderBrush}" />
                         <Grid Visibility="{Binding Data.HasPhoto}">
-                          <Rectangle RadiusX="16" RadiusY="16" Opacity="0.9">
+                          <Rectangle RadiusX="{StaticResource RectRadius16}" RadiusY="{StaticResource RectRadius16}" Opacity="0.9">
                             <Rectangle.Fill><ImageBrush ImageSource="{Binding Data.HeroPhoto}" Stretch="Fill" /></Rectangle.Fill>
                           </Rectangle>
                           <!-- xaml-lint: allow card - childless blur layer (Skia-native AcrylicBrush must have no children) -->
-                          <Border CornerRadius="16">
+                          <Border CornerRadius="{StaticResource Radius16}">
                             <!-- xaml-lint: allow hex - AcrylicBrush tint and fallback colours (Color values; the tint opacity is 0, the fallback matches MediaPlaceholderBrush) -->
-                            <Border.Background><AcrylicBrush AlwaysUseFallback="False" media:AcrylicBrushExtensions.UseCompositionEffectBrush="False" TintColor="#808080" TintOpacity="0" TintLuminosityOpacity="0" FallbackColor="#E9E9EB" /></Border.Background>
+                            <Border.Background><AcrylicBrush AlwaysUseFallback="False" media:AcrylicBrushExtensions.UseCompositionEffectBrush="False" TintColor="{ThemeResource PhotoAcrylicTintColor}" TintOpacity="0" TintLuminosityOpacity="0" FallbackColor="{ThemeResource PhotoAcrylicFallbackColor}" /></Border.Background>
                           </Border>
-                          <Rectangle RadiusX="16" RadiusY="16" AutomationProperties.Name="{Binding Data.PhotoName}">
+                          <Rectangle RadiusX="{StaticResource RectRadius16}" RadiusY="{StaticResource RectRadius16}" AutomationProperties.Name="{Binding Data.PhotoName}">
                             <Rectangle.Fill><ImageBrush ImageSource="{Binding Data.HeroPhoto}" Stretch="Uniform" /></Rectangle.Fill>
                           </Rectangle>
                         </Grid>
-                        <StackPanel Visibility="{Binding Data.HasNoPhoto}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+                        <StackPanel Visibility="{Binding Data.HasNoPhoto}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="{StaticResource Space8}">
                           <ContentControl Style="{StaticResource LineIcon18}" Width="28" Height="28" Content="{StaticResource IconPawPrint}" HorizontalAlignment="Center" />
                           <TextBlock x:Uid="Record_83" Text="Patient photo not added" Style="{StaticResource TypeBodyS}" HorizontalAlignment="Center" />
                         </StackPanel>
-                        <utu:ShadowContainer Background="Transparent" CornerRadius="16" IsHitTestVisible="False">
-                          <utu:ShadowContainer.Shadows>
-                            <utu:ShadowCollection><utu:Shadow IsInner="True" OffsetY="1" BlurRadius="3" Opacity="0.2" Color="Black" /></utu:ShadowCollection>
-                          </utu:ShadowContainer.Shadows>
+                        <utu:ShadowContainer Background="Transparent" CornerRadius="{StaticResource Radius16}" IsHitTestVisible="False" Shadows="{StaticResource ShadowInsetPhoto}">
                           <Grid />
                         </utu:ShadowContainer>
-                        <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="12">
-                          <utu:ShadowContainer.Shadows>
-                            <utu:ShadowCollection><utu:Shadow OffsetY="2" BlurRadius="8" Opacity="0.18" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-                          </utu:ShadowContainer.Shadows>
+                        <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius10}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="{StaticResource Inset12}" Shadows="{StaticResource ShadowFloatButton}">
                           <Button x:Uid="Record_84" Style="{StaticResource ButtonSecondaryM}" Command="{Binding Parent.OpenParentPreview}" AutomationProperties.Name="Pet-parent view">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                               <TextBlock x:Uid="Record_85" Text="Pet-parent view" Style="{StaticResource TypeButtonS}" VerticalAlignment="Center" />
                               <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconArrowUpRight}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" />
                             </StackPanel>
@@ -171,25 +164,25 @@
                       </Grid>
 
                       <!-- Status column 300: weight card, status card (flex 1), CTA 48 -->
-                      <Grid Grid.Column="{utu:Responsive Narrowest=0, Wide=2, Layout={StaticResource ShellLayout}}" Grid.Row="{utu:Responsive Narrowest=2, Normal=1, Wide=0, Layout={StaticResource ShellLayout}}"
-                            Grid.ColumnSpan="{utu:Responsive Narrowest=3, Wide=1, Layout={StaticResource ShellLayout}}" RowDefinitions="Auto,*,Auto" RowSpacing="8">
+                      <Grid Grid.Column="{utu:Responsive Narrowest=0, Widest=2}" Grid.Row="{utu:Responsive Narrowest=2, Wide=1, Widest=0}"
+                            Grid.ColumnSpan="{utu:Responsive Narrowest=3, Widest=1}" RowDefinitions="Auto,*,Auto" RowSpacing="{StaticResource Space8}">
                         <!-- xaml-lint: allow card - weight tile inside the hero tray (tri-tone gradient edge, exact radius 14 / padding 16 15) -->
-                        <Border Padding="16,15,16,16" CornerRadius="14" Background="{ThemeResource Surface1Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
+                        <Border Padding="{StaticResource AlertInset}" CornerRadius="{StaticResource Radius14}" Background="{ThemeResource Surface1Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
                           <StackPanel>
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space8}">
                               <TextBlock x:Uid="Record_86" Text="Weight at this visit" Style="{StaticResource TypeBodyS}" FontWeight="Medium" VerticalAlignment="Center" />
                               <Border Grid.Column="1" Style="{StaticResource BadgeOutline}"><TextBlock Text="{Binding Data.Preop.AsaLabel}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" /></Border>
                             </Grid>
-                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,0">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Margin="{StaticResource GapTop4}">
                               <TextBlock Text="{Binding Data.WeightText}" Style="{StaticResource TypeMonoStatL}" />
                               <TextBlock x:Uid="Record_87" Text="kg" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Bottom" Margin="0,0,0,5" />
                             </StackPanel>
                             <TextBlock Text="{Binding Data.WeightDate}" Style="{StaticResource TypeBodyS}" />
                           </StackPanel>
                         </Border>
-                        <controls:CareStatusCard Grid.Row="1" DataContext="{Binding Data}" MinHeight="{utu:Responsive Narrowest=200, Wide=0, Layout={StaticResource ShellLayout}}" />
+                        <controls:CareStatusCard Grid.Row="1" DataContext="{Binding Data}" MinHeight="{utu:Responsive Narrowest=200, Widest=0}" />
                         <Button Grid.Row="2" Style="{StaticResource ButtonPrimaryXL}" Command="{Binding Parent.OpenPane}" CommandParameter="{Binding Data.Care.CtaPane}" IsEnabled="{Binding Data.CanChange}" AutomationProperties.Name="{Binding Data.Care.Cta}">
-                          <StackPanel Orientation="Horizontal" Spacing="8">
+                          <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                             <TextBlock Text="{Binding Data.Care.Cta}" Style="{StaticResource TypeTitleS}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                             <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" Visibility="{Binding Data.Care.IsSurgery}" />
                           </StackPanel>
@@ -201,33 +194,33 @@
 
                 <!-- 3. Overdue banner (role alert): min-h 64, pad 10 12 10 14, radius 16, error soft -->
                 <!-- xaml-lint: allow card - role=alert banner (error soft fill and border), not a card surface -->
-                <Border Margin="0,16,0,0" MinHeight="64" Padding="14,10,12,10" CornerRadius="16" Background="{ThemeResource PhaseErrorSoftBrush}" BorderBrush="{ThemeResource PhaseErrorSoftBorderBrush}" BorderThickness="1"
+                <Border Margin="{StaticResource GapTop16}" MinHeight="64" Padding="{StaticResource ChipInsetRoomy}" CornerRadius="{StaticResource Radius16}" Background="{ThemeResource PhaseErrorSoftBrush}" BorderBrush="{ThemeResource PhaseErrorSoftBorderBrush}" BorderThickness="1"
                         Visibility="{Binding Data.IsOverdue}" AutomationProperties.LiveSetting="Assertive" AutomationProperties.Name="{Binding Data.OverdueTitle}">
-                  <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="14" RowSpacing="{utu:Responsive Narrowest=8, Normal=0, Layout={StaticResource ShellLayout}}">
+                  <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space14}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space8}, Wide=0}">
                     <Grid Width="36" Height="36" VerticalAlignment="Center">
-                      <Rectangle RadiusX="10" RadiusY="10" Fill="{ThemeResource AlertTileBrush}" />
+                      <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource AlertTileBrush}" />
                       <ContentControl Style="{StaticResource LineIcon16Bold}" Width="18" Height="18" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorDeepBrush}" />
                     </Grid>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                       <TextBlock Text="{Binding Data.OverdueTitle}" Style="{StaticResource TypeTitleS}" Foreground="{ThemeResource PhaseErrorDeepBrush}" />
                       <TextBlock Text="{Binding Data.OverdueDetail}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource AlertInkBrush}" TextWrapping="WrapWholeWords" />
                     </StackPanel>
-                    <Button x:Uid="Record_88" Grid.Column="{utu:Responsive Narrowest=1, Normal=2, Layout={StaticResource ShellLayout}}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0, Layout={StaticResource ShellLayout}}"
+                    <Button x:Uid="Record_88" Grid.Column="{utu:Responsive Narrowest=1, Wide=2}" Grid.Row="{utu:Responsive Narrowest=1, Wide=0}"
                             Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Record observations" Command="{Binding Parent.OpenPane}" CommandParameter="Monitor" />
                   </Grid>
                 </Border>
-                <muxc:InfoBar x:Uid="Record_89" Margin="0,16,0,0" Severity="Warning" Title="Latest recorded observations need attention" Message="{Binding Data.Alert}" IsOpen="{Binding Data.HasAlert}" Visibility="{Binding Data.HasAlert}" IsClosable="False" />
+                <muxc:InfoBar x:Uid="Record_89" Margin="{StaticResource GapTop16}" Severity="Warning" Title="Latest recorded observations need attention" Message="{Binding Data.Alert}" IsOpen="{Binding Data.HasAlert}" Visibility="{Binding Data.HasAlert}" IsClosable="False" />
 
                 <!-- 4. Procedure header: h2 20/28 + meta; Pre-op (secondary-l), Administer dose (primary-l + syringe) -->
-                <Grid Margin="0,32,0,0" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="{utu:Responsive Narrowest=12, Normal=0, Layout={StaticResource ShellLayout}}">
+                <Grid Margin="{StaticResource GapTop32}" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space16}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space12}, Wide=0}">
                   <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TypeH2Section}" TextWrapping="WrapWholeWords" />
-                    <TextBlock Margin="0,2,0,0" Text="{Binding Data.ProcedureMeta}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+                    <TextBlock Margin="{StaticResource GapTop2}" Text="{Binding Data.ProcedureMeta}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
                   </StackPanel>
-                  <StackPanel Grid.Column="{utu:Responsive Narrowest=0, Normal=1, Layout={StaticResource ShellLayout}}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0, Layout={StaticResource ShellLayout}}" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Left">
+                  <StackPanel Grid.Column="{utu:Responsive Narrowest=0, Wide=1}" Grid.Row="{utu:Responsive Narrowest=1, Wide=0}" Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <Button x:Uid="Record_90" Style="{StaticResource ButtonSecondaryL}" Content="Pre-op" Command="{Binding Parent.OpenPane}" CommandParameter="Preop" AutomationProperties.Name="Pre-op preparation" />
                     <Button x:Uid="Record_91" Style="{StaticResource ButtonPrimaryL}" IsEnabled="{Binding Data.CanChange}" Command="{Binding Parent.OpenPane}" CommandParameter="Dose" AutomationProperties.Name="Administer dose">
-                      <StackPanel Orientation="Horizontal" Spacing="8">
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                         <TextBlock x:Uid="Record_92" Text="Administer dose" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                         <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconSyringe}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                       </StackPanel>
@@ -235,39 +228,36 @@
                   </StackPanel>
                 </Grid>
                 <!-- xaml-lint: allow card - transient acknowledgement chip -->
-                <Border Margin="0,12,0,0" Background="{ThemeResource PhaseAnesthesiaSoftBrush}" Padding="12,8" CornerRadius="12" HorizontalAlignment="Left" Visibility="{Binding Parent.ShowAcknowledgement}">
-                  <StackPanel Orientation="Horizontal" Spacing="8"><controls:CareMark Width="18" Height="20" Acknowledge="{Binding Parent.ShowAcknowledgement}" ReduceMotion="{Binding Parent.ReduceMotion}" /><TextBlock x:Uid="Record_93" Text="Dose recorded · visual acknowledgement only" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" AutomationProperties.LiveSetting="Polite" /></StackPanel>
+                <Border Margin="{StaticResource GapTop12}" Background="{ThemeResource PhaseAnesthesiaSoftBrush}" Padding="{StaticResource Inset12x8}" CornerRadius="{StaticResource Radius12}" HorizontalAlignment="Left" Visibility="{Binding Parent.ShowAcknowledgement}">
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}"><controls:CareMark Width="18" Height="20" Acknowledge="{Binding Parent.ShowAcknowledgement}" ReduceMotion="{Binding Parent.ReduceMotion}" /><TextBlock x:Uid="Record_93" Text="Dose recorded · visual acknowledgement only" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" AutomationProperties.LiveSetting="Polite" /></StackPanel>
                 </Border>
 
                 <!-- 5. Metric cards: 2.1fr | 1.2fr | 1fr | 1fr, gap 16 (five star columns so 2 x 2 below 1080 splits evenly) -->
-                <Grid Margin="0,16,0,0" ColumnDefinitions="40.24*,9.76*,11.67*,19.16*,19.16*" RowDefinitions="Auto,Auto,Auto,Auto"
-                      ColumnSpacing="{utu:Responsive Narrowest=0, Normal=16, Layout={StaticResource ShellLayout}}" RowSpacing="16">
+                <Grid Margin="{StaticResource GapTop16}" ColumnDefinitions="40.24*,9.76*,11.67*,19.16*,19.16*" RowDefinitions="Auto,Auto,Auto,Auto"
+                      ColumnSpacing="{utu:Responsive Narrowest=0, Wide={StaticResource Space16}}" RowSpacing="{StaticResource Space16}">
 
                   <!-- Card A: Anesthesia record -->
-                  <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="18"
-                                       Grid.ColumnSpan="{utu:Responsive Narrowest=5, Normal=2, Wide=1, Layout={StaticResource ShellLayout}}">
-                    <utu:ShadowContainer.Shadows>
-                      <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-                    </utu:ShadowContainer.Shadows>
+                  <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius18}"
+                                       Grid.ColumnSpan="{utu:Responsive Narrowest=5, Wide=2, Widest=1}" Shadows="{StaticResource ShadowXs}">
                     <!-- xaml-lint: allow card - tri-tone stroke over the ShadowContainer surface (gradient edge, exact shadow xs) -->
-                    <Border CornerRadius="18" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="19,17">
+                    <Border CornerRadius="{StaticResource Radius18}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="{StaticResource MetricTileInset}">
                       <StackPanel>
                         <TextBlock x:Uid="Record_94" Text="Anesthesia record" Style="{StaticResource TypeH3Card}" />
                         <TextBlock x:Uid="Record_95" Text="Observed values · 5-minute strip" Style="{StaticResource TypeBodyS}" />
-                        <StackPanel Margin="0,10,0,0" Orientation="Horizontal" Spacing="14">
-                          <StackPanel Orientation="Horizontal" Spacing="6"><Rectangle Width="12" Height="2" RadiusX="1" RadiusY="1" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="Record_96" Text="HR bpm" Style="{StaticResource TypeCaption}" /></StackPanel>
-                          <StackPanel Orientation="Horizontal" Spacing="6"><Rectangle Width="4" Height="12" RadiusX="2" RadiusY="2" Fill="{ThemeResource PhaseRecoverySolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="Record_97" Text="BP mmHg" Style="{StaticResource TypeCaption}" /></StackPanel>
-                          <StackPanel Orientation="Horizontal" Spacing="6" Visibility="{Binding Data.Chart.HasDue}"><Rectangle Width="8" Height="12" RadiusX="3" RadiusY="3" Fill="{ThemeResource PhaseErrorSoftBrush}" Stroke="{ThemeResource PhaseErrorSolidBrush}" StrokeThickness="1" StrokeDashArray="2,1" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Chart.DueLabel}" Style="{StaticResource TypeCaption}" /></StackPanel>
+                        <StackPanel Margin="{StaticResource GapTop10}" Orientation="Horizontal" Spacing="{StaticResource Space14}">
+                          <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}"><Rectangle Width="12" Height="2" RadiusX="{StaticResource RectRadius1}" RadiusY="{StaticResource RectRadius1}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="Record_96" Text="HR bpm" Style="{StaticResource TypeCaption}" /></StackPanel>
+                          <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}"><Rectangle Width="4" Height="12" RadiusX="{StaticResource RectRadius2}" RadiusY="{StaticResource RectRadius2}" Fill="{ThemeResource PhaseRecoverySolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="Record_97" Text="BP mmHg" Style="{StaticResource TypeCaption}" /></StackPanel>
+                          <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding Data.Chart.HasDue}"><Rectangle Width="8" Height="12" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseErrorSoftBrush}" Stroke="{ThemeResource PhaseErrorSolidBrush}" StrokeThickness="1" StrokeDashArray="2,1" VerticalAlignment="Center" /><TextBlock Text="{Binding Data.Chart.DueLabel}" Style="{StaticResource TypeCaption}" /></StackPanel>
                         </StackPanel>
                         <!-- The chart: viewBox 400 x 188, scaled uniformly to the card (patient-care-values.md §3.4). -->
-                        <Viewbox Margin="0,12,0,0" Stretch="Uniform" AutomationProperties.Name="{Binding Data.Chart.AccessibleName}">
+                        <Viewbox Margin="{StaticResource GapTop12}" Stretch="Uniform" AutomationProperties.Name="{Binding Data.Chart.AccessibleName}">
                           <Grid Width="400" Height="188">
                             <Path Data="{Binding Data.Chart.DueBand}" Fill="{ThemeResource PhaseErrorSoftBrush}" />
                             <Path Data="{Binding Data.Chart.DueLine}" Stroke="{ThemeResource PhaseErrorSolidBrush}" StrokeThickness="1.5" StrokeDashArray="2,2" />
                             <!-- xaml-lint: allow icon - chart gridlines in the 400 x 188 viewBox, not an icon -->
                             <Path Data="M34,12H378M34,38H378M34,64.5H378" Stroke="{ThemeResource DividerBrush}" StrokeThickness="1" />
-                            <TextBlock Margin="0,6,0,0" Text="{Binding Data.Chart.Hr0}" Style="{StaticResource AxisY}" />
-                            <TextBlock Margin="0,32,0,0" Text="{Binding Data.Chart.Hr1}" Style="{StaticResource AxisY}" />
+                            <TextBlock Margin="{StaticResource GapTop6}" Text="{Binding Data.Chart.Hr0}" Style="{StaticResource AxisY}" />
+                            <TextBlock Margin="{StaticResource GapTop32}" Text="{Binding Data.Chart.Hr1}" Style="{StaticResource AxisY}" />
                             <TextBlock Margin="0,58,0,0" Text="{Binding Data.Chart.Hr2}" Style="{StaticResource AxisY}" />
                             <Path Data="{Binding Data.Chart.HrLine}" Stroke="{ThemeResource PhaseAnesthesiaSolidBrush}" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                             <Path Data="{Binding Data.Chart.HrPoints}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Stroke="{ThemeResource Surface1Brush}" StrokeThickness="2" />
@@ -292,31 +282,28 @@
                   </utu:ShadowContainer>
 
                   <!-- Card B: Latest medication, Next dose, Fluids -->
-                  <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="18"
-                                       Grid.Column="{utu:Responsive Narrowest=0, Normal=2, Wide=1, Layout={StaticResource ShellLayout}}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0, Layout={StaticResource ShellLayout}}"
-                                       Grid.ColumnSpan="{utu:Responsive Narrowest=5, Normal=3, Wide=2, Layout={StaticResource ShellLayout}}">
-                    <utu:ShadowContainer.Shadows>
-                      <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-                    </utu:ShadowContainer.Shadows>
+                  <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius18}"
+                                       Grid.Column="{utu:Responsive Narrowest=0, Wide=2, Widest=1}" Grid.Row="{utu:Responsive Narrowest=1, Wide=0}"
+                                       Grid.ColumnSpan="{utu:Responsive Narrowest=5, Wide=3, Widest=2}" Shadows="{StaticResource ShadowXs}">
                     <!-- xaml-lint: allow card - tri-tone stroke over the ShadowContainer surface (gradient edge, exact shadow xs) -->
-                    <Border CornerRadius="18" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="19,17">
+                    <Border CornerRadius="{StaticResource Radius18}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="{StaticResource MetricTileInset}">
                       <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                           <ContentControl Style="{StaticResource LineIcon16}" Width="15" Height="15" Content="{StaticResource IconSyringe}" VerticalAlignment="Center" />
                           <TextBlock x:Uid="Record_99" Text="Latest medication" Style="{StaticResource TypeBodyS}" FontWeight="Medium" VerticalAlignment="Center" />
                         </StackPanel>
-                        <TextBlock Grid.Row="1" Margin="0,8,0,0" Text="{Binding Data.MedicationSummary}" Style="{StaticResource TypeTitleM}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Row="1" Margin="{StaticResource GapTop8}" Text="{Binding Data.MedicationSummary}" Style="{StaticResource TypeTitleM}" TextTrimming="CharacterEllipsis" />
                         <TextBlock Grid.Row="2" Text="{Binding Data.MedicationDetail}" Style="{StaticResource TypeMonoMeta}" TextWrapping="WrapWholeWords" Visibility="{Binding Data.HasDoses}" />
                         <TextBlock Grid.Row="2" Text="{Binding Data.MedicationDetail}" Style="{StaticResource TypeBodyS}" TextWrapping="WrapWholeWords" Visibility="{Binding Data.HasNoDoses}" />
-                        <StackPanel Grid.Row="3" Margin="0,16,0,0" Padding="0,14,0,0" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
+                        <StackPanel Grid.Row="3" Margin="{StaticResource GapTop16}" Padding="{StaticResource GapTop14}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
                           <TextBlock x:Uid="Record_100" Text="Next dose" Style="{StaticResource TypeBodyS}" />
-                          <TextBlock Margin="0,2,0,0" Text="{Binding Data.NextDose.Time}" Style="{StaticResource TypeMonoStatS}" />
+                          <TextBlock Margin="{StaticResource GapTop2}" Text="{Binding Data.NextDose.Time}" Style="{StaticResource TypeMonoStatS}" />
                           <TextBlock Text="{Binding Data.NextDose.Detail}" Style="{StaticResource TypeBodyS}" TextWrapping="WrapWholeWords" />
                         </StackPanel>
                         <!-- The fluids line opens the Medication record pane, where fluids start and stop. -->
                         <Button Grid.Row="5" Margin="-8,8,-8,-6" Style="{StaticResource RowLinkButton}"
                                 Command="{Binding Parent.OpenPane}" CommandParameter="Drugs" AutomationProperties.Name="{Binding Data.Fluids.Text}">
-                          <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                          <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{StaticResource Space8}">
                             <Grid Width="6" Height="6" VerticalAlignment="Center">
                               <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding Data.Fluids.IsRunning}" />
                               <Ellipse Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding Data.Fluids.IsStopped}" />
@@ -330,56 +317,50 @@
                   </utu:ShadowContainer>
 
                   <!-- Card C: Circulation -->
-                  <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="18"
-                                       Grid.Column="{utu:Responsive Narrowest=0, Normal=0, Wide=3, Layout={StaticResource ShellLayout}}" Grid.Row="{utu:Responsive Narrowest=2, Normal=1, Wide=0, Layout={StaticResource ShellLayout}}"
-                                       Grid.ColumnSpan="{utu:Responsive Narrowest=5, Normal=2, Wide=1, Layout={StaticResource ShellLayout}}">
-                    <utu:ShadowContainer.Shadows>
-                      <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-                    </utu:ShadowContainer.Shadows>
+                  <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius18}"
+                                       Grid.Column="{utu:Responsive Narrowest=0, Wide=0, Widest=3}" Grid.Row="{utu:Responsive Narrowest=2, Wide=1, Widest=0}"
+                                       Grid.ColumnSpan="{utu:Responsive Narrowest=5, Wide=2, Widest=1}" Shadows="{StaticResource ShadowXs}">
                     <!-- xaml-lint: allow card - tri-tone stroke over the ShadowContainer surface (gradient edge, exact shadow xs) -->
-                    <Border CornerRadius="18" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="19,17">
+                    <Border CornerRadius="{StaticResource Radius18}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="{StaticResource MetricTileInset}">
                       <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                           <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconHeartPulse}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" />
                           <TextBlock x:Uid="Record_101" Text="Circulation" Style="{StaticResource TypeH3Card}" VerticalAlignment="Center" />
                         </StackPanel>
-                        <TextBlock x:Uid="Record_102" Grid.Row="1" Margin="0,10,0,0" Text="Heart rate · bpm" Style="{StaticResource TypeBodyS}" />
+                        <TextBlock x:Uid="Record_102" Grid.Row="1" Margin="{StaticResource GapTop10}" Text="Heart rate · bpm" Style="{StaticResource TypeBodyS}" />
                         <TextBlock Grid.Row="2" Text="{Binding Data.LastHr}" Style="{StaticResource TypeMonoVital}" />
-                        <Grid Grid.Row="3" Margin="0,12,0,0" Height="32" AutomationProperties.AccessibilityView="Raw">
+                        <Grid Grid.Row="3" Margin="{StaticResource GapTop12}" Height="32" AutomationProperties.AccessibilityView="Raw">
                           <Path Data="{Binding Data.HrSpark.Data}" Margin="{Binding Data.HrSpark.LineMargin}" Height="{Binding Data.HrSpark.Height}" VerticalAlignment="Top" Stretch="Fill"
                                 Stroke="{ThemeResource PhaseAnesthesiaSolidBrush}" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                           <Ellipse Width="8" Height="8" Margin="{Binding Data.HrSpark.DotMargin}" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding Data.HrSpark.HasLine}" />
                         </Grid>
-                        <TextBlock Grid.Row="5" Padding="0,12,0,0" Text="{Binding Data.CirculationDetail}" Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Row="5" Padding="{StaticResource GapTop12}" Text="{Binding Data.CirculationDetail}" Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis" />
                       </Grid>
                     </Border>
                   </utu:ShadowContainer>
 
                   <!-- Card D: Respiration -->
-                  <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="18"
-                                       Grid.Column="{utu:Responsive Narrowest=0, Normal=2, Wide=4, Layout={StaticResource ShellLayout}}" Grid.Row="{utu:Responsive Narrowest=3, Normal=1, Wide=0, Layout={StaticResource ShellLayout}}"
-                                       Grid.ColumnSpan="{utu:Responsive Narrowest=5, Normal=3, Wide=1, Layout={StaticResource ShellLayout}}">
-                    <utu:ShadowContainer.Shadows>
-                      <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-                    </utu:ShadowContainer.Shadows>
+                  <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius18}"
+                                       Grid.Column="{utu:Responsive Narrowest=0, Wide=2, Widest=4}" Grid.Row="{utu:Responsive Narrowest=3, Wide=1, Widest=0}"
+                                       Grid.ColumnSpan="{utu:Responsive Narrowest=5, Wide=3, Widest=1}" Shadows="{StaticResource ShadowXs}">
                     <!-- xaml-lint: allow card - tri-tone stroke over the ShadowContainer surface (gradient edge, exact shadow xs) -->
-                    <Border CornerRadius="18" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="19,17">
+                    <Border CornerRadius="{StaticResource Radius18}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="{StaticResource MetricTileInset}">
                       <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                           <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconWind}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" />
                           <TextBlock x:Uid="Record_103" Text="Respiration" Style="{StaticResource TypeH3Card}" VerticalAlignment="Center" />
                         </StackPanel>
-                        <TextBlock x:Uid="Record_104" Grid.Row="1" Margin="0,10,0,0" Text="Oxygen saturation" Style="{StaticResource TypeBodyS}" />
-                        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="4">
+                        <TextBlock x:Uid="Record_104" Grid.Row="1" Margin="{StaticResource GapTop10}" Text="Oxygen saturation" Style="{StaticResource TypeBodyS}" />
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="{StaticResource Space4}">
                           <TextBlock Text="{Binding Data.LastSpo2}" Style="{StaticResource TypeMonoVital}" />
-                          <TextBlock Text="%" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Bottom" Margin="0,0,0,4" />
+                          <TextBlock Text="%" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Bottom" Margin="{StaticResource GapBottom4}" />
                         </StackPanel>
-                        <Grid Grid.Row="3" Margin="0,12,0,0" Height="32" AutomationProperties.AccessibilityView="Raw">
+                        <Grid Grid.Row="3" Margin="{StaticResource GapTop12}" Height="32" AutomationProperties.AccessibilityView="Raw">
                           <Path Data="{Binding Data.SpO2Spark.Data}" Margin="{Binding Data.SpO2Spark.LineMargin}" Height="{Binding Data.SpO2Spark.Height}" VerticalAlignment="Top" Stretch="Fill"
                                 Stroke="{ThemeResource InkMutedBrush}" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                           <Ellipse Width="8" Height="8" Margin="{Binding Data.SpO2Spark.DotMargin}" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.SpO2Spark.HasLine}" />
                         </Grid>
-                        <TextBlock Grid.Row="5" Padding="0,12,0,0" Text="{Binding Data.RespirationDetail}" Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Row="5" Padding="{StaticResource GapTop12}" Text="{Binding Data.RespirationDetail}" Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis" />
                       </Grid>
                     </Border>
                   </utu:ShadowContainer>
@@ -388,8 +369,8 @@
             </ScrollViewer>
           </SplitView.Content>
 <SplitView.Pane><Grid RowDefinitions="Auto,*" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1,0,0,0">
-  <Grid ColumnDefinitions="*,Auto" Padding="24,16" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1"><TextBlock Text="{Binding Parent.PaneTitle}" Style="{StaticResource TypeTitleM}" VerticalAlignment="Center" /><Button x:Name="DrawerClose" x:Uid="Record_132" Grid.Column="1" Style="{StaticResource ButtonIconGhost}" Command="{Binding Parent.ClosePane}" AutomationProperties.Name="Close panel"><ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconX}" /></Button></Grid>
-  <Grid Grid.Row="1"><Grid Visibility="{Binding Parent.PaneDose}"><Grid DataContext="{Binding Parent}"><Grid Padding="{utu:Responsive Narrow='16,8,16,16', Wide='24,8,24,24'}" ColumnSpacing="24" RowSpacing="16">
+  <Grid ColumnDefinitions="*,Auto" Padding="{StaticResource Inset24x16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1"><TextBlock Text="{Binding Parent.PaneTitle}" Style="{StaticResource TypeTitleM}" VerticalAlignment="Center" /><Button x:Name="DrawerClose" x:Uid="Record_132" Grid.Column="1" Style="{StaticResource ButtonIconGhost}" Command="{Binding Parent.ClosePane}" AutomationProperties.Name="Close panel"><ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconX}" /></Button></Grid>
+  <Grid Grid.Row="1"><Grid Visibility="{Binding Parent.PaneDose}"><Grid DataContext="{Binding Parent}"><Grid Padding="{utu:Responsive Narrow={StaticResource PaneInsetNarrow}, Wide={StaticResource PaneInsetWide}}" ColumnSpacing="{StaticResource Space24}" RowSpacing="{StaticResource Space16}">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*" />
         <ColumnDefinition Width="*" />
@@ -401,7 +382,7 @@
       </Grid.RowDefinitions>
 
       <!-- Drug list -->
-      <Grid Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" RowSpacing="8">
+      <Grid Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" RowSpacing="{StaticResource Space8}">
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto" />
           <RowDefinition Height="*" />
@@ -413,12 +394,12 @@
                   AutomationProperties.Name="Drugs">
           <ListView.ItemTemplate>
             <DataTemplate x:DataType="domain:Drug">
-              <Grid Padding="4,10" ColumnSpacing="12">
+              <Grid Padding="{StaticResource Inset4x10}" ColumnSpacing="{StaticResource Space12}">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*" />
                   <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Spacing="2">
+                <StackPanel Spacing="{StaticResource Space2}">
                   <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{x:Bind Name}" />
                   <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind DrugClass}" />
                 </StackPanel>
@@ -435,7 +416,7 @@
       <ScrollViewer Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"
                     Grid.Column="{utu:Responsive Narrowest=0, Normal=1}"
                     Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}">
-        <StackPanel Spacing="16">
+        <StackPanel Spacing="{StaticResource Space16}">
           <TextBox x:Uid="Record_143" Header="Dose (mg/kg)"
                    InputScope="Number"
                    Text="{Binding DoseMgPerKg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -444,7 +425,7 @@
           <mvux:FeedView Source="{Binding DoseCalculation}" IsTabStop="False" RefreshingState="None">
             <mvux:FeedView.ValueTemplate>
               <DataTemplate>
-                <StackPanel Spacing="6">
+                <StackPanel Spacing="{StaticResource Space6}">
                   <TextBlock x:Uid="Record_144" Style="{StaticResource TypeEyebrow}" Text="DRAW UP" />
                   <TextBlock x:Uid="Record_145" Style="{StaticResource TypeMonoVital}"
                              Foreground="{ThemeResource InkBrush}"
@@ -457,8 +438,8 @@
                     <Run x:Uid="Record_146" Text="Reference range" />
                     <Run Text="{Binding Data.ReferenceText}" />
                   </TextBlock>
-                  <StackPanel Orientation="Horizontal" Spacing="8" Visibility="{Binding Data.IsOutOfRange}">
-                    <FontIcon Glyph="&#xE7BA;" FontSize="18" Foreground="{ThemeResource ErrorBrush}" />
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" Visibility="{Binding Data.IsOutOfRange}">
+                    <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
                     <TextBlock x:Uid="Record_147" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource ErrorBrush}" Text="Outside the reference range: you will be asked to confirm." TextWrapping="WrapWholeWords" />
                   </StackPanel>
                 </StackPanel>
@@ -466,7 +447,7 @@
             </mvux:FeedView.ValueTemplate>
             <mvux:FeedView.NoneTemplate>
               <DataTemplate>
-                <StackPanel Spacing="6">
+                <StackPanel Spacing="{StaticResource Space6}">
                   <TextBlock x:Uid="Record_148" Style="{StaticResource TypeEyebrow}" Text="DRAW UP" />
                   <TextBlock x:Uid="Record_149" Style="{StaticResource TypeH2Section}" Foreground="{ThemeResource InkMutedBrush}" Text="Pick a drug" />
                   <TextBlock x:Uid="Record_150" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords"
@@ -498,14 +479,14 @@
                                 HorizontalAlignment="Stretch"
                                 Visibility="{Binding DoseConfirming}"
                                 IsTabStop="False">
-          <StackPanel Padding="16" Spacing="12">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <FontIcon Glyph="&#xE7BA;" FontSize="20" Foreground="{ThemeResource ErrorBrush}" />
+          <StackPanel Padding="{StaticResource Inset16}" Spacing="{StaticResource Space12}">
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
+              <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
               <TextBlock Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkBrush}" Text="{Binding DoseConfirmTitle}" />
             </StackPanel>
             <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="{Binding DoseConfirmText}"
                        AutomationProperties.LiveSetting="Assertive" />
-            <Grid ColumnSpacing="12">
+            <Grid ColumnSpacing="{StaticResource Space12}">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -518,18 +499,18 @@
         </utu:CardContentControl>
       </Grid>
     </Grid></Grid></Grid><ScrollViewer Visibility="{Binding Parent.PanePreop}">
-                <StackPanel Padding="20,16,20,28" Spacing="24" MaxWidth="960" HorizontalAlignment="Stretch">
-                  <StackPanel Spacing="4">
+                <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
+                  <StackPanel Spacing="{StaticResource Space4}">
                     <TextBlock x:Uid="Record_10" Style="{StaticResource TypeEyebrow}" Text="WEIGHT" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                       <TextBlock x:Uid="Record_11" Style="{StaticResource TypeMonoVital}" Foreground="{ThemeResource InkBrush}" Text="{Binding Data.WeightText}" AutomationProperties.Name="Patient weight in kilograms" />
-                      <TextBlock x:Uid="Record_12" Style="{StaticResource TypeH2Section}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Bottom" Margin="0,0,0,10" Text="kg" />
+                      <TextBlock x:Uid="Record_12" Style="{StaticResource TypeH2Section}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Bottom" Margin="{StaticResource GapBottom10}" Text="kg" />
                     </StackPanel>
                     <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="{Binding Data.Signalment}" />
                   </StackPanel>
 
                   <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
-                    <StackPanel Padding="20" Spacing="8">
+                    <StackPanel Padding="{StaticResource Inset20}" Spacing="{StaticResource Space8}">
                       <Grid>
                         <TextBlock x:Uid="Record_13" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkBrush}" Text="Pre-anesthetic check" />
                         <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Data.PreopProgress}" />
@@ -543,7 +524,7 @@
                   </utu:CardContentControl>
 
                   <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
-                    <StackPanel Padding="20" Spacing="12">
+                    <StackPanel Padding="{StaticResource Inset20}" Spacing="{StaticResource Space12}">
                       <TextBlock x:Uid="Record_19" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkBrush}" Text="ASA physical status" />
                       <muxc:RadioButtons x:Uid="Record_20" MaxColumns="3" IsEnabled="{Binding Data.IsScheduled}" SelectedIndex="{Binding Parent.Preop.Asa, Mode=TwoWay}" AutomationProperties.Name="ASA physical status">
                         <RadioButton x:Uid="Record_21" Content="Not set" />
@@ -558,9 +539,9 @@
                     </StackPanel>
                   </utu:CardContentControl>
 
-                  <StackPanel Spacing="8">
-                    <Button x:Uid="Record_29" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" MinWidth="220" Content="Give premedication" Visibility="{Binding Data.IsScheduled}" Command="{Binding Parent.OpenPane}" CommandParameter="Dose" AutomationProperties.Name="Give premedication" />
-                    <Button x:Uid="Record_30" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="220" Content="Induce" Visibility="{Binding Data.IsScheduled}" IsEnabled="{Binding Data.CanInduce}" Command="{Binding Parent.Induce}" AutomationProperties.Name="Induce anesthesia" />
+                  <StackPanel Spacing="{StaticResource Space8}">
+                    <Button x:Uid="Record_29" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Give premedication" Visibility="{Binding Data.IsScheduled}" Command="{Binding Parent.OpenPane}" CommandParameter="Dose" AutomationProperties.Name="Give premedication" />
+                    <Button x:Uid="Record_30" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Induce" Visibility="{Binding Data.IsScheduled}" IsEnabled="{Binding Data.CanInduce}" Command="{Binding Parent.Induce}" AutomationProperties.Name="Induce anesthesia" />
                     <TextBlock x:Uid="Record_31" TextWrapping="WrapWholeWords" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.IsScheduled}" Text="Complete the five checks and set the ASA status to induce. Induction starts the reading clock." />
                     <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{Binding Data.InducedText}" />
                   </StackPanel>
@@ -569,11 +550,11 @@
 
 
               <ScrollViewer Visibility="{Binding Parent.PaneDrugs}">
-                <StackPanel Padding="20,16,20,28" Spacing="16" MaxWidth="960" HorizontalAlignment="Stretch">
-                  <StackPanel Spacing="12">
+                <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space16}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
+                  <StackPanel Spacing="{StaticResource Space12}">
                     <TextBlock x:Uid="Record_32" Style="{StaticResource TypeH2Section}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" Text="Doses given" />
                     <Button x:Uid="Record_33" Style="{StaticResource ButtonPrimaryL}" IsEnabled="{Binding Data.CanChange}" Command="{Binding Parent.OpenPane}" CommandParameter="Dose" AutomationProperties.Name="Give a dose">
-                      <StackPanel Orientation="Horizontal" Spacing="8">
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                         <SymbolIcon Symbol="Add" />
                         <TextBlock x:Uid="Record_34" Text="Give a dose" />
                       </StackPanel>
@@ -583,14 +564,14 @@
                   <ItemsControl x:Uid="Record_36" ItemsSource="{Binding Data.Doses}" AutomationProperties.Name="Doses given">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate x:DataType="local:DoseRow">
-                        <Grid Padding="0,10" ColumnSpacing="16" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+                        <Grid Padding="{StaticResource InsetY10}" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
                           <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="56" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                           </Grid.ColumnDefinitions>
                           <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
-                          <StackPanel Grid.Column="1" Spacing="2">
+                          <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}">
                             <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{x:Bind Drug}" />
                             <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}">
                               <Run Text="{x:Bind Dose}" />
@@ -606,20 +587,20 @@
                   </ItemsControl>
 
                   <!-- Fluids: one run at a time; starting a new rate stops the running one (Case.WithFluidsStarted). -->
-                  <StackPanel Spacing="12" Margin="0,12,0,0">
+                  <StackPanel Spacing="{StaticResource Space12}" Margin="{StaticResource GapTop12}">
                     <TextBlock x:Uid="Record_Fluids" Style="{StaticResource TypeH3Card}" Text="Fluids" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                       <Grid Width="6" Height="6" VerticalAlignment="Center">
                         <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding Data.Fluids.IsRunning}" />
                         <Ellipse Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding Data.Fluids.IsStopped}" />
                       </Grid>
                       <TextBlock Text="{Binding Data.Fluids.Text}" Style="{StaticResource TypeBody}" VerticalAlignment="Center" />
                     </StackPanel>
-                    <Grid ColumnSpacing="12" ColumnDefinitions="*,*" Visibility="{Binding Data.CanChange}">
+                    <Grid ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="*,*" Visibility="{Binding Data.CanChange}">
                       <TextBox x:Uid="Record_FluidName" Header="Fluid" Text="{Binding Parent.FluidName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Fluid name" />
                       <TextBox x:Uid="Record_FluidRate" Grid.Column="1" Header="Rate (mL/kg/h)" InputScope="Number" Text="{Binding Parent.FluidRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Fluid rate in millilitres per kilogram per hour" />
                     </Grid>
-                    <StackPanel Orientation="Horizontal" Spacing="8" Visibility="{Binding Data.CanChange}">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" Visibility="{Binding Data.CanChange}">
                       <Button Style="{StaticResource ButtonPrimaryM}" Content="{Binding Data.Fluids.StartLabel}" Command="{Binding Parent.StartFluids}" AutomationProperties.Name="{Binding Data.Fluids.StartLabel}" />
                       <Button x:Uid="Record_StopFluids" Style="{StaticResource ButtonSecondaryM}" Content="Stop fluids" Visibility="{Binding Data.Fluids.IsRunning}" Command="{Binding Parent.StopFluids}" AutomationProperties.Name="Stop fluids" />
                     </StackPanel>
@@ -629,7 +610,7 @@
 
 
               <ScrollViewer Visibility="{Binding Parent.PaneMonitor}">
-                <Grid Padding="20,16,20,28" ColumnSpacing="20" RowSpacing="16">
+                <Grid Padding="{StaticResource MetricCardInset}" ColumnSpacing="{StaticResource Space20}" RowSpacing="{StaticResource Space16}">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5*" />
                     <ColumnDefinition Width="4*" />
@@ -639,18 +620,22 @@
                     <RowDefinition Height="Auto" />
                   </Grid.RowDefinitions>
 
-                  <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Spacing="16">
-                    <Button x:Uid="Record_47" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Stretch" Height="64" IsEnabled="{Binding Data.IsAnesthetized}" Command="{Binding Parent.RecordReading}" AutomationProperties.Name="Record reading">
+                  <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Spacing="{StaticResource Space16}">
+                    <Button x:Uid="Record_47" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Stretch" Height="{StaticResource ActionHeightLarge}" IsEnabled="{Binding Data.IsAnesthetized}" Command="{Binding Parent.RecordReading}" AutomationProperties.Name="Record reading">
                       <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Modifiers="Control" Key="R" />
                       </Button.KeyboardAccelerators>
-                      <StackPanel Orientation="Horizontal" Spacing="12">
-                        <SymbolIcon Symbol="Accept" />
-                        <TextBlock x:Uid="Record_48" Text="Record reading" />
-                        <TextBlock Style="{StaticResource TypeMonoCell}" Text="{Binding Data.ClockText}" />
+                      <!-- The due clock in the button's own ink (it was body ink on the primary green, ~1.3:1); phones put
+                           it under the label so neither is clipped. -->
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space12}">
+                        <SymbolIcon Symbol="Accept" VerticalAlignment="Center" />
+                        <StackPanel Orientation="{utu:Responsive Narrowest=Vertical, Normal=Horizontal}" Spacing="{utu:Responsive Narrowest=0, Normal={StaticResource Space12}}" VerticalAlignment="Center">
+                          <TextBlock x:Uid="Record_48" Text="Record reading" />
+                          <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource OnPrimaryInkBrush}" Text="{Binding Data.ClockText}" VerticalAlignment="Center" />
+                        </StackPanel>
                       </StackPanel>
                     </Button>
-                    <Grid ColumnSpacing="{utu:Responsive Narrowest=8, Normal=16}" RowSpacing="16">
+                    <Grid ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space8}, Normal={StaticResource Space16}}" RowSpacing="{StaticResource Space16}">
                       <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -689,59 +674,59 @@
 
 
               <ScrollViewer Visibility="{Binding Parent.PaneRecovery}">
-                <StackPanel Padding="20,16,20,28" Spacing="24" MaxWidth="960" HorizontalAlignment="Stretch">
+                <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
 
 
-                  <StackPanel Spacing="8" Visibility="{Binding Data.IsAnesthetized}">
+                  <StackPanel Spacing="{StaticResource Space8}" Visibility="{Binding Data.IsAnesthetized}">
                     <TextBlock x:Uid="Record_65" Style="{StaticResource TypeH2Section}" Foreground="{ThemeResource InkBrush}" Text="Patient is under anesthesia" />
                     <TextBlock x:Uid="Record_66" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="End anesthesia when the vaporizer is off. The reading clock stops and recovery starts." />
-                    <Button x:Uid="Record_67" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="220" Content="End anesthesia" Command="{Binding Parent.EndAnesthesia}" AutomationProperties.Name="End anesthesia" />
+                    <Button x:Uid="Record_67" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="End anesthesia" Command="{Binding Parent.EndAnesthesia}" AutomationProperties.Name="End anesthesia" />
                   </StackPanel>
 
-                  <StackPanel Spacing="4" Visibility="{Binding Data.IsNotAnesthetized}">
+                  <StackPanel Spacing="{StaticResource Space4}" Visibility="{Binding Data.IsNotAnesthetized}">
                     <TextBlock x:Uid="Record_68" Style="{StaticResource TypeEyebrow}" Text="RECOVERY" />
                     <TextBlock x:Uid="Record_69" Style="{StaticResource TypeMonoVital}" Foreground="{ThemeResource InkBrush}" Text="{Binding Data.RecoveryAnchor}" AutomationProperties.Name="Time in recovery" />
                     <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Text="{Binding Data.RecoveryAnchorLabel}" />
                   </StackPanel>
 
                   <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False" Visibility="{Binding Data.IsNotAnesthetized}">
-                    <StackPanel Padding="20" Spacing="12">
+                    <StackPanel Padding="{StaticResource Inset20}" Spacing="{StaticResource Space12}">
                       <TextBlock x:Uid="Record_70" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkBrush}" Text="Recovery log" />
-                      <Grid ColumnSpacing="12" RowSpacing="12">
+                      <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{StaticResource Space12}">
                         <Grid.ColumnDefinitions>
                           <ColumnDefinition Width="*" />
                           <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Spacing="6">
+                        <StackPanel Spacing="{StaticResource Space6}">
                           <Button x:Uid="Record_71" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Stretch" Content="Extubated now" Visibility="{Binding Data.IsNotExtubated}" Command="{Binding Parent.Extubate}" AutomationProperties.Name="Record extubation now" />
                           <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{Binding Data.ExtubatedText}" />
                         </StackPanel>
-                        <StackPanel Grid.Column="1" Spacing="6">
+                        <StackPanel Grid.Column="1" Spacing="{StaticResource Space6}">
                           <Button x:Uid="Record_72" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Stretch" Content="Sternal now" Visibility="{Binding Data.IsNotSternal}" Command="{Binding Parent.Sternal}" AutomationProperties.Name="Record sternal recumbency now" />
                           <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{Binding Data.SternalText}" />
                         </StackPanel>
                       </Grid>
                       <!-- Pain score: each tap records a timed score (the 15-minute task resets even when the score is unchanged). -->
-                      <StackPanel Spacing="8">
+                      <StackPanel Spacing="{StaticResource Space8}">
                         <TextBlock x:Uid="Record_159" Text="Pain score (0 none to 4 severe)" Style="{StaticResource TypeBodyS}" FontWeight="Medium" />
-                        <StackPanel Orientation="Horizontal" Spacing="8" Visibility="{Binding Data.CanEditRecovery}">
-                          <Button x:Uid="Record_160" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="0" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="0" AutomationProperties.Name="Record pain score 0" />
-                          <Button x:Uid="Record_161" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="1" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="1" AutomationProperties.Name="Record pain score 1" />
-                          <Button x:Uid="Record_162" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="2" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="2" AutomationProperties.Name="Record pain score 2" />
-                          <Button x:Uid="Record_163" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="3" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="3" AutomationProperties.Name="Record pain score 3" />
-                          <Button x:Uid="Record_164" Style="{StaticResource ButtonSecondaryM}" MinWidth="48" Content="4" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="4" AutomationProperties.Name="Record pain score 4" />
+                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" Visibility="{Binding Data.CanEditRecovery}">
+                          <Button x:Uid="Record_160" Style="{StaticResource ButtonSecondaryM}" MinWidth="{StaticResource ScoreButtonMinWidth}" Content="0" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="0" AutomationProperties.Name="Record pain score 0" />
+                          <Button x:Uid="Record_161" Style="{StaticResource ButtonSecondaryM}" MinWidth="{StaticResource ScoreButtonMinWidth}" Content="1" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="1" AutomationProperties.Name="Record pain score 1" />
+                          <Button x:Uid="Record_162" Style="{StaticResource ButtonSecondaryM}" MinWidth="{StaticResource ScoreButtonMinWidth}" Content="2" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="2" AutomationProperties.Name="Record pain score 2" />
+                          <Button x:Uid="Record_163" Style="{StaticResource ButtonSecondaryM}" MinWidth="{StaticResource ScoreButtonMinWidth}" Content="3" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="3" AutomationProperties.Name="Record pain score 3" />
+                          <Button x:Uid="Record_164" Style="{StaticResource ButtonSecondaryM}" MinWidth="{StaticResource ScoreButtonMinWidth}" Content="4" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="4" AutomationProperties.Name="Record pain score 4" />
                         </StackPanel>
                         <TextBlock Text="{Binding Data.PainText}" Style="{StaticResource TypeBodyS}" AutomationProperties.LiveSetting="Polite" />
                       </StackPanel>
-                      <TextBox x:Uid="Record_75" Header="Temperature (°C)" InputScope="Number" MaxWidth="240" HorizontalAlignment="Left" IsEnabled="{Binding Data.CanEditRecovery}" Text="{Binding Parent.Recovery.TempC, Mode=TwoWay}" />
+                      <TextBox x:Uid="Record_75" Header="Temperature (°C)" InputScope="Number" MaxWidth="{StaticResource ShortFieldMaxWidth}" HorizontalAlignment="Left" IsEnabled="{Binding Data.CanEditRecovery}" Text="{Binding Parent.Recovery.TempC, Mode=TwoWay}" />
                       <TextBox x:Uid="Record_76" Header="Notes" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80" IsEnabled="{Binding Data.CanEditRecovery}" Text="{Binding Parent.Recovery.Notes, Mode=TwoWay}" />
                     </StackPanel>
                   </utu:CardContentControl>
 
-                  <StackPanel Spacing="8">
-                    <Button x:Uid="Record_77" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="220" Content="Sign off" Visibility="{Binding Data.IsRecovery}" Command="{Binding Parent.OpenSignOff}" AutomationProperties.Name="Sign off the record" />
+                  <StackPanel Spacing="{StaticResource Space8}">
+                    <Button x:Uid="Record_77" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Sign off" Visibility="{Binding Data.IsRecovery}" Command="{Binding Parent.OpenSignOff}" AutomationProperties.Name="Sign off the record" />
                     <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.SignedText}" />
-                    <StackPanel Orientation="Horizontal" Spacing="12" Visibility="{Binding Data.IsSigned}">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space12}" Visibility="{Binding Data.IsSigned}">
                       <Button x:Uid="Record_78" Style="{StaticResource ButtonPrimaryL}" Content="Export CSV" Command="{Binding Parent.Export}" AutomationProperties.Name="Export the record as CSV" />
                       <Button x:Uid="Record_79" Style="{StaticResource ButtonSecondaryL}" Content="Copy summary" Command="{Binding Parent.CopySummary}" AutomationProperties.Name="Copy a text summary" />
                     </StackPanel>
@@ -749,24 +734,24 @@
                   </StackPanel>
 
                   <!-- Discharge call to the pet parent (a "Due next" task): recorded here once made. -->
-                  <StackPanel Spacing="8" Visibility="{Binding Data.HasDischargeCall}">
+                  <StackPanel Spacing="{StaticResource Space8}" Visibility="{Binding Data.HasDischargeCall}">
                     <TextBlock x:Uid="Record_170" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkBrush}" Text="Discharge call" />
                     <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Text="{Binding Data.DischargeText}" TextWrapping="WrapWholeWords" />
-                    <Button x:Uid="Record_171" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" MinWidth="220" Content="Call made" Visibility="{Binding Data.CanCompleteCall}" Command="{Binding Parent.CompleteDischargeCall}" AutomationProperties.Name="Record the discharge call as made" />
+                    <Button x:Uid="Record_171" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Call made" Visibility="{Binding Data.CanCompleteCall}" Command="{Binding Parent.CompleteDischargeCall}" AutomationProperties.Name="Record the discharge call as made" />
                   </StackPanel>
                 </StackPanel>
               </ScrollViewer>
 
-    <ScrollViewer Visibility="{Binding Parent.PaneHistory}"><StackPanel Padding="24" Spacing="16"><TextBlock Text="{Binding Data.VisitDate}" Style="{StaticResource TypeEyebrow}" /><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TypeH2Section}" /><TextBlock Text="{Binding Data.Team}" Style="{StaticResource TypeBodyMuted}" /><TextBlock x:Uid="Record_133" Text="Observations in this record" Style="{StaticResource TypeTitleM}" /><ItemsControl x:Uid="Record_39" ItemsSource="{Binding Data.Readings}" AutomationProperties.Name="Readings table">
+    <ScrollViewer Visibility="{Binding Parent.PaneHistory}"><StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space16}"><TextBlock Text="{Binding Data.VisitDate}" Style="{StaticResource TypeEyebrow}" /><TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TypeH2Section}" /><TextBlock Text="{Binding Data.Team}" Style="{StaticResource TypeBodyMuted}" /><TextBlock x:Uid="Record_133" Text="Observations in this record" Style="{StaticResource TypeTitleM}" /><ItemsControl x:Uid="Record_39" ItemsSource="{Binding Data.Readings}" AutomationProperties.Name="Readings table">
                         <ItemsControl.ItemTemplate>
                           <DataTemplate x:DataType="local:ReadingRow">
-                            <Grid Padding="0,8" ColumnSpacing="12" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+                            <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
                               <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="56" />
                                 <ColumnDefinition Width="*" />
                               </Grid.ColumnDefinitions>
                               <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
-                              <StackPanel Grid.Column="1" Spacing="2">
+                              <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}">
                                 <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkBrush}" TextWrapping="Wrap">
                                   <Run x:Uid="Record_40" Text="HR" /> <Run Text="{x:Bind Hr}" />
                                   <Run x:Uid="Record_41" Text=" RR" /> <Run Text="{x:Bind Rr}" />
@@ -785,15 +770,15 @@
                         </ItemsControl.ItemTemplate>
                       </ItemsControl>
                       </StackPanel></ScrollViewer>
-    <ScrollViewer Visibility="{Binding Parent.PaneLabs}"><StackPanel Padding="24" Spacing="16">
+    <ScrollViewer Visibility="{Binding Parent.PaneLabs}"><StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space16}">
       <TextBlock x:Uid="Record_165" Text="Lab panels for this visit" Style="{StaticResource TypeH2Section}" />
       <TextBlock x:Uid="Record_166" Text="Vigil tracks which panels are pending, ready and reviewed. The reports and their values stay in your lab system." Style="{StaticResource TypeBodyMuted}" TextWrapping="WrapWholeWords" />
       <TextBlock x:Uid="Record_167" Text="No lab panels for this visit." Style="{StaticResource TypeBodyMuted}" Visibility="{Binding Data.HasNoLabs}" />
       <ItemsControl x:Uid="Record_168" ItemsSource="{Binding Data.LabRows}" AutomationProperties.Name="Lab panels">
         <ItemsControl.ItemTemplate>
           <DataTemplate x:DataType="local:LabRow">
-            <Grid Padding="0,10" ColumnSpacing="16" ColumnDefinitions="*,Auto" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
-              <StackPanel Spacing="2" VerticalAlignment="Center">
+            <Grid Padding="{StaticResource InsetY10}" ColumnSpacing="{StaticResource Space16}" ColumnDefinitions="*,Auto" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+              <StackPanel Spacing="{StaticResource Space2}" VerticalAlignment="Center">
                 <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{x:Bind Panel}" />
                 <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind StateText}" />
               </StackPanel>
@@ -813,24 +798,24 @@
       <!-- Loading: skeleton of the hero tray, the procedure header and the four cards (same footprint). -->
       <mvux:FeedView.ProgressTemplate>
         <DataTemplate>
-          <StackPanel Padding="{utu:Responsive Narrowest='20,20,20,40', Normal='40,20,40,40', Layout={StaticResource ShellLayout}}" AutomationProperties.AccessibilityView="Raw">
+          <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageBodyInsetNarrow}, Normal={StaticResource PageBodyInsetNormal}}" AutomationProperties.AccessibilityView="Raw">
             <!-- xaml-lint: allow card - skeleton of the hero tray (same footprint as the loaded tray) -->
-            <Border Height="{utu:Responsive Narrowest=720, Wide=452, Layout={StaticResource ShellLayout}}" CornerRadius="26" Padding="20" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
-              <StackPanel Spacing="14">
+            <Border Height="{utu:Responsive Narrowest=720, Widest=452}" CornerRadius="{StaticResource Radius26}" Padding="{StaticResource Inset20}" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
+              <StackPanel Spacing="{StaticResource Space14}">
                 <Rectangle Style="{StaticResource Skeleton}" Width="140" Height="28" />
                 <Rectangle Style="{StaticResource Skeleton}" Width="180" Height="56" />
                 <Rectangle Style="{StaticResource Skeleton}" Width="150" Height="20" />
-                <Rectangle Style="{StaticResource Skeleton}" Width="200" Height="200" Margin="0,8,0,0" />
+                <Rectangle Style="{StaticResource Skeleton}" Width="200" Height="200" Margin="{StaticResource GapTop8}" />
               </StackPanel>
             </Border>
-            <Rectangle Style="{StaticResource Skeleton}" Margin="0,48,0,0" Width="320" Height="28" />
-            <Rectangle Style="{StaticResource Skeleton}" Margin="0,6,0,0" Width="260" Height="20" />
+            <Rectangle Style="{StaticResource Skeleton}" Margin="{StaticResource GapTop48}" Width="320" Height="28" />
+            <Rectangle Style="{StaticResource Skeleton}" Margin="{StaticResource GapTop6}" Width="260" Height="20" />
             <!-- xaml-lint: allow card - skeleton of the anesthesia record card -->
-            <Border Margin="0,16,0,0" Height="292" CornerRadius="18" Background="{ThemeResource Surface1Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="20,18">
-              <StackPanel Spacing="10">
+            <Border Margin="{StaticResource GapTop16}" Height="292" CornerRadius="{StaticResource Radius18}" Background="{ThemeResource Surface1Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="{StaticResource LiveCardInset}">
+              <StackPanel Spacing="{StaticResource Space10}">
                 <Rectangle Style="{StaticResource Skeleton}" Width="160" Height="20" />
                 <Rectangle Style="{StaticResource Skeleton}" Width="220" Height="16" />
-                <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="170" Margin="0,8,0,0" />
+                <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="170" Margin="{StaticResource GapTop8}" />
               </StackPanel>
             </Border>
           </StackPanel>
@@ -839,10 +824,10 @@
 
       <mvux:FeedView.NoneTemplate>
         <DataTemplate>
-          <StackPanel Padding="{utu:Responsive Narrowest='20,20,20,40', Normal='40,20,40,40', Layout={StaticResource ShellLayout}}">
+          <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageBodyInsetNarrow}, Normal={StaticResource PageBodyInsetNormal}}">
             <!-- xaml-lint: allow card - None state inside the hero tray footprint -->
-            <Border MinHeight="452" CornerRadius="26" Padding="32" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
-              <StackPanel Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Border MinHeight="452" CornerRadius="{StaticResource Radius26}" Padding="{StaticResource Inset32}" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
+              <StackPanel Spacing="{StaticResource Space8}" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock x:Uid="Record_105" Text="This record no longer exists." Style="{StaticResource TypeTitleM}" HorizontalAlignment="Center" AutomationProperties.LiveSetting="Polite" />
                 <TextBlock x:Uid="Record_106" Text="It may have been cleared from this device." Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" HorizontalAlignment="Center" />
               </StackPanel>
@@ -853,11 +838,11 @@
 
       <mvux:FeedView.ErrorTemplate>
         <DataTemplate>
-          <StackPanel Padding="{utu:Responsive Narrowest='20,20,20,40', Normal='40,20,40,40', Layout={StaticResource ShellLayout}}">
+          <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageBodyInsetNarrow}, Normal={StaticResource PageBodyInsetNormal}}">
             <!-- xaml-lint: allow card - Error state inside the hero tray footprint -->
-            <Border MinHeight="452" CornerRadius="26" Padding="32" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
-              <StackPanel Spacing="12" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <Border MinHeight="452" CornerRadius="{StaticResource Radius26}" Padding="{StaticResource Inset32}" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
+              <StackPanel Spacing="{StaticResource Space12}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" HorizontalAlignment="Center">
                   <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
                   <TextBlock x:Uid="Record_107" Text="Couldn't read this record." Style="{StaticResource TypeTitleM}" AutomationProperties.LiveSetting="Polite" />
                 </StackPanel>

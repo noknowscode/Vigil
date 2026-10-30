@@ -10,6 +10,10 @@
   <data name="Agenda_12.Text" xml:space="preserve"><value>Prochaine observation</value></data>
   <data name="Agenda_13.Text" xml:space="preserve"><value>Aucun rappel d’observation pour le moment.</value></data>
   <data name="Agenda_14.Text" xml:space="preserve"><value>Rappels d’observation indisponibles.</value></data>
+  <data name="Agenda_15.Content" xml:space="preserve"><value>Réessayer</value></data>
+  <data name="Agenda_15.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Réessayer la lecture des dossiers</value></data>
+  <data name="Agenda_16.Content" xml:space="preserve"><value>Réessayer</value></data>
+  <data name="Agenda_16.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Réessayer la lecture des dossiers</value></data>
   <data name="Agenda_2.Text" xml:space="preserve"><value>Intervalles consignés</value></data>
   <data name="Agenda_3.Text" xml:space="preserve"><value>Anesthésie</value></data>
   <data name="Agenda_4.Text" xml:space="preserve"><value>Réveil</value></data>
@@ -103,6 +107,9 @@
   <data name="Dose_21.Content" xml:space="preserve"><value>Modifier la dose</value></data>
   <data name="Dose_22.Content" xml:space="preserve"><value>Administrer quand même</value></data>
   <data name="Dose_22.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer la dose hors plage quand même</value></data>
+  <data name="Dose_23.Text" xml:space="preserve"><value>Le formulaire ne contient aucun médicament.</value></data>
+  <data name="Dose_24.Text" xml:space="preserve"><value>Impossible de charger le formulaire.</value></data>
+  <data name="Dose_25.Text" xml:space="preserve"><value>Les doses ne peuvent pas être calculées sur cet appareil tant que l'application n'est pas réinstallée.</value></data>
   <data name="Dose_3.Text" xml:space="preserve"><value>Médicament</value></data>
   <data name="Dose_4.Text" xml:space="preserve"><value>Formulaire d'exemple, pas pour usage clinique.</value></data>
   <data name="Dose_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Médicaments</value></data>
@@ -658,8 +665,6 @@
   <data name="Strip_Booked" xml:space="preserve"><value>PRÉVU</value></data>
   <data name="Strip_Empty" xml:space="preserve"><value>Bande des signes vitaux : aucune lecture pour l'instant.</value></data>
   <data name="Strip_Home" xml:space="preserve"><value>PARTI</value></data>
-  <data name="Strip_LegendBp" xml:space="preserve"><value>PA</value></data>
-  <data name="Strip_LegendHr" xml:space="preserve"><value>FC</value></data>
   <data name="Strip_NotStarted" xml:space="preserve"><value>Pas commencé</value></data>
   <data name="Strip_Prep" xml:space="preserve"><value>EN PRÉPARATION</value></data>
   <data name="Strip_Recovery" xml:space="preserve"><value>EN RÉVEIL</value></data>

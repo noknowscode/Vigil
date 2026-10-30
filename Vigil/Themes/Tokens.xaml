@@ -22,6 +22,9 @@
       <SolidColorBrush x:Key="Surface2Brush" Color="#F8F8F7" />
       <SolidColorBrush x:Key="ChipNeutralBrush" Color="#E9EAEF" />
       <SolidColorBrush x:Key="MediaPlaceholderBrush" Color="#E9E9EB" />
+      <!-- Record photo panel acrylic: neutral tint (fully transparent, kept for the blur) and the placeholder as fallback. -->
+      <Color x:Key="PhotoAcrylicTintColor">#808080</Color>
+      <Color x:Key="PhotoAcrylicFallbackColor">#E9E9EB</Color>
       <SolidColorBrush x:Key="AvatarBrush" Color="#DCE7E0" />
       <SolidColorBrush x:Key="AvatarInkBrush" Color="#244936" />
       <SolidColorBrush x:Key="TrackBrush" Color="#EDEDEF" />
@@ -101,15 +104,12 @@
       <SolidColorBrush x:Key="KnobEdgeBrush" Color="#D4D4D8" />
       <SolidColorBrush x:Key="LinkUnderlineBrush" Color="#4D1B212F" />
       <SolidColorBrush x:Key="SkeletonBrush" Color="#ECECEE" />
-          <!-- Care ruler (Agenda: anaesthesia mint, recovery lavender), CareMark dot and PetBackdrop placeholder. -->
+          <!-- Care ruler (Agenda: anaesthesia mint, recovery lavender) and the CareMark dot. -->
       <SolidColorBrush x:Key="CloverLavender" Color="#E5E8F9" />
       <SolidColorBrush x:Key="CloverLavenderEdge" Color="#CDD3F3" />
       <SolidColorBrush x:Key="CloverMint" Color="#D5ECE0" />
       <SolidColorBrush x:Key="CloverMintEdge" Color="#B8DDC8" />
       <SolidColorBrush x:Key="CloverLime" Color="#F3F3F2" />
-      <SolidColorBrush x:Key="CloverPhotoBase" Color="#E9E9EB" />
-      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#EDEDEF" />
-      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#F3F3F2" />
           <!-- Inset shadow (CSS inset 0 1px 3px) as a 4 px top shade inside rounded strips and status cards. -->
       <LinearGradientBrush x:Key="InsetShadeBrush" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,4"><GradientStop Color="#1F000000" Offset="0" /><GradientStop Color="#00000000" Offset="1" /></LinearGradientBrush>
     </ResourceDictionary>
@@ -124,6 +124,8 @@
       <SolidColorBrush x:Key="Surface2Brush" Color="#202328" />
       <SolidColorBrush x:Key="ChipNeutralBrush" Color="#2A2D33" />
       <SolidColorBrush x:Key="MediaPlaceholderBrush" Color="#23262B" />
+      <Color x:Key="PhotoAcrylicTintColor">#808080</Color>
+      <Color x:Key="PhotoAcrylicFallbackColor">#23262B</Color>
       <SolidColorBrush x:Key="AvatarBrush" Color="#24392D" />
       <SolidColorBrush x:Key="AvatarInkBrush" Color="#BFE3CF" />
       <SolidColorBrush x:Key="TrackBrush" Color="#2A2D33" />
@@ -197,15 +199,12 @@
       <SolidColorBrush x:Key="KnobEdgeBrush" Color="#4A4D55" />
       <SolidColorBrush x:Key="LinkUnderlineBrush" Color="#4DE6E7EA" />
       <SolidColorBrush x:Key="SkeletonBrush" Color="#2A2D33" />
-          <!-- Care ruler (Agenda: anaesthesia mint, recovery lavender), CareMark dot and PetBackdrop placeholder. -->
+          <!-- Care ruler (Agenda: anaesthesia mint, recovery lavender) and the CareMark dot. -->
       <SolidColorBrush x:Key="CloverLavender" Color="#262B45" />
       <SolidColorBrush x:Key="CloverLavenderEdge" Color="#3A4166" />
       <SolidColorBrush x:Key="CloverMint" Color="#17372A" />
       <SolidColorBrush x:Key="CloverMintEdge" Color="#24513D" />
       <SolidColorBrush x:Key="CloverLime" Color="#1E2125" />
-      <SolidColorBrush x:Key="CloverPhotoBase" Color="#23262B" />
-      <SolidColorBrush x:Key="CloverPhotoBlobA" Color="#2A2D33" />
-      <SolidColorBrush x:Key="CloverPhotoBlobB" Color="#1E2125" />
           <!-- Inset shadow (CSS inset 0 1px 3px) as a 4 px top shade inside rounded strips and status cards. -->
       <LinearGradientBrush x:Key="InsetShadeBrush" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,4"><GradientStop Color="#4D000000" Offset="0" /><GradientStop Color="#00000000" Offset="1" /></LinearGradientBrush>
     </ResourceDictionary>
@@ -213,6 +212,22 @@
 
   <!-- Shadow ink (§4): utu:Shadow is not a FrameworkElement, so shadows take this static colour in both themes. -->
   <Color x:Key="ShadowInkColor">#1B212F</Color>
+  <!-- Shadows (§4), shared by every ShadowContainer that wears them (Toolkit: a ShadowCollection may be a resource). -->
+  <utu:ShadowCollection x:Key="ShadowFrame">
+    <utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" />
+    <utu:Shadow OffsetY="12" BlurRadius="32" Spread="-24" Opacity="0.25" Color="{StaticResource ShadowInkColor}" />
+  </utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowXs"><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowNavOn"><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.06" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowSegOn"><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.12" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowCard"><utu:Shadow OffsetY="2" BlurRadius="3" Spread="-1" Opacity="0.07" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowGlass"><utu:Shadow OffsetY="10" BlurRadius="28" Spread="-16" Opacity="0.28" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowFloatButton"><utu:Shadow OffsetY="2" BlurRadius="8" Opacity="0.18" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowKnob"><utu:Shadow OffsetY="1" BlurRadius="3" Opacity="0.2" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowGanttDot"><utu:Shadow OffsetY="1" BlurRadius="3" Opacity="0.25" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <!-- Inset: photo frames. Black at 20 % in both themes (the prototype's rgba(0,0,0,.2)). -->
+  <Color x:Key="InsetShadowColor">#000000</Color>
+  <utu:ShadowCollection x:Key="ShadowInsetPhoto"><utu:Shadow IsInner="True" OffsetY="1" BlurRadius="3" Opacity="0.2" Color="{StaticResource InsetShadowColor}" /></utu:ShadowCollection>
 
   <!-- Fonts (§1). Weights resolve through the .ttf.manifest files (static instances per weight). -->
   <FontFamily x:Key="FontSans">ms-appx:///Assets/Fonts/HankenGrotesk.ttf#Hanken Grotesk</FontFamily>
@@ -240,6 +255,12 @@
   <CornerRadius x:Key="Radius22">22</CornerRadius>
   <CornerRadius x:Key="Radius24">24</CornerRadius>
   <CornerRadius x:Key="Radius26">26</CornerRadius>
+  <CornerRadius x:Key="Radius11">11</CornerRadius>
+  <CornerRadius x:Key="Radius19">19</CornerRadius>
+  <CornerRadius x:Key="Radius20">20</CornerRadius>
+  <!-- Patient card header tray (17 under the 18 px tray, 18 at its foot) and the Show details toggle's foot. -->
+  <CornerRadius x:Key="RadiusTrayHeader">17,17,18,18</CornerRadius>
+  <CornerRadius x:Key="RadiusToggleBottom">0,0,17,17</CornerRadius>
 
   <!-- Page frame (§7): content padding inside the frame's scroll area (CSS main padding 36 40 40 40). -->
   <Thickness x:Key="FramePadding">40,36,40,40</Thickness>
@@ -543,10 +564,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="utu:CardContentControl">
-          <utu:ShadowContainer Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
-            <utu:ShadowContainer.Shadows>
-              <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-            </utu:ShadowContainer.Shadows>
+          <utu:ShadowContainer Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" Shadows="{StaticResource ShadowXs}">
             <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}">
               <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -637,12 +655,7 @@
               </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
             <Border x:Name="Hover" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" />
-            <utu:ShadowContainer x:Name="Shadow" Visibility="Collapsed" Background="{ThemeResource Surface1Brush}" CornerRadius="{TemplateBinding CornerRadius}">
-              <utu:ShadowContainer.Shadows>
-                <utu:ShadowCollection>
-                  <utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.06" Color="{StaticResource ShadowInkColor}" />
-                </utu:ShadowCollection>
-              </utu:ShadowContainer.Shadows>
+            <utu:ShadowContainer x:Name="Shadow" Visibility="Collapsed" Background="{ThemeResource Surface1Brush}" CornerRadius="{TemplateBinding CornerRadius}" Shadows="{StaticResource ShadowNavOn}">
               <Border CornerRadius="{TemplateBinding CornerRadius}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" />
             </utu:ShadowContainer>
             <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -689,12 +702,10 @@
     <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" /><Setter Property="BorderThickness" Value="1" />
   </Style>
   <Style x:Key="SearchFieldSurface" TargetType="Border">
-    <Setter Property="Width" Value="340" /><Setter Property="Height" Value="40" /><Setter Property="Padding" Value="11,0,7,0" /><Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Height" Value="40" /><Setter Property="Padding" Value="11,0,7,0" /><Setter Property="CornerRadius" Value="12" />
     <Setter Property="Background" Value="{ThemeResource Surface2Brush}" />
     <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" /><Setter Property="BorderThickness" Value="1" />
   </Style>
-  <!-- Shell breakpoints (SPEC-v2 Layout): below 760 the sidebar is a drawer, 760-1080 an icon rail, from 1080 the full sidebar. -->
-  <utu:ResponsiveLayout x:Key="ShellLayout" Narrowest="0" Narrow="400" Normal="760" Wide="1080" Widest="2400" />
   <!-- Keycap "Ctrl K" (§9): Martian Mono 11/16, pad 2 6, radius 6. -->
   <Style x:Key="Keycap" TargetType="Border">
     <Setter Property="Padding" Value="6,2" /><Setter Property="CornerRadius" Value="6" />

@@ -736,5 +736,8 @@
   "You": "Vous",
   "Your first name for the avatar initials": "Votre prénom pour les initiales de l'avatar",
   "Your visit and care team": "Votre visite et l'équipe de soins",
-  "Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card.": "Facultatif. Les heures s'écrivent comme 14:00. Une heure de début place le patient sur la ligne du temps d'Aujourd'hui et dans la fiche Prochaine chirurgie."
+  "Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card.": "Facultatif. Les heures s'écrivent comme 14:00. Une heure de début place le patient sur la ligne du temps d'Aujourd'hui et dans la fiche Prochaine chirurgie.",
+  "Couldn't load the formulary.": "Impossible de charger le formulaire.",
+  "Doses can't be calculated on this device until the app is reinstalled.": "Les doses ne peuvent pas être calculées sur cet appareil tant que l'application n'est pas réinstallée.",
+  "The formulary has no drugs.": "Le formulaire ne contient aucun médicament."
 }

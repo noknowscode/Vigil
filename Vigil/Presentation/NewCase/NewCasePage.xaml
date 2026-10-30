@@ -9,7 +9,8 @@
       xmlns:utu="using:Uno.Toolkit.UI"
       Background="{ThemeResource PageBrush}">
 
-  <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="640">
+  <!-- Phones stack every field pair; from Normal they share rows. -->
+  <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="{StaticResource FormMaxWidth}">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
@@ -29,20 +30,20 @@
     </utu:NavigationBar>
 
     <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled">
-      <StackPanel Padding="24,0,24,24" Spacing="16">
-        <StackPanel Spacing="6" Margin="0,0,0,8">
+      <StackPanel Padding="{StaticResource SheetInsetFlush}" Spacing="{StaticResource Space16}">
+        <StackPanel Spacing="{StaticResource Space6}" Margin="{StaticResource GapBottom8}">
           <TextBlock x:Uid="NewCase_2" Text="New patient" Style="{StaticResource TypeDisplayTitle}" />
           <TextBlock x:Uid="NewCase_3" Text="Weight sets every dose, so it is the one number to get right." Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
         </StackPanel>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="14">
+          <StackPanel Spacing="{StaticResource Space14}">
             <TextBlock x:Uid="NewCase_4" Style="{StaticResource TypeEyebrow}" Text="PATIENT" />
             <TextBox x:Uid="NewCase_5" Header="Name"
                      Text="{Binding Draft.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Patient name" />
-            <Grid ColumnSpacing="12" ColumnDefinitions="*,*">
-              <ComboBox x:Uid="NewCase_6" x:Name="SpeciesBox"
+            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+              <ComboBox x:Uid="NewCase_6" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" x:Name="SpeciesBox"
                         Header="Species"
                         HorizontalAlignment="Stretch"
                         SelectedIndex="{Binding Draft.SpeciesIndex, Mode=TwoWay}"
@@ -51,17 +52,17 @@
                 <ComboBoxItem x:Uid="NewCase_8" Content="Feline" />
                 <ComboBoxItem x:Uid="NewCase_9" Content="Other" />
               </ComboBox>
-              <TextBox x:Uid="NewCase_10" Grid.Column="1"
+              <TextBox x:Uid="NewCase_10" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}"
                        Header="Breed"
                        Text="{Binding Draft.Breed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Breed" />
             </Grid>
-            <Grid ColumnSpacing="12" ColumnDefinitions="*,*">
-              <TextBox x:Uid="NewCase_11" Header="Weight (kg)"
+            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+              <TextBox x:Uid="NewCase_11" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Header="Weight (kg)"
                        InputScope="Number"
                        Text="{Binding Draft.WeightText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Weight in kilograms" />
-              <TextBox x:Uid="NewCase_12" Grid.Column="1"
+              <TextBox x:Uid="NewCase_12" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}"
                        Header="Age (years)"
                        InputScope="Number"
                        Text="{Binding Draft.AgeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -74,16 +75,16 @@
         </utu:CardContentControl>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="14">
+          <StackPanel Spacing="{StaticResource Space14}">
             <TextBlock x:Uid="NewCase_14" Style="{StaticResource TypeEyebrow}" Text="PROCEDURE" />
             <TextBox x:Uid="NewCase_15" Header="Procedure"
                      Text="{Binding Draft.Procedure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Procedure" />
-            <Grid ColumnSpacing="12" ColumnDefinitions="*,*">
-              <TextBox x:Uid="NewCase_16" Header="Veterinarian"
+            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+              <TextBox x:Uid="NewCase_16" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Header="Veterinarian"
                        Text="{Binding Draft.Veterinarian, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Veterinarian" />
-              <TextBox x:Uid="NewCase_17" Grid.Column="1"
+              <TextBox x:Uid="NewCase_17" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}"
                        Header="Technician"
                        Text="{Binding Draft.Technician, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Technician" />
@@ -92,31 +93,31 @@
         </utu:CardContentControl>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="14">
-            <StackPanel Spacing="4">
+          <StackPanel Spacing="{StaticResource Space14}">
+            <StackPanel Spacing="{StaticResource Space4}">
               <TextBlock x:Uid="NewCase_18" Style="{StaticResource TypeEyebrow}" Text="SCHEDULE" />
               <TextBlock x:Uid="NewCase_19" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords"
                          Text="Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card." />
             </StackPanel>
-            <Grid ColumnSpacing="12" ColumnDefinitions="*,*,*">
-              <TextBox x:Uid="NewCase_20" Header="Room"
+            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto">
+              <TextBox x:Uid="NewCase_20" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=3, Normal=1}" Header="Room"
                        Text="{Binding Draft.OperatingRoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Operating room" />
-              <TextBox x:Uid="NewCase_21" Grid.Column="1"
+              <TextBox x:Uid="NewCase_21" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=3, Normal=1}"
                        Header="Planned start"
                        Text="{Binding Draft.PlannedStartText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Planned start time" />
-              <TextBox x:Uid="NewCase_22" Grid.Column="2"
+              <TextBox x:Uid="NewCase_22" Grid.Column="{utu:Responsive Narrowest=0, Normal=2}" Grid.Row="{utu:Responsive Narrowest=2, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=3, Normal=1}"
                        Header="Length (min)"
                        InputScope="Number"
                        Text="{Binding Draft.PlannedMinutesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Planned length in minutes" />
             </Grid>
-            <Grid ColumnSpacing="12" ColumnDefinitions="*,2*">
-              <TextBox x:Uid="NewCase_23" Header="Fasting since"
+            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,2*" RowDefinitions="Auto,Auto">
+              <TextBox x:Uid="NewCase_23" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Header="Fasting since"
                        Text="{Binding Draft.FastingSinceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Fasting since, time of day" />
-              <CheckBox x:Uid="NewCase_24" Grid.Column="1" VerticalAlignment="Bottom"
+              <CheckBox x:Uid="NewCase_24" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" VerticalAlignment="Bottom"
                         Content="Pet parent told the plan"
                         IsChecked="{Binding Draft.ParentNotified, Mode=TwoWay}"
                         AutomationProperties.Name="Pet parent has been told the plan" />
@@ -126,8 +127,8 @@
       </StackPanel>
     </ScrollViewer>
 
-    <StackPanel Grid.Row="2" Padding="24,12,24,24" Spacing="12" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
-      <StackPanel Spacing="4" Visibility="{Binding HasErrors}">
+    <StackPanel Grid.Row="2" Padding="{StaticResource SheetInset}" Spacing="{StaticResource Space12}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
+      <StackPanel Spacing="{StaticResource Space4}" Visibility="{Binding HasErrors}">
         <TextBlock x:Uid="NewCase_25" Style="{StaticResource TypeBodyS}"
                    Foreground="{ThemeResource ErrorBrush}"
                    TextWrapping="WrapWholeWords"

@@ -12,13 +12,13 @@
   <Flyout.FlyoutPresenterStyle>
     <Style TargetType="FlyoutPresenter">
       <Setter Property="Padding" Value="0" />
-      <Setter Property="MaxWidth" Value="320" />
+      <Setter Property="MaxWidth" Value="{StaticResource DrawerMaxWidth}" />
       <Setter Property="MaxHeight" Value="2000" />
-      <Setter Property="CornerRadius" Value="22" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius22}" />
       <Setter Property="Background" Value="{ThemeResource PageBrush}" />
       <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" />
       <Setter Property="BorderThickness" Value="1" />
     </Style>
   </Flyout.FlyoutPresenterStyle>
-  <controls:Sidebar Width="256" />
+  <controls:Sidebar Width="{StaticResource SidebarWidth}" />
 </Flyout>

@@ -4,7 +4,7 @@
              xmlns:utu="using:Uno.Toolkit.UI"
              x:Name="Root">
   <!-- One vital on the pad: label with its strip glyph, 48 px − / value / +, range flag as text. -->
-  <Grid RowSpacing="4">
+  <Grid RowSpacing="{StaticResource Space4}">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
@@ -15,7 +15,7 @@
       <ColumnDefinition Width="Auto" />
     </Grid.ColumnDefinitions>
 
-    <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="6">
+    <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="{StaticResource Space6}">
       <TextBlock Style="{StaticResource TypeEyebrow}"
                  Foreground="{Binding GlyphBrush, ElementName=Root}"
                  Text="{Binding Glyph, ElementName=Root}" />
@@ -33,8 +33,8 @@
     </StackPanel>
 
     <RepeatButton Grid.Row="1"
-                  Width="48"
-                  Height="48"
+                  Width="{StaticResource StepperTarget}"
+                  Height="{StaticResource StepperTarget}"
                   Padding="0"
                   Delay="400"
                   Interval="120"
@@ -46,19 +46,19 @@
     </RepeatButton>
     <TextBox Grid.Row="1"
              Grid.Column="1"
-             Margin="{utu:Responsive Narrowest='4,0', Normal='8,0'}"
-             MinHeight="48"
+             Margin="{utu:Responsive Narrowest={StaticResource InsetX4}, Normal={StaticResource InsetX8}}"
+             MinHeight="{StaticResource StepperTarget}"
              TextAlignment="Center"
              VerticalContentAlignment="Center"
              FontFamily="{StaticResource FontMono}"
-             FontSize="20"
+             FontSize="{StaticResource StepperValueFontSize}"
              InputScope="Number"
              Text="{Binding Text, ElementName=Root, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
              AutomationProperties.Name="{Binding AccessibleName, ElementName=Root}" />
     <RepeatButton Grid.Row="1"
                   Grid.Column="2"
-                  Width="48"
-                  Height="48"
+                  Width="{StaticResource StepperTarget}"
+                  Height="{StaticResource StepperTarget}"
                   Padding="0"
                   Delay="400"
                   Interval="120"

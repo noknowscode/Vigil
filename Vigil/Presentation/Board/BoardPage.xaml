@@ -3,8 +3,9 @@
   surgery, care gantt), today's patient cards, "Due next" and "Where care time went". Every async block is a FeedView
   inside its own section shell: Progress = skeleton, None = the block's empty copy, Error = message + Retry
   (Retry → BoardModel.Retry → Store.Reload; ErrorTemplate's DataContext is the exception, so it binds by ElementName).
-  Breakpoints (ShellLayout): hero and bottom split stack below 1080; cards fit 3 / 2 / 1 columns by width
-  (CardColumnsLayout, 320 px minimum); below 760 the section headers stack.
+  Breakpoints (Styles/Layout.xaml): the header stacks below Widest; the hero and bottom splits stack below SplitLayout's
+  Widest (1280, the full sidebar's page needs it); cards fit 3 / 2 / 1 columns by width (CardColumnsLayout, 320 px
+  minimum); the Due next status column folds under the task below Wide; phones stack the section headers.
 -->
 <Page x:Class="Vigil.Presentation.BoardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -21,7 +22,7 @@
     <Style x:Key="SegmentButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
       <Setter Property="Height" Value="30" />
       <Setter Property="Padding" Value="0" />
-      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius8}" />
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Template">
         <Setter.Value>
@@ -70,28 +71,28 @@
     </Style>
     <!-- Section surfaces -->
     <Style x:Key="HeroSection" TargetType="Border">
-      <Setter Property="CornerRadius" Value="24" />
-      <Setter Property="Padding" Value="24" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius24}" />
+      <Setter Property="Padding" Value="{StaticResource Inset24}" />
       <Setter Property="Background" Value="{ThemeResource HeroGradientBrush}" />
       <Setter Property="BorderBrush" Value="{ThemeResource HeroEdgeBrush}" />
       <Setter Property="BorderThickness" Value="1" />
     </Style>
     <Style x:Key="GlassEdge" TargetType="Border">
-      <Setter Property="CornerRadius" Value="22" />
-      <Setter Property="Padding" Value="6" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius22}" />
+      <Setter Property="Padding" Value="{StaticResource Inset6}" />
       <Setter Property="BorderBrush" Value="{ThemeResource GlassEdgeBrush}" />
       <Setter Property="BorderThickness" Value="1" />
     </Style>
     <Style x:Key="LiveCardSurface" TargetType="Border">
-      <Setter Property="CornerRadius" Value="16" />
-      <Setter Property="Padding" Value="20,18" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius16}" />
+      <Setter Property="Padding" Value="{StaticResource LiveCardInset}" />
       <Setter Property="Background" Value="{ThemeResource Surface1Brush}" />
       <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" />
       <Setter Property="BorderThickness" Value="1" />
     </Style>
     <Style x:Key="QuietPanel" TargetType="Border">
-      <Setter Property="CornerRadius" Value="14" />
-      <Setter Property="Padding" Value="16,14" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius14}" />
+      <Setter Property="Padding" Value="{StaticResource QuietPanelInset}" />
       <Setter Property="Background" Value="{ThemeResource PageBrush}" />
       <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" />
       <Setter Property="BorderThickness" Value="1" />
@@ -99,7 +100,7 @@
     <Style x:Key="IconTile" TargetType="Border">
       <Setter Property="Width" Value="32" />
       <Setter Property="Height" Value="32" />
-      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius10}" />
     </Style>
     <Style x:Key="GanttName" TargetType="TextBlock" BasedOn="{StaticResource TypeBodyS}">
       <Setter Property="LineHeight" Value="16" />
@@ -109,8 +110,8 @@
 
     <!-- A hero stat (label row with dot, mono value, sub). -->
     <DataTemplate x:Key="HeroStatTemplate">
-      <StackPanel Spacing="2">
-        <StackPanel Orientation="Horizontal" Spacing="6">
+      <StackPanel Spacing="{StaticResource Space2}">
+        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
           <Grid Width="6" Height="6" VerticalAlignment="Center">
             <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsLive}" />
             <Ellipse Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
@@ -119,7 +120,8 @@
           </Grid>
           <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" />
         </StackPanel>
-        <TextBlock Text="{Binding Value}" Style="{StaticResource TypeMonoValue}" Visibility="{Binding IsMono}" TextTrimming="CharacterEllipsis" />
+        <!-- Phones: the 16 px mono step, so a time still fits a third of the live card. -->
+        <TextBlock Text="{Binding Value}" Style="{utu:Responsive Narrowest={StaticResource TypeMonoValueS}, Normal={StaticResource TypeMonoValue}}" Visibility="{Binding IsMono}" TextTrimming="CharacterEllipsis" />
         <TextBlock Text="{Binding Value}" Style="{StaticResource TypeTitleS}" LineHeight="26" Visibility="{Binding IsText}" TextTrimming="CharacterEllipsis" />
         <TextBlock Text="{Binding Sub}" Style="{StaticResource TypeCaption}" TextTrimming="CharacterEllipsis" />
       </StackPanel>
@@ -129,16 +131,13 @@
     <DataTemplate x:Key="GanttMarkTemplate">
       <Grid ToolTipService.ToolTip="{Binding Tooltip}" Background="Transparent">
         <Grid Height="12" Visibility="{Binding IsSegment}">
-          <Rectangle RadiusX="4" RadiusY="4" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
-          <Rectangle RadiusX="4" RadiusY="4" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
-          <Rectangle RadiusX="4" RadiusY="4" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
-          <Rectangle RadiusX="4" RadiusY="4" Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting}" />
-          <Rectangle RadiusX="4" RadiusY="4" Fill="{ThemeResource PlannedHatchBrush}" Visibility="{Binding IsPlanned}" />
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting}" />
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PlannedHatchBrush}" Visibility="{Binding IsPlanned}" />
         </Grid>
-        <utu:ShadowContainer Width="16" Height="16" CornerRadius="8" Background="{ThemeResource OnInkBrush}" Visibility="{Binding IsDot}">
-          <utu:ShadowContainer.Shadows>
-            <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="3" Opacity="0.25" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-          </utu:ShadowContainer.Shadows>
+        <utu:ShadowContainer Width="16" Height="16" CornerRadius="{StaticResource Radius8}" Background="{ThemeResource OnInkBrush}" Visibility="{Binding IsDot}" Shadows="{StaticResource ShadowGanttDot}">
           <Grid Width="16" Height="16">
             <Ellipse Width="10" Height="10" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
             <Ellipse Width="10" Height="10" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
@@ -149,48 +148,49 @@
     </DataTemplate>
 
     <ItemsPanelTemplate x:Key="SpanItems"><controls:SpanPanel /></ItemsPanelTemplate>
+    <ItemsPanelTemplate x:Key="SpanLabelItems"><controls:SpanPanel HideOverlaps="True" /></ItemsPanelTemplate>
   </Page.Resources>
 
   <ScrollViewer x:Name="TodayScroll" HorizontalScrollMode="Disabled">
-    <StackPanel Padding="{utu:Responsive Narrowest='20,28,20,40', Normal='40,36,40,40', Layout={StaticResource ShellLayout}}">
+    <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" MaxWidth="{StaticResource ContentMaxWidth}">
 
       <!-- 1. Header: greeting + recap, top bar cluster (top-aligned, gap 24) -->
-      <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="24" RowSpacing="{utu:Responsive Narrowest=16, Normal=0, Layout={StaticResource ShellLayout}}">
-        <StackPanel Grid.Row="{utu:Responsive Narrowest=1, Normal=0, Layout={StaticResource ShellLayout}}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1, Layout={StaticResource ShellLayout}}">
-          <!-- Newsreader sits 4 px lower than the browser places it at 40/46: pulled up to the render. -->`n          <TextBlock Text="{Binding Greeting.Title}" Style="{StaticResource TypeDisplayTitle}" Margin="0,-4,0,0" />
+      <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space24}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space16}, Widest=0}">
+        <StackPanel Grid.Row="{utu:Responsive Narrowest=1, Widest=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1}">
+          <!-- Newsreader sits 4 px lower than the browser places it at 40/46: pulled up to the render. -->
+          <TextBlock Text="{Binding Greeting.Title}" Style="{StaticResource TypeDisplayTitle}" Margin="0,-4,0,0" />
           <!-- Recap: the most urgent fact in bold, then the other counts. -->
-          <TextBlock Margin="0,10,0,0" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" AutomationProperties.LiveSetting="Off"><Run Text="{Binding Greeting.Lead}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" /><Run Text="{Binding Greeting.Rest}" /></TextBlock>
+          <TextBlock Margin="{StaticResource GapTop10}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" AutomationProperties.LiveSetting="Off"><Run Text="{Binding Greeting.Lead}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" /><Run Text="{Binding Greeting.Rest}" /></TextBlock>
         </StackPanel>
-        <controls:TopBarCluster Grid.Column="{utu:Responsive Narrowest=0, Normal=1, Layout={StaticResource ShellLayout}}" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <controls:TopBarCluster Grid.Column="{utu:Responsive Narrowest=0, Widest=1}" VerticalAlignment="Top" />
       </Grid>
 
       <!-- 2. Hero "Right now": live card (448) | under care today + gantt; stacks below 1080 -->
       <!-- xaml-lint: allow card - hero section ground is the 110° gradient (§2.1), not a card surface -->
-      <Border Style="{StaticResource HeroSection}" Margin="0,30,0,0">
-        <Grid ColumnDefinitions="448,*" RowDefinitions="Auto,Auto"
-              ColumnSpacing="{utu:Responsive Narrowest=0, Wide=40, Layout={StaticResource ShellLayout}}"
-              RowSpacing="{utu:Responsive Narrowest=24, Wide=0, Layout={StaticResource ShellLayout}}">
+      <Border Style="{StaticResource HeroSection}" Margin="{StaticResource HeroTopGap}" Padding="{utu:Responsive Narrowest={StaticResource Inset12}, Normal={StaticResource Inset24}}">
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto"
+              ColumnSpacing="{utu:Responsive Narrowest=0, Widest={StaticResource Space40}, Layout={StaticResource SplitLayout}}"
+              RowSpacing="{utu:Responsive Narrowest={StaticResource Space24}, Widest=0, Layout={StaticResource SplitLayout}}">
           <mvux:FeedView x:Name="HeroFeed" Source="{Binding Hero}" RefreshingState="None" IsTabStop="False" VerticalAlignment="Center"
-                         Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1, Layout={StaticResource ShellLayout}}" HorizontalContentAlignment="Stretch">
+                         Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1, Layout={StaticResource SplitLayout}}" HorizontalContentAlignment="Stretch"
+                         Width="{utu:Responsive Narrowest=NaN, Widest={StaticResource HeroCardWidth}, Layout={StaticResource SplitLayout}}">
             <mvux:FeedView.ValueTemplate>
               <DataTemplate>
                 <!-- Glass shell: rgba(255,255,255,.5), radius 22, pad 6, edge .8 white, shadow glass 0 10 28 -16 .28 -->
-                <utu:ShadowContainer Background="{ThemeResource GlassShellBrush}" CornerRadius="22">
-                  <utu:ShadowContainer.Shadows>
-                    <utu:ShadowCollection><utu:Shadow OffsetY="10" BlurRadius="28" Spread="-16" Opacity="0.28" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-                  </utu:ShadowContainer.Shadows>
+                <utu:ShadowContainer Background="{ThemeResource GlassShellBrush}" CornerRadius="{StaticResource Radius22}" Shadows="{StaticResource ShadowGlass}">
                   <Border Style="{StaticResource GlassEdge}">
-                    <Border Style="{StaticResource LiveCardSurface}">
+                    <Border Style="{StaticResource LiveCardSurface}" Padding="{utu:Responsive Narrowest={StaticResource LiveCardInsetNarrow}, Normal={StaticResource LiveCardInset}}">
                       <StackPanel AutomationProperties.Name="{Binding Data.AccessibleName}">
                         <!-- Row 1: icon tile, title + subtitle, Record / Start prep -->
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                        <!-- Phones move Record / Start prep under the title so the title keeps the row. -->
+                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space10}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space10}, Normal=0}">
                           <Grid Width="30" Height="30" VerticalAlignment="Center">
                             <Grid Visibility="{Binding Data.IsLive}">
-                              <Rectangle RadiusX="9" RadiusY="9" Fill="{ThemeResource PhaseAnesthesiaSoftBrush}" Stroke="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" StrokeThickness="1" />
+                              <Rectangle RadiusX="{StaticResource RectRadius9}" RadiusY="{StaticResource RectRadius9}" Fill="{ThemeResource PhaseAnesthesiaSoftBrush}" Stroke="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" StrokeThickness="1" />
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconActivity}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" />
                             </Grid>
                             <Grid Visibility="{Binding Data.IsNext}">
-                              <Rectangle RadiusX="9" RadiusY="9" Fill="{ThemeResource PhasePrepSoftBrush}" Stroke="{ThemeResource PhasePrepSoftBorderBrush}" StrokeThickness="1" />
+                              <Rectangle RadiusX="{StaticResource RectRadius9}" RadiusY="{StaticResource RectRadius9}" Fill="{ThemeResource PhasePrepSoftBrush}" Stroke="{ThemeResource PhasePrepSoftBorderBrush}" StrokeThickness="1" />
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconCalendar}" Foreground="{ThemeResource PhasePrepDeepBrush}" />
                             </Grid>
                           </Grid>
@@ -198,33 +198,36 @@
                             <TextBlock Text="{Binding Data.Title}" Style="{StaticResource TypeTitleS}" TextTrimming="CharacterEllipsis" />
                             <TextBlock Text="{Binding Data.Subtitle}" Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis" />
                           </StackPanel>
-                          <Button x:Uid="TodayPage_1" Grid.Column="2" Style="{StaticResource ButtonPrimaryS}" VerticalAlignment="Center" Visibility="{Binding Data.IsLive}"
+                          <Button x:Uid="TodayPage_1" Grid.Column="{utu:Responsive Narrowest=1, Normal=2}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" Style="{StaticResource ButtonPrimaryS}" VerticalAlignment="Center" Visibility="{Binding Data.IsLive}"
                                   Command="{Binding Parent.OpenRecord}" CommandParameter="{Binding Data}" AutomationProperties.Name="Record observations">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                               <TextBlock x:Uid="TodayPage_2" Text="Record" Style="{StaticResource TypeButtonS}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                             </StackPanel>
                           </Button>
-                          <Button Grid.Column="2" Style="{StaticResource ButtonSecondaryS}" VerticalAlignment="Center" Visibility="{Binding Data.CanStartPrep}"
+                          <Button Grid.Column="{utu:Responsive Narrowest=1, Normal=2}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" Style="{StaticResource ButtonSecondaryS}" VerticalAlignment="Center" Visibility="{Binding Data.CanStartPrep}"
                                   Command="{Binding Parent.StartPrep}" CommandParameter="{Binding Data}">
                             <TextBlock x:Uid="TodayPage_3" Text="Start prep" Style="{StaticResource TypeButtonS}" VerticalAlignment="Center" />
                           </Button>
                         </Grid>
                         <!-- Timer row: margin-top 14, baseline-aligned caption -->
-                        <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,14,0,0">
+                        <!-- Phones put the caption under the timer: side by side they need ~280 px. -->
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space12}" Margin="{StaticResource GapTop14}">
                           <TextBlock Text="{Binding Data.Timer}" Style="{StaticResource TypeMonoHero}" />
-                          <TextBlock Text="{Binding Data.TimerCaption}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Bottom" Margin="0,0,0,11" />
-                        </StackPanel>
+                          <!-- 11 px: the caption's baseline on the timer's (optical, as the prototype's align-items: baseline). -->
+                          <TextBlock Text="{Binding Data.TimerCaption}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis"
+                                     Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Margin="{utu:Responsive Narrowest='0', Normal='0,0,0,11'}" />
+                        </Grid>
                         <!-- Chip row: margin-top 8 -->
-                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,8,0,0" Height="26">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space10}" Margin="{StaticResource GapTop8}" Height="26">
                           <Border Style="{StaticResource ChipErrorSoft}" Visibility="{Binding Data.ShowErrorChip}">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                               <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
                               <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
                             </StackPanel>
                           </Border>
-                          <Border Style="{StaticResource ChipLiveSoft}" Height="26" Padding="8,0" Visibility="{Binding Data.ShowReadyChip}">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
+                          <Border Style="{StaticResource ChipLiveSoft}" Height="26" Padding="{StaticResource InsetX8}" Visibility="{Binding Data.ShowReadyChip}">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                               <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" />
                               <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" />
                             </StackPanel>
@@ -232,15 +235,16 @@
                           <Border Style="{StaticResource BadgeNeutral}" Height="26" Visibility="{Binding Data.ShowNeutralChip}">
                             <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" />
                           </Border>
-                          <TextBlock Text="{Binding Data.ChipNote}" Style="{StaticResource TypeBodyS}" VerticalAlignment="Center" />
-                        </StackPanel>
+                          <!-- One chip shows at a time (they share the first cell); the note trims. -->
+                          <TextBlock Grid.Column="1" Text="{Binding Data.ChipNote}" Style="{StaticResource TypeBodyS}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        </Grid>
                         <!-- Stats: margin-top 16, pad-top 14, top divider; 2 and 3 have a left divider + 16 -->
-                        <Grid Margin="0,16,0,0" Padding="0,14,0,0" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" ColumnDefinitions="*,*,*" ColumnSpacing="16">
+                        <Grid Margin="{StaticResource GapTop16}" Padding="{StaticResource GapTop14}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" ColumnDefinitions="*,*,*" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space8}, Normal={StaticResource Space16}}">
                           <ContentControl Content="{Binding Data.First}" ContentTemplate="{StaticResource HeroStatTemplate}" HorizontalContentAlignment="Stretch" IsTabStop="False" />
-                          <Grid Grid.Column="1" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1,0,0,0" Padding="16,0,0,0">
+                          <Grid Grid.Column="1" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1,0,0,0" Padding="{utu:Responsive Narrowest={StaticResource GapStart8}, Normal={StaticResource GapStart16}}">
                             <ContentControl Content="{Binding Data.Second}" ContentTemplate="{StaticResource HeroStatTemplate}" HorizontalContentAlignment="Stretch" IsTabStop="False" />
                           </Grid>
-                          <Grid Grid.Column="2" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1,0,0,0" Padding="16,0,0,0">
+                          <Grid Grid.Column="2" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1,0,0,0" Padding="{utu:Responsive Narrowest={StaticResource GapStart8}, Normal={StaticResource GapStart16}}">
                             <ContentControl Content="{Binding Data.Third}" ContentTemplate="{StaticResource HeroStatTemplate}" HorizontalContentAlignment="Stretch" IsTabStop="False" />
                           </Grid>
                         </Grid>
@@ -254,7 +258,7 @@
               <DataTemplate>
                 <Border Style="{StaticResource GlassEdge}" Background="{ThemeResource GlassShellBrush}" AutomationProperties.AccessibilityView="Raw">
                   <Border Style="{StaticResource LiveCardSurface}" Height="287">
-                    <StackPanel Spacing="14">
+                    <StackPanel Spacing="{StaticResource Space14}">
                       <Rectangle Style="{StaticResource Skeleton}" Width="220" Height="30" />
                       <Rectangle Style="{StaticResource Skeleton}" Width="160" Height="64" />
                       <Rectangle Style="{StaticResource Skeleton}" Width="200" Height="26" />
@@ -268,7 +272,7 @@
               <DataTemplate>
                 <Border Style="{StaticResource GlassEdge}" Background="{ThemeResource GlassShellBrush}">
                   <Border Style="{StaticResource LiveCardSurface}" MinHeight="287">
-                    <StackPanel VerticalAlignment="Center" Spacing="6" AutomationProperties.LiveSetting="Polite">
+                    <StackPanel VerticalAlignment="Center" Spacing="{StaticResource Space6}" AutomationProperties.LiveSetting="Polite">
                       <TextBlock x:Uid="TodayPage_4" Text="Nothing in surgery" Style="{StaticResource TypeTitleS}" />
                       <TextBlock x:Uid="TodayPage_5" Text="No surgery is running and none is booked for later today." Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
                     </StackPanel>
@@ -280,8 +284,8 @@
               <DataTemplate>
                 <Border Style="{StaticResource GlassEdge}" Background="{ThemeResource GlassShellBrush}">
                   <Border Style="{StaticResource LiveCardSurface}" MinHeight="287">
-                    <StackPanel VerticalAlignment="Center" Spacing="10" AutomationProperties.LiveSetting="Polite">
-                      <StackPanel Orientation="Horizontal" Spacing="8">
+                    <StackPanel VerticalAlignment="Center" Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                         <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
                         <TextBlock x:Uid="TodayPage_6" Text="Couldn't read the case in surgery." Style="{StaticResource TypeTitleS}" />
                       </StackPanel>
@@ -297,20 +301,20 @@
 
           <!-- Care timeline: under care today + gantt (§2.2), pad T4 R4 -->
           <mvux:FeedView x:Name="TimelineFeed" Source="{Binding Timeline}" RefreshingState="None" IsTabStop="False" VerticalAlignment="Center" HorizontalContentAlignment="Stretch"
-                         Grid.Column="{utu:Responsive Narrowest=0, Wide=1, Layout={StaticResource ShellLayout}}"
-                         Grid.Row="{utu:Responsive Narrowest=1, Wide=0, Layout={StaticResource ShellLayout}}"
-                         Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1, Layout={StaticResource ShellLayout}}">
+                         Grid.Column="{utu:Responsive Narrowest=0, Widest=1, Layout={StaticResource SplitLayout}}"
+                         Grid.Row="{utu:Responsive Narrowest=1, Widest=0, Layout={StaticResource SplitLayout}}"
+                         Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1, Layout={StaticResource SplitLayout}}">
             <mvux:FeedView.ValueTemplate>
               <DataTemplate>
-                <StackPanel Padding="0,4,4,0">
+                <StackPanel Padding="{StaticResource TimelineInset}">
                   <TextBlock x:Uid="TodayPage_9" Text="Under care today" Style="{StaticResource TypeBodyMedium}" Foreground="{ThemeResource InkMutedBrush}" />
-                  <TextBlock Text="{Binding Data.TotalText}" Style="{StaticResource TypeMonoStat}" Margin="0,2,0,0" />
-                  <TextBlock Text="{Binding Data.DayLine}" Style="{StaticResource TypeBodyS}" Margin="0,4,0,0" />
-                  <StackPanel Margin="0,14,0,0" AutomationProperties.Name="{Binding Data.AccessibleName}">
+                  <TextBlock Text="{Binding Data.TotalText}" Style="{StaticResource TypeMonoStat}" Margin="{StaticResource GapTop2}" />
+                  <TextBlock Text="{Binding Data.DayLine}" Style="{StaticResource TypeBodyS}" Margin="{StaticResource GapTop4}" />
+                  <StackPanel Margin="{StaticResource GapTop14}" AutomationProperties.Name="{Binding Data.AccessibleName}">
                     <!-- Now pill: 20 px, radius 6, ink ground, centred on now -->
                     <controls:SpanPanel Margin="56,0,0,0" Height="22">
                       <!-- xaml-lint: allow card - 20 px "Now" pill, display-only -->
-                      <Border controls:SpanPanel.Start="{Binding Data.NowFraction}" Height="20" Padding="6,0" CornerRadius="6" Background="{ThemeResource InkBrush}" VerticalAlignment="Top">
+                      <Border controls:SpanPanel.Start="{Binding Data.NowFraction}" Height="20" Padding="{StaticResource InsetX6}" CornerRadius="{StaticResource Radius6}" Background="{ThemeResource InkBrush}" VerticalAlignment="Top">
                         <TextBlock Text="{Binding Data.NowText}" Style="{StaticResource TypeMonoAxis}" Foreground="{ThemeResource OnInkBrush}" VerticalAlignment="Center" />
                       </Border>
                     </controls:SpanPanel>
@@ -328,7 +332,7 @@
                             <Grid Height="30" ColumnDefinitions="56,*">
                               <TextBlock Text="{Binding Name}" Style="{StaticResource GanttName}" VerticalAlignment="Center" />
                               <Grid Grid.Column="1" Height="12" VerticalAlignment="Center">
-                                <Rectangle RadiusX="6" RadiusY="6" Fill="{ThemeResource GanttTrackBrush}" />
+                                <Rectangle RadiusX="{StaticResource RectRadius6}" RadiusY="{StaticResource RectRadius6}" Fill="{ThemeResource GanttTrackBrush}" />
                                 <ItemsControl ItemsSource="{Binding Marks}" ItemsPanel="{StaticResource SpanItems}" ItemTemplate="{StaticResource GanttMarkTemplate}" IsTabStop="False" />
                               </Grid>
                             </Grid>
@@ -337,34 +341,34 @@
                       </ItemsControl>
                     </Grid>
                     <!-- Axis labels: margin-top 6, Martian Mono 11/16 -->
-                    <ItemsControl Margin="56,6,0,0" Height="16" ItemsSource="{Binding Data.Ticks}" ItemsPanel="{StaticResource SpanItems}" IsTabStop="False">
+                    <ItemsControl Margin="56,6,0,0" Height="16" ItemsSource="{Binding Data.Ticks}" ItemsPanel="{StaticResource SpanLabelItems}" IsTabStop="False">
                       <ItemsControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding Label}" Style="{StaticResource TypeMonoAxis}" /></DataTemplate></ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <!-- Legend: margin T14 L56, gap 16 -->
-                    <StackPanel Orientation="Horizontal" Spacing="16" Margin="56,14,0,0">
-                      <StackPanel Orientation="Horizontal" Spacing="6"><Ellipse Width="8" Height="8" Fill="{ThemeResource PhasePrepSolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_10" Text="Prep" Style="{StaticResource TypeCaption}" /></StackPanel>
-                      <StackPanel Orientation="Horizontal" Spacing="6"><Ellipse Width="8" Height="8" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_11" Text="Anesthesia" Style="{StaticResource TypeCaption}" /></StackPanel>
-                      <StackPanel Orientation="Horizontal" Spacing="6"><Ellipse Width="8" Height="8" Fill="{ThemeResource PhaseRecoverySolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_12" Text="Recovery" Style="{StaticResource TypeCaption}" /></StackPanel>
-                      <StackPanel Orientation="Horizontal" Spacing="6"><Ellipse Width="8" Height="8" Fill="{ThemeResource PhaseWaitingSolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_13" Text="Waiting" Style="{StaticResource TypeCaption}" /></StackPanel>
-                      <StackPanel Orientation="Horizontal" Spacing="6"><Rectangle Width="14" Height="8" RadiusX="3" RadiusY="3" Fill="{ThemeResource PlannedHatchBrush}" Stroke="{ThemeResource InkGridlineBrush}" StrokeThickness="0.5" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_14" Text="Planned" Style="{StaticResource TypeCaption}" /></StackPanel>
-                    </StackPanel>
+                    <!-- Legend: margin T14 L56, gap 16. Phones wrap it onto two rows (three items, then two). -->
+                    <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space16}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space6}, Normal=0}" Margin="56,14,0,0">
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource PhasePrepSolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_10" Text="Prep" Style="{StaticResource TypeCaption}" /></StackPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=1, Normal=1}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_11" Text="Anesthesia" Style="{StaticResource TypeCaption}" /></StackPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=2, Normal=2}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource PhaseRecoverySolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_12" Text="Recovery" Style="{StaticResource TypeCaption}" /></StackPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=0, Normal=3}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource PhaseWaitingSolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_13" Text="Waiting" Style="{StaticResource TypeCaption}" /></StackPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=1, Normal=4}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"><Rectangle Width="14" Height="8" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PlannedHatchBrush}" Stroke="{ThemeResource InkGridlineBrush}" StrokeThickness="0.5" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_14" Text="Planned" Style="{StaticResource TypeCaption}" /></StackPanel>
+                    </Grid>
                   </StackPanel>
                 </StackPanel>
               </DataTemplate>
             </mvux:FeedView.ValueTemplate>
             <mvux:FeedView.ProgressTemplate>
               <DataTemplate>
-                <StackPanel Padding="0,4,4,0" Spacing="10" AutomationProperties.AccessibilityView="Raw">
+                <StackPanel Padding="{StaticResource TimelineInset}" Spacing="{StaticResource Space10}" AutomationProperties.AccessibilityView="Raw">
                   <Rectangle Style="{StaticResource Skeleton}" Width="120" Height="16" />
                   <Rectangle Style="{StaticResource Skeleton}" Width="140" Height="30" />
                   <Rectangle Style="{StaticResource Skeleton}" Width="240" Height="14" />
-                  <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="170" Margin="0,8,0,0" />
+                  <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="170" Margin="{StaticResource GapTop8}" />
                 </StackPanel>
               </DataTemplate>
             </mvux:FeedView.ProgressTemplate>
             <mvux:FeedView.NoneTemplate>
               <DataTemplate>
-                <StackPanel Padding="0,4,4,0" Spacing="4" AutomationProperties.LiveSetting="Polite">
+                <StackPanel Padding="{StaticResource TimelineInset}" Spacing="{StaticResource Space4}" AutomationProperties.LiveSetting="Polite">
                   <TextBlock x:Uid="TodayPage_15" Text="Under care today" Style="{StaticResource TypeBodyMedium}" Foreground="{ThemeResource InkMutedBrush}" />
                   <TextBlock x:Uid="TodayPage_16" Text="0h 0m" Style="{StaticResource TypeMonoStat}" />
                   <TextBlock x:Uid="TodayPage_17" Text="No care recorded yet today. The timeline fills in as patients are prepared." Style="{StaticResource TypeBodyS}" TextWrapping="WrapWholeWords" />
@@ -373,7 +377,7 @@
             </mvux:FeedView.NoneTemplate>
             <mvux:FeedView.ErrorTemplate>
               <DataTemplate>
-                <StackPanel Padding="0,4,4,0" Spacing="10" AutomationProperties.LiveSetting="Polite">
+                <StackPanel Padding="{StaticResource TimelineInset}" Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
                   <TextBlock x:Uid="TodayPage_18" Text="Couldn't build today's timeline." Style="{StaticResource TypeTitleS}" />
                   <Button x:Uid="TodayPage_19" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=TimelineFeed}" AutomationProperties.Name="Retry reading records">
                     <TextBlock x:Uid="TodayPage_20" Text="Retry" Style="{StaticResource TypeButtonS}" />
@@ -386,27 +390,26 @@
       </Border>
 
       <!-- 3. Today's patients: header (segmented filter, All records), 3 / 2 / 1 column card grid -->
-      <Grid Margin="0,40,0,0" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="{utu:Responsive Narrowest=12, Normal=0, Layout={StaticResource ShellLayout}}">
-        <TextBlock x:Uid="TodayPage_21" Text="Today's patients" Style="{StaticResource TypeH2Section}" VerticalAlignment="Center" />
-        <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center"
-                    Grid.Column="{utu:Responsive Narrowest=0, Normal=1, Layout={StaticResource ShellLayout}}"
-                    Grid.Row="{utu:Responsive Narrowest=1, Normal=0, Layout={StaticResource ShellLayout}}">
+      <!-- Below Wide the title and All records share the first row and the filter takes the second; from Wide one row. -->
+      <Grid Margin="{StaticResource GapTop40}" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space16}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space12}, Wide=0}">
+        <TextBlock x:Uid="TodayPage_21" Text="Today's patients" Style="{StaticResource TypeH2Section}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space16}" VerticalAlignment="Center" HorizontalAlignment="Left"
+                    Grid.Column="{utu:Responsive Narrowest=0, Wide=1}"
+                    Grid.ColumnSpan="{utu:Responsive Narrowest=3, Wide=1}"
+                    Grid.Row="{utu:Responsive Narrowest=1, Wide=0}">
           <!-- Segmented control: pad 3, radius 11, #F3F3F2, border #E8E8EA, gap 2 -->
           <!-- xaml-lint: allow card - segmented-control track, not a surface -->
-          <Border x:Uid="TodayPage_22" Padding="3" CornerRadius="11" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource SegmentTrackEdgeBrush}" BorderThickness="1" AutomationProperties.Name="Filter patients">
+          <Border x:Uid="TodayPage_22" Padding="{StaticResource Inset3}" CornerRadius="{StaticResource Radius11}" Background="{ThemeResource PageBrush}" BorderBrush="{ThemeResource SegmentTrackEdgeBrush}" BorderThickness="1" AutomationProperties.Name="Filter patients">
             <ItemsControl ItemsSource="{Binding Tabs}" IsTabStop="False">
-              <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="2" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="{StaticResource Space2}" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
                   <Button Style="{StaticResource SegmentButton}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.ShowFilter}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding AccessibleName}">
                     <Grid>
-                      <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="8" Visibility="{Binding IsSelected}">
-                        <utu:ShadowContainer.Shadows>
-                          <utu:ShadowCollection><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.12" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
-                        </utu:ShadowContainer.Shadows>
-                        <Border CornerRadius="8" BorderBrush="{ThemeResource EdgeBrush}" BorderThickness="1" />
+                      <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius8}" Visibility="{Binding IsSelected}" Shadows="{StaticResource ShadowSegOn}">
+                        <Border CornerRadius="{StaticResource Radius8}" BorderBrush="{ThemeResource EdgeBrush}" BorderThickness="1" />
                       </utu:ShadowContainer>
-                      <StackPanel Orientation="Horizontal" Spacing="6" Padding="12,0" VerticalAlignment="Center">
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Padding="{StaticResource InsetX12}" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" FontWeight="SemiBold" Visibility="{Binding IsSelected}" />
                         <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" FontWeight="Medium" Visibility="{Binding IsUnselected}" />
                         <TextBlock Text="{Binding Count}" Style="{StaticResource TypeBodyS}" />
@@ -417,14 +420,14 @@
               </ItemsControl.ItemTemplate>
             </ItemsControl>
           </Border>
-          <Button x:Uid="TodayPage_23" Style="{StaticResource LinkButton}" Content="All records" Command="{Binding OpenPatients}" VerticalAlignment="Center" />
         </StackPanel>
+        <Button x:Uid="TodayPage_23" Grid.Column="2" Style="{StaticResource LinkButton}" Content="All records" Command="{Binding OpenPatients}" VerticalAlignment="Center" />
       </Grid>
-      <mvux:FeedView x:Name="CardsFeed" Source="{Binding Cards}" Margin="0,16,0,0" MinHeight="227" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+      <mvux:FeedView x:Name="CardsFeed" Source="{Binding Cards}" Margin="{StaticResource GapTop16}" MinHeight="227" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
         <mvux:FeedView.ValueTemplate>
           <DataTemplate>
             <muxc:ItemsRepeater x:Uid="TodayPage_24" ItemsSource="{Binding Data}" AutomationProperties.Name="Patient cards">
-              <muxc:ItemsRepeater.Layout><controls:CardColumnsLayout MinColumnWidth="320" MaxColumns="3" ColumnSpacing="24" RowSpacing="24" /></muxc:ItemsRepeater.Layout>
+              <muxc:ItemsRepeater.Layout><controls:CardColumnsLayout MinColumnWidth="{StaticResource CardMinColumnWidth}" MaxColumns="3" ColumnSpacing="{StaticResource Space24}" RowSpacing="{StaticResource Space24}" /></muxc:ItemsRepeater.Layout>
               <muxc:ItemsRepeater.ItemTemplate>
                 <DataTemplate><local:PatientCardView /></DataTemplate>
               </muxc:ItemsRepeater.ItemTemplate>
@@ -435,21 +438,21 @@
           <DataTemplate>
             <!-- Skeleton: the collapsed card's footprint (photo, two text bars, strip, stepper, toggle), 227 px -->
             <muxc:ItemsRepeater ItemsSource="{Binding DataContext.Skeleton, ElementName=CardsFeed}" AutomationProperties.AccessibilityView="Raw">
-              <muxc:ItemsRepeater.Layout><controls:CardColumnsLayout MinColumnWidth="320" MaxColumns="3" ColumnSpacing="24" RowSpacing="24" /></muxc:ItemsRepeater.Layout>
+              <muxc:ItemsRepeater.Layout><controls:CardColumnsLayout MinColumnWidth="{StaticResource CardMinColumnWidth}" MaxColumns="3" ColumnSpacing="{StaticResource Space24}" RowSpacing="{StaticResource Space24}" /></muxc:ItemsRepeater.Layout>
               <muxc:ItemsRepeater.ItemTemplate>
                 <DataTemplate>
                   <!-- xaml-lint: allow card - skeleton of the patient card shell -->
-                  <Border Height="227" CornerRadius="22" Background="{ThemeResource Surface2Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="9">
-                    <Grid RowDefinitions="44,Auto,Auto,*" RowSpacing="12">
-                      <Grid ColumnDefinitions="88,*" ColumnSpacing="12">
-                        <Rectangle Style="{StaticResource Skeleton}" Width="88" Height="44" RadiusX="12" RadiusY="12" />
-                        <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+                  <Border Height="227" CornerRadius="{StaticResource Radius22}" Background="{ThemeResource Surface2Brush}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="{StaticResource CardSkeletonInset}">
+                    <Grid RowDefinitions="44,Auto,Auto,*" RowSpacing="{StaticResource Space12}">
+                      <Grid ColumnDefinitions="88,*" ColumnSpacing="{StaticResource Space12}">
+                        <Rectangle Style="{StaticResource Skeleton}" Width="88" Height="44" RadiusX="{StaticResource RectRadius12}" RadiusY="{StaticResource RectRadius12}" />
+                        <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center">
                           <Rectangle Style="{StaticResource Skeleton}" Width="90" Height="16" />
                           <Rectangle Style="{StaticResource Skeleton}" Width="150" Height="12" />
                         </StackPanel>
                       </Grid>
-                      <Rectangle Grid.Row="1" Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="44" RadiusX="12" RadiusY="12" />
-                      <Rectangle Grid.Row="2" Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="6" Margin="8,14,8,0" />
+                      <Rectangle Grid.Row="1" Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="44" RadiusX="{StaticResource RectRadius12}" RadiusY="{StaticResource RectRadius12}" />
+                      <Rectangle Grid.Row="2" Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="6" Margin="{StaticResource SkeletonStepperMargin}" />
                       <Rectangle Grid.Row="3" Style="{StaticResource Skeleton}" HorizontalAlignment="Center" Width="100" Height="12" VerticalAlignment="Center" />
                     </Grid>
                   </Border>
@@ -460,13 +463,13 @@
         </mvux:FeedView.ProgressTemplate>
         <mvux:FeedView.NoneTemplate>
           <DataTemplate>
-            <Border Style="{StaticResource QuietPanel}" MinHeight="227" Padding="24">
-              <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="8" AutomationProperties.LiveSetting="Polite">
+            <Border Style="{StaticResource QuietPanel}" MinHeight="227" Padding="{StaticResource Inset24}">
+              <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="{StaticResource Space8}" AutomationProperties.LiveSetting="Polite">
                 <TextBlock Text="{Binding DataContext.CardsEmpty.Title, ElementName=CardsFeed}" Style="{StaticResource TypeTitleS}" TextWrapping="WrapWholeWords" />
                 <TextBlock Text="{Binding DataContext.CardsEmpty.Body, ElementName=CardsFeed}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
-                <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,8,0,0" Visibility="{Binding DataContext.CardsEmpty.ShowActions, ElementName=CardsFeed, FallbackValue=Collapsed}">
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space10}" Margin="{StaticResource GapTop8}" Visibility="{Binding DataContext.CardsEmpty.ShowActions, ElementName=CardsFeed, FallbackValue=Collapsed}">
                   <Button x:Uid="TodayPage_25" Style="{StaticResource ButtonPrimaryM}" Command="{Binding DataContext.NewCase, ElementName=CardsFeed}" AutomationProperties.Name="New patient">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                       <TextBlock x:Uid="TodayPage_26" Text="New patient" Style="{StaticResource TypeButtonS}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                       <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                     </StackPanel>
@@ -481,9 +484,9 @@
         </mvux:FeedView.NoneTemplate>
         <mvux:FeedView.ErrorTemplate>
           <DataTemplate>
-            <Border Style="{StaticResource QuietPanel}" MinHeight="227" Padding="24">
-              <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="10" AutomationProperties.LiveSetting="Polite">
-                <StackPanel Orientation="Horizontal" Spacing="8">
+            <Border Style="{StaticResource QuietPanel}" MinHeight="227" Padding="{StaticResource Inset24}">
+              <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                   <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
                   <TextBlock x:Uid="TodayPage_28" Text="Couldn't read saved records." Style="{StaticResource TypeTitleS}" />
                 </StackPanel>
@@ -496,25 +499,29 @@
         </mvux:FeedView.ErrorTemplate>
       </mvux:FeedView>
 
-      <!-- 4. Bottom split: Due next (1.55fr) | Where care time went (1fr, left divider + 40); stacks below 1080 -->
-      <Grid Margin="0,48,0,0" RowDefinitions="Auto,Auto"
-            ColumnSpacing="{utu:Responsive Narrowest=0, Wide=40, Layout={StaticResource ShellLayout}}"
-            RowSpacing="{utu:Responsive Narrowest=40, Wide=0, Layout={StaticResource ShellLayout}}">
+      <!-- 4. Bottom split: Due next (1.55fr) | Where care time went (1fr, left divider + 40); stacks below SplitLayout's Widest -->
+      <Grid Margin="{StaticResource GapTop48}" RowDefinitions="Auto,Auto"
+            ColumnSpacing="{utu:Responsive Narrowest=0, Widest={StaticResource Space40}, Layout={StaticResource SplitLayout}}"
+            RowSpacing="{utu:Responsive Narrowest={StaticResource Space40}, Widest=0, Layout={StaticResource SplitLayout}}">
         <Grid.ColumnDefinitions><ColumnDefinition Width="1.55*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
 
-        <StackPanel Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1, Layout={StaticResource ShellLayout}}">
-          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+        <StackPanel Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1, Layout={StaticResource SplitLayout}}">
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space16}">
             <StackPanel>
               <TextBlock x:Uid="TodayPage_31" Text="Due next" Style="{StaticResource TypeH2Section}" />
-              <TextBlock Text="{Binding DueHeader.Summary}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Margin="0,2,0,0" />
+              <TextBlock Text="{Binding DueHeader.Summary}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Margin="{StaticResource GapTop2}" />
             </StackPanel>
             <Button x:Uid="TodayPage_32" Grid.Column="1" Style="{StaticResource LinkButton}" Content="Open agenda" Command="{Binding OpenAgenda}" VerticalAlignment="Bottom" />
           </Grid>
-          <Grid Margin="0,16,0,0" Padding="0,0,0,8" ColumnSpacing="16">
-            <Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="148" /><ColumnDefinition Width="96" /></Grid.ColumnDefinitions>
+          <!-- Status (148) from Wide; below it the column is empty (Auto, 0 wide) and the status folds under the task.
+               Phones tighten the gaps so the task keeps ~130 px next to the time chip and the action. -->
+          <Grid Margin="{StaticResource GapTop16}" Padding="{StaticResource GapBottom8}" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space10}, Normal={StaticResource Space16}}">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
             <TextBlock x:Uid="TodayPage_33" Text="Due" Style="{StaticResource TypeCaptionStrong}" />
-            <TextBlock x:Uid="TodayPage_34" Grid.Column="1" Text="Task" Style="{StaticResource TypeCaptionStrong}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1, Layout={StaticResource ShellLayout}}" />
-            <TextBlock x:Uid="TodayPage_35" Grid.Column="2" Text="Status" Style="{StaticResource TypeCaptionStrong}" Visibility="{utu:Responsive Narrowest=Collapsed, Normal=Visible, Layout={StaticResource ShellLayout}}" />
+            <TextBlock x:Uid="TodayPage_34" Grid.Column="1" Text="Task" Style="{StaticResource TypeCaptionStrong}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1}" />
+            <TextBlock x:Uid="TodayPage_35" Grid.Column="2" Text="Status" Style="{StaticResource TypeCaptionStrong}" Width="{StaticResource DueStatusWidth}" Visibility="{utu:Responsive Narrowest=Collapsed, Wide=Visible}" />
+            <!-- Holds the action column at its 96 px in the header row too. -->
+            <Border Grid.Column="3" Width="{StaticResource DueActionWidth}" />
           </Grid>
           <mvux:FeedView x:Name="DueFeed" Source="{Binding DueRows}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch" MinHeight="72">
             <mvux:FeedView.ValueTemplate>
@@ -525,21 +532,21 @@
                       <!-- Row: min-h 72, pad 10 8, bleeds 8 px each side, top divider, hover #F8F8F7 -->
                       <Grid Margin="-8,0" MinHeight="72" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
                         <Button Style="{StaticResource RowHitButton}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenRow}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding AccessibleName}" />
-                        <Grid Padding="8,10" ColumnSpacing="16">
-                          <Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="148" /><ColumnDefinition Width="96" /></Grid.ColumnDefinitions>
+                        <Grid Padding="{StaticResource DueRowInset}" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space10}, Normal={StaticResource Space16}}">
+                          <Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                           <!-- Time chip 56 x 46, radius 10 -->
                           <Grid Width="56" Height="46" HorizontalAlignment="Left" IsHitTestVisible="False">
-                            <Rectangle RadiusX="10" RadiusY="10" Fill="{ThemeResource PageBrush}" Stroke="{ThemeResource EdgeBrush}" StrokeThickness="1" Visibility="{Binding IsDue}" />
-                            <Rectangle RadiusX="10" RadiusY="10" Fill="{ThemeResource PhaseErrorSoftBrush}" Stroke="{ThemeResource PhaseErrorSoftBorderBrush}" StrokeThickness="1" Visibility="{Binding IsLate}" />
+                            <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PageBrush}" Stroke="{ThemeResource EdgeBrush}" StrokeThickness="1" Visibility="{Binding IsDue}" />
+                            <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PhaseErrorSoftBrush}" Stroke="{ThemeResource PhaseErrorSoftBorderBrush}" StrokeThickness="1" Visibility="{Binding IsLate}" />
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                               <TextBlock Text="{Binding DueLabel}" Style="{StaticResource TypeMicro}" HorizontalAlignment="Center" Visibility="{Binding IsDue}" />
                               <TextBlock Text="{Binding DueLabel}" Style="{StaticResource TypeMicro}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseErrorSolidBrush}" HorizontalAlignment="Center" Visibility="{Binding IsLate}" />
                               <TextBlock Text="{Binding Time}" Style="{StaticResource TypeMonoCell}" HorizontalAlignment="Center" />
                             </StackPanel>
                           </Grid>
-                          <StackPanel Grid.Column="1" VerticalAlignment="Center" IsHitTestVisible="False" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1, Layout={StaticResource ShellLayout}}">
+                          <StackPanel Grid.Column="1" VerticalAlignment="Center" IsHitTestVisible="False" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1}">
                             <TextBlock Text="{Binding Title}" Style="{StaticResource TypeTitleS}" TextTrimming="CharacterEllipsis" />
-                            <StackPanel Orientation="Horizontal" Spacing="6">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                               <Grid Width="6" Height="6" VerticalAlignment="Center">
                                 <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
                                 <Ellipse Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
@@ -549,21 +556,21 @@
                               </Grid>
                               <TextBlock Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis"><Run Text="{Binding PatientName}" FontWeight="Medium" Foreground="{ThemeResource InkBrush}" /><Run Text=" · " /><Run Text="{Binding Meta}" /></TextBlock>
                             </StackPanel>
-                            <!-- Below 760 the status column folds under the task -->
-                            <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyS}" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Layout={StaticResource ShellLayout}}" />
+                            <!-- Below Wide the status column folds under the task -->
+                            <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyS}" Visibility="{utu:Responsive Narrowest=Visible, Wide=Collapsed}" />
                           </StackPanel>
-                          <Grid Grid.Column="2" VerticalAlignment="Center" IsHitTestVisible="False" Visibility="{utu:Responsive Narrowest=Collapsed, Normal=Visible, Layout={StaticResource ShellLayout}}">
-                            <StackPanel Orientation="Horizontal" Spacing="6" Visibility="{Binding IsOverdue}">
+                          <Grid Grid.Column="2" Width="{StaticResource DueStatusWidth}" VerticalAlignment="Center" IsHitTestVisible="False" Visibility="{utu:Responsive Narrowest=Collapsed, Wide=Visible}">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsOverdue}">
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
                               <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource PhaseErrorSolidBrush}" />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Spacing="6" Visibility="{Binding IsReady}">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsReady}">
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" />
                               <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" />
                             </StackPanel>
                             <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding IsNeutral}" />
                           </Grid>
-                          <Grid Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center">
+                          <Grid Grid.Column="3" MinWidth="{StaticResource DueActionWidth}" HorizontalAlignment="Right" VerticalAlignment="Center">
                             <Button Style="{StaticResource ButtonPrimaryM}" Visibility="{Binding IsPrimary}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenTask}" CommandParameter="{Binding}">
                               <TextBlock Text="{Binding ActionLabel}" Style="{StaticResource TypeButtonS}" Foreground="{ThemeResource OnPrimaryInkBrush}" />
                             </Button>
@@ -581,17 +588,17 @@
             <mvux:FeedView.ProgressTemplate>
               <DataTemplate>
                 <StackPanel AutomationProperties.AccessibilityView="Raw">
-                  <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="16" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
-                    <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="10" RadiusY="10" />
-                    <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="160" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="220" Height="12" /></StackPanel>
+                  <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
+                    <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" />
+                    <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="160" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="220" Height="12" /></StackPanel>
                   </Grid>
-                  <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="16" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
-                    <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="10" RadiusY="10" />
-                    <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="120" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="200" Height="12" /></StackPanel>
+                  <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
+                    <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" />
+                    <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="120" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="200" Height="12" /></StackPanel>
                   </Grid>
-                  <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="16" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
-                    <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="10" RadiusY="10" />
-                    <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="140" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="180" Height="12" /></StackPanel>
+                  <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
+                    <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" />
+                    <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="140" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="180" Height="12" /></StackPanel>
                   </Grid>
                 </StackPanel>
               </DataTemplate>
@@ -599,9 +606,9 @@
             <mvux:FeedView.NoneTemplate>
               <DataTemplate>
                 <!-- Nothing due: green check tile, "All caught up", what is next -->
-                <Grid MinHeight="72" Padding="0,14" ColumnDefinitions="Auto,*" ColumnSpacing="12" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
+                <Grid MinHeight="72" Padding="{StaticResource InsetY14}" ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
                   <Grid Width="32" Height="32" VerticalAlignment="Center">
-                    <Rectangle RadiusX="10" RadiusY="10" Fill="{ThemeResource PhaseAnesthesiaSoftBrush}" Stroke="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" StrokeThickness="1" />
+                    <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PhaseAnesthesiaSoftBrush}" Stroke="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" StrokeThickness="1" />
                     <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" />
                   </Grid>
                   <StackPanel Grid.Column="1" VerticalAlignment="Center">
@@ -613,7 +620,7 @@
             </mvux:FeedView.NoneTemplate>
             <mvux:FeedView.ErrorTemplate>
               <DataTemplate>
-                <StackPanel Padding="0,14" Spacing="10" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
+                <StackPanel Padding="{StaticResource InsetY14}" Spacing="{StaticResource Space10}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
                   <TextBlock x:Uid="TodayPage_38" Text="Couldn't work out what is due." Style="{StaticResource TypeTitleS}" />
                   <Button x:Uid="TodayPage_39" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=DueFeed}" AutomationProperties.Name="Retry reading records">
                     <TextBlock x:Uid="TodayPage_40" Text="Retry" Style="{StaticResource TypeButtonS}" />
@@ -625,16 +632,16 @@
         </StackPanel>
 
         <!-- Where care time went: pad-left 40, left divider (dropped when stacked) -->
-        <StackPanel Grid.Column="{utu:Responsive Narrowest=0, Wide=1, Layout={StaticResource ShellLayout}}"
-                    Grid.Row="{utu:Responsive Narrowest=1, Wide=0, Layout={StaticResource ShellLayout}}"
-                    Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1, Layout={StaticResource ShellLayout}}"
-                    Padding="{utu:Responsive Narrowest='0', Wide='40,0,0,0', Layout={StaticResource ShellLayout}}"
-                    BorderThickness="{utu:Responsive Narrowest='0', Wide='1,0,0,0', Layout={StaticResource ShellLayout}}"
+        <StackPanel Grid.Column="{utu:Responsive Narrowest=0, Widest=1, Layout={StaticResource SplitLayout}}"
+                    Grid.Row="{utu:Responsive Narrowest=1, Widest=0, Layout={StaticResource SplitLayout}}"
+                    Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1, Layout={StaticResource SplitLayout}}"
+                    Padding="{utu:Responsive Narrowest='0', Widest={StaticResource GapStart40}, Layout={StaticResource SplitLayout}}"
+                    BorderThickness="{utu:Responsive Narrowest='0', Widest='1,0,0,0', Layout={StaticResource SplitLayout}}"
                     BorderBrush="{ThemeResource DividerBrush}">
-          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space16}">
             <StackPanel>
               <TextBlock x:Uid="TodayPage_41" Text="Where care time went" Style="{StaticResource TypeH2Section}" />
-              <TextBlock Text="{Binding CareTime.Summary}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Margin="0,2,0,0" />
+              <TextBlock Text="{Binding CareTime.Summary}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Margin="{StaticResource GapTop2}" />
             </StackPanel>
             <Grid Grid.Column="1" Background="Transparent" VerticalAlignment="Top">
               <ToolTipService.ToolTip><ToolTip x:Uid="TodayPage_42" Content="Coming soon" /></ToolTipService.ToolTip>
@@ -643,23 +650,23 @@
               </Button>
             </Grid>
           </Grid>
-          <mvux:FeedView x:Name="CareFeed" Source="{Binding CareTime}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch" Margin="0,20,0,0">
+          <mvux:FeedView x:Name="CareFeed" Source="{Binding CareTime}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch" Margin="{StaticResource GapTop20}">
             <mvux:FeedView.ValueTemplate>
               <DataTemplate>
                 <StackPanel>
                   <ItemsControl ItemsSource="{Binding Data.Bars}" IsTabStop="False">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate>
-                        <Grid Height="36" ColumnSpacing="12" ToolTipService.ToolTip="{Binding Tooltip}" Background="Transparent" AutomationProperties.Name="{Binding Tooltip}">
+                        <Grid Height="36" ColumnSpacing="{StaticResource Space12}" ToolTipService.ToolTip="{Binding Tooltip}" Background="Transparent" AutomationProperties.Name="{Binding Tooltip}">
                           <Grid.ColumnDefinitions><ColumnDefinition Width="96" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /><ColumnDefinition Width="40" /></Grid.ColumnDefinitions>
                           <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBody}" VerticalAlignment="Center" />
                           <Grid Grid.Column="1" Height="8" VerticalAlignment="Center">
-                            <Rectangle RadiusX="4" RadiusY="4" Fill="{ThemeResource TrackBrush}" />
+                            <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource TrackBrush}" />
                             <controls:SpanPanel>
-                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="4" RadiusY="4" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
-                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="4" RadiusY="4" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
-                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="4" RadiusY="4" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
-                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="4" RadiusY="4" Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting}" />
+                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
+                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
+                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
+                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting}" />
                             </controls:SpanPanel>
                           </Grid>
                           <TextBlock Grid.Column="2" Text="{Binding DurationText}" Style="{StaticResource TypeMonoNum}" HorizontalAlignment="Right" VerticalAlignment="Center" />
@@ -669,13 +676,13 @@
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
                   <!-- Insight card: margin-top 24, pad 14 16, radius 14, #F3F3F2, tri-tone -->
-                  <Border Style="{StaticResource QuietPanel}" Margin="0,24,0,0" Visibility="{Binding Data.HasInsight}">
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                  <Border Style="{StaticResource QuietPanel}" Margin="{StaticResource GapTop24}" Visibility="{Binding Data.HasInsight}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space12}">
                       <Grid Width="32" Height="32" VerticalAlignment="Top">
-                        <Rectangle RadiusX="10" RadiusY="10" Fill="{ThemeResource PhasePrepSoftBrush}" />
+                        <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PhasePrepSoftBrush}" />
                         <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconLightbulb}" Foreground="{ThemeResource PhasePrepDeepBrush}" />
                       </Grid>
-                      <StackPanel Grid.Column="1" Spacing="4">
+                      <StackPanel Grid.Column="1" Spacing="{StaticResource Space4}">
                         <TextBlock Text="{Binding Data.Insight}" Style="{StaticResource TypeBody}" TextWrapping="WrapWholeWords" />
                         <Grid Background="Transparent" HorizontalAlignment="Left">
                           <ToolTipService.ToolTip><ToolTip x:Uid="TodayPage_44" Content="Coming soon" /></ToolTipService.ToolTip>
@@ -689,7 +696,7 @@
             </mvux:FeedView.ValueTemplate>
             <mvux:FeedView.ProgressTemplate>
               <DataTemplate>
-                <StackPanel Spacing="20" AutomationProperties.AccessibilityView="Raw">
+                <StackPanel Spacing="{StaticResource Space20}" AutomationProperties.AccessibilityView="Raw">
                   <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="16" />
                   <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="16" />
                   <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="16" />
@@ -704,7 +711,7 @@
             </mvux:FeedView.NoneTemplate>
             <mvux:FeedView.ErrorTemplate>
               <DataTemplate>
-                <StackPanel Spacing="10" AutomationProperties.LiveSetting="Polite">
+                <StackPanel Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
                   <TextBlock x:Uid="TodayPage_47" Text="Couldn't total today's care time." Style="{StaticResource TypeTitleS}" />
                   <Button x:Uid="TodayPage_48" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=CareFeed}" AutomationProperties.Name="Retry reading records">
                     <TextBlock x:Uid="TodayPage_49" Text="Retry" Style="{StaticResource TypeButtonS}" />

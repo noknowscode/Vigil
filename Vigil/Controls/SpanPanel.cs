@@ -30,6 +30,22 @@ public sealed partial class SpanPanel : Panel
     public static readonly DependencyProperty LengthProperty = DependencyProperty.RegisterAttached(
         "Length", typeof(double), typeof(SpanPanel), new PropertyMetadata(0d, OnSpanChanged));
 
+    /// <summary>
+    /// Axis labels: a point child that would overlap the previous one is left out (arranged to an empty slot), so a
+    /// narrow gantt shows every other hour instead of overprinting them all.
+    /// </summary>
+    public static readonly DependencyProperty HideOverlapsProperty = DependencyProperty.Register(
+        nameof(HideOverlaps), typeof(bool), typeof(SpanPanel), new PropertyMetadata(false, (d, _) => ((SpanPanel)d).InvalidateArrange()));
+
+    public bool HideOverlaps
+    {
+        get => (bool)GetValue(HideOverlapsProperty);
+        set => SetValue(HideOverlapsProperty, value);
+    }
+
+    /// <summary>Clear space kept between two visible labels.</summary>
+    private const double LabelGap = 6;
+
     public static double GetStart(DependencyObject o) => (double)o.GetValue(StartProperty);
 
     public static void SetStart(DependencyObject o, double value) => o.SetValue(StartProperty, value);
@@ -87,6 +103,7 @@ public sealed partial class SpanPanel : Panel
 
     protected override Size ArrangeOverride(Size finalSize)
     {
+        var lastRight = double.NegativeInfinity;
         foreach (var child in Children)
         {
             var (start, length, gap) = SpanOf(child);
@@ -100,7 +117,17 @@ public sealed partial class SpanPanel : Panel
             else
             {
                 var w = child.DesiredSize.Width;
-                child.Arrange(new Rect(start * finalSize.Width - w / 2, y, w, h));
+                var x = start * finalSize.Width - w / 2;
+                if (HideOverlaps && w > 0 && x < lastRight + LabelGap)
+                {
+                    child.Arrange(new Rect(x, y, 0, 0));
+                    continue;
+                }
+                child.Arrange(new Rect(x, y, w, h));
+                if (w > 0)
+                {
+                    lastRight = x + w;
+                }
             }
         }
         return finalSize;

@@ -8,6 +8,7 @@ public partial record CareMilestone(string Label, string Detail, string Time, bo
 public partial record ParentSnapshot(string Name, string Breed, string? Photo, string Status, string Description, string Updated, string Next, string Procedure, string Team, IImmutableList<CareMilestone> Milestones)
 {
     public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
+    public bool HasPhoto => !HasNoPhoto;
     public string Initial => string.IsNullOrEmpty(Name) ? "?" : Name[..1];
     public static ParentSnapshot From(Case c)
     {

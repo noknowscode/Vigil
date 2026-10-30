@@ -9,7 +9,7 @@
       xmlns:utu="using:Uno.Toolkit.UI"
       Background="{ThemeResource PageBrush}">
 
-  <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="640">
+  <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="{StaticResource FormMaxWidth}">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
@@ -27,20 +27,20 @@
     </utu:NavigationBar>
 
     <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled">
-      <StackPanel Padding="24,0,24,24" Spacing="16">
+      <StackPanel Padding="{StaticResource SheetInsetFlush}" Spacing="{StaticResource Space16}">
         <mvux:FeedView x:Name="SummaryFeed" Source="{Binding Summary}" IsTabStop="False" RefreshingState="None" MinHeight="220" HorizontalContentAlignment="Stretch">
           <mvux:FeedView.ValueTemplate>
             <DataTemplate>
-              <StackPanel Spacing="16">
-                <StackPanel Spacing="6" Margin="0,0,0,8">
+              <StackPanel Spacing="{StaticResource Space16}">
+                <StackPanel Spacing="{StaticResource Space6}" Margin="{StaticResource GapBottom8}">
                   <TextBlock x:Uid="SignOff_2" Text="Sign off" Style="{StaticResource TypeDisplayTitle}" />
                   <TextBlock Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Patient}" />
                 </StackPanel>
                 <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-                  <StackPanel Spacing="14">
+                  <StackPanel Spacing="{StaticResource Space14}">
                     <TextBlock Style="{StaticResource TypeH3Card}" TextWrapping="WrapWholeWords" Text="{Binding Data.Procedure}" />
                     <!-- Anchor: the signed summary as two mono stats. -->
-                    <StackPanel Orientation="Horizontal" Spacing="32">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space32}">
                       <StackPanel>
                         <TextBlock x:Uid="SignOff_3" Text="Anesthesia" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" />
                         <TextBlock x:Uid="SignOff_4" Style="{StaticResource TypeMonoStat}" Text="{Binding Data.Duration}" AutomationProperties.Name="Anesthesia duration" />
@@ -50,7 +50,7 @@
                         <TextBlock x:Uid="SignOff_6" Style="{StaticResource TypeMonoStat}" Text="{Binding Data.Readings}" AutomationProperties.Name="Readings recorded" />
                       </StackPanel>
                     </StackPanel>
-                    <StackPanel Spacing="4" Padding="0,14,0,0" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
+                    <StackPanel Spacing="{StaticResource Space4}" Padding="{StaticResource GapTop14}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
                       <TextBlock Style="{StaticResource TypeBody}" TextWrapping="WrapWholeWords" Text="{Binding Data.Counts}" />
                       <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Recovery}" />
                     </StackPanel>
@@ -62,16 +62,16 @@
           </mvux:FeedView.ValueTemplate>
           <mvux:FeedView.ProgressTemplate>
             <DataTemplate>
-              <StackPanel Spacing="12" AutomationProperties.AccessibilityView="Raw">
+              <StackPanel Spacing="{StaticResource Space12}" AutomationProperties.AccessibilityView="Raw">
                 <Rectangle Style="{StaticResource Skeleton}" Width="200" Height="40" HorizontalAlignment="Left" />
                 <Rectangle Style="{StaticResource Skeleton}" Width="320" Height="20" HorizontalAlignment="Left" />
-                <Rectangle Style="{StaticResource Skeleton}" Height="180" Margin="0,12,0,0" HorizontalAlignment="Stretch" />
+                <Rectangle Style="{StaticResource Skeleton}" Height="180" Margin="{StaticResource GapTop12}" HorizontalAlignment="Stretch" />
               </StackPanel>
             </DataTemplate>
           </mvux:FeedView.ProgressTemplate>
           <mvux:FeedView.ErrorTemplate>
             <DataTemplate>
-              <StackPanel Spacing="12">
+              <StackPanel Spacing="{StaticResource Space12}">
                 <TextBlock x:Uid="SignOff_7" Style="{StaticResource TypeH3Card}" Text="Couldn't read this record." />
                 <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="{Binding Message}" />
                 <Button x:Uid="SignOff_8" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Content="Retry"
@@ -82,7 +82,7 @@
         </mvux:FeedView>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="14">
+          <StackPanel Spacing="{StaticResource Space14}">
             <TextBlock x:Uid="SignOff_9" Style="{StaticResource TypeEyebrow}" Text="SIGNED BY" />
             <TextBox x:Uid="SignOff_10" Header="Veterinarian"
                      Text="{Binding Veterinarian, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -96,7 +96,7 @@
       </StackPanel>
     </ScrollViewer>
 
-    <StackPanel Grid.Row="2" Padding="24,12,24,24" Spacing="8" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
+    <StackPanel Grid.Row="2" Padding="{StaticResource SheetInset}" Spacing="{StaticResource Space8}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
       <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Error}" />
       <Button x:Uid="SignOff_13" Style="{StaticResource ButtonPrimaryXL}" Content="Sign record"
               Command="{Binding Sign}" AutomationProperties.Name="Sign the record" />

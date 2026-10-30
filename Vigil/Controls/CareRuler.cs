@@ -2,7 +2,6 @@ using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
-using Windows.UI;
 
 namespace Vigil.Controls;
 
@@ -31,8 +30,8 @@ public sealed partial class CareRuler : UserControl
         ActualThemeChanged += (_, _) => Draw();
     }
 
-    private SolidColorBrush Ink(string key, string fallback) => new(ThemePalette.Resolve(key, ActualTheme, Hex(fallback)));
-    private static Color Hex(string value) => Color.FromArgb(255, Convert.ToByte(value.Substring(1, 2), 16), Convert.ToByte(value.Substring(3, 2), 16), Convert.ToByte(value.Substring(5, 2), 16));
+    // Every key exists in both theme dictionaries (Material roles in Styles/CloverPalette.xaml, ruler inks in Tokens.xaml).
+    private SolidColorBrush Ink(string key) => new(ThemePalette.Resolve(key, ActualTheme, Microsoft.UI.Colors.Transparent));
     private static void Place(Canvas host, FrameworkElement element, double x, double y)
     {
         Canvas.SetLeft(element, x); Canvas.SetTop(element, y); host.Children.Add(element);
@@ -54,10 +53,10 @@ public sealed partial class CareRuler : UserControl
             Height = height; _surface.Width = width; _surface.Height = height;
             _ticks.Children.Clear(); _present.Children.Clear();
             // Color keys, not *Brush: only the colours sit in theme dictionaries, so a brush key resolves to the Light value under Theatre.
-            var text = Ink("OnSurfaceColor", "#203B2B");
-            var quiet = Ink("OnSurfaceVariantColor", "#5E6B61");
-            var line = Ink("OutlineColor", "#D9DED2");
-            var primary = Ink("PrimaryColor", "#244936");
+            var text = Ink("OnSurfaceColor");
+            var quiet = Ink("OnSurfaceVariantColor");
+            var line = Ink("OutlineColor");
+            var primary = Ink("PrimaryColor");
             Place(_ticks, new Border { Width = 1, Height = day.Height, Background = line }, 43, 22);
             for (var q = 0; q <= (day.End - day.Start).TotalMinutes / 15; q++)
             {
@@ -91,8 +90,8 @@ public sealed partial class CareRuler : UserControl
                 }
                 button.Width = laneWidth - 5; button.Height = slot.Height;
                 Canvas.SetLeft(button, 52 + laneWidth * slot.Lane); Canvas.SetTop(button, slot.Top + 24);
-                button.Background = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverMint" : "CloverLavender", span.Phase == CarePhase.Anaesthesia ? "#D5ECE0" : "#E5E8F9");
-                button.BorderBrush = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverMintEdge" : "CloverLavenderEdge", "#E4E4E6");
+                button.Background = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverMint" : "CloverLavender");
+                button.BorderBrush = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverMintEdge" : "CloverLavenderEdge");
                 var content = new StackPanel { Spacing = 4 };
                 var name = Label(span.Name, 15, text);
                 name.FontWeight = Microsoft.UI.Text.FontWeights.SemiBold;
@@ -118,7 +117,7 @@ public sealed partial class CareRuler : UserControl
             var nowY = day.NowTop + 22;
             Place(_present, new Border { Width = width - 43, Height = 1.5, Background = primary }, 43, nowY);
             Place(_present, new Ellipse { Width = 6, Height = 6, Fill = primary }, 40, nowY - 2.5);
-            var marker = new Border { Background = primary, CornerRadius = new CornerRadius(5), Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), 12, Ink("OnPrimaryColor", "#FFFEF9")) };
+            var marker = new Border { Background = primary, CornerRadius = new CornerRadius(5), Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), 12, Ink("OnPrimaryColor")) };
             Place(_present, marker, 0, nowY - 10);
         }
         finally { _drawing = false; }

@@ -10,6 +10,10 @@
   <data name="Agenda_12.Text" xml:space="preserve"><value>Next observation</value></data>
   <data name="Agenda_13.Text" xml:space="preserve"><value>No observation reminders right now.</value></data>
   <data name="Agenda_14.Text" xml:space="preserve"><value>Observation reminders unavailable.</value></data>
+  <data name="Agenda_15.Content" xml:space="preserve"><value>Retry</value></data>
+  <data name="Agenda_15.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
+  <data name="Agenda_16.Content" xml:space="preserve"><value>Retry</value></data>
+  <data name="Agenda_16.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
   <data name="Agenda_2.Text" xml:space="preserve"><value>Recorded intervals</value></data>
   <data name="Agenda_3.Text" xml:space="preserve"><value>Anaesthesia</value></data>
   <data name="Agenda_4.Text" xml:space="preserve"><value>Recovery</value></data>
@@ -103,6 +107,9 @@
   <data name="Dose_21.Content" xml:space="preserve"><value>Change dose</value></data>
   <data name="Dose_22.Content" xml:space="preserve"><value>Give anyway</value></data>
   <data name="Dose_22.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Give the out-of-range dose anyway</value></data>
+  <data name="Dose_23.Text" xml:space="preserve"><value>The formulary has no drugs.</value></data>
+  <data name="Dose_24.Text" xml:space="preserve"><value>Couldn't load the formulary.</value></data>
+  <data name="Dose_25.Text" xml:space="preserve"><value>Doses can't be calculated on this device until the app is reinstalled.</value></data>
   <data name="Dose_3.Text" xml:space="preserve"><value>Drug</value></data>
   <data name="Dose_4.Text" xml:space="preserve"><value>Sample formulary, not for clinical use.</value></data>
   <data name="Dose_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Drugs</value></data>
@@ -658,8 +665,6 @@
   <data name="Strip_Booked" xml:space="preserve"><value>BOOKED</value></data>
   <data name="Strip_Empty" xml:space="preserve"><value>Vitals strip: no readings yet.</value></data>
   <data name="Strip_Home" xml:space="preserve"><value>SIGNED OUT</value></data>
-  <data name="Strip_LegendBp" xml:space="preserve"><value>BP</value></data>
-  <data name="Strip_LegendHr" xml:space="preserve"><value>HR</value></data>
   <data name="Strip_NotStarted" xml:space="preserve"><value>Not started</value></data>
   <data name="Strip_Prep" xml:space="preserve"><value>IN PREP</value></data>
   <data name="Strip_Recovery" xml:space="preserve"><value>IN RECOVERY</value></data>

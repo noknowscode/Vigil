@@ -4,6 +4,7 @@ namespace Vigil.Presentation;
 public partial record AgendaEntry(Guid Id, string Name, string Detail, string Stage, string Time, DateTimeOffset At, string? Photo, string Initial, bool IsComplete) : CaseRef(Id)
 {
     public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
+    public bool HasPhoto => !HasNoPhoto;
     public string Marker => IsComplete ? "✓" : "•";
     public string AccessibleName => $"{Name}, {Stage}, {Time}. {Detail}";
 }
@@ -53,6 +54,7 @@ public partial record AgendaReminder(Guid Id, string Name, string DueAt, string 
     public string? Photo { get; init; }
     public string Initial => string.IsNullOrWhiteSpace(Name) ? "?" : Name[..1];
     public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
+    public bool HasPhoto => !HasNoPhoto;
     public string AccessibleName => $"{Name}, {Label}. {Detail}";
     public bool IsWaiting => !IsOverdue;
     public string OpenLabel => Loc.F("Agenda_OpenRecord", "Open {0}'s record", Name);

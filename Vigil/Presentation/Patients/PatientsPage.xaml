@@ -9,19 +9,19 @@
       Background="Transparent">
   <!-- Patients (sidebar destination): every case on this device as Today's patient cards (PatientCardView). -->
   <ScrollViewer HorizontalScrollMode="Disabled">
-    <StackPanel Padding="{utu:Responsive Narrowest='20,28,20,40', Narrow='40,36,40,40'}" Spacing="24">
-      <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="24" RowSpacing="16">
-        <StackPanel Spacing="8" Grid.Row="{utu:Responsive Narrowest=1, Wide=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1}">
+    <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ContentMaxWidth}">
+      <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space24}" RowSpacing="{StaticResource Space16}">
+        <StackPanel Spacing="{StaticResource Space8}" Grid.Row="{utu:Responsive Narrowest=1, Widest=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1}">
           <TextBlock x:Uid="Patients_1" Text="Patients" Style="{StaticResource TypeDisplayTitle}" />
           <TextBlock Text="{Binding Summary}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" />
         </StackPanel>
-        <controls:TopBarCluster Grid.Column="{utu:Responsive Narrowest=0, Wide=1}" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <controls:TopBarCluster Grid.Column="{utu:Responsive Narrowest=0, Widest=1}" VerticalAlignment="Top" />
       </Grid>
       <mvux:FeedView x:Name="PatientsFeed" Source="{Binding All}" VerticalContentAlignment="Top" RefreshingState="None" IsTabStop="False">
         <mvux:FeedView.ValueTemplate>
           <DataTemplate>
             <muxc:ItemsRepeater x:Uid="Patients_2" ItemsSource="{Binding Data}" AutomationProperties.Name="All patients">
-              <muxc:ItemsRepeater.Layout><controls:CardColumnsLayout MinColumnWidth="320" MaxColumns="3" ColumnSpacing="24" RowSpacing="24" /></muxc:ItemsRepeater.Layout>
+              <muxc:ItemsRepeater.Layout><controls:CardColumnsLayout MinColumnWidth="{StaticResource CardMinColumnWidth}" MaxColumns="3" ColumnSpacing="{StaticResource Space24}" RowSpacing="{StaticResource Space24}" /></muxc:ItemsRepeater.Layout>
               <muxc:ItemsRepeater.ItemTemplate>
                 <DataTemplate><local:PatientCardView /></DataTemplate>
               </muxc:ItemsRepeater.ItemTemplate>
@@ -36,7 +36,7 @@
         </mvux:FeedView.NoneTemplate>
         <mvux:FeedView.ErrorTemplate>
           <DataTemplate>
-            <StackPanel Spacing="12" HorizontalAlignment="Left">
+            <StackPanel Spacing="{StaticResource Space12}" HorizontalAlignment="Left">
               <TextBlock x:Uid="Patients_5" Text="Couldn't read saved records." Style="{StaticResource TypeH3Card}" />
               <!-- ErrorTemplate DataContext is the Exception: reach the page model by ElementName. -->
               <Button x:Uid="Patients_6" Content="Retry" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" AutomationProperties.Name="Retry reading records"
