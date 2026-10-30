@@ -157,16 +157,11 @@ public partial class App : Application
             .FirstOrDefault(a => a.StartsWith($"--vigil-{name}=", StringComparison.OrdinalIgnoreCase))?.Split('=', 2)[1];
         try
         {
-            if (Arg("theme") is { } theme && MainWindow?.Content is FrameworkElement themed)
-            {
-                themed.RequestedTheme = theme.Equals("dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Light;
-                Console.Error.WriteLine($"VERIFY theme={themed.RequestedTheme}");
-            }
-            if (Arg("route") is not { } spec || Host is null || MainWindow?.Content is not FrameworkElement root)
+            if (Host is null || MainWindow?.Content is not FrameworkElement root)
             {
                 return;
             }
-            // The shell owns the content frame; wait for it (and its navigator) before navigating in it.
+            // The shell owns the content frame and the window's scoped services; wait for it and its navigator.
             ShellPage? shell = null;
             INavigator? navigator = null;
             for (var i = 0; i < 100 && navigator is null; i++)
@@ -174,6 +169,26 @@ public partial class App : Application
                 await Task.Delay(100);
                 shell = Find<ShellPage>(root);
                 navigator = shell?.Navigator();
+            }
+            if (Arg("theme") is { } theme)
+            {
+                // Through the window's theme service, as Settings does: Settings reads the service's theme back, so a
+                // theme set around it showed Settings in the other one. The service persists the choice, like a user's.
+                var dark = theme.Equals("dark", StringComparison.OrdinalIgnoreCase);
+                var service = shell?.FindServiceProvider()?.GetService<Uno.Extensions.Toolkit.IThemeService>();
+                if (service is not null)
+                {
+                    await service.SetThemeAsync(dark ? Uno.Extensions.Toolkit.AppTheme.Dark : Uno.Extensions.Toolkit.AppTheme.Light);
+                }
+                else
+                {
+                    root.RequestedTheme = dark ? ElementTheme.Dark : ElementTheme.Light;
+                }
+                Console.Error.WriteLine($"VERIFY theme={(dark ? "Dark" : "Light")} service={service is not null}");
+            }
+            if (Arg("route") is not { } spec)
+            {
+                return;
             }
             if (shell is null || navigator is null)
             {
