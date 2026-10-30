@@ -137,7 +137,7 @@ internal static class PageTimer
         throw new TimeoutException($"{typeof(T).Name} did not appear within {Timeout.TotalSeconds:0} s.");
     }
 
-    private static T? Find<T>(DependencyObject? root) where T : class, DependencyObject
+    private static T? Find<T>(DependencyObject? root) where T : DependencyObject
     {
         if (root is null)
         {

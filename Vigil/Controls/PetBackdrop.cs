@@ -12,7 +12,9 @@ public sealed partial class PetBackdrop : SKCanvasElement
     public static readonly DependencyProperty PulseProperty = DependencyProperty.Register(nameof(Pulse), typeof(long), typeof(PetBackdrop), new PropertyMetadata(0L, (d, _) => ((PetBackdrop)d).StartPulse()));
     public static readonly DependencyProperty ReduceMotionProperty = DependencyProperty.Register(nameof(ReduceMotion), typeof(bool), typeof(PetBackdrop), new PropertyMetadata(false, (d, _) => ((PetBackdrop)d).StartPulse()));
     public static readonly DependencyProperty HeroProperty = DependencyProperty.Register(nameof(Hero), typeof(bool), typeof(PetBackdrop), new PropertyMetadata(false, (d, _) => { var b = (PetBackdrop)d; b.ResolveInks(); b.Invalidate(); }));
-    private SKBitmap? _bitmap;
+    private SKImage? _image;
+    // SkiaSharp 4 wants explicit sampling; linear with mipmaps keeps the scaled photo smooth.
+    private static readonly SKSamplingOptions Sampling = new(SKFilterMode.Linear, SKMipmapMode.Linear);
     private DispatcherQueueTimer? _timer;
     private int _loadVersion;
     private bool _loaded;
@@ -27,7 +29,7 @@ public sealed partial class PetBackdrop : SKCanvasElement
         IsHitTestVisible = false;
         Loaded += (_, _) => { _loaded = true; ResolveInks(); LoadPhoto(); StartPulse(); };
         ActualThemeChanged += (_, _) => { ResolveInks(); Invalidate(); };
-        Unloaded += (_, _) => { _loaded = false; ++_loadVersion; _timer?.Stop(); _bitmap?.Dispose(); _bitmap = null; _blur = 0; };
+        Unloaded += (_, _) => { _loaded = false; ++_loadVersion; _timer?.Stop(); _image?.Dispose(); _image = null; _blur = 0; };
     }
     // The hero keeps its light panel in both themes: its text inks are fixed dark colours over the photo.
     private void ResolveInks()
@@ -46,7 +48,7 @@ public sealed partial class PetBackdrop : SKCanvasElement
     {
         if (!_loaded) return;
         var version = ++_loadVersion;
-        _bitmap?.Dispose(); _bitmap = null; Invalidate();
+        _image?.Dispose(); _image = null; Invalidate();
         if (string.IsNullOrEmpty(Photo)) return;
         try
         {
@@ -54,9 +56,9 @@ public sealed partial class PetBackdrop : SKCanvasElement
             using var stream = await file.OpenStreamForReadAsync();
             using var memory = new MemoryStream();
             await stream.CopyToAsync(memory);
-            var bitmap = SKBitmap.Decode(memory.ToArray());
-            if (!_loaded || version != _loadVersion) { bitmap?.Dispose(); return; }
-            _bitmap = bitmap;
+            var image = SKImage.FromEncodedData(memory.ToArray());
+            if (!_loaded || version != _loadVersion) { image?.Dispose(); return; }
+            _image = image;
             Invalidate();
         }
         catch (Exception ex) when (ex is IOException or ArgumentException or UnauthorizedAccessException)
@@ -89,33 +91,33 @@ public sealed partial class PetBackdrop : SKCanvasElement
         using var paint = new SKPaint { IsAntialias = true };
         using var filter = _blur > .1f ? SKImageFilter.CreateBlur(_blur, _blur, SKShaderTileMode.Clamp) : null;
         paint.ImageFilter = filter;
-        if (_bitmap is not null)
+        if (_image is not null)
         {
-            if (Hero && w / h > (float)_bitmap.Width / _bitmap.Height)
+            if (Hero && w / h > (float)_image.Width / _image.Height)
             {
                 // Extend the outdoor atmosphere at wide ratios; keep the complete animal in frame.
                 using var ambient = new SKPaint { IsAntialias = true };
                 using var ambientBlur = SKImageFilter.CreateBlur(28, 28, SKShaderTileMode.Clamp);
                 ambient.ImageFilter = ambientBlur;
-                var cover = Math.Max(w / _bitmap.Width, h / _bitmap.Height);
-                var coverW = _bitmap.Width * cover; var coverH = _bitmap.Height * cover;
-                canvas.DrawBitmap(_bitmap, new SKRect((w-coverW)/2, (h-coverH)/2, (w+coverW)/2, (h+coverH)/2), ambient);
+                var cover = Math.Max(w / _image.Width, h / _image.Height);
+                var coverW = _image.Width * cover; var coverH = _image.Height * cover;
+                canvas.DrawImage(_image, new SKRect((w-coverW)/2, (h-coverH)/2, (w+coverW)/2, (h+coverH)/2), Sampling, ambient);
             }
-            var scale = (Hero ? h / _bitmap.Height : Math.Max(w / _bitmap.Width, h / _bitmap.Height)) * (1 + .04f * _blur / 24);
-            var bw = _bitmap.Width * scale; var bh = _bitmap.Height * scale;
+            var scale = (Hero ? h / _image.Height : Math.Max(w / _image.Width, h / _image.Height)) * (1 + .04f * _blur / 24);
+            var bw = _image.Width * scale; var bh = _image.Height * scale;
             var imageRect = new SKRect((w-bw)/2, (h-bh)/2, (w+bw)/2, (h+bh)/2);
             if (Hero && bw < w)
             {
                 // Feather the photo into the extended landscape instead of exposing a hard edge.
                 canvas.SaveLayer(new SKRect(0, 0, w, h), null);
-                canvas.DrawBitmap(_bitmap, imageRect, paint);
+                canvas.DrawImage(_image, imageRect, Sampling, paint);
                 using var edgeShader = SKShader.CreateLinearGradient(new SKPoint(imageRect.Left, 0), new SKPoint(imageRect.Right, 0),
                     [SKColors.Transparent, SKColors.White, SKColors.White, SKColors.Transparent], [0, .07f, .93f, 1], SKShaderTileMode.Clamp);
                 using var mask = new SKPaint { Shader = edgeShader, BlendMode = SKBlendMode.DstIn };
                 canvas.DrawRect(new SKRect(0, 0, w, h), mask);
                 canvas.Restore();
             }
-            else canvas.DrawBitmap(_bitmap, imageRect, paint);
+            else canvas.DrawImage(_image, imageRect, Sampling, paint);
         }
         else
         {
