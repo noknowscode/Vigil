@@ -9,7 +9,7 @@
   the cards go 2 x 2; below Wide (phones and the 600-800 rail layout) everything is one column. At Widest the header and
   body stop at ContentMaxWidth and centre.
 -->
-<Page x:Class="Vigil.Presentation.RecordPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:muxc="using:Microsoft.UI.Xaml.Controls" xmlns:mvux="using:Uno.Extensions.Reactive.UI" xmlns:utu="using:Uno.Toolkit.UI" xmlns:local="using:Vigil.Presentation" xmlns:controls="using:Vigil.Controls" xmlns:domain="using:Vigil.Domain" xmlns:media="using:Microsoft.UI.Xaml.Media" Background="Transparent">
+<Page x:Class="Vigil.Presentation.RecordPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:muxc="using:Microsoft.UI.Xaml.Controls" xmlns:mvux="using:Uno.Extensions.Reactive.UI" xmlns:utu="using:Uno.Toolkit.UI" xmlns:local="using:Vigil.Presentation" xmlns:controls="using:Vigil.Controls" xmlns:domain="using:Vigil.Domain" xmlns:media="using:Microsoft.UI.Xaml.Media" xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:not_win="http://uno.ui/not_win" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="not_win" Background="Transparent">
   <Page.Resources>
     <!-- Breadcrumb link: 14/20 muted, no underline (the prototype overrides it to transparent); hover ink.
          xaml-lint: allow template - text-only link with an ink hover, no button chrome -->
@@ -139,8 +139,12 @@
                           </Rectangle>
                           <!-- xaml-lint: allow card - childless blur layer (Skia-native AcrylicBrush must have no children) -->
                           <Border CornerRadius="{StaticResource Radius16}">
-                            <!-- xaml-lint: allow hex - AcrylicBrush tint and fallback colours (Color values; the tint opacity is 0, the fallback matches MediaPlaceholderBrush) -->
-                            <Border.Background><AcrylicBrush AlwaysUseFallback="False" media:AcrylicBrushExtensions.UseCompositionEffectBrush="False" TintColor="{ThemeResource PhotoAcrylicTintColor}" TintOpacity="0" TintLuminosityOpacity="0" FallbackColor="{ThemeResource PhotoAcrylicFallbackColor}" /></Border.Background>
+                            <!-- Tint (opacity 0) and fallback come from the theme tokens. UseCompositionEffectBrush is Uno-only (the
+                                 Skia blur path), so WinUI gets the same brush without it (conditional XAML, platform-specific-xaml.md). -->
+                            <Border.Background>
+                              <win:AcrylicBrush AlwaysUseFallback="False" TintColor="{ThemeResource PhotoAcrylicTintColor}" TintOpacity="0" TintLuminosityOpacity="0" FallbackColor="{ThemeResource PhotoAcrylicFallbackColor}" />
+                              <not_win:AcrylicBrush AlwaysUseFallback="False" media:AcrylicBrushExtensions.UseCompositionEffectBrush="False" TintColor="{ThemeResource PhotoAcrylicTintColor}" TintOpacity="0" TintLuminosityOpacity="0" FallbackColor="{ThemeResource PhotoAcrylicFallbackColor}" />
+                            </Border.Background>
                           </Border>
                           <Rectangle RadiusX="{StaticResource RectRadius16}" RadiusY="{StaticResource RectRadius16}" AutomationProperties.Name="{Binding Data.PhotoName}">
                             <Rectangle.Fill><ImageBrush ImageSource="{Binding Data.HeroPhoto}" Stretch="Uniform" /></Rectangle.Fill>
