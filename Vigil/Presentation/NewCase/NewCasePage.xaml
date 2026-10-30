@@ -128,7 +128,7 @@
     </ScrollViewer>
 
     <StackPanel Grid.Row="2" Padding="{StaticResource SheetInset}" Spacing="{StaticResource Space12}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
-      <StackPanel Spacing="{StaticResource Space4}" Visibility="{Binding HasErrors}">
+      <StackPanel Spacing="{StaticResource Space4}" Visibility="{Binding HasErrors, Converter={StaticResource VisibleWhenTrue}}">
         <TextBlock x:Uid="NewCase_25" Style="{StaticResource TypeBodyS}"
                    Foreground="{ThemeResource ErrorBrush}"
                    TextWrapping="WrapWholeWords"

@@ -189,19 +189,19 @@
                     <!-- Photo 88 x 44, radius 12, placeholder #E9E9EB, the whole picture fitted (Uniform, user 2026-10-29): an ImageBrush ground, because a Border's radius does not clip an Image child on Skia. -->
                     <Grid Width="88" Height="44">
                       <Rectangle RadiusX="{StaticResource RectRadius12}" RadiusY="{StaticResource RectRadius12}" Fill="{ThemeResource MediaPlaceholderBrush}" />
-                      <Rectangle RadiusX="{StaticResource RectRadius12}" RadiusY="{StaticResource RectRadius12}" Visibility="{Binding HasPhoto}">
+                      <Rectangle RadiusX="{StaticResource RectRadius12}" RadiusY="{StaticResource RectRadius12}" Visibility="{Binding HasPhoto, Converter={StaticResource VisibleWhenTrue}}">
                         <Rectangle.Fill><ImageBrush ImageSource="{Binding Photo}" Stretch="Uniform" /></Rectangle.Fill>
                       </Rectangle>
-                      <TextBlock Text="{Binding Initials}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasNoPhoto}" />
+                      <TextBlock Text="{Binding Initials}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasNoPhoto, Converter={StaticResource VisibleWhenTrue}}" />
                     </Grid>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space12}">
                         <TextBlock Text="{Binding Name}" Style="{StaticResource TypeH3CardName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                        <Border Grid.Column="1" Style="{StaticResource BadgeOutline}" Visibility="{Binding AsaKnown}" VerticalAlignment="Center">
+                        <Border Grid.Column="1" Style="{StaticResource BadgeOutline}" Visibility="{Binding AsaKnown, Converter={StaticResource VisibleWhenTrue}}" VerticalAlignment="Center">
                           <TextBlock Text="{Binding Asa}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" />
                         </Border>
                         <!-- dashed-pending badge: no fill, 1 px dashed #A3A6AE -->
-                        <Grid Grid.Column="1" Height="24" Visibility="{Binding AsaPending}" VerticalAlignment="Center">
+                        <Grid Grid.Column="1" Height="24" Visibility="{Binding AsaPending, Converter={StaticResource VisibleWhenTrue}}" VerticalAlignment="Center">
                           <Rectangle RadiusX="{StaticResource RectRadius8}" RadiusY="{StaticResource RectRadius8}" Stroke="{ThemeResource InkFaintBrush}" StrokeThickness="1" StrokeDashArray="3,2" />
                           <TextBlock Text="{Binding Asa}" Style="{StaticResource TypeCaptionStrong}" Margin="9,0" VerticalAlignment="Center" />
                         </Grid>
@@ -265,12 +265,12 @@
                       <!-- Recorded heart rate, last 12 readings (SPEC-v2 decision 3: not a decorative ECG). -->
                       <!-- Phones drop the sparkline: next to the status label and the timer it leaves the label no room. -->
                       <Grid Visibility="{utu:Responsive Narrowest=Collapsed, Normal=Visible}" VerticalAlignment="Center">
-                      <Grid Width="72" Height="20" Visibility="{Binding HasSparkline}" VerticalAlignment="Center">
+                      <Grid Width="72" Height="20" Visibility="{Binding HasSparkline, Converter={StaticResource VisibleWhenTrue}}" VerticalAlignment="Center">
                         <Path Data="{Binding Sparkline}" Stroke="{ThemeResource PhaseAnesthesiaSolidBrush}" StrokeThickness="1.6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                       </Grid>
                       </Grid>
-                      <TextBlock Text="{Binding StripValue}" Style="{StaticResource TypeMonoTimerCard}" Visibility="{Binding StripIsClock}" VerticalAlignment="Center" />
-                      <TextBlock Text="{Binding StripValue}" Style="{StaticResource TypeBodyMedium}" Visibility="{Binding StripIsText}" VerticalAlignment="Center" />
+                      <TextBlock Text="{Binding StripValue}" Style="{StaticResource TypeMonoTimerCard}" Visibility="{Binding StripIsClock, Converter={StaticResource VisibleWhenTrue}}" VerticalAlignment="Center" />
+                      <TextBlock Text="{Binding StripValue}" Style="{StaticResource TypeBodyMedium}" Visibility="{Binding StripIsText, Converter={StaticResource VisibleWhenTrue}}" VerticalAlignment="Center" />
                     </StackPanel>
                   </Grid>
                 </Grid>
@@ -281,20 +281,20 @@
                     <Grid Height="6" VerticalAlignment="Top" Margin="0,7,0,0" ColumnSpacing="{StaticResource Space3}" ColumnDefinitions="*,*,*,*,*">
                       <Rectangle RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource StepDoneHatchBrush}" />
                       <Rectangle Grid.Column="1" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource TrackBrush}" />
-                      <Rectangle Grid.Column="1" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhasePrepStepBrush}" Visibility="{Binding ReachedPrep}" />
+                      <Rectangle Grid.Column="1" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhasePrepStepBrush}" Visibility="{Binding ReachedPrep, Converter={StaticResource VisibleWhenTrue}}" />
                       <Rectangle Grid.Column="2" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource TrackBrush}" />
-                      <Rectangle Grid.Column="2" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseAnesthesiaStepBrush}" Visibility="{Binding ReachedSurgery}" />
+                      <Rectangle Grid.Column="2" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseAnesthesiaStepBrush}" Visibility="{Binding ReachedSurgery, Converter={StaticResource VisibleWhenTrue}}" />
                       <Rectangle Grid.Column="3" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource TrackBrush}" />
-                      <Rectangle Grid.Column="3" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseRecoveryStepBrush}" Visibility="{Binding ReachedRecovery}" />
+                      <Rectangle Grid.Column="3" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseRecoveryStepBrush}" Visibility="{Binding ReachedRecovery, Converter={StaticResource VisibleWhenTrue}}" />
                       <Rectangle Grid.Column="4" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource TrackBrush}" />
-                      <Rectangle Grid.Column="4" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseHomeStepBrush}" Visibility="{Binding ReachedHome}" />
+                      <Rectangle Grid.Column="4" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseHomeStepBrush}" Visibility="{Binding ReachedHome, Converter={StaticResource VisibleWhenTrue}}" />
                     </Grid>
                     <!-- Knob: 20 px, centred on the current stage (10/30/50/70/90 %), shadow knob 0 1 3 .2 -->
                     <Grid ColumnSpacing="{StaticResource Space3}" ColumnDefinitions="*,*,*,*,*">
                       <utu:ShadowContainer Grid.Column="{Binding StageIndex}" Width="20" Height="20" HorizontalAlignment="Center" Background="Transparent" CornerRadius="{StaticResource Radius10}" Shadows="{StaticResource ShadowKnob}">
                         <Grid Width="20" Height="20">
                           <Ellipse Fill="{ThemeResource KnobBrush}" Stroke="{ThemeResource KnobEdgeBrush}" StrokeThickness="1" />
-                          <Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding KnobLive}" />
+                          <Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding KnobLive, Converter={StaticResource VisibleWhenTrue}}" />
                         </Grid>
                       </utu:ShadowContainer>
                     </Grid>

@@ -78,8 +78,8 @@
                         <Grid ColumnDefinitions="40,*,Auto" ColumnSpacing="{StaticResource Space12}">
                           <Grid Width="40" Height="40" VerticalAlignment="Center">
                             <Ellipse Fill="{ThemeResource MediaPlaceholderBrush}" />
-                            <Ellipse Visibility="{Binding HasPhoto}"><Ellipse.Fill><ImageBrush ImageSource="{Binding Photo}" Stretch="UniformToFill" /></Ellipse.Fill></Ellipse>
-                            <TextBlock Text="{Binding Initial}" Visibility="{Binding HasNoPhoto}" Style="{StaticResource TypeBodyStrong}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Ellipse Visibility="{Binding HasPhoto, Converter={StaticResource VisibleWhenTrue}}"><Ellipse.Fill><ImageBrush ImageSource="{Binding Photo}" Stretch="UniformToFill" /></Ellipse.Fill></Ellipse>
+                            <TextBlock Text="{Binding Initial}" Visibility="{Binding HasNoPhoto, Converter={StaticResource VisibleWhenTrue}}" Style="{StaticResource TypeBodyStrong}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                           </Grid>
                           <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}" VerticalAlignment="Center">
                             <TextBlock Text="{Binding Name}" Style="{StaticResource TypeTitleS}" TextTrimming="CharacterEllipsis" />
@@ -90,7 +90,7 @@
                       </Button>
                     </DataTemplate></muxc:ItemsRepeater.ItemTemplate>
                   </muxc:ItemsRepeater>
-                  <TextBlock x:Uid="Agenda_10" Text="No patients waiting for preparation." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.NoPreparing}" />
+                  <TextBlock x:Uid="Agenda_10" Text="No patients waiting for preparation." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.NoPreparing, Converter={StaticResource VisibleWhenTrue}}" />
                 </StackPanel>
               </DataTemplate></mvux:FeedView.ValueTemplate>
               <mvux:FeedView.ProgressTemplate><DataTemplate>
@@ -122,15 +122,15 @@
                   <Grid ColumnDefinitions="40,*" ColumnSpacing="{StaticResource Space12}">
                     <Grid Width="40" Height="40" VerticalAlignment="Center">
                       <Ellipse Fill="{ThemeResource MediaPlaceholderBrush}" />
-                      <Ellipse Visibility="{Binding Data.HasPhoto}"><Ellipse.Fill><ImageBrush ImageSource="{Binding Data.Photo}" Stretch="UniformToFill" /></Ellipse.Fill></Ellipse>
-                      <TextBlock Text="{Binding Data.Initial}" Visibility="{Binding Data.HasNoPhoto}" Style="{StaticResource TypeBodyStrong}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                      <Ellipse Visibility="{Binding Data.HasPhoto, Converter={StaticResource VisibleWhenTrue}}"><Ellipse.Fill><ImageBrush ImageSource="{Binding Data.Photo}" Stretch="UniformToFill" /></Ellipse.Fill></Ellipse>
+                      <TextBlock Text="{Binding Data.Initial}" Visibility="{Binding Data.HasNoPhoto, Converter={StaticResource VisibleWhenTrue}}" Style="{StaticResource TypeBodyStrong}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Grid>
                     <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}" VerticalAlignment="Center">
                       <TextBlock Text="{Binding Data.Name}" Style="{StaticResource TypeTitleS}" TextTrimming="CharacterEllipsis" />
                       <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
-                        <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding Data.Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource PrimaryBrush}" Visibility="{Binding Data.IsWaiting}" />
-                        <TextBlock Text="{Binding Data.Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue}" />
+                        <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue, Converter={StaticResource VisibleWhenTrue}}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Data.Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource PrimaryBrush}" Visibility="{Binding Data.IsWaiting, Converter={StaticResource VisibleWhenTrue}}" />
+                        <TextBlock Text="{Binding Data.Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource ErrorBrush}" Visibility="{Binding Data.IsOverdue, Converter={StaticResource VisibleWhenTrue}}" />
                       </StackPanel>
                     </StackPanel>
                   </Grid>

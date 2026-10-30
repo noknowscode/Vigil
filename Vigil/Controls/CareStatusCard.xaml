@@ -72,7 +72,7 @@
       </Grid>
       <TextBlock Grid.Row="1" Margin="{StaticResource GapTop2}" Text="{Binding Care.Timer}" Style="{StaticResource TypeMonoHeroS}" />
       <!-- Recorded heart rate (last 13 readings), 32 px, stroke 1.6, while the patient is under anesthesia. -->
-      <Grid Grid.Row="2" Height="32" Margin="{StaticResource GapTop2}" Visibility="{Binding Care.IsSurgery}" AutomationProperties.AccessibilityView="Raw">
+      <Grid Grid.Row="2" Height="32" Margin="{StaticResource GapTop2}" Visibility="{Binding Care.IsSurgery, Converter={StaticResource VisibleWhenTrue}}" AutomationProperties.AccessibilityView="Raw">
         <Path Data="{Binding HrSpark.Data}" Margin="{Binding HrSpark.LineMargin}" Height="{Binding HrSpark.Height}" VerticalAlignment="Top" Stretch="Fill"
               Stroke="{ThemeResource PhaseAnesthesiaSolidBrush}" StrokeThickness="1.6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
       </Grid>
@@ -86,7 +86,7 @@
           <TextBlock Text="{Binding Care.SecondValue}" Style="{StaticResource TypeMonoValueS}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
       </Grid>
-      <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="{StaticResource Space6}" Margin="{StaticResource GapTop10}" Visibility="{Binding Care.HasAlert}">
+      <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="{StaticResource Space6}" Margin="{StaticResource GapTop10}" Visibility="{Binding Care.HasAlert, Converter={StaticResource VisibleWhenTrue}}">
         <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
         <TextBlock Text="{Binding Care.Alert}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
       </StackPanel>

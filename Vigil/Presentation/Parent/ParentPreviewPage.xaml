@@ -42,10 +42,10 @@
                   <!-- Photo: an ImageBrush ground, rounded by the rectangle (a corner radius does not clip an Image on Skia). -->
                   <Grid Height="248">
                     <Rectangle RadiusX="{StaticResource RectRadius19}" RadiusY="{StaticResource RectRadius19}" Fill="{ThemeResource MediaPlaceholderBrush}" />
-                    <Rectangle RadiusX="{StaticResource RectRadius19}" RadiusY="{StaticResource RectRadius19}" Visibility="{Binding Data.HasPhoto}">
+                    <Rectangle RadiusX="{StaticResource RectRadius19}" RadiusY="{StaticResource RectRadius19}" Visibility="{Binding Data.HasPhoto, Converter={StaticResource VisibleWhenTrue}}">
                       <Rectangle.Fill><ImageBrush ImageSource="{Binding Data.Photo}" Stretch="UniformToFill" /></Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock Text="{Binding Data.Initial}" Style="{StaticResource TypeDisplayTitleL}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Data.HasNoPhoto}" />
+                    <TextBlock Text="{Binding Data.Initial}" Style="{StaticResource TypeDisplayTitleL}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Data.HasNoPhoto, Converter={StaticResource VisibleWhenTrue}}" />
                     <!-- xaml-lint: allow card - status pill over the photo, display-only -->
                     <Border Style="{StaticResource PillSurface}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="{StaticResource Inset12}">
                       <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">

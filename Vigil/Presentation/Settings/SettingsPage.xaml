@@ -67,7 +67,7 @@
                 <RadioButton x:Uid="Settings_18" Content="Français" />
               </muxc:RadioButtons>
               <!-- Shown once the language changes (applies at the next start). -->
-              <TextBlock Style="{StaticResource TypeBodyS}" Text="{Binding LanguageNotice}" Visibility="{Binding HasLanguageNotice}" AutomationProperties.LiveSetting="Polite" />
+              <TextBlock Style="{StaticResource TypeBodyS}" Text="{Binding LanguageNotice}" Visibility="{Binding HasLanguageNotice, Converter={StaticResource VisibleWhenTrue}}" AutomationProperties.LiveSetting="Polite" />
             </StackPanel>
           </StackPanel>
         </utu:CardContentControl>

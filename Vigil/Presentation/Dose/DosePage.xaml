@@ -129,7 +129,7 @@
                     <Run x:Uid="Dose_10" Text="Reference range" />
                     <Run Text="{Binding Data.ReferenceText}" />
                   </TextBlock>
-                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" Visibility="{Binding Data.IsOutOfRange}">
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" Visibility="{Binding Data.IsOutOfRange, Converter={StaticResource VisibleWhenTrue}}">
                     <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
                     <TextBlock x:Uid="Dose_11" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource ErrorBrush}" Text="Outside the reference range: you will be asked to confirm." TextWrapping="WrapWholeWords" />
                   </StackPanel>
@@ -165,13 +165,13 @@
     <Grid Grid.Row="3" Padding="{utu:Responsive Narrowest={StaticResource SheetActionInsetNarrow}, Normal={StaticResource SheetActionInsetNormal}}">
         <Button x:Uid="Dose_20" Style="{StaticResource ButtonPrimaryXL}"
                 Content="Give dose"
-                Visibility="{Binding NotConfirming}"
+                Visibility="{Binding NotConfirming, Converter={StaticResource VisibleWhenTrue}}"
                 Command="{Binding Give}"
                 AutomationProperties.Name="Give dose" />
         <!-- Out-of-range confirmation, inline: the safe choice is the filled one. -->
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}"
                                 BorderBrush="{ThemeResource PhaseErrorSoftBorderBrush}"
-                                Visibility="{Binding Confirming}">
+                                Visibility="{Binding Confirming, Converter={StaticResource VisibleWhenTrue}}">
           <StackPanel Spacing="{StaticResource Space12}">
             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
               <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />

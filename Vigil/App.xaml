@@ -2,7 +2,8 @@
        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
        xmlns:utum="using:Uno.Toolkit.UI.Material"
-       xmlns:ut="using:Uno.Themes">
+       xmlns:ut="using:Uno.Themes"
+       xmlns:controls="using:Vigil.Controls">
 
   <Application.Resources>
     <ResourceDictionary>
@@ -35,6 +36,8 @@
         <!-- Layout tokens: spacing scale, insets per responsive category, content widths, the content-split breakpoint -->
         <ResourceDictionary Source="ms-appx:///Styles/Layout.xaml" />
       </ResourceDictionary.MergedDictionaries>
+      <!-- bool -> Visibility for {Binding}: WinUI has no implicit conversion outside x:Bind. -->
+      <controls:VisibleWhenTrueConverter x:Key="VisibleWhenTrue" />
     </ResourceDictionary>
   </Application.Resources>
 

@@ -113,16 +113,16 @@
       <StackPanel Spacing="{StaticResource Space2}">
         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
           <Grid Width="6" Height="6" VerticalAlignment="Center">
-            <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsLive}" />
-            <Ellipse Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
-            <Ellipse Fill="{ThemeResource PhaseErrorSolidBrush}" Visibility="{Binding IsError}" />
-            <Ellipse Fill="{ThemeResource InkMutedBrush}" Visibility="{Binding IsMuted}" />
+            <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsLive, Converter={StaticResource VisibleWhenTrue}}" />
+            <Ellipse Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep, Converter={StaticResource VisibleWhenTrue}}" />
+            <Ellipse Fill="{ThemeResource PhaseErrorSolidBrush}" Visibility="{Binding IsError, Converter={StaticResource VisibleWhenTrue}}" />
+            <Ellipse Fill="{ThemeResource InkMutedBrush}" Visibility="{Binding IsMuted, Converter={StaticResource VisibleWhenTrue}}" />
           </Grid>
           <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" />
         </StackPanel>
         <!-- Phones: the 16 px mono step, so a time still fits a third of the live card. -->
-        <TextBlock Text="{Binding Value}" Style="{utu:Responsive Narrowest={StaticResource TypeMonoValueS}, Normal={StaticResource TypeMonoValue}}" Visibility="{Binding IsMono}" TextTrimming="CharacterEllipsis" />
-        <TextBlock Text="{Binding Value}" Style="{StaticResource TypeTitleS}" LineHeight="26" Visibility="{Binding IsText}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Text="{Binding Value}" Style="{utu:Responsive Narrowest={StaticResource TypeMonoValueS}, Normal={StaticResource TypeMonoValue}}" Visibility="{Binding IsMono, Converter={StaticResource VisibleWhenTrue}}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Text="{Binding Value}" Style="{StaticResource TypeTitleS}" LineHeight="26" Visibility="{Binding IsText, Converter={StaticResource VisibleWhenTrue}}" TextTrimming="CharacterEllipsis" />
         <TextBlock Text="{Binding Sub}" Style="{StaticResource TypeCaption}" TextTrimming="CharacterEllipsis" />
       </StackPanel>
     </DataTemplate>
@@ -130,18 +130,18 @@
     <!-- Gantt mark: a phase segment (radius 4), a planned slot (hatch) or the now dot (16 px, 3 px white ring). -->
     <DataTemplate x:Key="GanttMarkTemplate">
       <Grid ToolTipService.ToolTip="{Binding Tooltip}" Background="Transparent">
-        <Grid Height="12" Visibility="{Binding IsSegment}">
-          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
-          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
-          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
-          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting}" />
-          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PlannedHatchBrush}" Visibility="{Binding IsPlanned}" />
+        <Grid Height="12" Visibility="{Binding IsSegment, Converter={StaticResource VisibleWhenTrue}}">
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep, Converter={StaticResource VisibleWhenTrue}}" />
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia, Converter={StaticResource VisibleWhenTrue}}" />
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery, Converter={StaticResource VisibleWhenTrue}}" />
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting, Converter={StaticResource VisibleWhenTrue}}" />
+          <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PlannedHatchBrush}" Visibility="{Binding IsPlanned, Converter={StaticResource VisibleWhenTrue}}" />
         </Grid>
-        <utu:ShadowContainer Width="16" Height="16" CornerRadius="{StaticResource Radius8}" Background="{ThemeResource OnInkBrush}" Visibility="{Binding IsDot}" Shadows="{StaticResource ShadowGanttDot}">
+        <utu:ShadowContainer Width="16" Height="16" CornerRadius="{StaticResource Radius8}" Background="{ThemeResource OnInkBrush}" Visibility="{Binding IsDot, Converter={StaticResource VisibleWhenTrue}}" Shadows="{StaticResource ShadowGanttDot}">
           <Grid Width="16" Height="16">
-            <Ellipse Width="10" Height="10" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
-            <Ellipse Width="10" Height="10" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
-            <Ellipse Width="10" Height="10" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
+            <Ellipse Width="10" Height="10" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia, Converter={StaticResource VisibleWhenTrue}}" />
+            <Ellipse Width="10" Height="10" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery, Converter={StaticResource VisibleWhenTrue}}" />
+            <Ellipse Width="10" Height="10" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep, Converter={StaticResource VisibleWhenTrue}}" />
           </Grid>
         </utu:ShadowContainer>
       </Grid>
@@ -185,11 +185,11 @@
                         <!-- Phones move Record / Start prep under the title so the title keeps the row. -->
                         <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space10}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space10}, Normal=0}">
                           <Grid Width="30" Height="30" VerticalAlignment="Center">
-                            <Grid Visibility="{Binding Data.IsLive}">
+                            <Grid Visibility="{Binding Data.IsLive, Converter={StaticResource VisibleWhenTrue}}">
                               <Rectangle RadiusX="{StaticResource RectRadius9}" RadiusY="{StaticResource RectRadius9}" Fill="{ThemeResource PhaseAnesthesiaSoftBrush}" Stroke="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" StrokeThickness="1" />
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconActivity}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" />
                             </Grid>
-                            <Grid Visibility="{Binding Data.IsNext}">
+                            <Grid Visibility="{Binding Data.IsNext, Converter={StaticResource VisibleWhenTrue}}">
                               <Rectangle RadiusX="{StaticResource RectRadius9}" RadiusY="{StaticResource RectRadius9}" Fill="{ThemeResource PhasePrepSoftBrush}" Stroke="{ThemeResource PhasePrepSoftBorderBrush}" StrokeThickness="1" />
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconCalendar}" Foreground="{ThemeResource PhasePrepDeepBrush}" />
                             </Grid>
@@ -198,14 +198,14 @@
                             <TextBlock Text="{Binding Data.Title}" Style="{StaticResource TypeTitleS}" TextTrimming="CharacterEllipsis" />
                             <TextBlock Text="{Binding Data.Subtitle}" Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis" />
                           </StackPanel>
-                          <Button x:Uid="TodayPage_1" Grid.Column="{utu:Responsive Narrowest=1, Normal=2}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" Style="{StaticResource ButtonPrimaryS}" VerticalAlignment="Center" Visibility="{Binding Data.IsLive}"
+                          <Button x:Uid="TodayPage_1" Grid.Column="{utu:Responsive Narrowest=1, Normal=2}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" Style="{StaticResource ButtonPrimaryS}" VerticalAlignment="Center" Visibility="{Binding Data.IsLive, Converter={StaticResource VisibleWhenTrue}}"
                                   Command="{Binding Parent.OpenRecord}" CommandParameter="{Binding Data}" AutomationProperties.Name="Record observations">
                             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                               <TextBlock x:Uid="TodayPage_2" Text="Record" Style="{StaticResource TypeButtonS}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                             </StackPanel>
                           </Button>
-                          <Button Grid.Column="{utu:Responsive Narrowest=1, Normal=2}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" Style="{StaticResource ButtonSecondaryS}" VerticalAlignment="Center" Visibility="{Binding Data.CanStartPrep}"
+                          <Button Grid.Column="{utu:Responsive Narrowest=1, Normal=2}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" Style="{StaticResource ButtonSecondaryS}" VerticalAlignment="Center" Visibility="{Binding Data.CanStartPrep, Converter={StaticResource VisibleWhenTrue}}"
                                   Command="{Binding Parent.StartPrep}" CommandParameter="{Binding Data}">
                             <TextBlock x:Uid="TodayPage_3" Text="Start prep" Style="{StaticResource TypeButtonS}" VerticalAlignment="Center" />
                           </Button>
@@ -220,19 +220,19 @@
                         </Grid>
                         <!-- Chip row: margin-top 8 -->
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space10}" Margin="{StaticResource GapTop8}" Height="26">
-                          <Border Style="{StaticResource ChipErrorSoft}" Visibility="{Binding Data.ShowErrorChip}">
+                          <Border Style="{StaticResource ChipErrorSoft}" Visibility="{Binding Data.ShowErrorChip, Converter={StaticResource VisibleWhenTrue}}">
                             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                               <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
                               <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
                             </StackPanel>
                           </Border>
-                          <Border Style="{StaticResource ChipLiveSoft}" Height="26" Padding="{StaticResource InsetX8}" Visibility="{Binding Data.ShowReadyChip}">
+                          <Border Style="{StaticResource ChipLiveSoft}" Height="26" Padding="{StaticResource InsetX8}" Visibility="{Binding Data.ShowReadyChip, Converter={StaticResource VisibleWhenTrue}}">
                             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                               <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" />
                               <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" />
                             </StackPanel>
                           </Border>
-                          <Border Style="{StaticResource BadgeNeutral}" Height="26" Visibility="{Binding Data.ShowNeutralChip}">
+                          <Border Style="{StaticResource BadgeNeutral}" Height="26" Visibility="{Binding Data.ShowNeutralChip, Converter={StaticResource VisibleWhenTrue}}">
                             <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" />
                           </Border>
                           <!-- One chip shows at a time (they share the first cell); the note trims. -->
@@ -406,12 +406,12 @@
                 <DataTemplate>
                   <Button Style="{StaticResource SegmentButton}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.ShowFilter}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding AccessibleName}">
                     <Grid>
-                      <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius8}" Visibility="{Binding IsSelected}" Shadows="{StaticResource ShadowSegOn}">
+                      <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius8}" Visibility="{Binding IsSelected, Converter={StaticResource VisibleWhenTrue}}" Shadows="{StaticResource ShadowSegOn}">
                         <Border CornerRadius="{StaticResource Radius8}" BorderBrush="{ThemeResource EdgeBrush}" BorderThickness="1" />
                       </utu:ShadowContainer>
                       <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Padding="{StaticResource InsetX12}" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" FontWeight="SemiBold" Visibility="{Binding IsSelected}" />
-                        <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" FontWeight="Medium" Visibility="{Binding IsUnselected}" />
+                        <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" FontWeight="SemiBold" Visibility="{Binding IsSelected, Converter={StaticResource VisibleWhenTrue}}" />
+                        <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" FontWeight="Medium" Visibility="{Binding IsUnselected, Converter={StaticResource VisibleWhenTrue}}" />
                         <TextBlock Text="{Binding Count}" Style="{StaticResource TypeBodyS}" />
                       </StackPanel>
                     </Grid>
@@ -467,7 +467,7 @@
               <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="{StaticResource Space8}" AutomationProperties.LiveSetting="Polite">
                 <TextBlock Text="{Binding DataContext.CardsEmpty.Title, ElementName=CardsFeed}" Style="{StaticResource TypeTitleS}" TextWrapping="WrapWholeWords" />
                 <TextBlock Text="{Binding DataContext.CardsEmpty.Body, ElementName=CardsFeed}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
-                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space10}" Margin="{StaticResource GapTop8}" Visibility="{Binding DataContext.CardsEmpty.ShowActions, ElementName=CardsFeed, FallbackValue=Collapsed}">
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space10}" Margin="{StaticResource GapTop8}" Visibility="{Binding DataContext.CardsEmpty.ShowActions, ElementName=CardsFeed, FallbackValue=Collapsed, Converter={StaticResource VisibleWhenTrue}}">
                   <Button x:Uid="TodayPage_25" Style="{StaticResource ButtonPrimaryM}" Command="{Binding DataContext.NewCase, ElementName=CardsFeed}" AutomationProperties.Name="New patient">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                       <TextBlock x:Uid="TodayPage_26" Text="New patient" Style="{StaticResource TypeButtonS}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
@@ -536,11 +536,11 @@
                           <Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                           <!-- Time chip 56 x 46, radius 10 -->
                           <Grid Width="56" Height="46" HorizontalAlignment="Left" IsHitTestVisible="False">
-                            <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PageBrush}" Stroke="{ThemeResource EdgeBrush}" StrokeThickness="1" Visibility="{Binding IsDue}" />
-                            <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PhaseErrorSoftBrush}" Stroke="{ThemeResource PhaseErrorSoftBorderBrush}" StrokeThickness="1" Visibility="{Binding IsLate}" />
+                            <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PageBrush}" Stroke="{ThemeResource EdgeBrush}" StrokeThickness="1" Visibility="{Binding IsDue, Converter={StaticResource VisibleWhenTrue}}" />
+                            <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PhaseErrorSoftBrush}" Stroke="{ThemeResource PhaseErrorSoftBorderBrush}" StrokeThickness="1" Visibility="{Binding IsLate, Converter={StaticResource VisibleWhenTrue}}" />
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                              <TextBlock Text="{Binding DueLabel}" Style="{StaticResource TypeMicro}" HorizontalAlignment="Center" Visibility="{Binding IsDue}" />
-                              <TextBlock Text="{Binding DueLabel}" Style="{StaticResource TypeMicro}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseErrorSolidBrush}" HorizontalAlignment="Center" Visibility="{Binding IsLate}" />
+                              <TextBlock Text="{Binding DueLabel}" Style="{StaticResource TypeMicro}" HorizontalAlignment="Center" Visibility="{Binding IsDue, Converter={StaticResource VisibleWhenTrue}}" />
+                              <TextBlock Text="{Binding DueLabel}" Style="{StaticResource TypeMicro}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseErrorSolidBrush}" HorizontalAlignment="Center" Visibility="{Binding IsLate, Converter={StaticResource VisibleWhenTrue}}" />
                               <TextBlock Text="{Binding Time}" Style="{StaticResource TypeMonoCell}" HorizontalAlignment="Center" />
                             </StackPanel>
                           </Grid>
@@ -548,11 +548,11 @@
                             <TextBlock Text="{Binding Title}" Style="{StaticResource TypeTitleS}" TextTrimming="CharacterEllipsis" />
                             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                               <Grid Width="6" Height="6" VerticalAlignment="Center">
-                                <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
-                                <Ellipse Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
-                                <Ellipse Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
-                                <Ellipse Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting}" />
-                                <Ellipse Fill="{ThemeResource InkMutedBrush}" Visibility="{Binding IsHome}" />
+                                <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia, Converter={StaticResource VisibleWhenTrue}}" />
+                                <Ellipse Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery, Converter={StaticResource VisibleWhenTrue}}" />
+                                <Ellipse Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep, Converter={StaticResource VisibleWhenTrue}}" />
+                                <Ellipse Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting, Converter={StaticResource VisibleWhenTrue}}" />
+                                <Ellipse Fill="{ThemeResource InkMutedBrush}" Visibility="{Binding IsHome, Converter={StaticResource VisibleWhenTrue}}" />
                               </Grid>
                               <TextBlock Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis"><Run Text="{Binding PatientName}" FontWeight="Medium" Foreground="{ThemeResource InkBrush}" /><Run Text=" · " /><Run Text="{Binding Meta}" /></TextBlock>
                             </StackPanel>
@@ -560,21 +560,21 @@
                             <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyS}" Visibility="{utu:Responsive Narrowest=Visible, Wide=Collapsed}" />
                           </StackPanel>
                           <Grid Grid.Column="2" Width="{StaticResource DueStatusWidth}" VerticalAlignment="Center" IsHitTestVisible="False" Visibility="{utu:Responsive Narrowest=Collapsed, Wide=Visible}">
-                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsOverdue}">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsOverdue, Converter={StaticResource VisibleWhenTrue}}">
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
                               <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource PhaseErrorSolidBrush}" />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsReady}">
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsReady, Converter={StaticResource VisibleWhenTrue}}">
                               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" />
                               <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" />
                             </StackPanel>
-                            <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding IsNeutral}" />
+                            <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding IsNeutral, Converter={StaticResource VisibleWhenTrue}}" />
                           </Grid>
                           <Grid Grid.Column="3" MinWidth="{StaticResource DueActionWidth}" HorizontalAlignment="Right" VerticalAlignment="Center">
-                            <Button Style="{StaticResource ButtonPrimaryM}" Visibility="{Binding IsPrimary}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenTask}" CommandParameter="{Binding}">
+                            <Button Style="{StaticResource ButtonPrimaryM}" Visibility="{Binding IsPrimary, Converter={StaticResource VisibleWhenTrue}}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenTask}" CommandParameter="{Binding}">
                               <TextBlock Text="{Binding ActionLabel}" Style="{StaticResource TypeButtonS}" Foreground="{ThemeResource OnPrimaryInkBrush}" />
                             </Button>
-                            <Button Style="{StaticResource ButtonSecondaryM}" Visibility="{Binding IsSecondary}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenTask}" CommandParameter="{Binding}">
+                            <Button Style="{StaticResource ButtonSecondaryM}" Visibility="{Binding IsSecondary, Converter={StaticResource VisibleWhenTrue}}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenTask}" CommandParameter="{Binding}">
                               <TextBlock Text="{Binding ActionLabel}" Style="{StaticResource TypeButtonS}" />
                             </Button>
                           </Grid>
@@ -663,10 +663,10 @@
                           <Grid Grid.Column="1" Height="8" VerticalAlignment="Center">
                             <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource TrackBrush}" />
                             <controls:SpanPanel>
-                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia}" />
-                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep}" />
-                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery}" />
-                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting}" />
+                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia, Converter={StaticResource VisibleWhenTrue}}" />
+                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep, Converter={StaticResource VisibleWhenTrue}}" />
+                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery, Converter={StaticResource VisibleWhenTrue}}" />
+                              <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting, Converter={StaticResource VisibleWhenTrue}}" />
                             </controls:SpanPanel>
                           </Grid>
                           <TextBlock Grid.Column="2" Text="{Binding DurationText}" Style="{StaticResource TypeMonoNum}" HorizontalAlignment="Right" VerticalAlignment="Center" />
@@ -676,7 +676,7 @@
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
                   <!-- Insight card: margin-top 24, pad 14 16, radius 14, #F3F3F2, tri-tone -->
-                  <Border Style="{StaticResource QuietPanel}" Margin="{StaticResource GapTop24}" Visibility="{Binding Data.HasInsight}">
+                  <Border Style="{StaticResource QuietPanel}" Margin="{StaticResource GapTop24}" Visibility="{Binding Data.HasInsight, Converter={StaticResource VisibleWhenTrue}}">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space12}">
                       <Grid Width="32" Height="32" VerticalAlignment="Top">
                         <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PhasePrepSoftBrush}" />
