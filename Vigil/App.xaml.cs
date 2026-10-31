@@ -119,7 +119,7 @@ public partial class App : Application
         {
             _ = Diagnostics.PageTimer.RunAsync(MainWindow, Host.Services, perfOutput);
         }
-#if DESKTOP
+#if __DESKTOP__ || WINDOWS
 #if DEBUG
         // Windows can restore the window maximized, and Resize does nothing on a maximized window: restore it first.
         if (Environment.GetCommandLineArgs().Contains("--clover-preview") && MainWindow.AppWindow.Presenter is Microsoft.UI.Windowing.OverlappedPresenter { State: Microsoft.UI.Windowing.OverlappedPresenterState.Maximized } presenter)
