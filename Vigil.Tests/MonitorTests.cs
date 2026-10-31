@@ -84,7 +84,7 @@ public class StripDataTests
     private static readonly DateTimeOffset T0 = new(2026, 10, 7, 9, 0, 0, TimeSpan.FromHours(-4));
 
     private static Case Live(params int[] minutes) =>
-        Case.New(new Patient("Bella", Species.Canine, "Lab", 18.4m, 2m, "M"), "Spay", "Dr", "Tech", T0.AddHours(-1)) with
+        Case.New(new Patient("Knuckles", Species.Canine, "Lab", 18.4m, 2m, "M"), "Spay", "Dr", "Tech", T0.AddHours(-1)) with
         {
             Status = CaseStatus.Anesthetized,
             InducedAt = T0,

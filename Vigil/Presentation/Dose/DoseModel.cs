@@ -1,7 +1,7 @@
 namespace Vigil.Presentation;
 
 /// <summary>The dose sheet: pick a drug, set mg/kg (pre-filled with the formulary default), read the volume, give.</summary>
-public partial record DoseModel(CaseRef Ref, ICaseStore Store, IFormulary Formulary, IClock Clock, INavigator Navigator)
+public partial record DoseModel(CaseRef Ref, ICaseStore Store, IFormulary Formulary, IClock Clock, INavigator Navigator, DoseFeedback Feedback)
 {
     private IFeed<Case> Source { get; } = Feed<Case>.Async(
         async ct => await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(c) : Option.None<Case>(), Store.Changed);
@@ -75,6 +75,7 @@ public partial record DoseModel(CaseRef Ref, ICaseStore Store, IFormulary Formul
             await Error.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", ex.Message), ct);
             return;
         }
+        Feedback.Recorded(Ref.Id);
         await Navigator.NavigateBackAsync(this, cancellation: ct);
     }
 

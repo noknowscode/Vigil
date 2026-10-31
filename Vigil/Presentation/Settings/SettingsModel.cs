@@ -24,7 +24,7 @@ public partial record SettingsModel(
             if (Localization.CurrentCulture.TwoLetterISOLanguageName != culture)
             {
                 await Localization.SetCurrentCultureAsync(new System.Globalization.CultureInfo(culture));
-                await LanguageNotice.UpdateAsync(_ => culture == "fr" ? "Langue enregistrée : redémarrez Vigil pour l'appliquer." : "Language saved: restart Vigil to apply it.", ct);
+                await LanguageNotice.UpdateAsync(_ => culture == "fr" ? "Langue enregistrée : redémarrez Clover pour l'appliquer." : "Language saved: restart Clover to apply it.", ct);
             }
         });
 
@@ -35,9 +35,19 @@ public partial record SettingsModel(
     public IState<int> IntervalIndex => State.Value(this, () => Math.Max(0, Array.IndexOf(Services.Preferences.Intervals, (int)Preferences.ReadingInterval.TotalMinutes)))
         .ForEach(async (index, ct) => await Preferences.SetReadingIntervalAsync(Services.Preferences.Intervals[Math.Clamp(index, 0, 2)], ct));
 
+    /// <summary>Surname for the board greeting; saved when the field loses focus.</summary>
+    public IState<string> ClinicianName => State.Value(this, () => Preferences.ClinicianName)
+        .ForEach(async (name, ct) => await Preferences.SetClinicianNameAsync(name ?? "", ct));
+
+    /// <summary>First name, for the sidebar avatar initials only; saved when the field loses focus.</summary>
+    public IState<string> ClinicianFirstName => State.Value(this, () => Preferences.ClinicianFirstName)
+        .ForEach(async (name, ct) => await Preferences.SetClinicianFirstNameAsync(name ?? "", ct));
+
     public IState<string> Notice => State.Value(this, () => "");
 
     public IState<string> LanguageNotice => State.Value(this, () => "");
+
+    public IFeed<bool> HasLanguageNotice => LanguageNotice.Select(s => !string.IsNullOrEmpty(s));
 
     public async ValueTask LoadSampleDay(CancellationToken ct)
     {

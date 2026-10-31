@@ -1,3 +1,8 @@
+<!--
+  Administer dose (route Main/Dose, from a Due next "Prepare" task). v2 utility layout: serif title over the patient
+  line, the drug list and the calculation as two panel cards (side by side from Normal), the action bar pinned below.
+  The computed volume is the anchor (mono stat). Out-of-range doses confirm inline; the safe choice is the filled one.
+-->
 <Page x:Class="Vigil.Presentation.DosePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -5,15 +10,17 @@
       xmlns:mvux="using:Uno.Extensions.Reactive.UI"
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:domain="using:Vigil.Domain"
-      Background="{ThemeResource SurfaceBrush}">
+      Background="Transparent">
 
-  <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="960">
+  <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="{StaticResource SheetMaxWidth}" HorizontalAlignment="Left">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <utu:NavigationBar Content="{Binding Patient}" Background="{ThemeResource SurfaceBrush}">
+    <utu:NavigationBar Content="" Background="Transparent">
       <utu:NavigationBar.MainCommand>
         <AppBarButton x:Uid="Dose_1" Label="Cancel" AutomationProperties.Name="Close the dose sheet" Command="{Binding Cancel}">
           <AppBarButton.Icon>
@@ -23,54 +30,86 @@
       </utu:NavigationBar.MainCommand>
     </utu:NavigationBar>
 
-    <Grid Grid.Row="1" Padding="{utu:Responsive Narrow='16,8,16,16', Wide='24,8,24,24'}" ColumnSpacing="24" RowSpacing="16">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="*" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-      </Grid.RowDefinitions>
+    <StackPanel Grid.Row="1" Spacing="{StaticResource Space6}" Padding="{utu:Responsive Narrowest={StaticResource SheetSectionInsetNarrow}, Normal={StaticResource SheetSectionInsetNormal}}">
+      <TextBlock x:Uid="Dose_2" Text="Administer dose" Style="{StaticResource TypeDisplayTitle}" />
+      <TextBlock Text="{Binding Patient}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextTrimming="CharacterEllipsis" />
+    </StackPanel>
+
+    <!-- Body: the drug list and the calculation, side by side from Normal, stacked on phones; it scrolls when the
+         window is short (a 640 px window left the stacked drug list no height at all). -->
+    <ScrollViewer Grid.Row="2" HorizontalScrollMode="Disabled">
+    <Grid Padding="{utu:Responsive Narrowest={StaticResource SheetSectionInsetNarrow}, Normal={StaticResource SheetSectionInsetNormal}}" ColumnSpacing="{StaticResource Space20}" RowSpacing="{StaticResource Space16}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
 
       <!-- Drug list -->
-      <Grid Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" RowSpacing="8">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBlock x:Uid="Dose_2" Style="{StaticResource LabelLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="DRUG · sample formulary, not for clinical use" />
-        <ListView x:Uid="Dose_3" Grid.Row="1"
-                  ItemsSource="{Binding Drugs}"
-                  SelectionMode="Single"
-                  AutomationProperties.Name="Drugs">
-          <ListView.ItemTemplate>
-            <DataTemplate x:DataType="domain:Drug">
-              <Grid Padding="4,10" ColumnSpacing="12">
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Spacing="2">
-                  <TextBlock Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{x:Bind Name}" />
-                  <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind DrugClass}" />
-                </StackPanel>
-                <TextBlock Grid.Column="1" Style="{StaticResource CodeTextStyle}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center">
-                  <Run Text="{x:Bind MgPerMl}" /><Run x:Uid="Dose_4" Text=" mg/mL" />
-                </TextBlock>
-              </Grid>
+      <utu:CardContentControl Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Style="{StaticResource PanelCardStyle}" Padding="{StaticResource Inset12x16}" VerticalContentAlignment="Stretch">
+      <Grid RowSpacing="{StaticResource Space8}" RowDefinitions="Auto,Auto">
+        <StackPanel Spacing="{StaticResource Space2}" Padding="{StaticResource InsetX8}">
+          <TextBlock x:Uid="Dose_3" Style="{StaticResource TypeH3Card}" Text="Drug" />
+          <TextBlock x:Uid="Dose_4" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="Sample formulary, not for clinical use." TextWrapping="WrapWholeWords" />
+        </StackPanel>
+        <!-- Formulary states; the list binds the IListFeed through Parent so the MVUX selection (Selected) still syncs. -->
+        <mvux:FeedView x:Name="DrugsFeed" Grid.Row="1" Source="{Binding Drugs}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch">
+          <mvux:FeedView.ValueTemplate>
+            <DataTemplate>
+              <ListView x:Uid="Dose_5"
+                        ItemsSource="{Binding Parent.Drugs}"
+                        SelectionMode="Single"
+                        AutomationProperties.Name="Drugs">
+                <ListView.ItemTemplate>
+                  <DataTemplate x:DataType="domain:Drug">
+                    <Grid Padding="{StaticResource Inset4x10}" ColumnSpacing="{StaticResource Space12}">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel Spacing="{StaticResource Space2}">
+                        <TextBlock Style="{StaticResource TypeBodyStrong}" Text="{x:Bind Name}" />
+                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind DrugClass}" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1" Style="{StaticResource TypeMonoMeta}" VerticalAlignment="Center">
+                        <Run Text="{x:Bind MgPerMl}" /><Run x:Uid="Dose_6" Text=" mg/mL" />
+                      </TextBlock>
+                    </Grid>
+                  </DataTemplate>
+                </ListView.ItemTemplate>
+              </ListView>
             </DataTemplate>
-          </ListView.ItemTemplate>
-        </ListView>
+          </mvux:FeedView.ValueTemplate>
+          <mvux:FeedView.ProgressTemplate>
+            <DataTemplate>
+              <StackPanel Padding="{StaticResource InsetX8}" Spacing="{StaticResource Space16}" AutomationProperties.AccessibilityView="Raw">
+                <Rectangle Style="{StaticResource Skeleton}" Width="160" Height="18" />
+                <Rectangle Style="{StaticResource Skeleton}" Width="200" Height="18" />
+                <Rectangle Style="{StaticResource Skeleton}" Width="140" Height="18" />
+              </StackPanel>
+            </DataTemplate>
+          </mvux:FeedView.ProgressTemplate>
+          <mvux:FeedView.NoneTemplate>
+            <DataTemplate>
+              <TextBlock x:Uid="Dose_23" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Margin="{StaticResource InsetX8}"
+                         Text="The formulary has no drugs." />
+            </DataTemplate>
+          </mvux:FeedView.NoneTemplate>
+          <mvux:FeedView.ErrorTemplate>
+            <DataTemplate>
+              <StackPanel Spacing="{StaticResource Space12}" Padding="{StaticResource InsetX8}" AutomationProperties.LiveSetting="Polite">
+                <!-- The formulary ships inside the app: a read failure is not something a retry fixes. -->
+                <TextBlock x:Uid="Dose_24" Style="{StaticResource TypeTitleS}" Text="Couldn't load the formulary." />
+                <TextBlock x:Uid="Dose_25" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="Doses can't be calculated on this device until the app is reinstalled." />
+              </StackPanel>
+            </DataTemplate>
+          </mvux:FeedView.ErrorTemplate>
+        </mvux:FeedView>
       </Grid>
+      </utu:CardContentControl>
 
       <!-- Calculation: the computed volume is the sheet's anchor. -->
-      <ScrollViewer Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"
-                    Grid.Column="{utu:Responsive Narrowest=0, Normal=1}"
-                    Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}">
-        <StackPanel Spacing="16">
-          <TextBox x:Uid="Dose_5" Header="Dose (mg/kg)"
+      <utu:CardContentControl Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"
+                              Grid.Column="{utu:Responsive Narrowest=0, Normal=1}"
+                              Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}"
+                              Style="{StaticResource PanelCardStyle}" VerticalAlignment="Top">
+        <StackPanel Spacing="{StaticResource Space16}">
+          <TextBox x:Uid="Dose_7" Header="Dose (mg/kg)"
                    InputScope="Number"
                    Text="{Binding MgPerKg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    AutomationProperties.Name="Dose in milligrams per kilogram" />
@@ -78,79 +117,79 @@
           <mvux:FeedView Source="{Binding Calc}" IsTabStop="False" RefreshingState="None">
             <mvux:FeedView.ValueTemplate>
               <DataTemplate>
-                <StackPanel Spacing="6">
-                  <TextBlock x:Uid="Dose_6" Style="{StaticResource LabelLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="DRAW UP" />
-                  <TextBlock x:Uid="Dose_7" Style="{StaticResource DisplayLarge}"
-                             Foreground="{ThemeResource OnSurfaceBrush}"
+                <StackPanel Spacing="{StaticResource Space6}">
+                  <TextBlock x:Uid="Dose_8" Style="{StaticResource TypeEyebrow}" Text="DRAW UP" />
+                  <TextBlock x:Uid="Dose_9" Style="{StaticResource TypeMonoVital}"
                              Text="{Binding Data.VolumeText}"
                              AutomationProperties.Name="Volume to draw up" />
-                  <TextBlock Style="{StaticResource CodeTextStyle}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="Wrap">
+                  <TextBlock Style="{StaticResource TypeMonoMeta}" TextWrapping="Wrap">
                     <Run Text="{Binding Data.Formula}" />
                   </TextBlock>
-                  <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}">
-                    <Run x:Uid="Dose_8" Text="Reference range" />
+                  <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}">
+                    <Run x:Uid="Dose_10" Text="Reference range" />
                     <Run Text="{Binding Data.ReferenceText}" />
                   </TextBlock>
-                  <StackPanel Orientation="Horizontal" Spacing="8" Visibility="{Binding Data.IsOutOfRange}">
-                    <FontIcon Glyph="&#xE7BA;" FontSize="18" Foreground="{ThemeResource ErrorBrush}" />
-                    <TextBlock x:Uid="Dose_9" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource ErrorBrush}" Text="Outside the reference range: you will be asked to confirm." TextWrapping="WrapWholeWords" />
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" Visibility="{Binding Data.IsOutOfRange, Converter={StaticResource VisibleWhenTrue}}">
+                    <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
+                    <TextBlock x:Uid="Dose_11" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource ErrorBrush}" Text="Outside the reference range: you will be asked to confirm." TextWrapping="WrapWholeWords" />
                   </StackPanel>
                 </StackPanel>
               </DataTemplate>
             </mvux:FeedView.ValueTemplate>
             <mvux:FeedView.NoneTemplate>
               <DataTemplate>
-                <StackPanel Spacing="6">
-                  <TextBlock x:Uid="Dose_10" Style="{StaticResource LabelLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="DRAW UP" />
-                  <TextBlock x:Uid="Dose_11" Style="{StaticResource HeadlineMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="Pick a drug" />
-                  <TextBlock x:Uid="Dose_12" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+                <StackPanel Spacing="{StaticResource Space6}">
+                  <TextBlock x:Uid="Dose_12" Style="{StaticResource TypeEyebrow}" Text="DRAW UP" />
+                  <TextBlock x:Uid="Dose_13" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkMutedBrush}" Text="Pick a drug" />
+                  <TextBlock x:Uid="Dose_14" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords"
                              Text="The volume appears here with its formula once a drug and a dose in mg/kg are set." />
                 </StackPanel>
               </DataTemplate>
             </mvux:FeedView.NoneTemplate>
           </mvux:FeedView>
 
-          <muxc:RadioButtons x:Uid="Dose_13" Header="Route" MaxColumns="4" SelectedIndex="{Binding RouteIndex, Mode=TwoWay}">
-            <RadioButton x:Uid="Dose_14" Content="IV" />
-            <RadioButton x:Uid="Dose_15" Content="IM" />
-            <RadioButton x:Uid="Dose_16" Content="SC" />
-            <RadioButton x:Uid="Dose_17" Content="PO" />
+          <muxc:RadioButtons x:Uid="Dose_15" Header="Route" MaxColumns="4" SelectedIndex="{Binding RouteIndex, Mode=TwoWay}">
+            <RadioButton x:Uid="Dose_16" Content="IV" />
+            <RadioButton x:Uid="Dose_17" Content="IM" />
+            <RadioButton x:Uid="Dose_18" Content="SC" />
+            <RadioButton x:Uid="Dose_19" Content="PO" />
           </muxc:RadioButtons>
-          <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Error}" />
+          <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Error}" />
         </StackPanel>
-      </ScrollViewer>
+      </utu:CardContentControl>
 
-      <Grid Grid.Row="2" Grid.ColumnSpan="2">
-        <Button x:Uid="Dose_18" Style="{StaticResource FilledButtonStyle}"
-                HorizontalAlignment="Stretch"
+    </Grid>
+    </ScrollViewer>
+
+    <!-- The action bar stays pinned under the scrolling body at every width. -->
+    <Grid Grid.Row="3" Padding="{utu:Responsive Narrowest={StaticResource SheetActionInsetNarrow}, Normal={StaticResource SheetActionInsetNormal}}">
+        <Button x:Uid="Dose_20" Style="{StaticResource ButtonPrimaryXL}"
                 Content="Give dose"
-                Visibility="{Binding NotConfirming}"
+                Visibility="{Binding NotConfirming, Converter={StaticResource VisibleWhenTrue}}"
                 Command="{Binding Give}"
                 AutomationProperties.Name="Give dose" />
         <!-- Out-of-range confirmation, inline: the safe choice is the filled one. -->
-        <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}"
-                                HorizontalAlignment="Stretch"
-                                Visibility="{Binding Confirming}"
-                                IsTabStop="False">
-          <StackPanel Padding="16" Spacing="12">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <FontIcon Glyph="&#xE7BA;" FontSize="20" Foreground="{ThemeResource ErrorBrush}" />
-              <TextBlock Style="{StaticResource TitleLarge}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{Binding ConfirmTitle}" />
+        <utu:CardContentControl Style="{StaticResource PanelCardStyle}"
+                                BorderBrush="{ThemeResource PhaseErrorSoftBorderBrush}"
+                                Visibility="{Binding Confirming, Converter={StaticResource VisibleWhenTrue}}">
+          <StackPanel Spacing="{StaticResource Space12}">
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
+              <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
+              <TextBlock Style="{StaticResource TypeTitleM}" Text="{Binding ConfirmTitle}" />
             </StackPanel>
-            <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding ConfirmText}"
+            <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" Text="{Binding ConfirmText}"
                        AutomationProperties.LiveSetting="Assertive" />
-            <Grid ColumnSpacing="12">
+            <Grid ColumnSpacing="{StaticResource Space12}">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
-              <Button x:Uid="Dose_19" Style="{StaticResource FilledButtonStyle}" HorizontalAlignment="Stretch" Content="Change dose" Command="{Binding ChangeDose}" />
-              <Button x:Uid="Dose_20" Grid.Column="1" Style="{StaticResource OutlinedButtonStyle}" HorizontalAlignment="Stretch" Content="Give anyway"
+              <Button x:Uid="Dose_21" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Stretch" Content="Change dose" Command="{Binding ChangeDose}" />
+              <Button x:Uid="Dose_22" Grid.Column="1" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Stretch" Content="Give anyway"
                       Command="{Binding GiveAnyway}" AutomationProperties.Name="Give the out-of-range dose anyway" />
             </Grid>
           </StackPanel>
         </utu:CardContentControl>
       </Grid>
-    </Grid>
   </Grid>
 </Page>

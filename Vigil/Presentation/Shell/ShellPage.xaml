@@ -1,0 +1,47 @@
+<!--
+  The app shell (route Main, docs/design/shell-and-tokens.md §7): the sidebar on the page ground and the main frame,
+  12 px in (0 on the sidebar side), radius 22, surface, tri-tone border and the frame shadow, holding the content
+  Frame region every sidebar destination and detail page navigates in. Pages pad their own scroll content
+  (FramePadding 36/40/40/40) so the scroll bar sits at the frame edge, as the prototype's overflow-y main does.
+-->
+<Page x:Class="Vigil.Presentation.ShellPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:Vigil.Controls"
+      xmlns:uen="using:Uno.Extensions.Navigation.UI"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource PageBrush}">
+  <Grid utu:SafeArea.Insets="VisibleBounds" ColumnDefinitions="Auto,*">
+    <!--
+      Navigation by width (default breakpoints): Narrow (phones, below 600) has no sidebar column, the frame header's
+      menu button opens the sidebar as the !Menu drawer; Normal and Wide (600-1080) show the 72 px icon rail; Widest
+      (1080 and up) the full 256 px sidebar, which the user can still collapse to the rail. The ResponsiveView builds
+      the sidebar only where it is shown; the Sidebar picks rail or full itself.
+    -->
+    <utu:ResponsiveView>
+      <utu:ResponsiveView.NarrowTemplate><DataTemplate><Grid /></DataTemplate></utu:ResponsiveView.NarrowTemplate>
+      <utu:ResponsiveView.NormalTemplate><DataTemplate><controls:Sidebar /></DataTemplate></utu:ResponsiveView.NormalTemplate>
+    </utu:ResponsiveView>
+
+    <!-- The frame keeps a fixed offset inside this wrapper: ShadowContainer repaints on size, not on offset changes. -->
+    <Grid Grid.Column="1" Margin="{utu:Responsive Narrowest={StaticResource FrameMarginNarrow}, Normal={StaticResource FrameMarginNormal}}">
+      <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius22}" Shadows="{StaticResource ShadowFrame}">
+        <Border CornerRadius="{StaticResource Radius22}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
+          <Grid RowDefinitions="Auto,*">
+            <!-- Narrow: a frame header with the menu button that opens the sidebar drawer. -->
+            <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed}"
+                  Padding="{StaticResource FrameHeaderInset}" ColumnDefinitions="Auto,Auto,*" ColumnSpacing="{StaticResource Space12}">
+              <Button x:Uid="Shell_1" Style="{StaticResource ButtonIconSecondary}" Command="{Binding OpenMenu}" AutomationProperties.Name="Open menu">
+                <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconMenu}" Foreground="{ThemeResource InkBrush}" />
+              </Button>
+              <ContentControl Grid.Column="1" Style="{StaticResource FilledIcon}" Width="22" Height="22" Content="{StaticResource IconLogo}" VerticalAlignment="Center" />
+              <!-- -4: the wordmark's side bearing, so the gap reads as the sidebar's 10 px (optical). -->
+              <TextBlock x:Uid="Shell_2" Grid.Column="2" Text="clover" Style="{StaticResource TypeBrand}" Margin="-4,0,0,0" VerticalAlignment="Center" />
+            </Grid>
+            <Frame Grid.Row="1" uen:Region.Attached="True" />
+          </Grid>
+        </Border>
+      </utu:ShadowContainer>
+    </Grid>
+  </Grid>
+</Page>

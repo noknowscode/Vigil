@@ -18,9 +18,24 @@ public interface IPreferences
     ValueTask SetReadingIntervalAsync(int minutes, CancellationToken ct);
 
     ValueTask SetReduceMotionAsync(bool value, CancellationToken ct);
+
+    /// <summary>Surname for the board greeting ("Good morning, Dr. Okafor"); empty greets without a name.</summary>
+    string ClinicianName { get; }
+
+    ValueTask SetClinicianNameAsync(string name, CancellationToken ct);
+
+    /// <summary>First name, for the avatar initials only ("Amara" + "Okafor" gives "AO"); empty uses the surname alone.</summary>
+    string ClinicianFirstName { get; }
+
+    ValueTask SetClinicianFirstNameAsync(string name, CancellationToken ct);
+
+    /// <summary>Planned preparation time per case, for the care-time insight and the next surgery's prep start.</summary>
+    int PlannedPrepMinutes { get; }
+
+    ValueTask SetPlannedPrepMinutesAsync(int minutes, CancellationToken ct);
 }
 
-internal sealed record PreferencesFile(int ReadingIntervalMinutes, bool ReduceMotion);
+internal sealed record PreferencesFile(int ReadingIntervalMinutes, bool ReduceMotion, string ClinicianName = "", int PlannedPrepMinutes = Preferences.DefaultPlannedPrepMinutes, string ClinicianFirstName = "");
 
 [JsonSerializable(typeof(PreferencesFile))]
 internal partial class PreferencesJsonContext : JsonSerializerContext;
@@ -28,6 +43,8 @@ internal partial class PreferencesJsonContext : JsonSerializerContext;
 public sealed class Preferences : IPreferences
 {
     public static readonly int[] Intervals = [3, 5, 10];
+
+    public const int DefaultPlannedPrepMinutes = 25;
 
     private readonly string? _path;
     private PreferencesFile _value = new(5, false);
@@ -57,6 +74,19 @@ public sealed class Preferences : IPreferences
     public ValueTask SetReadingIntervalAsync(int minutes, CancellationToken ct) => SaveAsync(_value with { ReadingIntervalMinutes = minutes }, ct);
 
     public ValueTask SetReduceMotionAsync(bool value, CancellationToken ct) => SaveAsync(_value with { ReduceMotion = value }, ct);
+
+    public string ClinicianName => _value.ClinicianName ?? "";
+
+    public ValueTask SetClinicianNameAsync(string name, CancellationToken ct) => SaveAsync(_value with { ClinicianName = name.Trim() }, ct);
+
+    public string ClinicianFirstName => _value.ClinicianFirstName ?? "";
+
+    public ValueTask SetClinicianFirstNameAsync(string name, CancellationToken ct) => SaveAsync(_value with { ClinicianFirstName = name.Trim() }, ct);
+
+    public int PlannedPrepMinutes => _value.PlannedPrepMinutes is >= 5 and <= 180 ? _value.PlannedPrepMinutes : DefaultPlannedPrepMinutes;
+
+    public ValueTask SetPlannedPrepMinutesAsync(int minutes, CancellationToken ct) =>
+        SaveAsync(_value with { PlannedPrepMinutes = Math.Clamp(minutes, 5, 180) }, ct);
 
     /// <summary>The user's own setting, without the platform's.</summary>
     public bool ReduceMotionSetting => _value.ReduceMotion;

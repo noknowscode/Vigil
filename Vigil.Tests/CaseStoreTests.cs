@@ -32,9 +32,9 @@ public class CaseStoreTests
         await SeedAsync(Store());
 
         var reloaded = await Store().GetAllAsync(CancellationToken.None);
-        reloaded.Should().HaveCount(5);
-        var bella = reloaded.Single(c => c.Patient.Name == "Bella");
-        bella.Readings.Should().HaveCount(14);
+        reloaded.Should().HaveCount(4);
+        var bella = reloaded.Single(c => c.Patient.Name == "Knuckles");
+        bella.Readings.Should().HaveCount(13);
         bella.Doses.Should().HaveCount(4);
         bella.Preop.Asa.Should().Be(2);
         bella.Status.Should().Be(CaseStatus.Anesthetized);
@@ -62,6 +62,24 @@ public class CaseStoreTests
         var save = async () => await store.SaveAsync(signed with { Procedure = "Changed" }, CancellationToken.None);
         await save.Should().ThrowAsync<SignedRecordException>();
         (await store.GetAsync(signed.Id, CancellationToken.None))!.Procedure.Should().Be(signed.Procedure);
+    }
+
+    [Test]
+    public async Task SignedRecordsStillTakeTheDischargeCallButNothingWithIt()
+    {
+        var store = Store();
+        var signed = SampleDay.Create(DateTimeOffset.Now).Single(c => c.IsSigned);
+        await store.SaveAsync(signed, CancellationToken.None);
+        var at = DateTimeOffset.Now;
+
+        var mixed = async () => await store.UpdateAsync(signed.Id, c => c.WithDischargeCallDone(at) with { Procedure = "Changed" }, CancellationToken.None);
+        await mixed.Should().ThrowAsync<SignedRecordException>();
+        await store.UpdateAsync(signed.Id, c => c.WithDischargeCallDone(at), CancellationToken.None);
+
+        var stored = (await store.GetAsync(signed.Id, CancellationToken.None))!;
+        stored.DischargeCall!.DoneAt.Should().Be(at);
+        stored.Procedure.Should().Be(signed.Procedure);
+        stored.IsSigned.Should().BeTrue();
     }
 
     [Test]

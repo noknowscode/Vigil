@@ -1,5 +1,5 @@
 {
-  "note": "Sample reference data for the Vigil reference app. Not for clinical use: a practice supplies its own concentrations and ranges.",
+  "note": "Sample reference data for the Clover reference app. Not for clinical use: a practice supplies its own concentrations and ranges.",
   "drugs": [
     { "id": "dexmedetomidine", "name": "Dexmedetomidine", "drugClass": "Sedative", "mgPerMl": 0.5, "defaultMgPerKg": 0.005, "canineMinMgPerKg": 0.001, "canineMaxMgPerKg": 0.01, "felineMinMgPerKg": 0.001, "felineMaxMgPerKg": 0.015, "defaultRoute": "IM" },
     { "id": "acepromazine", "name": "Acepromazine", "drugClass": "Sedative", "mgPerMl": 10, "defaultMgPerKg": 0.02, "canineMinMgPerKg": 0.01, "canineMaxMgPerKg": 0.05, "felineMinMgPerKg": 0.01, "felineMaxMgPerKg": 0.05, "defaultRoute": "IM" },
@@ -10,7 +10,7 @@
     { "id": "propofol", "name": "Propofol", "drugClass": "Induction", "mgPerMl": 10, "defaultMgPerKg": 4, "canineMinMgPerKg": 2, "canineMaxMgPerKg": 6, "felineMinMgPerKg": 2, "felineMaxMgPerKg": 8, "defaultRoute": "IV" },
     { "id": "alfaxalone", "name": "Alfaxalone", "drugClass": "Induction", "mgPerMl": 10, "defaultMgPerKg": 2, "canineMinMgPerKg": 1, "canineMaxMgPerKg": 3, "felineMinMgPerKg": 1, "felineMaxMgPerKg": 5, "defaultRoute": "IV" },
     { "id": "ketamine", "name": "Ketamine", "drugClass": "Induction", "mgPerMl": 100, "defaultMgPerKg": 5, "canineMinMgPerKg": 2, "canineMaxMgPerKg": 10, "felineMinMgPerKg": 2, "felineMaxMgPerKg": 10, "defaultRoute": "IV" },
-    { "id": "cefazolin", "name": "Cefazolin", "drugClass": "Antibiotic", "mgPerMl": 100, "defaultMgPerKg": 22, "canineMinMgPerKg": 20, "canineMaxMgPerKg": 25, "felineMinMgPerKg": 20, "felineMaxMgPerKg": 25, "defaultRoute": "IV" },
+    { "id": "cefazolin", "name": "Cefazolin", "drugClass": "Antibiotic", "mgPerMl": 100, "defaultMgPerKg": 22, "canineMinMgPerKg": 20, "canineMaxMgPerKg": 25, "felineMinMgPerKg": 20, "felineMaxMgPerKg": 25, "defaultRoute": "IV", "redoseMinutes": 90 },
     { "id": "meloxicam", "name": "Meloxicam", "drugClass": "NSAID", "mgPerMl": 5, "defaultMgPerKg": 0.2, "canineMinMgPerKg": 0.1, "canineMaxMgPerKg": 0.2, "felineMinMgPerKg": 0.05, "felineMaxMgPerKg": 0.3, "defaultRoute": "SC" },
     { "id": "atropine", "name": "Atropine", "drugClass": "Anticholinergic", "mgPerMl": 0.54, "defaultMgPerKg": 0.02, "canineMinMgPerKg": 0.02, "canineMaxMgPerKg": 0.04, "felineMinMgPerKg": 0.02, "felineMaxMgPerKg": 0.04, "defaultRoute": "IV" },
     { "id": "atipamezole", "name": "Atipamezole", "drugClass": "Reversal", "mgPerMl": 5, "defaultMgPerKg": 0.05, "canineMinMgPerKg": 0.025, "canineMaxMgPerKg": 0.1, "felineMinMgPerKg": 0.025, "felineMaxMgPerKg": 0.1, "defaultRoute": "IM" }

@@ -1,0 +1,715 @@
+<!--
+  v2 design tokens (SPEC-v2.md Design Brief; values from docs/design/shell-and-tokens.md §1-6, §10).
+  Merged in App.xaml after the Material palette (Styles/CloverPalette.xaml). Material roles already carry
+  Primary #244936, Background #F3F3F2, Surface #FCFBF9, OnSurface #1B212F, OnSurfaceVariant #5C616C and Outline #E4E4E6:
+  screens may bind those role brushes directly. The keys below cover the values no Material role holds.
+  Light values are the prototype's; Dark values are derived (SPEC-v2 Unresolved Questions).
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:utu="using:Uno.Toolkit.UI">
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Light">
+      <!-- Neutrals (§2) -->
+      <SolidColorBrush x:Key="InkBrush" Color="#1B212F" />
+      <SolidColorBrush x:Key="InkMutedBrush" Color="#5C616C" />
+      <SolidColorBrush x:Key="IconMutedBrush" Color="#6B707B" />
+      <SolidColorBrush x:Key="InkFaintBrush" Color="#A3A6AE" />
+      <!-- Form field outline: the lightest grey that keeps 3:1 against Surface1 (WCAG 1.4.11); no role sits there. -->
+      <SolidColorBrush x:Key="InputEdgeBrush" Color="#8E929B" />
+      <SolidColorBrush x:Key="PageBrush" Color="#F3F3F2" />
+      <SolidColorBrush x:Key="Surface1Brush" Color="#FCFBF9" />
+      <SolidColorBrush x:Key="Surface2Brush" Color="#F8F8F7" />
+      <SolidColorBrush x:Key="ChipNeutralBrush" Color="#E9EAEF" />
+      <SolidColorBrush x:Key="MediaPlaceholderBrush" Color="#E9E9EB" />
+      <!-- Record photo panel acrylic: neutral tint (fully transparent, kept for the blur) and the placeholder as fallback. -->
+      <Color x:Key="PhotoAcrylicTintColor">#808080</Color>
+      <Color x:Key="PhotoAcrylicFallbackColor">#E9E9EB</Color>
+      <SolidColorBrush x:Key="AvatarBrush" Color="#DCE7E0" />
+      <SolidColorBrush x:Key="AvatarInkBrush" Color="#244936" />
+      <SolidColorBrush x:Key="TrackBrush" Color="#EDEDEF" />
+      <SolidColorBrush x:Key="PressedBrush" Color="#ECECEE" />
+      <SolidColorBrush x:Key="InkHoverBrush" Color="#0D1B212F" />
+      <SolidColorBrush x:Key="InkGridlineBrush" Color="#141B212F" />
+      <SolidColorBrush x:Key="OnPrimaryInkBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="PrimaryStrongBrush" Color="#1C3A2B" />
+      <!-- Borders: sides, top, bottom of the tri-tone border, and internal dividers -->
+      <SolidColorBrush x:Key="EdgeBrush" Color="#E4E4E6" />
+      <SolidColorBrush x:Key="EdgeTopBrush" Color="#ECECEE" />
+      <SolidColorBrush x:Key="EdgeBottomBrush" Color="#D9D9DC" />
+      <SolidColorBrush x:Key="DividerBrush" Color="#EBEBED" />
+      <!-- Tri-tone border: XAML Border has one brush, so a vertical gradient puts the light tone on the top edge and the dark one on the bottom. -->
+      <LinearGradientBrush x:Key="TriToneBorderBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#ECECEE" Offset="0" />
+        <GradientStop Color="#E4E4E6" Offset="0.08" />
+        <GradientStop Color="#E4E4E6" Offset="0.92" />
+        <GradientStop Color="#D9D9DC" Offset="1" />
+      </LinearGradientBrush>
+      <!-- Phase colours: solid (bars, dots), deep (text on soft), soft fill, soft border, stepper segment -->
+      <SolidColorBrush x:Key="PhaseAnesthesiaSolidBrush" Color="#0F8A57" />
+      <SolidColorBrush x:Key="PhaseAnesthesiaDeepBrush" Color="#005527" />
+      <SolidColorBrush x:Key="PhaseAnesthesiaSoftBrush" Color="#D5ECE0" />
+      <SolidColorBrush x:Key="PhaseAnesthesiaSoftBorderBrush" Color="#B8DDC8" />
+      <SolidColorBrush x:Key="PhaseAnesthesiaStepBrush" Color="#BFE3CF" />
+      <SolidColorBrush x:Key="PhasePrepSolidBrush" Color="#C97A2E" />
+      <SolidColorBrush x:Key="PhasePrepDeepBrush" Color="#7A4A1C" />
+      <SolidColorBrush x:Key="PhasePrepSoftBrush" Color="#FCE3C6" />
+      <SolidColorBrush x:Key="PhasePrepStepBrush" Color="#FCE3C6" />
+      <SolidColorBrush x:Key="PhaseRecoverySolidBrush" Color="#5F78E2" />
+      <SolidColorBrush x:Key="PhaseRecoveryDeepBrush" Color="#1B212F" />
+      <SolidColorBrush x:Key="PhaseRecoverySoftBrush" Color="#E5E8F9" />
+      <SolidColorBrush x:Key="PhaseRecoverySoftBorderBrush" Color="#CDD3F3" />
+      <SolidColorBrush x:Key="PhaseRecoveryStepBrush" Color="#D3D9F7" />
+      <SolidColorBrush x:Key="PhaseWaitingSolidBrush" Color="#7E828B" />
+      <SolidColorBrush x:Key="PhaseErrorSolidBrush" Color="#B3261E" />
+      <SolidColorBrush x:Key="PhaseErrorDeepBrush" Color="#8C1D18" />
+      <SolidColorBrush x:Key="PhaseErrorSoftBrush" Color="#FBE6E2" />
+      <SolidColorBrush x:Key="PhaseErrorSoftBorderBrush" Color="#F1C9C2" />
+      <SolidColorBrush x:Key="LiveSoftInkBrush" Color="#3F5249" />
+      <!-- Patient care overdue banner (patient-care-values.md §1): icon tile and secondary text -->
+      <SolidColorBrush x:Key="AlertTileBrush" Color="#F6D2CC" />
+      <SolidColorBrush x:Key="AlertInkBrush" Color="#7A3B35" />
+      <LinearGradientBrush x:Key="HeroGradientBrush" StartPoint="0,0.32" EndPoint="1,0.68">
+        <GradientStop Color="#E5E8F9" Offset="0" />
+        <GradientStop Color="#DCEAF0" Offset="0.52" />
+        <GradientStop Color="#D5ECE0" Offset="1" />
+      </LinearGradientBrush>
+      <!-- Today (today-dashboard-values.md §1, shell-and-tokens.md §2.1) -->
+      <SolidColorBrush x:Key="HeroEdgeBrush" Color="#DDE3EE" />
+      <SolidColorBrush x:Key="GlassShellBrush" Color="#80FFFFFF" />
+      <SolidColorBrush x:Key="GlassEdgeBrush" Color="#CCFFFFFF" />
+      <SolidColorBrush x:Key="GanttTrackBrush" Color="#73FFFFFF" />
+      <SolidColorBrush x:Key="OnInkBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="SegmentTrackEdgeBrush" Color="#E8E8EA" />
+      <SolidColorBrush x:Key="TrayEdgeBrush" Color="#E6E6E8" />
+      <SolidColorBrush x:Key="BookedEdgeBrush" Color="#E0E0E3" />
+      <SolidColorBrush x:Key="PhasePrepSoftBorderBrush" Color="#F1D2AE" />
+      <SolidColorBrush x:Key="PhaseHomeStepBrush" Color="#DCE7E0" />
+      <!-- 135deg repeating stripes: Absolute mapping, end point (p/√2, p/√2) for a period of p px; hard stops. -->
+      <LinearGradientBrush x:Key="PlannedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+        <GradientStop Color="#BFFFFFFF" Offset="0" /><GradientStop Color="#BFFFFFFF" Offset="0.75" />
+        <GradientStop Color="#381B212F" Offset="0.75" /><GradientStop Color="#381B212F" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="BookedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="4.243,4.243">
+        <GradientStop Color="#F4F4F3" Offset="0" /><GradientStop Color="#F4F4F3" Offset="0.8333" />
+        <GradientStop Color="#E8E8EB" Offset="0.8333" /><GradientStop Color="#E8E8EB" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="StepDoneHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+        <GradientStop Color="#DCDCE0" Offset="0" /><GradientStop Color="#DCDCE0" Offset="0.25" />
+        <GradientStop Color="#F0F0F1" Offset="0.25" /><GradientStop Color="#F0F0F1" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="KnobBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" /><GradientStop Color="#EDEDEF" Offset="1" />
+      </LinearGradientBrush>
+      <SolidColorBrush x:Key="KnobEdgeBrush" Color="#D4D4D8" />
+      <SolidColorBrush x:Key="LinkUnderlineBrush" Color="#4D1B212F" />
+      <SolidColorBrush x:Key="SkeletonBrush" Color="#ECECEE" />
+          <!-- Care ruler (Agenda: anaesthesia mint, recovery lavender) and the CareMark dot. -->
+      <SolidColorBrush x:Key="CloverLavender" Color="#E5E8F9" />
+      <SolidColorBrush x:Key="CloverLavenderEdge" Color="#CDD3F3" />
+      <SolidColorBrush x:Key="CloverMint" Color="#D5ECE0" />
+      <SolidColorBrush x:Key="CloverMintEdge" Color="#B8DDC8" />
+      <SolidColorBrush x:Key="CloverLime" Color="#F3F3F2" />
+          <!-- Inset shadow (CSS inset 0 1px 3px) as a 4 px top shade inside rounded strips and status cards. -->
+      <LinearGradientBrush x:Key="InsetShadeBrush" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,4"><GradientStop Color="#1F000000" Offset="0" /><GradientStop Color="#00000000" Offset="1" /></LinearGradientBrush>
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="InkBrush" Color="#E6E7EA" />
+      <SolidColorBrush x:Key="InkMutedBrush" Color="#A3A6AE" />
+      <SolidColorBrush x:Key="IconMutedBrush" Color="#8E929B" />
+      <SolidColorBrush x:Key="InkFaintBrush" Color="#6B707B" />
+      <SolidColorBrush x:Key="InputEdgeBrush" Color="#6B707B" />
+      <SolidColorBrush x:Key="PageBrush" Color="#121417" />
+      <SolidColorBrush x:Key="Surface1Brush" Color="#1A1D21" />
+      <SolidColorBrush x:Key="Surface2Brush" Color="#202328" />
+      <SolidColorBrush x:Key="ChipNeutralBrush" Color="#2A2D33" />
+      <SolidColorBrush x:Key="MediaPlaceholderBrush" Color="#23262B" />
+      <Color x:Key="PhotoAcrylicTintColor">#808080</Color>
+      <Color x:Key="PhotoAcrylicFallbackColor">#23262B</Color>
+      <SolidColorBrush x:Key="AvatarBrush" Color="#24392D" />
+      <SolidColorBrush x:Key="AvatarInkBrush" Color="#BFE3CF" />
+      <SolidColorBrush x:Key="TrackBrush" Color="#2A2D33" />
+      <SolidColorBrush x:Key="PressedBrush" Color="#2C2F35" />
+      <SolidColorBrush x:Key="InkHoverBrush" Color="#0FFFFFFF" />
+      <SolidColorBrush x:Key="InkGridlineBrush" Color="#17FFFFFF" />
+      <SolidColorBrush x:Key="OnPrimaryInkBrush" Color="#0B2418" />
+      <SolidColorBrush x:Key="PrimaryStrongBrush" Color="#A9DCC0" />
+      <SolidColorBrush x:Key="EdgeBrush" Color="#2F3238" />
+      <SolidColorBrush x:Key="EdgeTopBrush" Color="#373A41" />
+      <SolidColorBrush x:Key="EdgeBottomBrush" Color="#25282D" />
+      <SolidColorBrush x:Key="DividerBrush" Color="#26292E" />
+      <LinearGradientBrush x:Key="TriToneBorderBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#373A41" Offset="0" />
+        <GradientStop Color="#2F3238" Offset="0.08" />
+        <GradientStop Color="#2F3238" Offset="0.92" />
+        <GradientStop Color="#25282D" Offset="1" />
+      </LinearGradientBrush>
+      <SolidColorBrush x:Key="PhaseAnesthesiaSolidBrush" Color="#4FC28E" />
+      <SolidColorBrush x:Key="PhaseAnesthesiaDeepBrush" Color="#9BE0BC" />
+      <SolidColorBrush x:Key="PhaseAnesthesiaSoftBrush" Color="#17372A" />
+      <SolidColorBrush x:Key="PhaseAnesthesiaSoftBorderBrush" Color="#24513D" />
+      <SolidColorBrush x:Key="PhaseAnesthesiaStepBrush" Color="#1F4A36" />
+      <SolidColorBrush x:Key="PhasePrepSolidBrush" Color="#E6A766" />
+      <SolidColorBrush x:Key="PhasePrepDeepBrush" Color="#FCE3C6" />
+      <SolidColorBrush x:Key="PhasePrepSoftBrush" Color="#3D2A16" />
+      <SolidColorBrush x:Key="PhasePrepStepBrush" Color="#3D2A16" />
+      <SolidColorBrush x:Key="PhaseRecoverySolidBrush" Color="#9AAAF0" />
+      <SolidColorBrush x:Key="PhaseRecoveryDeepBrush" Color="#E6E7EA" />
+      <SolidColorBrush x:Key="PhaseRecoverySoftBrush" Color="#262B45" />
+      <SolidColorBrush x:Key="PhaseRecoverySoftBorderBrush" Color="#3A4166" />
+      <SolidColorBrush x:Key="PhaseRecoveryStepBrush" Color="#2F3557" />
+      <SolidColorBrush x:Key="PhaseWaitingSolidBrush" Color="#8E929B" />
+      <SolidColorBrush x:Key="PhaseErrorSolidBrush" Color="#F2867C" />
+      <SolidColorBrush x:Key="PhaseErrorDeepBrush" Color="#F6D2CC" />
+      <SolidColorBrush x:Key="PhaseErrorSoftBrush" Color="#4A1712" />
+      <SolidColorBrush x:Key="PhaseErrorSoftBorderBrush" Color="#6A2A23" />
+      <SolidColorBrush x:Key="LiveSoftInkBrush" Color="#A9C2B5" />
+      <SolidColorBrush x:Key="AlertTileBrush" Color="#6A2A23" />
+      <SolidColorBrush x:Key="AlertInkBrush" Color="#E8B4AE" />
+      <LinearGradientBrush x:Key="HeroGradientBrush" StartPoint="0,0.32" EndPoint="1,0.68">
+        <GradientStop Color="#262B45" Offset="0" />
+        <GradientStop Color="#1C2A30" Offset="0.52" />
+        <GradientStop Color="#17372A" Offset="1" />
+      </LinearGradientBrush>
+      <SolidColorBrush x:Key="HeroEdgeBrush" Color="#2A3340" />
+      <SolidColorBrush x:Key="GlassShellBrush" Color="#0FFFFFFF" />
+      <SolidColorBrush x:Key="GlassEdgeBrush" Color="#1FFFFFFF" />
+      <SolidColorBrush x:Key="GanttTrackBrush" Color="#14FFFFFF" />
+      <SolidColorBrush x:Key="OnInkBrush" Color="#121417" />
+      <SolidColorBrush x:Key="SegmentTrackEdgeBrush" Color="#2A2D33" />
+      <SolidColorBrush x:Key="TrayEdgeBrush" Color="#2A2D33" />
+      <SolidColorBrush x:Key="BookedEdgeBrush" Color="#2F3238" />
+      <SolidColorBrush x:Key="PhasePrepSoftBorderBrush" Color="#5A3D1F" />
+      <SolidColorBrush x:Key="PhaseHomeStepBrush" Color="#24392D" />
+      <LinearGradientBrush x:Key="PlannedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+        <GradientStop Color="#1FFFFFFF" Offset="0" /><GradientStop Color="#1FFFFFFF" Offset="0.75" />
+        <GradientStop Color="#59FFFFFF" Offset="0.75" /><GradientStop Color="#59FFFFFF" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="BookedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="4.243,4.243">
+        <GradientStop Color="#202328" Offset="0" /><GradientStop Color="#202328" Offset="0.8333" />
+        <GradientStop Color="#2C2F35" Offset="0.8333" /><GradientStop Color="#2C2F35" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="StepDoneHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+        <GradientStop Color="#45484F" Offset="0" /><GradientStop Color="#45484F" Offset="0.25" />
+        <GradientStop Color="#26292E" Offset="0.25" /><GradientStop Color="#26292E" Offset="1" />
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="KnobBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#3A3D44" Offset="0" /><GradientStop Color="#2A2D33" Offset="1" />
+      </LinearGradientBrush>
+      <SolidColorBrush x:Key="KnobEdgeBrush" Color="#4A4D55" />
+      <SolidColorBrush x:Key="LinkUnderlineBrush" Color="#4DE6E7EA" />
+      <SolidColorBrush x:Key="SkeletonBrush" Color="#2A2D33" />
+          <!-- Care ruler (Agenda: anaesthesia mint, recovery lavender) and the CareMark dot. -->
+      <SolidColorBrush x:Key="CloverLavender" Color="#262B45" />
+      <SolidColorBrush x:Key="CloverLavenderEdge" Color="#3A4166" />
+      <SolidColorBrush x:Key="CloverMint" Color="#17372A" />
+      <SolidColorBrush x:Key="CloverMintEdge" Color="#24513D" />
+      <SolidColorBrush x:Key="CloverLime" Color="#1E2125" />
+          <!-- Inset shadow (CSS inset 0 1px 3px) as a 4 px top shade inside rounded strips and status cards. -->
+      <LinearGradientBrush x:Key="InsetShadeBrush" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,4"><GradientStop Color="#4D000000" Offset="0" /><GradientStop Color="#00000000" Offset="1" /></LinearGradientBrush>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!-- Shadow ink (§4): utu:Shadow is not a FrameworkElement, so shadows take this static colour in both themes. -->
+  <Color x:Key="ShadowInkColor">#1B212F</Color>
+  <!-- Shadows (§4), shared by every ShadowContainer that wears them (Toolkit: a ShadowCollection may be a resource). -->
+  <utu:ShadowCollection x:Key="ShadowFrame">
+    <utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" />
+    <utu:Shadow OffsetY="12" BlurRadius="32" Spread="-24" Opacity="0.25" Color="{StaticResource ShadowInkColor}" />
+  </utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowXs"><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowNavOn"><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.06" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowSegOn"><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.12" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowCard"><utu:Shadow OffsetY="2" BlurRadius="3" Spread="-1" Opacity="0.07" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowGlass"><utu:Shadow OffsetY="10" BlurRadius="28" Spread="-16" Opacity="0.28" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowFloatButton"><utu:Shadow OffsetY="2" BlurRadius="8" Opacity="0.18" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowKnob"><utu:Shadow OffsetY="1" BlurRadius="3" Opacity="0.2" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowGanttDot"><utu:Shadow OffsetY="1" BlurRadius="3" Opacity="0.25" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <!-- Inset: photo frames. Black at 20 % in both themes (the prototype's rgba(0,0,0,.2)). -->
+  <Color x:Key="InsetShadowColor">#000000</Color>
+  <utu:ShadowCollection x:Key="ShadowInsetPhoto"><utu:Shadow IsInner="True" OffsetY="1" BlurRadius="3" Opacity="0.2" Color="{StaticResource InsetShadowColor}" /></utu:ShadowCollection>
+
+  <!-- Fonts (§1). Weights resolve through the .ttf.manifest files (static instances per weight). -->
+  <FontFamily x:Key="FontSans">ms-appx:///Assets/Fonts/HankenGrotesk.ttf#Hanken Grotesk</FontFamily>
+  <FontFamily x:Key="FontMono">ms-appx:///Assets/Fonts/MartianMono.ttf#Martian Mono</FontFamily>
+  <FontFamily x:Key="FontSerif">ms-appx:///Assets/Fonts/Newsreader.ttf#Newsreader</FontFamily>
+  <!-- Tracked copies (tools/track_fonts.py): the prototype's negative letter-spacing baked into the advance widths,
+       because Skia ignores CharacterSpacing. Txx = -0.0xx em. -->
+  <FontFamily x:Key="FontMonoT50">ms-appx:///Assets/Fonts/MartianMonoT50.ttf#Vigil Mono T50</FontFamily>
+  <FontFamily x:Key="FontMonoT30">ms-appx:///Assets/Fonts/MartianMonoT30.ttf#Vigil Mono T30</FontFamily>
+  <FontFamily x:Key="FontMonoT20">ms-appx:///Assets/Fonts/MartianMonoT20.ttf#Vigil Mono T20</FontFamily>
+  <FontFamily x:Key="FontSerifT20">ms-appx:///Assets/Fonts/NewsreaderT20.ttf#Vigil Serif T20</FontFamily>
+  <FontFamily x:Key="FontSerifT15">ms-appx:///Assets/Fonts/NewsreaderT15.ttf#Vigil Serif T15</FontFamily>
+  <FontFamily x:Key="FontSansT20">ms-appx:///Assets/Fonts/HankenGroteskT20.ttf#Vigil Sans T20</FontFamily>
+
+  <!-- Radii (§3) -->
+  <CornerRadius x:Key="Radius3">3</CornerRadius>
+  <CornerRadius x:Key="Radius4">4</CornerRadius>
+  <CornerRadius x:Key="Radius6">6</CornerRadius>
+  <CornerRadius x:Key="Radius8">8</CornerRadius>
+  <CornerRadius x:Key="Radius10">10</CornerRadius>
+  <CornerRadius x:Key="Radius12">12</CornerRadius>
+  <CornerRadius x:Key="Radius14">14</CornerRadius>
+  <CornerRadius x:Key="Radius16">16</CornerRadius>
+  <CornerRadius x:Key="Radius18">18</CornerRadius>
+  <CornerRadius x:Key="Radius22">22</CornerRadius>
+  <CornerRadius x:Key="Radius24">24</CornerRadius>
+  <CornerRadius x:Key="Radius26">26</CornerRadius>
+  <CornerRadius x:Key="Radius11">11</CornerRadius>
+  <CornerRadius x:Key="Radius19">19</CornerRadius>
+  <CornerRadius x:Key="Radius20">20</CornerRadius>
+  <!-- Patient card header tray (17 under the 18 px tray, 18 at its foot) and the Show details toggle's foot. -->
+  <CornerRadius x:Key="RadiusTrayHeader">17,17,18,18</CornerRadius>
+  <CornerRadius x:Key="RadiusToggleBottom">0,0,17,17</CornerRadius>
+
+  <!-- Page frame (§7): content padding inside the frame's scroll area (CSS main padding 36 40 40 40). -->
+  <Thickness x:Key="FramePadding">40,36,40,40</Thickness>
+
+  <!-- Type ramp (§1), named by role. CharacterSpacing is a no-op on Skia: tracked roles use the FontXxxTnn copies. -->
+  <Style x:Key="TypeBase" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="Foreground" Value="{ThemeResource InkBrush}" />
+    <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
+    <Setter Property="TextWrapping" Value="NoWrap" />
+  </Style>
+  <Style x:Key="TypeDisplayTitleL" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
+    <Setter Property="FontFamily" Value="{StaticResource FontSerifT20}" />
+    <Setter Property="FontSize" Value="56" />
+    <Setter Property="LineHeight" Value="60" />
+  </Style>
+  <Style x:Key="TypeDisplayTitle" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
+    <Setter Property="FontFamily" Value="{StaticResource FontSerifT15}" />
+    <Setter Property="FontSize" Value="40" />
+    <Setter Property="LineHeight" Value="46" />
+    <Setter Property="TextWrapping" Value="WrapWholeWords" />
+  </Style>
+  <Style x:Key="TypeMono" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
+    <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+    <Setter Property="FontWeight" Value="Medium" />
+  </Style>
+  <Style x:Key="TypeMonoHero" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT50}" /><Setter Property="FontSize" Value="64" /><Setter Property="LineHeight" Value="68" /></Style>
+  <Style x:Key="TypeMonoHeroS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT50}" /><Setter Property="FontSize" Value="56" /><Setter Property="LineHeight" Value="60" /></Style>
+  <Style x:Key="TypeMonoVital" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT50}" /><Setter Property="FontSize" Value="48" /><Setter Property="LineHeight" Value="52" /></Style>
+  <Style x:Key="TypeMonoStatL" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT30}" /><Setter Property="FontSize" Value="30" /><Setter Property="LineHeight" Value="36" /></Style>
+  <Style x:Key="TypeMonoStat" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT30}" /><Setter Property="FontSize" Value="28" /><Setter Property="LineHeight" Value="32" /></Style>
+  <Style x:Key="TypeMonoStatS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT30}" /><Setter Property="FontSize" Value="24" /><Setter Property="LineHeight" Value="30" /></Style>
+  <Style x:Key="TypeMonoTimerCard" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT20}" /><Setter Property="FontSize" Value="20" /><Setter Property="LineHeight" Value="24" /></Style>
+  <Style x:Key="TypeMonoValue" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="18" /><Setter Property="LineHeight" Value="26" /></Style>
+  <Style x:Key="TypeMonoValueS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="16" /><Setter Property="LineHeight" Value="22" /></Style>
+  <Style x:Key="TypeMonoCell" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="14" /><Setter Property="LineHeight" Value="18" /></Style>
+  <Style x:Key="TypeMonoNum" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="13" /><Setter Property="LineHeight" Value="18" /></Style>
+  <Style x:Key="TypeMonoLabel" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="12" /><Setter Property="LineHeight" Value="16" /></Style>
+  <Style x:Key="TypeMonoMeta" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="12" /><Setter Property="LineHeight" Value="18" /><Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" /></Style>
+  <Style x:Key="TypeMonoAxis" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="11" /><Setter Property="LineHeight" Value="16" /><Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" /></Style>
+  <Style x:Key="TypeBrand" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
+    <Setter Property="FontFamily" Value="{StaticResource FontSansT20}" /><Setter Property="FontSize" Value="24" /><Setter Property="LineHeight" Value="28" /><Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="Foreground" Value="{ThemeResource PrimaryBrush}" />
+  </Style>
+  <Style x:Key="TypeH2Section" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="20" /><Setter Property="LineHeight" Value="28" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  <Style x:Key="TypeH3CardName" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="20" /><Setter Property="LineHeight" Value="24" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  <Style x:Key="TypeTitleM" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="18" /><Setter Property="LineHeight" Value="24" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  <Style x:Key="TypeH3Card" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="16" /><Setter Property="LineHeight" Value="24" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  <Style x:Key="TypeBodyL" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="16" /><Setter Property="LineHeight" Value="24" /><Setter Property="TextWrapping" Value="WrapWholeWords" /></Style>
+  <Style x:Key="TypeTitleS" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="15" /><Setter Property="LineHeight" Value="20" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  <Style x:Key="TypeBody" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="14" /><Setter Property="LineHeight" Value="20" /></Style>
+  <Style x:Key="TypeBodyMedium" TargetType="TextBlock" BasedOn="{StaticResource TypeBody}"><Setter Property="FontWeight" Value="Medium" /></Style>
+  <Style x:Key="TypeBodyStrong" TargetType="TextBlock" BasedOn="{StaticResource TypeBody}"><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  <Style x:Key="TypeBodyS" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="13" /><Setter Property="LineHeight" Value="18" /><Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" /></Style>
+  <Style x:Key="TypeButtonS" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="13" /><Setter Property="LineHeight" Value="20" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  <Style x:Key="TypeCaption" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="12" /><Setter Property="LineHeight" Value="16" /><Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" /></Style>
+  <Style x:Key="TypeCaptionStrong" TargetType="TextBlock" BasedOn="{StaticResource TypeCaption}"><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  <Style x:Key="TypeMicro" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="11" /><Setter Property="LineHeight" Value="14" /><Setter Property="FontWeight" Value="Medium" /><Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" /></Style>
+
+  <!--
+    Line icons (§11): Lucide geometry from Icons.xaml drawn at 24 units and scaled to the box, so the stroke scales
+    with it exactly like the prototype's SVG (stroke 1.75 or 2 in viewBox units). Set Content to the geometry key and
+    Foreground to the stroke colour. Path.Stroke does not inherit Foreground, so the template binds it.
+  -->
+  <ControlTemplate x:Key="LineIconTemplate" TargetType="ContentControl">
+    <Viewbox Stretch="Uniform">
+      <Grid Width="24" Height="24">
+        <Path Data="{TemplateBinding Content}" Stroke="{TemplateBinding Foreground}" StrokeThickness="1.75"
+              StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" />
+      </Grid>
+    </Viewbox>
+  </ControlTemplate>
+  <ControlTemplate x:Key="LineIconBoldTemplate" TargetType="ContentControl">
+    <Viewbox Stretch="Uniform">
+      <Grid Width="24" Height="24">
+        <Path Data="{TemplateBinding Content}" Stroke="{TemplateBinding Foreground}" StrokeThickness="2"
+              StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" />
+      </Grid>
+    </Viewbox>
+  </ControlTemplate>
+  <ControlTemplate x:Key="FilledIconTemplate" TargetType="ContentControl">
+    <Viewbox Stretch="Uniform">
+      <Grid Width="24" Height="24">
+        <Path Data="{TemplateBinding Content}" Fill="{TemplateBinding Foreground}" />
+      </Grid>
+    </Viewbox>
+  </ControlTemplate>
+  <Style x:Key="LineIcon18" TargetType="ContentControl">
+    <Setter Property="Width" Value="18" /><Setter Property="Height" Value="18" />
+    <Setter Property="IsTabStop" Value="False" /><Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="Foreground" Value="{ThemeResource IconMutedBrush}" />
+    <Setter Property="Template" Value="{StaticResource LineIconTemplate}" />
+  </Style>
+  <Style x:Key="LineIcon16" TargetType="ContentControl" BasedOn="{StaticResource LineIcon18}">
+    <Setter Property="Width" Value="16" /><Setter Property="Height" Value="16" />
+  </Style>
+  <Style x:Key="LineIcon16Bold" TargetType="ContentControl" BasedOn="{StaticResource LineIcon16}">
+    <Setter Property="Template" Value="{StaticResource LineIconBoldTemplate}" />
+  </Style>
+  <Style x:Key="LineIcon14Bold" TargetType="ContentControl" BasedOn="{StaticResource LineIcon16Bold}">
+    <Setter Property="Width" Value="14" /><Setter Property="Height" Value="14" />
+  </Style>
+  <Style x:Key="FilledIcon" TargetType="ContentControl" BasedOn="{StaticResource LineIcon18}">
+    <Setter Property="Foreground" Value="{ThemeResource PrimaryBrush}" />
+    <Setter Property="Template" Value="{StaticResource FilledIconTemplate}" />
+  </Style>
+
+  <!--
+    Buttons (§10). Two templates: the Material button templates carry their own elevation, min sizes and state
+    overlays (an overlay tint cannot produce the prototype's exact hover fills #1C3A2B / #F3F3F2), so a
+    Border + ContentPresenter template keeps the box, the hover fill and the 0.96 press scale exact.
+    xaml-lint: allow template - exact prototype fills, press scale; Material overlays cannot match them
+  -->
+  <Style x:Key="ButtonBase" TargetType="Button">
+    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="UseSystemFocusVisuals" Value="True" />
+    <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource InkBrush}" />
+    <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+    <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+    <Setter Property="FocusVisualMargin" Value="-4" />
+  </Style>
+  <ControlTemplate x:Key="PrimaryButtonTemplate" TargetType="Button">
+    <Grid x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" RenderTransformOrigin="0.5,0.5">
+      <Grid.RenderTransform><ScaleTransform x:Name="Press" /></Grid.RenderTransform>
+      <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup x:Name="CommonStates">
+          <VisualState x:Name="Normal" />
+          <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource PrimaryStrongBrush}" /></VisualState.Setters></VisualState>
+          <VisualState x:Name="Pressed">
+            <VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource PrimaryStrongBrush}" /></VisualState.Setters>
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleX" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleY" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
+            </Storyboard>
+          </VisualState>
+          <VisualState x:Name="Disabled" />
+        </VisualStateGroup>
+      </VisualStateManager.VisualStateGroups>
+      <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                        Padding="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+    </Grid>
+  </ControlTemplate>
+  <ControlTemplate x:Key="SecondaryButtonTemplate" TargetType="Button">
+    <Grid x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" RenderTransformOrigin="0.5,0.5">
+      <Grid.RenderTransform><ScaleTransform x:Name="Press" /></Grid.RenderTransform>
+      <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup x:Name="CommonStates">
+          <VisualState x:Name="Normal" />
+          <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource PageBrush}" /></VisualState.Setters></VisualState>
+          <VisualState x:Name="Pressed">
+            <VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource PressedBrush}" /></VisualState.Setters>
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleX" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleY" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
+            </Storyboard>
+          </VisualState>
+          <!-- Disabled controls keep the prototype's look ("Coming soon" items, SPEC-v2 decision 1). -->
+          <VisualState x:Name="Disabled" />
+        </VisualStateGroup>
+      </VisualStateManager.VisualStateGroups>
+      <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                        Padding="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+    </Grid>
+  </ControlTemplate>
+
+  <Style x:Key="ButtonPrimary" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="{ThemeResource PrimaryBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource PrimaryStrongBrush}" />
+    <Setter Property="Foreground" Value="{ThemeResource OnPrimaryInkBrush}" />
+    <Setter Property="Template" Value="{StaticResource PrimaryButtonTemplate}" />
+  </Style>
+  <Style x:Key="ButtonPrimaryS" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+    <Setter Property="Height" Value="32" /><Setter Property="Padding" Value="14,0" /><Setter Property="CornerRadius" Value="10" /><Setter Property="FontSize" Value="13" />
+  </Style>
+  <Style x:Key="ButtonPrimaryM" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+    <Setter Property="Height" Value="36" /><Setter Property="Padding" Value="14,0" /><Setter Property="CornerRadius" Value="10" /><Setter Property="FontSize" Value="13" />
+  </Style>
+  <Style x:Key="ButtonPrimaryL" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+    <Setter Property="Height" Value="40" /><Setter Property="Padding" Value="18,0" /><Setter Property="CornerRadius" Value="12" />
+  </Style>
+  <Style x:Key="ButtonPrimaryXL" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+    <Setter Property="Height" Value="48" /><Setter Property="Padding" Value="18,0" /><Setter Property="CornerRadius" Value="14" /><Setter Property="FontSize" Value="15" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+  </Style>
+  <Style x:Key="ButtonSecondary" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="{ThemeResource Surface1Brush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" />
+    <Setter Property="Foreground" Value="{ThemeResource InkBrush}" />
+    <Setter Property="Template" Value="{StaticResource SecondaryButtonTemplate}" />
+  </Style>
+  <Style x:Key="ButtonSecondaryM" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
+    <Setter Property="Height" Value="36" /><Setter Property="Padding" Value="14,0" /><Setter Property="CornerRadius" Value="10" /><Setter Property="FontSize" Value="13" />
+  </Style>
+  <Style x:Key="ButtonSecondaryL" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
+    <Setter Property="Height" Value="40" /><Setter Property="Padding" Value="18,0" /><Setter Property="CornerRadius" Value="12" />
+  </Style>
+  <Style x:Key="ButtonIconSecondary" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
+    <Setter Property="Width" Value="40" /><Setter Property="Height" Value="40" /><Setter Property="Padding" Value="0" /><Setter Property="CornerRadius" Value="12" />
+  </Style>
+  <Style x:Key="ButtonIconSecondaryS" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
+    <Setter Property="Width" Value="32" /><Setter Property="Height" Value="32" /><Setter Property="Padding" Value="0" /><Setter Property="CornerRadius" Value="10" />
+  </Style>
+  <Style x:Key="ButtonIconGhost" TargetType="Button" BasedOn="{StaticResource ButtonIconSecondaryS}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{ThemeResource IconMutedBrush}" />
+  </Style>
+
+  <!--
+    Sidebar nav item (§8): 40 px, radius 12, icon 18 + label 14/20 Medium + optional count. Hover ink 5 %; the active
+    item (NavStates.Active, driven by utu:VisualStateManagerExtensions.States from ShellModel) gets the surface, the
+    tri-tone border, the nav-on shadow and a primary icon (icons bind the presenter's Foreground).
+    xaml-lint: allow template - route-driven Active state needs its own visual state group
+  -->
+  <!-- Link (.lnk): 14/20 600 ink, underline rgba(27,33,47,.3) 4 px below, trailing arrow 16 / 2.
+       xaml-lint: allow template - underline colour and offset are not TextDecorations options -->
+  <Style x:Key="LinkButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Foreground" Value="{ThemeResource InkBrush}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid x:Name="Root" Background="Transparent">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Underline.Fill" Value="{ThemeResource InkBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Underline.Fill" Value="{ThemeResource InkBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled" />
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Grid>
+                <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource TypeBodyStrong}" Foreground="{TemplateBinding Foreground}" />
+                <Rectangle x:Name="Underline" Height="1" VerticalAlignment="Bottom" Margin="0,0,0,-3" Fill="{ThemeResource LinkUnderlineBrush}" />
+              </Grid>
+              <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconArrowRight}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <!-- A row that opens something (record card footers): content row, hover Surface2, radius 8. The negative margin at the
+       call site keeps the content aligned with the card text while the hover fill bleeds 8 px.
+       xaml-lint: allow template - row hover fill behind arbitrary row content -->
+  <Style x:Key="RowLinkButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="8,6" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource Surface2Brush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource PageBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled" />
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <ContentPresenter Padding="{TemplateBinding Padding}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="Center" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <!-- Panel card for the utility screens (Settings, Agenda, sheets): the record cards' surface. Surface1, tri-tone edge,
+       radius 18, padding 20, shadow xs (0 1 2 / 5 %). Static: no pressed overlay (see StaticOutlinedCardStyle).
+       xaml-lint: allow template - shadow xs and the gradient edge; the Material card templates draw neither -->
+  <Style x:Key="PanelCardStyle" TargetType="utu:CardContentControl" BasedOn="{StaticResource OutlinedCardContentControlStyle}">
+    <Setter Property="IsTabStop" Value="False" />
+    <Setter Property="Background" Value="{ThemeResource Surface1Brush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="18" />
+    <Setter Property="Padding" Value="20" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="utu:CardContentControl">
+          <utu:ShadowContainer Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" Shadows="{StaticResource ShadowXs}">
+            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}">
+              <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Border>
+          </utu:ShadowContainer>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <!-- Help and explanatory copy: body 14/20, muted, wrapping. -->
+  <Style x:Key="TypeBodyMuted" TargetType="TextBlock" BasedOn="{StaticResource TypeBody}">
+    <Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" />
+    <Setter Property="TextWrapping" Value="WrapWholeWords" />
+  </Style>
+  <!-- Section eyebrow over a group of fields ("PATIENT", "SCHEDULE"): 12/16 semibold muted. -->
+  <Style x:Key="TypeEyebrow" TargetType="TextBlock" BasedOn="{StaticResource TypeCaptionStrong}">
+    <Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" />
+  </Style>
+  <!-- Loading placeholder bar (skeletons keep the loaded layout's footprint). The record page adds VerticalAlignment Top. -->
+  <Style x:Key="Skeleton" TargetType="Rectangle">
+    <Setter Property="RadiusX" Value="6" />
+    <Setter Property="RadiusY" Value="6" />
+    <Setter Property="Fill" Value="{ThemeResource SkeletonBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+  </Style>
+  <!-- Care ruler time block (CareRuler builds these in code): radius 9, hover outline primary, press 10 % primary.
+       xaml-lint: allow template - hover tint over a block whose fill is the phase colour -->
+  <Style x:Key="CloverTimeBlock" TargetType="Button">
+    <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource OutlineBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="9" />
+    <Setter Property="Padding" Value="9,8" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="UseSystemFocusVisuals" Value="True" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid>
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Shell.BorderBrush" Value="{ThemeResource PrimaryBrush}" /><Setter Target="Hover.Opacity" Value="0.04" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Hover.Opacity" Value="0.10" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled"><VisualState.Setters><Setter Target="Shell.Opacity" Value="0.5" /></VisualState.Setters></VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Border x:Name="Shell" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}">
+              <ContentPresenter Content="{TemplateBinding Content}" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="Stretch" />
+            </Border>
+            <Border x:Name="Hover" CornerRadius="{TemplateBinding CornerRadius}" Background="{ThemeResource PrimaryBrush}" Opacity="0" IsHitTestVisible="False" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="NavItemButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Height" Value="40" />
+    <Setter Property="Padding" Value="12,0,0,0" />
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{ThemeResource IconMutedBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid x:Name="Root">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Hover.Background" Value="{ThemeResource InkHoverBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Hover.Background" Value="{ThemeResource InkGridlineBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled" />
+              </VisualStateGroup>
+              <VisualStateGroup x:Name="NavStates">
+                <VisualState x:Name="Inactive" />
+                <VisualState x:Name="Active">
+                  <VisualState.Setters>
+                    <Setter Target="Shadow.Visibility" Value="Visible" />
+                    <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource PrimaryBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Border x:Name="Hover" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" />
+            <utu:ShadowContainer x:Name="Shadow" Visibility="Collapsed" Background="{ThemeResource Surface1Brush}" CornerRadius="{TemplateBinding CornerRadius}" Shadows="{StaticResource ShadowNavOn}">
+              <Border CornerRadius="{TemplateBinding CornerRadius}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" />
+            </utu:ShadowContainer>
+            <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Padding="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}" BorderThickness="1" BorderBrush="Transparent"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="Center" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- Badges and chips (§10). Text inside uses TypeCaptionStrong (badges) or TypeBodyS + SemiBold (status chips). -->
+  <Style x:Key="BadgeOutline" TargetType="Border">
+    <Setter Property="Height" Value="24" /><Setter Property="Padding" Value="9,0" /><Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Background" Value="{ThemeResource Surface1Brush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource EdgeBrush}" /><Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style x:Key="BadgeNeutral" TargetType="Border">
+    <Setter Property="Height" Value="24" /><Setter Property="Padding" Value="9,0" /><Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Background" Value="{ThemeResource ChipNeutralBrush}" />
+  </Style>
+  <Style x:Key="ChipErrorSoft" TargetType="Border">
+    <Setter Property="Height" Value="26" /><Setter Property="Padding" Value="8,0" /><Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Background" Value="{ThemeResource PhaseErrorSoftBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource PhaseErrorSoftBorderBrush}" /><Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style x:Key="ChipLiveSoft" TargetType="Border">
+    <Setter Property="Height" Value="28" /><Setter Property="Padding" Value="10,0" /><Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Background" Value="{ThemeResource PhaseAnesthesiaSoftBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" /><Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <!-- Shell surfaces (§8-9) -->
+  <Style x:Key="MonogramTile" TargetType="Border">
+    <Setter Property="Width" Value="34" /><Setter Property="Height" Value="34" /><Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Background" Value="{ThemeResource ChipNeutralBrush}" />
+  </Style>
+  <Style x:Key="AvatarCircle" TargetType="Border">
+    <Setter Property="Width" Value="34" /><Setter Property="Height" Value="34" /><Setter Property="CornerRadius" Value="17" />
+    <Setter Property="Background" Value="{ThemeResource AvatarBrush}" />
+  </Style>
+  <Style x:Key="PillSurface" TargetType="Border">
+    <Setter Property="Padding" Value="11,9" /><Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Background" Value="{ThemeResource Surface1Brush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" /><Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style x:Key="SearchFieldSurface" TargetType="Border">
+    <Setter Property="Height" Value="40" /><Setter Property="Padding" Value="11,0,7,0" /><Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Background" Value="{ThemeResource Surface2Brush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" /><Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <!-- Keycap "Ctrl K" (§9): Martian Mono 11/16, pad 2 6, radius 6. -->
+  <Style x:Key="Keycap" TargetType="Border">
+    <Setter Property="Padding" Value="6,2" /><Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Background" Value="{ThemeResource Surface1Brush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource EdgeBrush}" /><Setter Property="BorderThickness" Value="1" />
+  </Style>
+</ResourceDictionary>

@@ -1,44 +1,59 @@
-# HANDOFF — Vigil Phase 2–3 (loop complete: reports + CI green on every head)
-Updated: 2026-10-08 11:02 (America/Montreal)
+# HANDOFF — Vigil: v2 follow-through (data entry, perf, screen restyle, polish)
+Updated: 2026-10-28 (America/Montreal)
 
 ## Where we are
-Implementation Plan steps 0–8 done; Phase 3 gates run: break-it round 1, gold-standard Fit & Finish item,
-uno-audit hygiene, atlas route diff, completeness audit. `docs/COMPLETENESS.md` (Complete with gaps: 0 Blockers,
-8 Majors) and `docs/DEPLOY.md` exist with evidence. The repo is now public, and CI run 37791335857 (9244b45)
-is green on every head incl. iOS, so the `/loop` stop condition is met. That run needed one fix: an iOS-only
-`CS0037` in `Controls/ThemePalette.cs` (explicit `Color?` arms).
+The v2 redesign (SPEC-v2.md) is built; `docs/COMPLETENESS.md` graded it Complete with gaps (f09f8a3). This session
+closed most of the remaining Majors in code:
+- New patient now captures room, start, length, fasting and parent notified.
+- Fluids start and stop from the record's Medication pane.
+- The avatar shows two initials from a new first-name setting.
+- Settings, New patient, Sign off, Dose, Agenda, Parent preview, Patients and the record panes all use v2 styling.
+- The details expansion animates its height.
+- Tracked font copies replace the letter-spacing Skia ignores.
+- Clover.xaml, CaseCards, CareGreeting and LiveBandView were deleted.
+- A Release timing run measured page changes (docs/evidence/perf-2026-10-28/RESULTS.md).
+
+The App MCP visual pass ran on 2026-10-29 (docs/evidence/runtime-2026-10-29/RESULTS.md). It proved the new
+New patient fields, fluids from start to stop, the AO avatar, the details animation, and that the tracked
+numbers match the prototype to within 1 px. It also found and fixed square-filled status strips, placeholder
+values that looked filled in, and the ruler label overlap. The sample patient Bella is now Knuckles (user request).
 
 ## Last verified state
-- Git: `main` at `9244b45`+, pushed to public `mtmattei/Vigil`.
-- Build: desktop 0 warnings. Tests 50/50. Lint gating 0 (1 TEMPLATE + 1 WORKAROUND, annotated).
-- CI: run 37791335857 green on all 7 jobs (tests, desktop ×3, WASM, Android, iOS 40 min); Pages job opt-in, skipped.
-- Runtime: desktop all 7 critical workflows (App MCP); Android emulator `chefs36` Release APK: board, sample day,
-  strip, reading survives force-stop; WASM: board, new case → record (after D5), persistence across fresh load.
+- Build: desktop Debug and Release, 0 warnings. Tests 131/131.
+- Runtime: timing runs only (Release and Debug, no devserver). Release page changes reach first frame in 0.1–2.0 s;
+  startup takes 14.7 s to a settled Today. Both harness runs exited 0xE0434352 after `Application.Exit()`.
+- Git: `archive/local-2026-10-28`, last commit d052fb9, pushed.
+- Lint: CARD 0 · HEX 0 · BACKBAR 0 · CODEBEHIND 2 (RecordPage pane SizeChanged/Escape) · ICON 2 (CareMark logo).
 
 ## Guidance applied
-| Skill / rule / decision | Applied at |
+| Skill / rule / decision | Applied at (file:line) |
 |---|---|
-| mvux: record feeds, ElementName in ErrorTemplate, `Parent.X` TwoWay | `Presentation/Record/RecordPage.xaml` |
-| D3: feeds reload from store Signal; Retry raises it | `Presentation/Board/BoardModel.cs` |
-| Toolkit doc: VSM `States` on the Control | `Controls/LiveBandView.xaml` |
-| uno-navigation: `!` result route then navigate (D2); D5 no address bar | `BoardModel.NewCase`, `App.xaml.cs` |
-| skiasharp-uno: SKCanvasElement, cached paints, palette snapshot, dispose on Unloaded | `Controls/VitalsStrip.cs`, `StripRenderer.cs` |
-| Gotcha workaround: static card template (Toolkit washout) | `Themes/Controls.xaml` |
-| Localization: x:Uid + `Loc`, generator `tools/localize.py` + `tools/fr.json` | `Strings/{en,fr}/Resources.resw` |
+| uno-material lightweight keys (OutlinedTextBox*, ComboBox*) | Vigil/Themes/Controls.xaml:11 |
+| Card surfaces via CardContentControl (PanelCardStyle) | Vigil/Themes/Tokens.xaml (PanelCardStyle), Settings/NewCase/SignOff/Dose/Agenda/ParentPreview pages |
+| NavigationBar for back (lint BACKBAR) | Vigil/Presentation/Parent/ParentPreviewPage.xaml |
+| MVUX command parameters from states (StartFluids) | Vigil/Presentation/Record/RecordModel.cs (StartFluids) |
+| User: Messages out of MVP, stays disabled | SPEC-v2.md capability table |
+Read, not applied: none.
 
 ## Next actions (in order)
-1. Majors in COMPLETENESS.md: drive Android workflows 1, 2, 4, 5 + export via adb; WASM workflows 2–5; iOS run on a Mac.
-2. Spec motion: 280 ms page entrance + Record confirm cross-fade (with reduced motion).
-3. Minors: F-014 TabBarItem peer (upstream), F-015 Material dialogs, F-016 drawer sheets, F-025 clipboard toast.
+1. Investigate the 0xE0434352 exit after `Application.Exit()` in PageTimer, and check that a normal window
+   close exits 0.
+2. Startup (14.7 s Release) and the first Settings visit (2.0 s): profile with `dotnet-trace`, or split the timing
+   into time to first frame.
+3. Check Settings and the forms at 700 px, then confirm the Agenda hides the hour label under the Now pill.
+4. Re-run `uno-completeness-audit` and update `docs/COMPLETENESS.md`.
+5. Still open from the audit: Android/WASM runtime proof, a UI test suite, a drawer below 760 px, and press scale
+   under reduced motion.
+
+## Open questions
+- The disabled Records, Reports, Help, search, bell and Monitoring pill are still visible (Messages is resolved: not
+  in the MVP).
+- `PlannedPrepMinutes` has no Settings field. It is only the default of 25 minutes.
+- Native French review of the 49 new strings.
+- The preview surname reads "Ehok" (typed into the running app during the pass, not by an automation step); it
+  lives only in the preview data folder.
 
 ## Relaunch
-```
-Get-Process Vigil -ErrorAction SilentlyContinue | Stop-Process -Force
-uno_app_start  projectPath=Vigil/Vigil.csproj  tfm=net10.0-desktop  args=--vigil-seed=sample
-Hooks (DEBUG): --vigil-seed=sample|empty, --vigil-fault=store-read-once|store-write, --vigil-slow-ms=N, --vigil-memlog
-Captures incl. popups: pwsh tools/Capture-Window.ps1 -ProcessId <pid> -Out artifacts/shots/x.png
-Resize: pwsh tools/Resize-Window.ps1 -Width 420 -Height 760 ; Save dialog: powershell tools/Complete-SaveDialog.ps1 -Path <file>
-Strings: python tools/localize.py --write   (fails on missing French)
-WASM: stop any stale dotnet on :5000 before uno_app_start; open http://localhost:5000 in a new tab
-Android: emulator -avd chefs36; adb install -r artifacts/publish/android/com.unoplatform.vigil-Signed.apk
-```
+cd C:\Users\Platform006\Vigil; dotnet build Vigil/Vigil.csproj -f net10.0-desktop
+Timing run: $env:VIGIL_PERF="<path>.csv"; Vigil\bin\Release\net10.0-desktop\Vigil.exe (exits by itself).
+App MCP: uno_app_start (Debug, devserver). Ask the user before any launch.

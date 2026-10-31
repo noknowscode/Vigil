@@ -33,7 +33,8 @@ public partial record SignOffSummary(
         return new SignOffSummary(
             $"{c.Patient.Name} · {c.Patient.SpeciesAndBreed} · {c.Patient.WeightKg:0.0} kg · {c.Preop.AsaLabel}",
             c.Procedure,
-            Schedule.HoursMinutes(Schedule.Elapsed(c, c.EndedAt ?? c.CreatedAt)),
+            // Only an ended anesthesia has a length; a live one used CreatedAt as its end and read "00:-30".
+            c.EndedAt is { } ended ? Schedule.HoursMinutes(Schedule.Elapsed(c, ended)) : "—",
             c.Readings.Count,
             c.Doses.Count,
             alarms,

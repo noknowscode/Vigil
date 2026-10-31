@@ -13,6 +13,9 @@ public partial record Drug(
     decimal FelineMaxMgPerKg,
     DoseRoute DefaultRoute)
 {
+    /// <summary>Minutes from the last dose to the next one (cefazolin 90); null when the drug is not redosed.</summary>
+    public int? RedoseMinutes { get; init; }
+
     public VitalRange RangeFor(Species species) => species == Species.Feline
         ? new(FelineMinMgPerKg, FelineMaxMgPerKg)
         : new(CanineMinMgPerKg, CanineMaxMgPerKg);

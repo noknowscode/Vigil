@@ -12,6 +12,8 @@ public class SignOffTests
         var live = SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Anesthetized));
         live.CanSign.Should().BeFalse();
         live.Blocker.Should().Be("End anesthesia before signing.");
+        live.Duration.Should().Be("—");
+        SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Recovery)).Duration.Should().MatchRegex(@"^\d\d:\d\d$");
         SignOffSummary.From(day.Single(c => c.IsSigned)).Blocker.Should().StartWith("Already signed by");
     }
 
@@ -24,13 +26,24 @@ public class SignOffTests
     }
 
     [Test]
-    public void RecoveryDraftMapsPainIndexToScore()
+    public void RecoveryDraftAppliesTemperatureAndNotesAndLeavesThePainScore()
     {
-        var log = new RecoveryDraft(3, "37,2", " ok ").ApplyTo(RecoveryLog.Empty);
-        log.PainScore.Should().Be(2);
+        var scored = RecoveryLog.Empty.WithPainScore(2, DateTimeOffset.Now);
+        var log = new RecoveryDraft("37,2", " ok ").ApplyTo(scored);
         log.TempC.Should().Be(37.2m);
         log.Notes.Should().Be("ok");
-        new RecoveryDraft(0, "", "").ApplyTo(log).PainScore.Should().BeNull();
-        RecoveryDraft.From(log).PainIndex.Should().Be(3);
+        log.PainScore.Should().Be(2);
+        log.PainScores.Should().HaveCount(1);
+        RecoveryDraft.From(log).Should().Be(new RecoveryDraft("37.2", "ok"));
+    }
+
+    [Test]
+    public void EveryPainScoreIsTimedEvenWhenUnchanged()
+    {
+        var at = DateTimeOffset.Now;
+        var log = RecoveryLog.Empty.WithPainScore(1, at).WithPainScore(1, at.AddMinutes(15));
+        log.PainScore.Should().Be(1);
+        log.PainScores.Select(p => p.At).Should().Equal(at, at.AddMinutes(15));
+        FluentActions.Invoking(() => log.WithPainScore(5, at)).Should().Throw<ArgumentOutOfRangeException>();
     }
 }

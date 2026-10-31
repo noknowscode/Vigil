@@ -41,6 +41,7 @@ def collect_xaml(write: bool) -> dict:
     counter = {}
     for path in xaml_files():
         text = path.read_text(encoding='utf-8')
+        used_uids = set(re.findall(r'x:Uid="([^"]+)"', text))
         base = path.stem.replace('Page', '').replace('View', '') or path.stem
 
         def replace(m):
@@ -54,6 +55,10 @@ def collect_xaml(write: bool) -> dict:
             if uid is None:
                 counter[base] = counter.get(base, 0) + 1
                 uid = f'{base}_{counter[base]}'
+                while uid in used_uids:
+                    counter[base] += 1
+                    uid = f'{base}_{counter[base]}'
+                used_uids.add(uid)
             for k, v in statics:
                 key = f'{uid}.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name' if k == 'AutomationProperties.Name' else f'{uid}.{k}'
                 entries[key] = v.replace('&amp;', '&').replace('&quot;', '"')

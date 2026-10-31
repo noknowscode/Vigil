@@ -1,6 +1,7 @@
 <Project Sdk="Uno.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-browserwasm;net10.0-desktop;net10.0</TargetFrameworks>
+    <!-- Uno.Sdk skips the heads the build OS can't build (iOS on Linux, Windows off Windows). -->
+    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-windows10.0.19041;net10.0-browserwasm;net10.0-desktop;net10.0</TargetFrameworks>
     <!--
       App-only override for single-head builds (CI, RID-specific publish): -p:VigilTargetFrameworks=net10.0-desktop.
       A global -p:TargetFrameworks would also retarget the test project and silently drop its tests.
@@ -11,14 +12,14 @@
     <UnoSingleProject>true</UnoSingleProject>
 
     <!-- Display name -->
-    <ApplicationTitle>Vigil</ApplicationTitle>
+    <ApplicationTitle>Clover</ApplicationTitle>
     <!-- App Identifier -->
     <ApplicationId>com.unoplatform.vigil</ApplicationId>
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <!-- Package Publisher -->
-    <ApplicationPublisher>Vigil</ApplicationPublisher>
+    <ApplicationPublisher>Clover</ApplicationPublisher>
     <!-- Package Description -->
     <Description>Vigil: the anesthesia record for veterinary surgical technicians. An Uno Platform reference app.</Description>
     <!-- Uno0001 = member not implemented in Uno Platform: fail the build instead of shipping a silent no-op. -->
@@ -47,6 +48,25 @@
       SkiaRenderer;
       Skia;
     </UnoFeatures>
+    <!--
+      Uno.Sdk 7.0.0-dev.115 bundles Hot Design 2.0.0-dev.31 and App MCP 2.0.0-dev.18, whose clients still reference
+      Uno.UI.Lottie, an assembly Uno 7 no longer ships: every Debug launch crashed in GlobalStaticResources. Both stay off
+      (Debug only; Release never had them) until a dev build drops the reference. Delete these three lines then.
+    -->
+    <UnoDisableHotDesign>true</UnoDisableHotDesign>
+    <UnoDisableMCPSupport>true</UnoDisableMCPSupport>
+    <DefineConstants>$(DefineConstants);NO_UNO_STUDIO</DefineConstants>
+  </PropertyGroup>
+
+  <!--
+    WinAppSDK: SKCanvasElement (the vitals strip) needs an x64 or ARM64 build, never AnyCPU.
+    Uno 7's WinUI libraries are built against WinRT.Runtime 2.3.1; the SDK's default projection for 19041
+    (Microsoft.Windows.SDK.NET.Ref 10.0.19041.57) carries 2.2.0 and fails with CS1705, so pin a projection that matches.
+  -->
+  <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+    <Platforms>x64;ARM64</Platforms>
+    <Platform Condition="'$(Platform)' == '' or '$(Platform)' == 'AnyCPU'">x64</Platform>
+    <WindowsSdkPackageVersion>10.0.19041.87</WindowsSdkPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -10,6 +10,9 @@ public static class UiThread
 {
     public static DispatcherQueue? Queue { get; set; }
 
+    /// <summary>The main window. WinAppSDK pickers need its handle as their owner.</summary>
+    public static Window? Window { get; set; }
+
     public static Task<T> RunAsync<T>(Func<Task<T>> work)
     {
         if (Queue is null || Queue.HasThreadAccess)
