@@ -50,6 +50,8 @@
     <UnoDisableHotDesign>true</UnoDisableHotDesign>
     <UnoDisableMCPSupport>true</UnoDisableMCPSupport>
     <DefineConstants>$(DefineConstants);NO_UNO_STUDIO</DefineConstants>
+    <!-- The page-change timing run (Services/PageTimer.cs) is in Debug builds; a Release timing build opts in with -p:VigilPageTimer=true. -->
+    <DefineConstants Condition="'$(VigilPageTimer)' == 'true'">$(DefineConstants);PAGE_TIMER</DefineConstants>
   </PropertyGroup>
 
   <!--

@@ -1,3 +1,4 @@
+#if DEBUG || PAGE_TIMER
 using System.Diagnostics;
 using System.Windows.Input;
 using Microsoft.UI.Xaml.Media;
@@ -5,7 +6,8 @@ using Microsoft.UI.Xaml.Media;
 namespace Vigil.Diagnostics;
 
 /// <summary>
-/// Page-change timing run, in every configuration (Release is the one that matters). With <c>VIGIL_PERF=&lt;csv path&gt;</c>
+/// Page-change timing run: Debug builds, and a Release build made with <c>-p:VigilPageTimer=true</c> (Release is the one
+/// that matters; a shipped Release build has no timing hook). With <c>VIGIL_PERF=&lt;csv path&gt;</c>
 /// the app uses its own data folder (<c>vigil-perf</c>, seeded with the sample day), steps through the sidebar
 /// destinations twice through the shell's own commands (no input is injected), writes one CSV row per page change and
 /// exits. Per change: request to frame navigated, page Loaded, first rendered frame after Loaded, and settled (the
@@ -167,3 +169,4 @@ internal static class PageTimer
         return n;
     }
 }
+#endif

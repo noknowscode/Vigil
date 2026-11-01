@@ -108,7 +108,7 @@ from the store, so a sheet and the page behind it never hold diverging copies.
 | `IFormulary` → `EmbeddedFormulary` | Singleton | Drug list, concentrations, mg/kg ranges, species alarm thresholds from an embedded `formulary.json` (sample reference data, labelled in the UI) |
 | `IClock` → `SystemClock` | Singleton | `Now` + a 1 Hz `IAsyncEnumerable<DateTimeOffset> Ticks(ct)`; replaced by a fake clock in tests |
 | `IRecordExporter` → `CsvRecordExporter` | Singleton | Signed record → CSV + plain-text summary |
-| `IFaultInjection` | Singleton | Reads `VIGIL_FAULT` / `VIGIL_SLOW_MS` env vars (desktop/Android) to prove Error/Loading states at runtime. Inert when unset; never shipped as a feature |
+| `IFaultInjection` | Singleton | Reads `VIGIL_FAULT` / `VIGIL_SLOW_MS` env vars (desktop/Android) to prove Error/Loading states at runtime. Debug builds only; Release registers a no-op (`NoFaultInjection`) |
 
 Domain logic (dose math, range classification, reading-due computation, MAP derivation, CSV) lives in
 `Vigil/Domain/` as plain C# with no Uno dependency, tested from `Vigil.Tests`.

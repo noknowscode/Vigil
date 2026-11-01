@@ -68,8 +68,13 @@ public partial class App : Application
                 .UseThemeSwitching()
                 .ConfigureServices((context, services) =>
                 {
-                    var fault = FaultInjection.FromEnvironment();
-                    services.AddSingleton<IFaultInjection>(fault);
+#if DEBUG
+                    // Test hook (VIGIL_FAULT / --vigil-fault): Debug builds only; Release never injects a fault.
+                    IFaultInjection fault = FaultInjection.FromEnvironment();
+#else
+                    IFaultInjection fault = NoFaultInjection.Instance;
+#endif
+                    services.AddSingleton(fault);
                     services.AddSingleton<IClock>(_ => PreviewClock() ?? new SystemClock());
                     services.AddSingleton<DoseFeedback>();
                     services.AddSingleton<IPreferences>(_ => new Preferences(
@@ -115,10 +120,12 @@ public partial class App : Application
             },
             initialRoute: "Main"
         );
+#if DEBUG || PAGE_TIMER
         if (Diagnostics.PageTimer.OutputPath is { } perfOutput)
         {
             _ = Diagnostics.PageTimer.RunAsync(MainWindow, Host.Services, perfOutput);
         }
+#endif
 #if __DESKTOP__ || WINDOWS
 #if DEBUG
         // Windows can restore the window maximized, and Resize does nothing on a maximized window: restore it first.
@@ -345,9 +352,11 @@ public partial class App : Application
 
     private static string DataRoot()
     {
+#if DEBUG || PAGE_TIMER
         // The page-change timing run keeps its sample day out of the real records.
         if (Diagnostics.PageTimer.OutputPath is not null)
             return Path.Combine(ApplicationData.Current.LocalFolder.Path, "vigil-perf");
+#endif
 #if DEBUG
         if (Environment.GetCommandLineArgs().Contains("--clover-preview"))
             return Path.Combine(ApplicationData.Current.LocalFolder.Path, "clover-design-preview");

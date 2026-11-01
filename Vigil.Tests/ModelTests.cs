@@ -31,7 +31,7 @@ public abstract class ModelTestBase
     public void SetUpStore()
     {
         _folder = Path.Combine(Path.GetTempPath(), "vigil-tests", Guid.NewGuid().ToString("N"));
-        Store = new JsonCaseStore(_folder, new FaultInjection(null, 0));
+        Store = new JsonCaseStore(_folder, NoFaultInjection.Instance);
     }
 
     [TearDown]

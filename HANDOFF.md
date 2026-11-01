@@ -55,5 +55,6 @@ Read, not applied: none.
 
 ## Relaunch
 cd C:\Users\Platform006\Vigil; dotnet build Vigil/Vigil.csproj -f net10.0-desktop
-Timing run: $env:VIGIL_PERF="<path>.csv"; Vigil\bin\Release\net10.0-desktop\Vigil.exe (exits by itself).
+Timing run: build Release with `-p:VigilPageTimer=true` (shipped builds have no timing hook), then
+$env:VIGIL_PERF="<path>.csv"; Vigil\bin\Release\net10.0-desktop\Vigil.exe (exits by itself).
 App MCP: uno_app_start (Debug, devserver). Ask the user before any launch.
