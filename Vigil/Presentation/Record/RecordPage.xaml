@@ -454,10 +454,12 @@
                                     <Run x:Uid="Record_146" Text="Reference range" />
                                     <Run Text="{Binding Data.ReferenceText}" />
                                   </TextBlock>
-                                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" Visibility="{Binding Data.IsOutOfRange, Converter={StaticResource VisibleWhenTrue}}">
+                                  <!-- A Grid, not a horizontal StackPanel: the StackPanel measures its text at infinite width, so it never wraps. -->
+                                  <Grid ColumnSpacing="{StaticResource Space8}" Visibility="{Binding Data.IsOutOfRange, Converter={StaticResource VisibleWhenTrue}}">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
                                     <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
-                                    <TextBlock x:Uid="Record_147" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource ErrorBrush}" Text="Outside the reference range: you will be asked to confirm." TextWrapping="WrapWholeWords" />
-                                  </StackPanel>
+                                    <TextBlock x:Uid="Record_147" Grid.Column="1" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource ErrorBrush}" Text="Outside the reference range: you will be asked to confirm." TextWrapping="WrapWholeWords" />
+                                  </Grid>
                                 </StackPanel>
                               </DataTemplate>
                             </mvux:FeedView.ValueTemplate>
