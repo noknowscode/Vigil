@@ -293,10 +293,16 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     public IFeed<string> Title => Source.Select(c => $"{c.Patient.Name} · {c.Patient.WeightKg:0.0} kg · {c.Procedure}");
 
-    /// <summary>The pre-op checklist, edited in place and saved on every change while the case is scheduled.</summary>
+    /// <summary>
+    /// The pre-op checklist, edited in place and saved on every change while the case is scheduled. A save writes only
+    /// the fields the user changed, so a check set elsewhere (Mark reviewed ticks the bloodwork) is never written over.
+    /// </summary>
     public IState<PreopCheck> Preop => State
-        .Async(this, async ct => (await Store.GetAsync(Ref.Id, ct))?.Preop ?? PreopCheck.Empty)
+        .Async(this, async ct => _preopShown = (await Store.GetAsync(Ref.Id, ct))?.Preop ?? PreopCheck.Empty)
         .ForEach(SavePreopAsync);
+
+    // The checklist as last loaded or saved: the next change is measured against it.
+    private PreopCheck _preopShown = PreopCheck.Empty;
 
     /// <summary>The selected tab. Opens where the case is (Monitor while asleep); the user owns it after that.</summary>
     public IState<int> Tab => State.Async(this, async ct =>
@@ -392,9 +398,16 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
     public async ValueTask Sternal(CancellationToken ct) =>
         await SaveAsync(c => c.Status == CaseStatus.Recovery ? c with { Recovery = c.Recovery with { SternalAt = Clock.Now } } : c, ct);
 
-    /// <summary>Lab results: marks a ready panel as reviewed.</summary>
-    public async ValueTask ReviewLab(string panel, CancellationToken ct) =>
+    /// <summary>Lab results: marks a ready panel as reviewed (before induction that also ticks the bloodwork check).</summary>
+    public async ValueTask ReviewLab(string panel, CancellationToken ct)
+    {
         await SaveAsync(c => c.WithLabReviewed(panel), ct);
+        // The checklist is an edited copy of the stored one: show the tick there as well.
+        if (await Store.GetAsync(Ref.Id, ct) is { } saved)
+        {
+            await Preop.UpdateAsync(p => (p ?? saved.Preop) with { BloodworkReviewed = saved.Preop.BloodworkReviewed }, ct);
+        }
+    }
 
     /// <summary>Recovery pane: the discharge call to the pet parent was made.</summary>
     public async ValueTask CompleteDischargeCall(CancellationToken ct)
@@ -460,7 +473,9 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
         {
             return;
         }
-        await SaveAsync(c => c.Status == CaseStatus.Scheduled ? c with { Preop = preop } : c, ct);
+        var before = _preopShown;
+        _preopShown = preop;
+        await SaveAsync(c => c.Status == CaseStatus.Scheduled ? c with { Preop = c.Preop.WithEdits(before, preop) } : c, ct);
     }
 
     private async ValueTask SaveAsync(Func<Case, Case> update, CancellationToken ct)

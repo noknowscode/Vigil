@@ -44,6 +44,24 @@ public partial record PreopCheck(
     public string AsaLabel => Asa is >= 1 and <= 5 ? $"ASA {Roman(Asa)}{(AsaEmergency ? "E" : "")}" : Loc.T("Asa_NotSet", "ASA —");
 
     public static string Roman(int asa) => asa switch { 1 => "I", 2 => "II", 3 => "III", 4 => "IV", 5 => "V", _ => "" };
+
+    /// <summary>
+    /// This check with the edits that turned <paramref name="before"/> into <paramref name="after"/>. A field the edit
+    /// left alone keeps this check's value, which may have been set elsewhere since (Mark reviewed ticks the bloodwork).
+    /// </summary>
+    public PreopCheck WithEdits(PreopCheck before, PreopCheck after)
+    {
+        static T Pick<T>(T mine, T was, T now) => EqualityComparer<T>.Default.Equals(was, now) ? mine : now;
+        return new(
+            Pick(Fasted, before.Fasted, after.Fasted),
+            Pick(IvCatheter, before.IvCatheter, after.IvCatheter),
+            Pick(MachineChecked, before.MachineChecked, after.MachineChecked),
+            Pick(ConsentSigned, before.ConsentSigned, after.ConsentSigned),
+            Pick(BloodworkReviewed, before.BloodworkReviewed, after.BloodworkReviewed),
+            Pick(Asa, before.Asa, after.Asa),
+            Pick(AsaEmergency, before.AsaEmergency, after.AsaEmergency),
+            Pick(Notes, before.Notes, after.Notes));
+    }
 }
 
 public partial record VitalsReading(

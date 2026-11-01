@@ -174,3 +174,16 @@ public class CsvExportTests
         text.Should().Contain("Pepper").And.Contain("Signed by Dr. Bergeron");
     }
 }
+
+public class PreopCheckTests
+{
+    [Test]
+    public void AnEditKeepsTheFieldsItDidNotTouch()
+    {
+        var shown = PreopCheck.Empty;
+        var stored = shown with { BloodworkReviewed = true };
+        stored.WithEdits(shown, shown with { Fasted = true, Notes = "NPO 06:00" })
+            .Should().Be(stored with { Fasted = true, Notes = "NPO 06:00" }, "Mark reviewed ticked the bloodwork after the checklist loaded");
+        stored.WithEdits(stored, stored with { BloodworkReviewed = false }).BloodworkReviewed.Should().BeFalse("an untick is an edit too");
+    }
+}
