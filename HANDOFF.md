@@ -48,7 +48,6 @@ Read, not applied: none.
 ## Open questions
 - The disabled Records, Reports, Help, search, bell and Monitoring pill are still visible (Messages is resolved: not
   in the MVP).
-- `PlannedPrepMinutes` has no Settings field. It is only the default of 25 minutes.
 - Native French review of the 49 new strings.
 - The preview surname reads "Ehok" (typed into the running app during the pass, not by an automation step); it
   lives only in the preview data folder.

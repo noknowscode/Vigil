@@ -36,6 +36,26 @@ public partial record SettingsModel(
     public IState<int> IntervalIndex => State.Value(this, () => Math.Max(0, Array.IndexOf(Services.Preferences.Intervals, (int)Preferences.ReadingInterval.TotalMinutes)))
         .ForEach(async (index, ct) => await Preferences.SetReadingIntervalAsync(Services.Preferences.Intervals[Math.Clamp(index, 0, 2)], ct));
 
+    /// <summary>
+    /// Planned preparation per case, in minutes, as typed; saved when the field loses focus. A number out of range is
+    /// saved clamped to 5-180 and anything else puts back the saved value, so the field always shows what applies.
+    /// </summary>
+    public IState<string> PlannedPrepMinutes => State.Value(this, () => Text(Preferences.PlannedPrepMinutes))
+        .ForEach(async (text, ct) =>
+        {
+            if (int.TryParse(text, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture, out var minutes))
+            {
+                await Preferences.SetPlannedPrepMinutesAsync(minutes, ct);
+            }
+            var saved = Text(Preferences.PlannedPrepMinutes);
+            if (text != saved)
+            {
+                await PlannedPrepMinutes.UpdateAsync(_ => saved, ct);
+            }
+        });
+
+    private static string Text(int minutes) => minutes.ToString(System.Globalization.CultureInfo.CurrentCulture);
+
     /// <summary>Surname for the board greeting; saved when the field loses focus.</summary>
     public IState<string> ClinicianName => State.Value(this, () => Preferences.ClinicianName)
         .ForEach(async (name, ct) => await Preferences.SetClinicianNameAsync(name ?? "", ct));

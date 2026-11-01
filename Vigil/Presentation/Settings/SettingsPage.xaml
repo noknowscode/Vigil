@@ -84,6 +84,13 @@
               <RadioButton x:Uid="Settings_23" Content="5 min" />
               <RadioButton x:Uid="Settings_24" Content="10 min" />
             </muxc:RadioButtons>
+            <!-- Saved when the field loses focus; out of range is clamped to 5-180 and shown as saved. -->
+            <StackPanel Spacing="{StaticResource Space6}" Padding="{StaticResource GapTop14}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
+              <TextBox x:Uid="Settings_30" Header="Planned prep (minutes)" InputScope="Number" MaxLength="3" MaxWidth="{StaticResource ShortFieldMaxWidth}" HorizontalAlignment="Left"
+                       Text="{Binding PlannedPrepMinutes, Mode=TwoWay}" AutomationProperties.Name="Planned preparation time per case, in minutes" />
+              <TextBlock x:Uid="Settings_31" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords"
+                         Text="Preparation starts this long before a booked case's planned start, unless the case sets its own. Today's care-time insight compares against it." />
+            </StackPanel>
           </StackPanel>
         </utu:CardContentControl>
 

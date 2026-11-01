@@ -755,5 +755,8 @@
   "The case could not be saved on this device. Your entries are kept; try again.": "Le dossier n'a pas pu être enregistré sur cet appareil. Vos saisies sont conservées; réessayez.",
   "The sample day could not be loaded. Your records are unchanged.": "La journée d'exemple n'a pas pu être chargée. Vos dossiers n'ont pas changé.",
   "Sample day loaded: 4 cases, one under anesthesia.": "Journée d'exemple chargée : 4 dossiers, dont un sous anesthésie.",
-  "Some records could not be deleted. Try again.": "Certains dossiers n'ont pas pu être supprimés. Réessayez."
+  "Some records could not be deleted. Try again.": "Certains dossiers n'ont pas pu être supprimés. Réessayez.",
+  "Planned preparation time per case, in minutes": "Temps de préparation prévu par dossier, en minutes",
+  "Preparation starts this long before a booked case's planned start, unless the case sets its own. Today's care-time insight compares against it.": "La préparation commence ce temps avant le début prévu d'un dossier réservé, sauf si le dossier fixe le sien. L'analyse du temps de soins du jour s'y compare.",
+  "Planned prep (minutes)": "Prép. prévue (minutes)"
 }

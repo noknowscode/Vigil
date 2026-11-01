@@ -228,3 +228,26 @@ public class StoreErrorsTests
         StoreErrors.Describe(new CaseRuleException("End anesthesia before signing.")).Should().Be("End anesthesia before signing.");
     }
 }
+
+public class SettingsModelTests : ModelTestBase
+{
+    [Test]
+    public async Task PlannedPrepIsSavedClampedOrPutBack()
+    {
+        var preferences = new Preferences();
+        var model = new SettingsModel(null!, null!, preferences, Store, Clock, null!, NullLogger<SettingsModel>.Instance);
+        (await model.PlannedPrepMinutes).Should().Be("25");
+
+        await model.PlannedPrepMinutes.UpdateAsync(_ => "40", CancellationToken.None);
+        await UntilAsync(() => Task.FromResult(preferences.PlannedPrepMinutes == 40));
+        preferences.PlannedPrepMinutes.Should().Be(40);
+
+        await model.PlannedPrepMinutes.UpdateAsync(_ => "500", CancellationToken.None);
+        await UntilAsync(async () => await model.PlannedPrepMinutes == "180");
+        preferences.PlannedPrepMinutes.Should().Be(180, "the practice preference is clamped to 5-180 minutes");
+
+        await model.PlannedPrepMinutes.UpdateAsync(_ => "soon", CancellationToken.None);
+        await UntilAsync(async () => await model.PlannedPrepMinutes == "180");
+        (await model.PlannedPrepMinutes).Should().Be("180", "text that is not a number puts back the saved value");
+    }
+}

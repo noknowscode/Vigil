@@ -567,6 +567,9 @@
   <data name="Settings_28.Content" xml:space="preserve"><value>Clear all records</value></data>
   <data name="Settings_29.Text" xml:space="preserve"><value>Clover is an Uno Platform reference app. Drug concentrations, dose ranges and alarm thresholds are sample reference data, not for clinical use.</value></data>
   <data name="Settings_3.Text" xml:space="preserve"><value>You</value></data>
+  <data name="Settings_30.Header" xml:space="preserve"><value>Planned prep (minutes)</value></data>
+  <data name="Settings_30.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Planned preparation time per case, in minutes</value></data>
+  <data name="Settings_31.Text" xml:space="preserve"><value>Preparation starts this long before a booked case's planned start, unless the case sets its own. Today's care-time insight compares against it.</value></data>
   <data name="Settings_4.Text" xml:space="preserve"><value>Today greets you as Dr. Okafor and the sidebar shows your initials. Leave both empty for a plain greeting.</value></data>
   <data name="Settings_5.Header" xml:space="preserve"><value>First name</value></data>
   <data name="Settings_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Your first name for the avatar initials</value></data>

@@ -567,6 +567,9 @@
   <data name="Settings_28.Content" xml:space="preserve"><value>Effacer tous les dossiers</value></data>
   <data name="Settings_29.Text" xml:space="preserve"><value>Clover est une application de référence Uno Platform. Les concentrations, plages de doses et seuils d'alarme sont des données d'exemple, non destinées à un usage clinique.</value></data>
   <data name="Settings_3.Text" xml:space="preserve"><value>Vous</value></data>
+  <data name="Settings_30.Header" xml:space="preserve"><value>Prép. prévue (minutes)</value></data>
+  <data name="Settings_30.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Temps de préparation prévu par dossier, en minutes</value></data>
+  <data name="Settings_31.Text" xml:space="preserve"><value>La préparation commence ce temps avant le début prévu d'un dossier réservé, sauf si le dossier fixe le sien. L'analyse du temps de soins du jour s'y compare.</value></data>
   <data name="Settings_4.Text" xml:space="preserve"><value>Aujourd'hui vous accueille comme Dr Okafor et la barre latérale affiche vos initiales. Laissez les deux vides pour un accueil sans nom.</value></data>
   <data name="Settings_5.Header" xml:space="preserve"><value>Prénom</value></data>
   <data name="Settings_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Votre prénom pour les initiales de l'avatar</value></data>
