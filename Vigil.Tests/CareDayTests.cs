@@ -13,7 +13,7 @@ public class CareDayTests
         day.Spans.Should().HaveCount(5);
         foreach (var c in cases.Where(c => c.InducedAt is not null))
         {
-            var anaesthesia = day.Spans.Single(x => x.CaseId == c.Id && x.Phase == CarePhase.Anaesthesia);
+            var anaesthesia = day.Spans.Single(x => x.CaseId == c.Id && x.Phase == CarePhaseKind.Anesthesia);
             anaesthesia.Start.Should().Be(c.InducedAt);
             anaesthesia.End.Should().Be(c.EndedAt ?? Now);
             anaesthesia.Ongoing.Should().Be(c.EndedAt is null);
@@ -28,7 +28,7 @@ public class CareDayTests
         var day = CareDay.From(cases, Now);
         foreach (var c in cases.Where(c => c.EndedAt is not null))
         {
-            var recovery = day.Spans.Single(x => x.CaseId == c.Id && x.Phase == CarePhase.Recovery);
+            var recovery = day.Spans.Single(x => x.CaseId == c.Id && x.Phase == CarePhaseKind.Recovery);
             recovery.Start.Should().Be(c.EndedAt);
             recovery.End.Should().Be(c.SignedAt ?? Now);
             recovery.Ongoing.Should().Be(c.SignedAt is null);

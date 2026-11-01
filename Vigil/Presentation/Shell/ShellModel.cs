@@ -10,12 +10,6 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
 {
     private const string ClearToFrame = Qualifiers.Nested + Qualifiers.ClearBackStack;
 
-    private IFeed<IImmutableList<Case>> Cases { get; } = Feed.Async(async ct => (IImmutableList<Case>)await Store.GetAllAsync(ct), Store.Changed);
-
-    private IFeed<string> Surname { get; } = Feed.Async(async ct => { await Task.Yield(); return Preferences.ClinicianName; }, Preferences.Changed);
-
-    private IFeed<string> Initials { get; } = Feed.Async(async ct => { await Task.Yield(); return ShellSection.Initials(Preferences.ClinicianFirstName, Preferences.ClinicianName); }, Preferences.Changed);
-
     /// <summary>
     /// The highlighted sidebar item. A pick sets it at once (<see cref="Go"/>); every route change in the content frame
     /// then sets it from the page shown (raised after the page loads), so detail pages move it too (Record: Patients).
@@ -28,21 +22,22 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
         return ShellSection.Today;
     });
 
-    public IFeed<string> TodayState => Section.Select(s => ShellSection.StateFor(s, ShellSection.Today));
-    public IFeed<string> PatientsState => Section.Select(s => ShellSection.StateFor(s, ShellSection.Patients));
-    public IFeed<string> AgendaState => Section.Select(s => ShellSection.StateFor(s, ShellSection.Agenda));
-    public IFeed<string> AnesthesiaState => Section.Select(s => ShellSection.StateFor(s, ShellSection.Anesthesia));
-    public IFeed<string> SettingsState => Section.Select(s => ShellSection.StateFor(s, ShellSection.Settings));
+    private SidebarFeeds Sidebar => _sidebar ??= new(Store, Preferences, Clock, Section);
+    private SidebarFeeds? _sidebar;
 
-    public IFeed<string> PatientsCount => Cases.Select(c => ShellSection.CountText(ShellSection.OnBoardToday(c, Clock.Now)));
-    public IFeed<string> AnesthesiaCount => Cases.Select(c => ShellSection.CountText(ShellSection.Live(c)));
-    public IFeed<bool> HasLive => Cases.Select(c => ShellSection.Live(c) > 0);
-
-    public IFeed<string> ClinicianName => Surname.Select(ShellSection.ClinicianLabel);
-    public IFeed<string> ClinicianInitials => Initials;
+    public IFeed<string> TodayState => Sidebar.TodayState;
+    public IFeed<string> PatientsState => Sidebar.PatientsState;
+    public IFeed<string> AgendaState => Sidebar.AgendaState;
+    public IFeed<string> AnesthesiaState => Sidebar.AnesthesiaState;
+    public IFeed<string> SettingsState => Sidebar.SettingsState;
+    public IFeed<string> PatientsCount => Sidebar.PatientsCount;
+    public IFeed<string> AnesthesiaCount => Sidebar.AnesthesiaCount;
+    public IFeed<bool> HasLive => Sidebar.HasLive;
+    public IFeed<string> ClinicianName => Sidebar.ClinicianName;
+    public IFeed<string> ClinicianInitials => Sidebar.ClinicianInitials;
 
     /// <summary>Read after each load of the cases: case files the store set aside as unreadable (the others loaded).</summary>
-    public IFeed<string> StoreWarning => Cases.Select(_ => ShellSection.SetAsideText(Store.SetAside.Count));
+    public IFeed<string> StoreWarning => Sidebar.Cases.Select(_ => ShellSection.SetAsideText(Store.SetAside.Count));
     public IFeed<bool> HasStoreWarning => StoreWarning.Select(s => s.Length > 0);
 
     /// <summary>Full sidebar (true) or icon rail (false) from 1080 px; below that the rail is forced by width.</summary>
@@ -88,7 +83,7 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
         }
     }
 
-    /// <summary>Below 760 px: the sidebar opens as the "!Menu" drawer, which hands the chosen item back here.</summary>
+    /// <summary>On phones the sidebar opens as the "!Menu" drawer, which hands the chosen item back here.</summary>
     public async ValueTask OpenMenu(string section, CancellationToken ct)
     {
         var choice = await Navigator.NavigateRouteForResultAsync<MenuChoice>(this, "!Menu", data: new MenuContext(section), cancellation: ct).AsResult();

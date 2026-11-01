@@ -1,12 +1,12 @@
 namespace Vigil.Presentation;
 
-public enum CarePhase { Anaesthesia, Recovery }
-public sealed partial record CareSpan(Guid CaseId, string Name, CarePhase Phase, DateTimeOffset Start, DateTimeOffset End, bool Ongoing)
+/// <summary>A recorded anesthesia or recovery phase on the Agenda ruler, clipped to today.</summary>
+public sealed partial record CareSpan(Guid CaseId, string Name, CarePhaseKind Phase, DateTimeOffset Start, DateTimeOffset End, bool Ongoing)
 {
     public DateTimeOffset RecordedStart { get; init; } = Start;
     public bool Continued { get; init; }
     public string Key => $"{CaseId}:{Phase}";
-    public string PhaseLabel => Phase == CarePhase.Anaesthesia ? Loc.T("Ruler_Anaesthesia", "Anaesthesia") : Loc.T("Ruler_Recovery", "Recovery");
+    public string PhaseLabel => Phase == CarePhaseKind.Anesthesia ? Loc.T("Ruler_Anaesthesia", "Anaesthesia") : Loc.T("Ruler_Recovery", "Recovery");
     public string Times => Continued
         ? $"{RecordedStart:dd MMM HH:mm} – {(Ongoing ? Loc.T("Ruler_Now", "Now") : End.ToString("HH:mm"))}"
         : Ongoing ? Loc.F("Ruler_Since", "Since {0:HH:mm}", RecordedStart) : $"{RecordedStart:HH:mm} – {End:HH:mm}";
@@ -40,27 +40,25 @@ public sealed record CareDay(DateTimeOffset Start, DateTimeOffset End, DateTimeO
         return slots.ToImmutable();
     }
 
+    /// <summary>
+    /// The recorded phases only: the anesthesia and recovery spans of <see cref="CarePhases"/> (the Today gantt adds
+    /// waiting, prep and planned slots), clipped to midnight and now.
+    /// </summary>
     public static CareDay From(IEnumerable<Case> cases, DateTimeOffset now)
     {
         var midnight = new DateTimeOffset(now.Date, now.Offset);
         var spans = ImmutableList.CreateBuilder<CareSpan>();
         foreach (var c in cases)
         {
-            if (c.InducedAt is not { } induced || induced > now) continue;
-            var anaesthesiaEnd = c.EndedAt ?? now;
-            Add(CarePhase.Anaesthesia, induced, anaesthesiaEnd, c.EndedAt is null);
-            if (c.EndedAt is { } ended && ended <= now)
-                Add(CarePhase.Recovery, ended, c.SignedAt ?? now, c.SignedAt is null);
-
-            void Add(CarePhase phase, DateTimeOffset from, DateTimeOffset to, bool ongoing)
+            foreach (var phase in CarePhases.Of(c, now).Where(s => s.Phase is CarePhaseKind.Anesthesia or CarePhaseKind.Recovery))
             {
-                from = from.ToOffset(now.Offset); to = to.ToOffset(now.Offset);
-                if (to < midnight || to < from) return;
-                var recordedStart = from;
-                from = from < midnight ? midnight : from;
-                to = to > now ? now : to;
-                if (to < from) return;
-                spans.Add(new(c.Id, c.Patient.Name, phase, from, to, ongoing) { RecordedStart = recordedStart, Continued = recordedStart < midnight });
+                var to = phase.End > now ? now : phase.End;
+                if (to < midnight)
+                {
+                    continue;
+                }
+                var from = phase.Start < midnight ? midnight : phase.Start;
+                spans.Add(new(c.Id, c.Patient.Name, phase.Phase, from, to, phase.Ongoing) { RecordedStart = phase.Start, Continued = phase.Start < midnight });
             }
         }
         var earliest = spans.Count > 0 ? spans.Min(x => x.Start) : now.AddHours(-1);

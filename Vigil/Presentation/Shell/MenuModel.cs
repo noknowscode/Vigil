@@ -1,34 +1,29 @@
 namespace Vigil.Presentation;
 
 /// <summary>
-/// The sidebar as a drawer below 760 px (route "!Menu"). It exposes the same members the Sidebar control binds on
-/// <see cref="ShellModel"/>; every choice closes the drawer and hands the route back to the shell, which owns the
-/// content frame (<see cref="ShellModel.OpenMenu"/>).
+/// The sidebar as a drawer on phones (route "!Menu"). It exposes the same members the Sidebar control binds on
+/// <see cref="ShellModel"/> (both from <see cref="SidebarFeeds"/>); every choice closes the drawer and hands the route
+/// back to the shell, which owns the content frame (<see cref="ShellModel.OpenMenu"/>).
 /// </summary>
 public partial record MenuModel(MenuContext Context, INavigator Navigator, ICaseStore Store, IPreferences Preferences, IClock Clock)
 {
-    private IFeed<IImmutableList<Case>> Cases { get; } = Feed.Async(async ct => (IImmutableList<Case>)await Store.GetAllAsync(ct), Store.Changed);
-
-    private IFeed<string> Surname { get; } = Feed.Async(async ct => { await Task.Yield(); return Preferences.ClinicianName; }, Preferences.Changed);
-
-    private IFeed<string> Initials { get; } = Feed.Async(async ct => { await Task.Yield(); return ShellSection.Initials(Preferences.ClinicianFirstName, Preferences.ClinicianName); }, Preferences.Changed);
-
     // Delivered as a feed: a value already present when the Sidebar binds reaches the nav items before their templates
     // exist, so utu:VisualStateManagerExtensions has no Active state to go to yet.
     private IFeed<string> Current { get; } = Feed.Async(async ct => { await Task.Yield(); return Context.Section; });
 
-    public IFeed<string> TodayState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Today));
-    public IFeed<string> PatientsState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Patients));
-    public IFeed<string> AgendaState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Agenda));
-    public IFeed<string> AnesthesiaState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Anesthesia));
-    public IFeed<string> SettingsState => Current.Select(s => ShellSection.StateFor(s, ShellSection.Settings));
+    private SidebarFeeds Sidebar => _sidebar ??= new(Store, Preferences, Clock, Current);
+    private SidebarFeeds? _sidebar;
 
-    public IFeed<string> PatientsCount => Cases.Select(c => ShellSection.CountText(ShellSection.OnBoardToday(c, Clock.Now)));
-    public IFeed<string> AnesthesiaCount => Cases.Select(c => ShellSection.CountText(ShellSection.Live(c)));
-    public IFeed<bool> HasLive => Cases.Select(c => ShellSection.Live(c) > 0);
-
-    public IFeed<string> ClinicianName => Surname.Select(ShellSection.ClinicianLabel);
-    public IFeed<string> ClinicianInitials => Initials;
+    public IFeed<string> TodayState => Sidebar.TodayState;
+    public IFeed<string> PatientsState => Sidebar.PatientsState;
+    public IFeed<string> AgendaState => Sidebar.AgendaState;
+    public IFeed<string> AnesthesiaState => Sidebar.AnesthesiaState;
+    public IFeed<string> SettingsState => Sidebar.SettingsState;
+    public IFeed<string> PatientsCount => Sidebar.PatientsCount;
+    public IFeed<string> AnesthesiaCount => Sidebar.AnesthesiaCount;
+    public IFeed<bool> HasLive => Sidebar.HasLive;
+    public IFeed<string> ClinicianName => Sidebar.ClinicianName;
+    public IFeed<string> ClinicianInitials => Sidebar.ClinicianInitials;
 
     /// <summary>The drawer always shows the full sidebar.</summary>
     public bool IsExpanded => true;

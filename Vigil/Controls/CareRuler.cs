@@ -90,8 +90,8 @@ public sealed partial class CareRuler : UserControl
                 }
                 button.Width = laneWidth - 5; button.Height = slot.Height;
                 Canvas.SetLeft(button, 52 + laneWidth * slot.Lane); Canvas.SetTop(button, slot.Top + 24);
-                button.Background = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverMint" : "CloverLavender");
-                button.BorderBrush = Ink(span.Phase == CarePhase.Anaesthesia ? "CloverMintEdge" : "CloverLavenderEdge");
+                button.Background = Ink(span.Phase == CarePhaseKind.Anesthesia ? "CloverMint" : "CloverLavender");
+                button.BorderBrush = Ink(span.Phase == CarePhaseKind.Anesthesia ? "CloverMintEdge" : "CloverLavenderEdge");
                 var content = new StackPanel { Spacing = 4 };
                 var name = Label(span.Name, 15, text);
                 name.FontWeight = Microsoft.UI.Text.FontWeights.SemiBold;
