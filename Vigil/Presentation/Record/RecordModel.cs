@@ -58,8 +58,6 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
     public async ValueTask OpenPatients(CancellationToken ct) =>
         await Navigator.NavigateRouteAsync(this, "-/" + ShellSection.Patients, cancellation: ct);
 
-    public IFeed<string> Title => Source.Select(c => $"{c.Patient.Name} · {c.Patient.WeightKg:0.0} kg · {c.Procedure}");
-
     /// <summary>
     /// The pre-op checklist, edited in place and saved on every change while the case is scheduled. A save writes only
     /// the fields the user changed, so a check set elsewhere (Mark reviewed ticks the bloodwork) is never written over.
@@ -70,10 +68,6 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     // The checklist as last loaded or saved: the next change is measured against it.
     private PreopCheck _preopShown = PreopCheck.Empty;
-
-    /// <summary>The selected tab. Opens where the case is (Monitor while asleep); the user owns it after that.</summary>
-    public IState<int> Tab => State.Async(this, async ct =>
-        (await Store.GetAsync(Ref.Id, ct)) is { } c ? CaseView.TabFor(c.Status) : 0);
 
     /// <summary>Store write failures surface here (InfoBar) with the action to retry.</summary>
     public IState<string> SaveError => State.Value(this, () => "");
@@ -88,18 +82,11 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     public IFeed<DraftFlags> Flags => Feed.Combine(Draft, Source).Select(x => DraftFlags.From(x.Item1, x.Item2.Patient.Species));
 
-    /// <summary>Strip or table: the table is the accessible alternative to the drawing.</summary>
-    public IState<bool> ShowTable => State.Value(this, () => false);
-
-    public IFeed<bool> ShowStrip => ShowTable.Select(t => !t);
-
     /// <summary>In-app setting OR'ed with the platform's; the strip draws new columns final instead of fading them.</summary>
     public IFeed<bool> ReduceMotion => Feed.Async(_ => ValueTask.FromResult(Preferences.ReduceMotion), Preferences.Changed);
 
     public async ValueTask Step(string arg, CancellationToken ct) =>
         await Draft.UpdateAsync(d => (d ?? VitalsDraft.Empty).Step(arg), ct);
-
-    public async ValueTask ToggleTable(CancellationToken ct) => await ShowTable.UpdateAsync(v => !v, ct);
 
     public async ValueTask RecordReading(VitalsDraft draft, CancellationToken ct)
     {
@@ -132,8 +119,6 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
         await SaveAsync(c => c.Status == CaseStatus.Scheduled
             ? c with { Status = CaseStatus.Anesthetized, InducedAt = Clock.Now }
             : c, ct);
-        await Tab.UpdateAsync(_ => CaseView.MonitorTab, ct);
-
         await PaneOpen.UpdateAsync(_ => false, ct);
     }
 
@@ -178,7 +163,6 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
     public async ValueTask EndAnesthesia(CancellationToken ct)
     {
         await SaveAsync(c => c.Status == CaseStatus.Anesthetized ? c with { Status = CaseStatus.Recovery, EndedAt = Clock.Now } : c, ct);
-        await Tab.UpdateAsync(_ => CaseView.RecoveryTab, ct);
     }
 
     public async ValueTask Extubate(CancellationToken ct) =>

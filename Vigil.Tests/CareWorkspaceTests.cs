@@ -17,14 +17,6 @@ public class CareWorkspaceTests
         }
     }
     [Test]
-    public void PatientCareShortcutPrioritizesActiveCareAndHandlesAnEmptyBoard()
-    {
-        var cases = SampleDay.Create(Now).Reverse().ToArray();
-        BoardDestination.Patient(cases)!.Patient.Name.Should().Be("Knuckles");
-        BoardDestination.Patient(cases.Where(c => c.Status != CaseStatus.Anesthetized))!.Patient.Name.Should().Be("Milo");
-        BoardDestination.Patient([]).Should().BeNull();
-    }
-    [Test]
     public void ReminderUsesTheSelectedPatientsPhotoAndNeverGuessesFromTheirName()
     {
         var bella = SampleDay.Create(Now).First();

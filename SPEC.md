@@ -238,7 +238,8 @@ Wide (≥1080, tablet landscape)                       Narrow (<600, phone)
 ### Tokens
 
 From DesignMd2Uno (`Styles/ColorPaletteOverride.xaml`, `Styles/Typography.xaml`, `Styles/Tokens.xaml`,
-regenerated, never hand-edited). Roles (light / dark):
+regenerated, never hand-edited). Roles (light / dark). v2 replaced the generated palette with
+`Styles/CloverPalette.xaml`; the generated one is kept only in `docs/design/generated/`:
 
 | Role | Light (Paper) | Dark (Theatre) | Use |
 |---|---|---|---|

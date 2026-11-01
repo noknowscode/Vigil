@@ -11,7 +11,6 @@ public partial record DoseRow(string Time, string Drug, string Dose, string Volu
 public partial record CaseView(
     Guid Id,
     string Name,
-    string Band,
     string Procedure,
     string Team,
     CaseStatus Status,
@@ -30,8 +29,6 @@ public partial record CaseView(
     IImmutableList<ReadingRow> Readings,
     IImmutableList<DoseRow> Doses,
     int ReadingCount,
-    StripData Strip,
-    string StripSummary,
     string LastRecorded,
     string RecoveryAnchor,
     string RecoveryAnchorLabel,
@@ -119,18 +116,6 @@ public partial record CaseView(
     public bool HasNoDoses => Doses.Count == 0;
     public bool HasDoses => !HasNoDoses;
 
-    public const int MonitorTab = 2;
-
-    public const int RecoveryTab = 3;
-
-    /// <summary>Tab the record opens on: Monitor while the patient is asleep, Recovery after, Pre-op before.</summary>
-    public static int TabFor(CaseStatus status) => status switch
-    {
-        CaseStatus.Anesthetized => MonitorTab,
-        CaseStatus.Recovery or CaseStatus.Signed => RecoveryTab,
-        _ => 0,
-    };
-
     public static CaseView From(Case c, DateTimeOffset now, TimeSpan interval) => From(c, now, interval, [], null);
 
     /// <param name="formulary">Drugs with their redose intervals (Next dose card).</param>
@@ -140,11 +125,9 @@ public partial record CaseView(
         var p = c.Patient;
         var due = Schedule.State(c, interval, now);
         var remaining = Schedule.Remaining(c, interval, now) ?? TimeSpan.Zero;
-        var strip = StripData.From(c, now, interval);
         return new CaseView(
             c.Id,
             p.Name,
-            $"{p.Species} · {p.WeightKg:0.0} kg · {c.Preop.AsaLabel}",
             c.Procedure,
             $"{c.Veterinarian} · {c.Technician}",
             c.Status,
@@ -163,8 +146,6 @@ public partial record CaseView(
             c.Readings.Reverse().Select(r => Row(p.Species, r)).ToImmutableList(),
             c.Doses.Reverse().Select(DoseRowOf).ToImmutableList(),
             c.Readings.Count,
-            strip,
-            strip.Summary(p.Species),
             c.Readings.Count > 0 ? Loc.F("Readings_LastRecorded", "Last recorded {0:dd MMM · HH:mm}", c.Readings[^1].At) : Loc.T("Readings_None", "No readings yet"),
             // A signed record stops its recovery clock at the signature.
             c.Recovery.ExtubatedAt is DateTimeOffset x ? Schedule.HoursMinutes((c.SignedAt ?? now) - x) : c.EndedAt is DateTimeOffset e ? Schedule.HoursMinutes((c.SignedAt ?? now) - e) : "—",

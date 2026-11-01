@@ -673,12 +673,10 @@
   <data name="Status_Signed" xml:space="preserve"><value>Signé</value></data>
   <data name="Strip_Anesthesia" xml:space="preserve"><value>ANESTHÉSIE</value></data>
   <data name="Strip_Booked" xml:space="preserve"><value>PRÉVU</value></data>
-  <data name="Strip_Empty" xml:space="preserve"><value>Bande des signes vitaux : aucune lecture pour l'instant.</value></data>
   <data name="Strip_Home" xml:space="preserve"><value>PARTI</value></data>
   <data name="Strip_NotStarted" xml:space="preserve"><value>Pas commencé</value></data>
   <data name="Strip_Prep" xml:space="preserve"><value>EN PRÉPARATION</value></data>
   <data name="Strip_Recovery" xml:space="preserve"><value>EN RÉVEIL</value></data>
-  <data name="Strip_Summary" xml:space="preserve"><value>Bande des signes vitaux : {0} lectures, dernière à {1:HH:mm} : fréquence cardiaque {2}, pression artérielle {3} sur {4}, SpO2 {5}. Utilisez la vue Tableau pour toutes les valeurs.</value></data>
   <data name="Task_Bloodwork" xml:space="preserve"><value>Révision du bilan sanguin</value></data>
   <data name="Task_DischargeCall" xml:space="preserve"><value>Appel de suivi après le congé</value></data>
   <data name="Task_Due" xml:space="preserve"><value>Prévu</value></data>

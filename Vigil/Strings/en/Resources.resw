@@ -673,12 +673,10 @@
   <data name="Status_Signed" xml:space="preserve"><value>Signed</value></data>
   <data name="Strip_Anesthesia" xml:space="preserve"><value>ANESTHESIA</value></data>
   <data name="Strip_Booked" xml:space="preserve"><value>BOOKED</value></data>
-  <data name="Strip_Empty" xml:space="preserve"><value>Vitals strip: no readings yet.</value></data>
   <data name="Strip_Home" xml:space="preserve"><value>SIGNED OUT</value></data>
   <data name="Strip_NotStarted" xml:space="preserve"><value>Not started</value></data>
   <data name="Strip_Prep" xml:space="preserve"><value>IN PREP</value></data>
   <data name="Strip_Recovery" xml:space="preserve"><value>IN RECOVERY</value></data>
-  <data name="Strip_Summary" xml:space="preserve"><value>Vitals strip: {0} readings, last at {1:HH:mm}: heart rate {2}, blood pressure {3} over {4}, SpO2 {5}. Use the Table view for every value.</value></data>
   <data name="Task_Bloodwork" xml:space="preserve"><value>Bloodwork review</value></data>
   <data name="Task_DischargeCall" xml:space="preserve"><value>Discharge call</value></data>
   <data name="Task_Due" xml:space="preserve"><value>Due</value></data>
