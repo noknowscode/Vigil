@@ -50,3 +50,16 @@ while Settings showed), and Create from the `!NewCase` sheet saved the case but 
 the URL stuck at `/Board/NewCase`. For an anesthesia record, browser history must not hold dialog text or
 record routes either.
 Tradeoff: no deep links or browser Back on the web head; the in-app Back (NavigationBar) is the only back path.
+
+## D6. The "Coming soon" controls stay: an exception to "every control functional" (2026-11-01)
+
+Decision: the controls without a screen stay visible and disabled, with a "Coming soon" tooltip and automation
+name: in the sidebar the clinic switcher, Records, Messages, Reports, Help center and the account menu, plus the
+Monitoring pill; in the top bar search and the notification bell; on Today the care-time report button and "See the
+prep checklist". They are the one recorded exception to the production-readiness rule that every visible control
+works.
+Reason: SPEC-v2 user decision 1 (2026-10-28): the sidebar shows every item as designed and items without a screen
+are disabled. The code review of 2026-11-01 asked to hide them, build them or record an exception; the owner kept
+the design.
+Tradeoff: the app advertises features it does not have (docs/COMPLETENESS.md). Building or hiding any of them
+retires its part of this exception.

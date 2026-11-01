@@ -18,8 +18,18 @@ New patient fields, fluids from start to stop, the AO avatar, the details animat
 numbers match the prototype to within 1 px. It also found and fixed square-filled status strips, placeholder
 values that looked filled in, and the ruler label overlap. The sample patient Bella is now Knuckles (user request).
 
+## Code-review fixes (2026-11-01, branch feat/production-readiness)
+The 2026-11-01 review's Vigil findings are fixed: the pre-op checklist saves field by field (Mark reviewed survives),
+Today's next surgery is today's booking only, a booked case can be deleted (Preparation pane, confirmed; signed
+records cannot), an unreadable case file is moved to `cases/damaged` with a shell warning, fault and timing hooks are
+Debug-only (`-p:VigilPageTimer=true` for a Release timing build), the dose entry and sidebar feeds are shared, the
+record view no longer rebuilds every second (`CaseTimers`), times show in the local zone, store failures read as
+sentences (details logged), Load sample day is all-or-nothing, and Settings sets the planned prep time. Model
+commands now have tests (`Vigil.Tests/ModelTests.cs`, a temp-folder store and a fixed clock). The build fails on
+warnings and on .editorconfig style rules. "Coming soon" controls stay (docs/DECISIONS.md D6).
+
 ## Last verified state
-- Build: desktop Debug and Release, 0 warnings. Tests 131/131.
+- Build: desktop Debug and Release, 0 warnings (enforced: TreatWarningsAsErrors). Tests 156/156 (2026-11-01).
 - Runtime: timing runs only (Release and Debug, no devserver). Release page changes reach first frame in 0.1–2.0 s;
   startup takes 14.7 s to a settled Today. Both harness runs exited 0xE0434352 after `Application.Exit()`.
 - Git: `archive/local-2026-10-28`, last commit d052fb9, pushed.
@@ -46,8 +56,9 @@ Read, not applied: none.
    under reduced motion.
 
 ## Open questions
-- The disabled Records, Reports, Help, search, bell and Monitoring pill are still visible (Messages is resolved: not
-  in the MVP).
+- The disabled Records, Reports, Help, search, bell and Monitoring pill stay visible by the owner's decision
+  (docs/DECISIONS.md D6).
+- Delete case is offered while a case is booked only (before induction); the store would delete any unsigned case.
 - Native French review of the 49 new strings.
 - The preview surname reads "Ehok" (typed into the running app during the pass, not by an automation step); it
   lives only in the preview data folder.

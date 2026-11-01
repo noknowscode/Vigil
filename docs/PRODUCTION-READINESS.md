@@ -137,4 +137,4 @@ manager), real GPU rendering, Android/iOS/WASM/WinAppSDK runtime, text scaling, 
   it implicitly, WinUI does not, so the Windows head needs a runtime check.
 - Touch targets were not raised to SPEC.md's 56 px gloved-hand size (superseded by SPEC-v2 decision 5).
 - Disabled "Coming soon" items (search, bell, Records, Messages, Reports, Help, clinic switcher, Monitoring) stay as the
-  user decided in SPEC-v2.
+  user decided in SPEC-v2; docs/DECISIONS.md D6 records them as the exception to "every control functional".
