@@ -372,6 +372,28 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     public async ValueTask DismissError(CancellationToken ct) => await SaveError.UpdateAsync(_ => "", ct);
 
+    /// <summary>
+    /// Preparation pane: deletes a booked case after a confirmation (booked by mistake, a mistyped weight, or the patient
+    /// is not coming), then leaves the record. The store refuses a signed record.
+    /// </summary>
+    public async ValueTask DeleteCase(CancellationToken ct)
+    {
+        if (!await Navigator.ConfirmAsync(this, Loc.T("Record_DeleteConfirm", "Delete this case and everything recorded in it? This cannot be undone."), Loc.T("Record_DeleteTitle", "Delete case"), Loc.T("Record_DeleteAction", "Delete case"), ct))
+        {
+            return;
+        }
+        try
+        {
+            await Store.DeleteAsync(Ref.Id, ct);
+        }
+        catch (Exception ex) when (ex is IOException or InvalidOperationException)
+        {
+            await SaveError.UpdateAsync(_ => Loc.T("Record_DeleteFailed", "The case could not be deleted. Try again."), ct);
+            return;
+        }
+        await GoBack(ct);
+    }
+
     /// <summary>The editable part of the recovery log, saved on every change while the case is in recovery.</summary>
     public IState<RecoveryDraft> Recovery => State
         .Async(this, async ct => RecoveryDraft.From((await Store.GetAsync(Ref.Id, ct))?.Recovery ?? RecoveryLog.Empty))

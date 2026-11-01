@@ -440,6 +440,7 @@
   <data name="Record_48.Text" xml:space="preserve"><value>Enregistrer la lecture</value></data>
   <data name="Record_49.Label" xml:space="preserve"><value>FC</value></data>
   <data name="Record_49.SpokenName" xml:space="preserve"><value>fréquence cardiaque, battements par minute</value></data>
+  <data name="Record_5.Text" xml:space="preserve"><value>Réservé par erreur, ou le patient ne viendra pas? Supprimez le dossier, puis réservez-le de nouveau avec les bons renseignements.</value></data>
   <data name="Record_50.Label" xml:space="preserve"><value>FR</value></data>
   <data name="Record_50.SpokenName" xml:space="preserve"><value>fréquence respiratoire, respirations par minute</value></data>
   <data name="Record_51.Label" xml:space="preserve"><value>SpO₂</value></data>
@@ -459,6 +460,8 @@
   <data name="Record_58.Label" xml:space="preserve"><value>O₂</value></data>
   <data name="Record_58.SpokenName" xml:space="preserve"><value>débit d'oxygène, litres par minute</value></data>
   <data name="Record_59.Text" xml:space="preserve"><value>PAM laissée vide : calculée par (SYS + 2·DIA) / 3 :</value></data>
+  <data name="Record_6.Content" xml:space="preserve"><value>Supprimer le dossier</value></data>
+  <data name="Record_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Supprimer ce dossier</value></data>
   <data name="Record_60.Header" xml:space="preserve"><value>Plan anesthésique</value></data>
   <data name="Record_61.Content" xml:space="preserve"><value>Léger</value></data>
   <data name="Record_62.Content" xml:space="preserve"><value>Chirurgical</value></data>
@@ -503,6 +506,10 @@
   <data name="Record_98.Text" xml:space="preserve"><value>Aucune mesure enregistrée</value></data>
   <data name="Record_99.Text" xml:space="preserve"><value>Dernier médicament</value></data>
   <data name="Record_BpMap" xml:space="preserve"><value>PA {0} · PAM {1}</value></data>
+  <data name="Record_DeleteAction" xml:space="preserve"><value>Supprimer le dossier</value></data>
+  <data name="Record_DeleteConfirm" xml:space="preserve"><value>Supprimer ce dossier et tout ce qui y est consigné? Cette action est irréversible.</value></data>
+  <data name="Record_DeleteFailed" xml:space="preserve"><value>Le dossier n'a pas pu être supprimé. Réessayez.</value></data>
+  <data name="Record_DeleteTitle" xml:space="preserve"><value>Supprimer le dossier</value></data>
   <data name="Record_DueEvery" xml:space="preserve"><value>mesures prévues toutes les {0} minutes</value></data>
   <data name="Record_EtCo2Rr" xml:space="preserve"><value>EtCO₂ {0} mmHg · FR {1}</value></data>
   <data name="Record_FluidName.Header" xml:space="preserve"><value>Soluté</value></data>

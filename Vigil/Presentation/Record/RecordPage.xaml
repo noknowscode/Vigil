@@ -549,6 +549,12 @@
                     <TextBlock x:Uid="Record_31" TextWrapping="WrapWholeWords" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}}" Text="Complete the five checks and set the ASA status to induce. Induction starts the reading clock." />
                     <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{Binding Data.InducedText}" />
                   </StackPanel>
+
+                  <!-- A booking made by mistake (a mistyped weight drives every dose) is deleted and booked again. -->
+                  <StackPanel Spacing="{StaticResource Space8}" Padding="{StaticResource GapTop16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}}">
+                    <TextBlock x:Uid="Record_5" TextWrapping="WrapWholeWords" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="Booked by mistake, or the patient is not coming? Delete the case, then book it again with the right details." />
+                    <Button x:Uid="Record_6" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Content="Delete case" Command="{Binding Parent.DeleteCase}" AutomationProperties.Name="Delete this case" />
+                  </StackPanel>
                 </StackPanel>
               </ScrollViewer>
 

@@ -440,6 +440,7 @@
   <data name="Record_48.Text" xml:space="preserve"><value>Record reading</value></data>
   <data name="Record_49.Label" xml:space="preserve"><value>HR</value></data>
   <data name="Record_49.SpokenName" xml:space="preserve"><value>heart rate, beats per minute</value></data>
+  <data name="Record_5.Text" xml:space="preserve"><value>Booked by mistake, or the patient is not coming? Delete the case, then book it again with the right details.</value></data>
   <data name="Record_50.Label" xml:space="preserve"><value>RR</value></data>
   <data name="Record_50.SpokenName" xml:space="preserve"><value>respiratory rate, breaths per minute</value></data>
   <data name="Record_51.Label" xml:space="preserve"><value>SpO₂</value></data>
@@ -459,6 +460,8 @@
   <data name="Record_58.Label" xml:space="preserve"><value>O₂</value></data>
   <data name="Record_58.SpokenName" xml:space="preserve"><value>oxygen flow, litres per minute</value></data>
   <data name="Record_59.Text" xml:space="preserve"><value>MAP left blank is derived as (SYS + 2·DIA) / 3:</value></data>
+  <data name="Record_6.Content" xml:space="preserve"><value>Delete case</value></data>
+  <data name="Record_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Delete this case</value></data>
   <data name="Record_60.Header" xml:space="preserve"><value>Anesthetic plane</value></data>
   <data name="Record_61.Content" xml:space="preserve"><value>Light</value></data>
   <data name="Record_62.Content" xml:space="preserve"><value>Surgical</value></data>
@@ -503,6 +506,10 @@
   <data name="Record_98.Text" xml:space="preserve"><value>No readings recorded yet</value></data>
   <data name="Record_99.Text" xml:space="preserve"><value>Latest medication</value></data>
   <data name="Record_BpMap" xml:space="preserve"><value>BP {0} · MAP {1}</value></data>
+  <data name="Record_DeleteAction" xml:space="preserve"><value>Delete case</value></data>
+  <data name="Record_DeleteConfirm" xml:space="preserve"><value>Delete this case and everything recorded in it? This cannot be undone.</value></data>
+  <data name="Record_DeleteFailed" xml:space="preserve"><value>The case could not be deleted. Try again.</value></data>
+  <data name="Record_DeleteTitle" xml:space="preserve"><value>Delete case</value></data>
   <data name="Record_DueEvery" xml:space="preserve"><value>readings due every {0} minutes</value></data>
   <data name="Record_EtCo2Rr" xml:space="preserve"><value>EtCO₂ {0} mmHg · RR {1}</value></data>
   <data name="Record_FluidName.Header" xml:space="preserve"><value>Fluid</value></data>

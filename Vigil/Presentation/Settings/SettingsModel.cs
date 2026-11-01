@@ -51,7 +51,7 @@ public partial record SettingsModel(
 
     public async ValueTask LoadSampleDay(CancellationToken ct)
     {
-        if (!await ConfirmAsync(Loc.T("Settings_SampleConfirm", "Replace every record on this tablet with the sample surgical day?"), Loc.T("Settings_SampleTitle", "Load sample day"), Loc.T("Settings_SampleAction", "Replace records"), ct))
+        if (!await Navigator.ConfirmAsync(this, Loc.T("Settings_SampleConfirm", "Replace every record on this tablet with the sample surgical day?"), Loc.T("Settings_SampleTitle", "Load sample day"), Loc.T("Settings_SampleAction", "Replace records"), ct))
         {
             return;
         }
@@ -65,30 +65,11 @@ public partial record SettingsModel(
 
     public async ValueTask ClearAll(CancellationToken ct)
     {
-        if (!await ConfirmAsync(Loc.T("Settings_ClearConfirm", "Delete every anesthesia record on this tablet? Signed records are deleted too. This cannot be undone."), Loc.T("Settings_ClearTitle", "Clear all records"), Loc.T("Settings_ClearAction", "Delete all"), ct))
+        if (!await Navigator.ConfirmAsync(this, Loc.T("Settings_ClearConfirm", "Delete every anesthesia record on this tablet? Signed records are deleted too. This cannot be undone."), Loc.T("Settings_ClearTitle", "Clear all records"), Loc.T("Settings_ClearAction", "Delete all"), ct))
         {
             return;
         }
         await Store.ClearAsync(ct);
         await Notice.UpdateAsync(_ => Loc.T("Settings_Cleared", "All records deleted from this tablet."), ct);
-    }
-
-    private async ValueTask<bool> ConfirmAsync(string content, string title, string action, CancellationToken ct)
-    {
-        var confirmed = false;
-        // The choice comes back through DialogAction callbacks, not the awaited result (runtime gotcha).
-        await Navigator.ShowMessageDialogAsync<object>(
-            this,
-            content: content,
-            title: title,
-            defaultButtonIndex: 1,
-            cancelButtonIndex: 1,
-            buttons:
-            [
-                new DialogAction(action, () => confirmed = true),
-                new DialogAction(Loc.T("Common_Cancel", "Cancel")),
-            ],
-            cancellation: ct);
-        return confirmed;
     }
 }

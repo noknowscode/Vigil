@@ -113,6 +113,35 @@ public class CaseStoreTests
     }
 
     [Test]
+    public async Task DeleteRemovesAnUnsignedCaseFromDisk()
+    {
+        var store = Store();
+        await SeedAsync(store);
+        var oscar = (await store.GetAllAsync(CancellationToken.None)).Single(c => c.Patient.Name == "Oscar");
+        var version = store.Version;
+
+        await store.DeleteAsync(oscar.Id, CancellationToken.None);
+
+        store.Version.Should().Be(version + 1, "the change signal refreshes every page");
+        (await store.GetAsync(oscar.Id, CancellationToken.None)).Should().BeNull();
+        (await Store().GetAllAsync(CancellationToken.None)).Should().HaveCount(3).And.NotContain(c => c.Id == oscar.Id);
+        await store.DeleteAsync(oscar.Id, CancellationToken.None);
+        store.Version.Should().Be(version + 1, "a case already gone is not deleted twice");
+    }
+
+    [Test]
+    public async Task SignedRecordsCannotBeDeleted()
+    {
+        var store = Store();
+        var signed = SampleDay.Create(DateTimeOffset.Now).Single(c => c.IsSigned);
+        await store.SaveAsync(signed, CancellationToken.None);
+
+        var delete = async () => await store.DeleteAsync(signed.Id, CancellationToken.None);
+        await delete.Should().ThrowAsync<SignedRecordException>();
+        (await Store().GetAsync(signed.Id, CancellationToken.None)).Should().NotBeNull();
+    }
+
+    [Test]
     public async Task ClearRemovesEveryCase()
     {
         var store = Store();

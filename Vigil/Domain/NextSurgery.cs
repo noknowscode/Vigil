@@ -56,9 +56,13 @@ public partial record NextSurgery(Case Case, DateTimeOffset PlannedStart, DateTi
 
     public static NextSurgery? Of(IEnumerable<Case> cases, DateTimeOffset now, IPreferences prefs) => Of(cases, now, prefs.PlannedPrepMinutes);
 
-    /// <summary>The earliest booked (or preparing) case with a planned start; null when none is planned.</summary>
+    /// <summary>
+    /// The earliest booked (or preparing) case planned for today (the local day of <paramref name="now"/>); null when
+    /// none is. A booking from another day never takes the hero: yesterday's no-show is not today's next surgery.
+    /// </summary>
     public static NextSurgery? Of(IEnumerable<Case> cases, DateTimeOffset now, int plannedPrepMinutes) =>
-        cases.Where(c => c.PlannedStart is not null && Stage.Of(c) is CareStage.Booked or CareStage.Prep)
+        cases.Where(c => c.PlannedStart is { } planned && planned.ToOffset(now.Offset).Date == now.Date
+                && Stage.Of(c) is CareStage.Booked or CareStage.Prep)
             .OrderBy(c => c.PlannedStart)
             .Select(c =>
             {

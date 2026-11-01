@@ -24,6 +24,12 @@ public interface ICaseStore
     /// <summary>Reads, transforms and saves one case. Returns the saved value.</summary>
     ValueTask<Case> UpdateAsync(Guid id, Func<Case, Case> update, CancellationToken ct);
 
+    /// <summary>
+    /// Deletes an unsigned case (booked by mistake, or the patient is not coming); a missing case is already gone.
+    /// Throws <see cref="SignedRecordException"/> for a signed record.
+    /// </summary>
+    ValueTask DeleteAsync(Guid id, CancellationToken ct);
+
     ValueTask ClearAsync(CancellationToken ct);
 }
 
@@ -112,6 +118,34 @@ public sealed class JsonCaseStore : ICaseStore
         }
         Notify();
         return updated;
+    }
+
+    public async ValueTask DeleteAsync(Guid id, CancellationToken ct)
+    {
+        await _gate.WaitAsync(ct);
+        try
+        {
+            var cache = await LoadCoreAsync(ct);
+            if (!cache.TryGetValue(id, out var existing))
+            {
+                return;
+            }
+            if (existing.IsSigned)
+            {
+                throw new SignedRecordException(id);
+            }
+            if (_fault.WriteFault)
+            {
+                throw new IOException("The record could not be deleted (injected fault).");
+            }
+            File.Delete(PathOf(id));
+            _cache = cache.Remove(id);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+        Notify();
     }
 
     public async ValueTask ClearAsync(CancellationToken ct)
@@ -209,7 +243,7 @@ public sealed class JsonCaseStore : ICaseStore
             throw new IOException("The record could not be saved (injected fault).");
         }
         Directory.CreateDirectory(_folder);
-        var path = Path.Combine(_folder, $"{value.Id:N}.json");
+        var path = PathOf(value.Id);
         var temp = path + ".tmp";
         await using (var stream = File.Create(temp))
         {
@@ -217,6 +251,8 @@ public sealed class JsonCaseStore : ICaseStore
         }
         File.Move(temp, path, overwrite: true);
     }
+
+    private string PathOf(Guid id) => Path.Combine(_folder, $"{id:N}.json");
 
     /// <summary>Incremented on every change notification (observable in tests; the Signal itself is not).</summary>
     public long Version { get; private set; }

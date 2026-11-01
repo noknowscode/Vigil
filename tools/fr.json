@@ -739,5 +739,10 @@
   "Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card.": "Facultatif. Les heures s'écrivent comme 14:00. Une heure de début place le patient sur la ligne du temps d'Aujourd'hui et dans la fiche Prochaine chirurgie.",
   "Couldn't load the formulary.": "Impossible de charger le formulaire.",
   "Doses can't be calculated on this device until the app is reinstalled.": "Les doses ne peuvent pas être calculées sur cet appareil tant que l'application n'est pas réinstallée.",
-  "The formulary has no drugs.": "Le formulaire ne contient aucun médicament."
+  "The formulary has no drugs.": "Le formulaire ne contient aucun médicament.",
+  "Booked by mistake, or the patient is not coming? Delete the case, then book it again with the right details.": "Réservé par erreur, ou le patient ne viendra pas? Supprimez le dossier, puis réservez-le de nouveau avec les bons renseignements.",
+  "Delete case": "Supprimer le dossier",
+  "Delete this case": "Supprimer ce dossier",
+  "Delete this case and everything recorded in it? This cannot be undone.": "Supprimer ce dossier et tout ce qui y est consigné? Cette action est irréversible.",
+  "The case could not be deleted. Try again.": "Le dossier n'a pas pu être supprimé. Réessayez."
 }

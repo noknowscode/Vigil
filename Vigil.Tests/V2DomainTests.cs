@@ -298,6 +298,18 @@ public class NextSurgeryTests
     }
 
     [Test]
+    public void OnlyTodaysBookingsTakeTheHero()
+    {
+        var oscar = Proto.Named("Oscar");
+        Case Booked(string name, DateTimeOffset start) => oscar with { Id = Guid.NewGuid(), PlannedStart = start, Patient = oscar.Patient with { Name = name } };
+        var yesterday = Booked("Luna", Proto.At(9, 0).AddDays(-1));
+        var tomorrow = Booked("Rex", Proto.At(8, 0).AddDays(1));
+        NextSurgery.Of([yesterday, tomorrow, oscar], Proto.Now, 25)!.Case.Patient.Name.Should().Be("Oscar", "yesterday's no-show and tomorrow's booking are not today's");
+        NextSurgery.Of([yesterday, tomorrow], Proto.Now, 25).Should().BeNull();
+        NextSurgery.Of([oscar, Booked("Late", Proto.At(9, 0))], Proto.Now, 25)!.Case.Patient.Name.Should().Be("Late", "a booking running late today is still next");
+    }
+
+    [Test]
     public void ThePracticePlannedPrepAppliesWhenTheCaseHasNone()
     {
         var oscar = Proto.Named("Oscar") with { PlannedPrepMinutes = null };
