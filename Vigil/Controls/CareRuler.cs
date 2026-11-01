@@ -15,8 +15,6 @@ public sealed partial class CareRuler : UserControl
     private readonly Canvas _blocks = new();
     private readonly Canvas _present = new() { IsHitTestVisible = false };
     private readonly Dictionary<string, Button> _buttons = new();
-    private readonly FontFamily _font = new("ms-appx:///Assets/Fonts/HankenGrotesk.ttf");
-    private readonly FontFamily _mono = new("ms-appx:///Assets/Fonts/MartianMono.ttf");
     private bool _drawing;
 
     public CareRuler()
@@ -36,8 +34,9 @@ public sealed partial class CareRuler : UserControl
     {
         Canvas.SetLeft(element, x); Canvas.SetTop(element, y); host.Children.Add(element);
     }
-    private TextBlock Label(string text, double size, Brush ink, bool mono = false) => new()
-    { Text = text, FontSize = size, Foreground = ink, FontFamily = mono ? _mono : _font, TextWrapping = TextWrapping.NoWrap };
+    /// <summary>A label in one of the app's type styles (Themes/Tokens.xaml: fonts, sizes, line heights).</summary>
+    private static TextBlock Label(string text, string style, Brush ink) => new()
+    { Text = text, Style = (Style)Application.Current.Resources[style], Foreground = ink };
 
     private void Draw()
     {
@@ -67,7 +66,7 @@ public sealed partial class CareRuler : UserControl
                 var now = day.NowTop + 22;
                 if (hour && (y <= now - 13 || y >= now + 33))
                 {
-                    Place(_ticks, Label(day.Start.AddMinutes(q * 15).ToString("HH:mm"), 12, quiet, true), 0, y - 17);
+                    Place(_ticks, Label(Presentation.Today.Time(day.Start.AddMinutes(q * 15), day.Now), "TypeMonoLabel", quiet), 0, y - 17);
                 }
                 if (hour)
                 {
@@ -93,15 +92,14 @@ public sealed partial class CareRuler : UserControl
                 button.Background = Ink(span.Phase == CarePhaseKind.Anesthesia ? "CloverMint" : "CloverLavender");
                 button.BorderBrush = Ink(span.Phase == CarePhaseKind.Anesthesia ? "CloverMintEdge" : "CloverLavenderEdge");
                 var content = new StackPanel { Spacing = 4 };
-                var name = Label(span.Name, 15, text);
-                name.FontWeight = Microsoft.UI.Text.FontWeights.SemiBold;
+                var name = Label(span.Name, "TypeTitleS", text);
                 name.TextTrimming = TextTrimming.CharacterEllipsis;
                 content.Children.Add(name);
                 // Short blocks fit the name only; the times stay in the tooltip and the accessible name.
-                if (slot.Height >= 76) content.Children.Add(Label(span.PhaseLabel, 12, quiet));
+                if (slot.Height >= 76) content.Children.Add(Label(span.PhaseLabel, "TypeCaption", quiet));
                 if (slot.Height >= 56)
                 {
-                    var time = Label(span.Times, 12, quiet); time.TextTrimming = TextTrimming.CharacterEllipsis;
+                    var time = Label(span.Times, "TypeCaption", quiet); time.TextTrimming = TextTrimming.CharacterEllipsis;
                     content.Children.Add(time);
                 }
                 button.Content = content;
@@ -110,14 +108,14 @@ public sealed partial class CareRuler : UserControl
             }
             if (day.IsEmpty)
             {
-                var empty = Label(Loc.T("Ruler_Empty", "Care intervals appear after anaesthesia begins."), 13, quiet);
+                var empty = Label(Loc.T("Ruler_Empty", "Care intervals appear after anaesthesia begins."), "TypeBodyS", quiet);
                 empty.TextWrapping = TextWrapping.Wrap; empty.Width = width - 72;
                 Place(_present, empty, 64, 36);
             }
             var nowY = day.NowTop + 22;
             Place(_present, new Border { Width = width - 43, Height = 1.5, Background = primary }, 43, nowY);
             Place(_present, new Ellipse { Width = 6, Height = 6, Fill = primary }, 40, nowY - 2.5);
-            var marker = new Border { Background = primary, CornerRadius = new CornerRadius(5), Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), 12, Ink("OnPrimaryColor")) };
+            var marker = new Border { Background = primary, CornerRadius = (CornerRadius)Application.Current.Resources["Radius6"], Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), "TypeCaption", Ink("OnPrimaryColor")) };
             Place(_present, marker, 0, nowY - 10);
         }
         finally { _drawing = false; }

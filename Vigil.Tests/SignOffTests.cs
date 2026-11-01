@@ -7,14 +7,15 @@ public class SignOffTests
     [Test]
     public void OnlyARecoveryCaseCanBeSigned()
     {
-        var day = SampleDay.Create(DateTimeOffset.Now);
-        SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Recovery)).CanSign.Should().BeTrue();
-        var live = SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Anesthetized));
+        var now = DateTimeOffset.Now;
+        var day = SampleDay.Create(now);
+        SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Recovery), now).CanSign.Should().BeTrue();
+        var live = SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Anesthetized), now);
         live.CanSign.Should().BeFalse();
         live.Blocker.Should().Be("End anesthesia before signing.");
         live.Duration.Should().Be("—");
-        SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Recovery)).Duration.Should().MatchRegex(@"^\d\d:\d\d$");
-        SignOffSummary.From(day.Single(c => c.IsSigned)).Blocker.Should().StartWith("Already signed by");
+        SignOffSummary.From(day.Single(c => c.Status == CaseStatus.Recovery), now).Duration.Should().MatchRegex(@"^\d\d:\d\d$");
+        SignOffSummary.From(day.Single(c => c.IsSigned), now).Blocker.Should().StartWith("Already signed by");
     }
 
     [Test]
@@ -22,7 +23,7 @@ public class SignOffTests
     {
         var milo = SampleDay.Create(DateTimeOffset.Now).Single(c => c.Patient.Name == "Milo");
         var oneDose = milo with { Doses = [new DoseGiven(Guid.NewGuid(), DateTimeOffset.Now, "x", "X", 1, 1, 1, DoseRoute.IV, false)] };
-        SignOffSummary.From(oneDose).Counts.Should().StartWith("1 dose ·");
+        SignOffSummary.From(oneDose, DateTimeOffset.Now).Counts.Should().StartWith("1 dose ·");
     }
 
     [Test]

@@ -120,20 +120,20 @@ public partial record CaseView(
             string.Join(" · ", new[] { p.SpeciesAndBreed, p.AgeYears > 0 ? Loc.F("Patient_AgeShort", "{0:0.#} y", p.AgeYears) : "", string.IsNullOrWhiteSpace(p.Owner) ? "" : Loc.F("Patient_OwnerShort", "owner {0}", p.Owner) }.Where(x => x.Length > 0)),
             c.Preop,
             Loc.F("Preop_Progress", "{0} of 5 checks", c.Preop.DoneCount),
-            c.InducedAt is DateTimeOffset i ? Loc.F("Preop_InducedAt", "Induced at {0:HH:mm}", i) : Loc.T("Preop_NotInduced", "Not induced"),
-            c.Readings.Reverse().Select(r => Row(p.Species, r)).ToImmutableList(),
-            c.Doses.Reverse().Select(DoseRowOf).ToImmutableList(),
+            c.InducedAt is DateTimeOffset i ? Loc.F("Preop_InducedAt", "Induced at {0:HH:mm}", i.ToOffset(now.Offset)) : Loc.T("Preop_NotInduced", "Not induced"),
+            c.Readings.Reverse().Select(r => Row(p.Species, r, now)).ToImmutableList(),
+            c.Doses.Reverse().Select(d => DoseRowOf(d, now)).ToImmutableList(),
             c.Readings.Count,
-            c.Readings.Count > 0 ? Loc.F("Readings_LastRecorded", "Last recorded {0:dd MMM · HH:mm}", c.Readings[^1].At) : Loc.T("Readings_None", "No readings yet"),
+            c.Readings.Count > 0 ? Loc.F("Readings_LastRecorded", "Last recorded {0:dd MMM · HH:mm}", c.Readings[^1].At.ToOffset(now.Offset)) : Loc.T("Readings_None", "No readings yet"),
             c.Recovery.ExtubatedAt is not null ? Loc.T("Recovery_SinceExtubation", "since extubation") : c.EndedAt is not null ? Loc.T("Recovery_SinceEnded", "since anesthesia ended (not extubated)") : Loc.T("Recovery_NotEnded", "anesthesia not ended"),
-            c.Recovery.ExtubatedAt is DateTimeOffset ex ? Loc.F("Recovery_Extubated", "Extubated {0:HH:mm}", ex) : "",
-            c.Recovery.SternalAt is DateTimeOffset st ? Loc.F("Recovery_Sternal", "Sternal {0:HH:mm}", st) : "",
-            c.SignedBy is { } by ? Loc.F("Recovery_SignedBy", "Signed by {0} at {1:HH:mm}. The record is read-only.", by, c.SignedAt) : "")
+            c.Recovery.ExtubatedAt is DateTimeOffset ex ? Loc.F("Recovery_Extubated", "Extubated {0:HH:mm}", ex.ToOffset(now.Offset)) : "",
+            c.Recovery.SternalAt is DateTimeOffset st ? Loc.F("Recovery_Sternal", "Sternal {0:HH:mm}", st.ToOffset(now.Offset)) : "",
+            c.SignedBy is { } by ? Loc.F("Recovery_SignedBy", "Signed by {0} at {1:HH:mm}. The record is read-only.", by, c.SignedAt?.ToOffset(now.Offset)) : "")
         {
             Photo = PatientMedia.Photo(p), HeroPhoto = PatientMedia.Hero(p),
             Breed = string.IsNullOrWhiteSpace(p.Breed) ? Loc.Species(p.Species) : p.Breed,
             AgeOwner = $"{(p.AgeYears == 1 ? Loc.T("Patient_OneYear", "1 year") : Loc.F("Patient_AgeYears", "{0:0.#} years", p.AgeYears))} · {p.Owner}",
-            WeightDate = Loc.F("Weight_RecordedAt", "Recorded {0:d MMM, HH:mm}", c.CreatedAt.ToOffset(now.Offset)), VisitDate = $"{c.CreatedAt:dd MMM yyyy}",
+            WeightDate = Loc.F("Weight_RecordedAt", "Recorded {0:d MMM, HH:mm}", c.CreatedAt.ToOffset(now.Offset)), VisitDate = $"{c.CreatedAt.ToOffset(now.Offset):dd MMM yyyy}",
             // The window follows the readings and the due time, not the clock: building it with the case is enough.
             Chart = RecordChart.From(c, now, interval),
             HrSpark = Spark.HeartRate(c),
@@ -164,17 +164,17 @@ public partial record CaseView(
             LastEtCo2 = c.Readings.LastOrDefault()?.EtCo2?.ToString() ?? "—",
             LastMap = c.Readings.LastOrDefault()?.EffectiveMap?.ToString() ?? "—",
             LastRr = c.Readings.LastOrDefault()?.Rr?.ToString() ?? "—",
-            Alert = c.Readings.LastOrDefault() is { } last ? Row(p.Species, last).Alarms : ""
+            Alert = c.Readings.LastOrDefault() is { } last ? Row(p.Species, last, now).Alarms : ""
         };
     }
 
-    private static ReadingRow Row(Species species, VitalsReading r)
+    private static ReadingRow Row(Species species, VitalsReading r, DateTimeOffset now)
     {
         static string N(int? v) => v?.ToString() ?? "—";
         var alarms = Vitals.Alarms(species, r)
             .Select(a => $"{Vitals.Label(a.Kind)} {(a.Class == RangeClass.High ? Loc.T("Alarm_High", "▲ high") : Loc.T("Alarm_Low", "▼ low"))}");
         return new ReadingRow(
-            $"{r.At:HH:mm}", N(r.Hr), N(r.Rr), N(r.SpO2), N(r.EtCo2),
+            Today.Time(r.At, now), N(r.Hr), N(r.Rr), N(r.SpO2), N(r.EtCo2),
             r.Sys is null && r.Dia is null ? "—" : $"{N(r.Sys)}/{N(r.Dia)}",
             r.EffectiveMap is int m ? (r.MapIsCalculated ? Loc.F("Map_Calc", "{0} calc", m) : $"{m}") : "—",
             r.TempC is decimal t ? $"{t:0.0}" : "—",
@@ -183,8 +183,8 @@ public partial record CaseView(
             r.Note);
     }
 
-    private static DoseRow DoseRowOf(DoseGiven d) => new(
-        $"{d.At:HH:mm}", d.DrugName, $"{d.MgPerKg:0.###} mg/kg", $"{d.VolumeMl:0.00} mL", d.Route.ToString(),
+    private static DoseRow DoseRowOf(DoseGiven d, DateTimeOffset now) => new(
+        Today.Time(d.At, now), d.DrugName, $"{d.MgPerKg:0.###} mg/kg", $"{d.VolumeMl:0.00} mL", d.Route.ToString(),
         d.OutOfRangeConfirmed ? Loc.T("Dose_OutOfRangeConfirmed", "Out of range, confirmed") : "");
 }
 

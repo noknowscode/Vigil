@@ -32,7 +32,7 @@ public class CloverTests
     public void SignedParentPreviewDoesNotPromiseDischargeOrInventVitals()
     {
         var signed = SampleDay.Create(DateTimeOffset.Now).Single(c => c.Status == CaseStatus.Signed);
-        var preview = ParentSnapshot.From(signed);
+        var preview = ParentSnapshot.From(signed, DateTimeOffset.Now);
         preview.Status.Should().Be("Record complete");
         preview.Next.Should().Contain("confirm");
         preview.Description.Should().Contain("wait");
@@ -44,7 +44,7 @@ public class CloverTests
     public void ScheduledParentPreviewKeepsFutureMilestonesPending()
     {
         var scheduled = SampleDay.Create(DateTimeOffset.Now).First(c => c.Status == CaseStatus.Scheduled);
-        var preview = ParentSnapshot.From(scheduled);
+        var preview = ParentSnapshot.From(scheduled, DateTimeOffset.Now);
         preview.Milestones.Skip(2).Should().OnlyContain(m => !m.Done && m.Time == "Pending");
         preview.Milestones[3].Detail.Should().Contain("will");
     }

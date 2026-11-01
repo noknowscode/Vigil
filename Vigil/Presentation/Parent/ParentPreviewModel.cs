@@ -10,28 +10,29 @@ public partial record ParentSnapshot(string Name, string Breed, string? Photo, s
     public bool HasNoPhoto => string.IsNullOrEmpty(Photo);
     public bool HasPhoto => !HasNoPhoto;
     public string Initial => string.IsNullOrEmpty(Name) ? "?" : Name[..1];
-    public static ParentSnapshot From(Case c)
+    /// <param name="now">The local time zone for the times shown.</param>
+    public static ParentSnapshot From(Case c, DateTimeOffset now)
     {
         var latest = new DateTimeOffset?[] { c.CreatedAt, c.InducedAt, c.EndedAt, c.Recovery.ExtubatedAt, c.Recovery.SternalAt, c.SignedAt }.Where(x => x.HasValue).Max()!.Value;
         var pending = Loc.T("Parent_Pending", "Pending");
         return new(c.Patient.Name, c.Patient.Breed, PatientMedia.Photo(c.Patient),
             c.Status switch { CaseStatus.Anesthetized => Loc.T("Parent_StatusSurgery", "In surgery"), CaseStatus.Recovery => Loc.T("Parent_StatusRecovery", "In recovery"), CaseStatus.Signed => Loc.T("Parent_StatusComplete", "Record complete"), _ => Loc.T("Parent_StatusReady", "Getting ready") },
             c.Status switch { CaseStatus.Anesthetized => Loc.T("Parent_DescSurgery", "The team has recorded the start of anaesthesia. The next milestone will appear when recovery is recorded."), CaseStatus.Recovery => Loc.T("Parent_DescRecovery", "Anaesthesia has ended and the team is recording recovery milestones."), CaseStatus.Signed => Loc.T("Parent_DescComplete", "The team has completed the anaesthesia record. Please wait for their collection instructions."), _ => Loc.T("Parent_DescReady", "Your pet's visit record is open. The team is working through the preparation checklist.") },
-            Loc.F("Parent_Updated", "Last milestone · {0:dd MMM, HH:mm}", latest),
+            Loc.F("Parent_Updated", "Last milestone · {0:dd MMM, HH:mm}", latest.ToOffset(now.Offset)),
             c.Status switch { CaseStatus.Anesthetized => Loc.T("Parent_NextSurgery", "The team will update you when recovery begins."), CaseStatus.Recovery => Loc.T("Parent_NextRecovery", "Wait for the team's collection instructions. Recovery timing is individual."), CaseStatus.Signed => Loc.T("Parent_NextComplete", "The clinic will confirm when your pet is ready to go home."), _ => Loc.T("Parent_NextReady", "The team will record the start of anaesthesia after preparation.") },
             c.Procedure, $"{c.Veterinarian} · {c.Technician}",
             new[] {
-                new CareMilestone(Loc.T("Parent_MsOpened", "Visit opened"), Loc.T("Parent_MsOpenedDetail", "Your pet's visit is open."), $"{c.CreatedAt:HH:mm}", true),
+                new CareMilestone(Loc.T("Parent_MsOpened", "Visit opened"), Loc.T("Parent_MsOpenedDetail", "Your pet's visit is open."), Today.Time(c.CreatedAt, now), true),
                 new CareMilestone(Loc.T("Parent_MsPrep", "Preparation"), c.Preop.IsComplete ? Loc.T("Parent_MsPrepDone", "Pre-op checklist complete.") : Loc.T("Parent_MsPrepPending", "Pre-op checks are in progress."), c.Preop.IsComplete ? Loc.T("Parent_Complete", "Complete") : pending, c.Preop.IsComplete),
-                new CareMilestone(Loc.T("Parent_MsAnaesthesia", "Anaesthesia"), c.InducedAt is not null ? Loc.T("Parent_MsAnaesthesiaDone", "Start recorded by the care team.") : Loc.T("Parent_MsAnaesthesiaPending", "The team will record the start."), c.InducedAt is { } i ? $"{i:HH:mm}" : pending, c.InducedAt is not null),
-                new CareMilestone(Loc.T("Parent_MsRecovery", "Recovery"), c.EndedAt is not null ? Loc.T("Parent_MsRecoveryDone", "Anaesthesia ended; recovery started.") : Loc.T("Parent_MsRecoveryPending", "The team will record recovery here."), c.EndedAt is { } e ? $"{e:HH:mm}" : pending, c.EndedAt is not null),
-                new CareMilestone(Loc.T("Parent_StatusComplete", "Record complete"), Loc.T("Parent_MsCompleteDetail", "Collection is confirmed separately."), c.SignedAt is { } s ? $"{s:HH:mm}" : pending, c.SignedAt is not null)
+                new CareMilestone(Loc.T("Parent_MsAnaesthesia", "Anaesthesia"), c.InducedAt is not null ? Loc.T("Parent_MsAnaesthesiaDone", "Start recorded by the care team.") : Loc.T("Parent_MsAnaesthesiaPending", "The team will record the start."), c.InducedAt is { } i ? Today.Time(i, now) : pending, c.InducedAt is not null),
+                new CareMilestone(Loc.T("Parent_MsRecovery", "Recovery"), c.EndedAt is not null ? Loc.T("Parent_MsRecoveryDone", "Anaesthesia ended; recovery started.") : Loc.T("Parent_MsRecoveryPending", "The team will record recovery here."), c.EndedAt is { } e ? Today.Time(e, now) : pending, c.EndedAt is not null),
+                new CareMilestone(Loc.T("Parent_StatusComplete", "Record complete"), Loc.T("Parent_MsCompleteDetail", "Collection is confirmed separately."), c.SignedAt is { } s ? Today.Time(s, now) : pending, c.SignedAt is not null)
             }.ToImmutableList());
     }
 }
 
-public partial record ParentPreviewModel(CaseRef Ref, ICaseStore Store)
+public partial record ParentPreviewModel(CaseRef Ref, ICaseStore Store, IClock Clock)
 {
-    public IFeed<ParentSnapshot> Patient => Feed<ParentSnapshot>.Async(async ct => await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(ParentSnapshot.From(c)) : Option.None<ParentSnapshot>(), Store.Changed);
+    public IFeed<ParentSnapshot> Patient => Feed<ParentSnapshot>.Async(async ct => await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(ParentSnapshot.From(c, Clock.Now)) : Option.None<ParentSnapshot>(), Store.Changed);
     public void Retry() => Store.Reload();
 }

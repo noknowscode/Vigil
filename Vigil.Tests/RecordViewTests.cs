@@ -107,6 +107,24 @@ public class RecordViewTests
     }
 
     [Test]
+    public void TimesShowInTheLocalZoneWhateverOffsetTheyWereSavedIn()
+    {
+        var knuckles = Proto.Named("Knuckles");
+        var savedInUtc = knuckles with
+        {
+            InducedAt = knuckles.InducedAt!.Value.ToUniversalTime(),
+            Readings = knuckles.Readings.Select(r => r with { At = r.At.ToUniversalTime() }).ToImmutableList(),
+            Doses = knuckles.Doses.Select(d => d with { At = d.At.ToUniversalTime() }).ToImmutableList(),
+        };
+        var view = CaseView.From(savedInUtc, Proto.Now, Proto.Interval);
+        view.InducedText.Should().Be("Induced at 11:30");
+        view.Readings[0].Time.Should().Be("12:36");
+        view.Doses[0].Time.Should().Be("11:40");
+        view.LastRecorded.Should().EndWith("12:36");
+        ParentSnapshot.From(savedInUtc, Proto.Now).Milestones[2].Time.Should().Be("11:30");
+    }
+
+    [Test]
     public void TimersAreEqualWhileNothingShownChanges()
     {
         var oscar = Proto.Named("Oscar");

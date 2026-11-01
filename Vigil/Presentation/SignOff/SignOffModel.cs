@@ -20,7 +20,8 @@ public partial record SignOffSummary(
         ? (n == 1 ? Loc.T("Count_OneDose", "1 dose") : Loc.F("Count_Doses", "{0} doses", n))
         : (n == 1 ? Loc.T("Count_OneReading", "1 reading") : Loc.F("Count_Readings", "{0} readings", n));
 
-    public static SignOffSummary From(Case c)
+    /// <param name="now">The local time zone for the times shown.</param>
+    public static SignOffSummary From(Case c, DateTimeOffset now)
     {
         var alarms = c.Readings.Count(r => Vitals.Alarms(c.Patient.Species, r).Count > 0);
         var blocker = c.Status switch
@@ -39,7 +40,7 @@ public partial record SignOffSummary(
             c.Doses.Count,
             alarms,
             c.Doses.Count(d => d.OutOfRangeConfirmed),
-            Loc.F("SignOff_Recovery", "Extubated {0} · sternal {1} · pain {2}/4", r.ExtubatedAt?.ToString("HH:mm") ?? "—", r.SternalAt?.ToString("HH:mm") ?? "—", r.PainScore?.ToString() ?? "—"),
+            Loc.F("SignOff_Recovery", "Extubated {0} · sternal {1} · pain {2}/4", r.ExtubatedAt is { } x ? Today.Time(x, now) : "—", r.SternalAt is { } s ? Today.Time(s, now) : "—", r.PainScore?.ToString() ?? "—"),
             c.Veterinarian,
             c.Status == CaseStatus.Recovery,
             blocker);
@@ -50,7 +51,7 @@ public partial record SignOffSummary(
 public partial record SignOffModel(CaseRef Ref, ICaseStore Store, IClock Clock, INavigator Navigator, ILogger<SignOffModel> Logger)
 {
     public IFeed<SignOffSummary> Summary => Feed<SignOffSummary>.Async(async ct =>
-        await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(SignOffSummary.From(c)) : Option.None<SignOffSummary>(), Store.Changed);
+        await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(SignOffSummary.From(c, Clock.Now)) : Option.None<SignOffSummary>(), Store.Changed);
 
     public IState<string> Veterinarian => State.Async(this, async ct => (await Store.GetAsync(Ref.Id, ct))?.Veterinarian ?? "");
 
