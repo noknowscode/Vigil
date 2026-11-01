@@ -15,7 +15,7 @@ public static class SampleDay
         var milo = Recovering(now);
         var pepper = Signed(now);
         var oscar = Booked(now);
-        return [bella, milo, oscar, pepper];
+        return new[] { bella, milo, oscar, pepper };
     }
 
     private static Case Booked(DateTimeOffset now)

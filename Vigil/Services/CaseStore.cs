@@ -323,7 +323,7 @@ public sealed class JsonCaseStore : ICaseStore
             Directory.CreateDirectory(damaged);
             var target = Path.Combine(damaged, $"{Path.GetFileNameWithoutExtension(file)}-{DateTime.UtcNow:yyyyMMddHHmmss}.json");
             File.Move(file, target, overwrite: true);
-            SetAside = [.. SetAside, Path.GetFileName(file)];
+            SetAside = SetAside.Append(Path.GetFileName(file)).ToArray();
             _logger?.LogWarning(ex, "Case file {File} could not be read and was moved to {Target}.", file, target);
             return null;
         }
