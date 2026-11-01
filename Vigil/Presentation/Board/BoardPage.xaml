@@ -165,6 +165,14 @@
         <controls:TopBarCluster Grid.Column="{utu:Responsive Narrowest=0, Widest=1}" VerticalAlignment="Top" />
       </Grid>
 
+      <!-- A failed action (Start prep) says why, above the hero, until dismissed. -->
+      <muxc:InfoBar x:Uid="Board_1" Margin="{StaticResource HeroTopGap}" Severity="Error" Title="Not saved" Message="{Binding ActionError}" IsOpen="{Binding HasActionError}" IsClosable="False"
+                    Visibility="{Binding HasActionError, Converter={StaticResource VisibleWhenTrue}}">
+        <muxc:InfoBar.ActionButton>
+          <Button x:Uid="Board_2" Content="Dismiss" Command="{Binding DismissError}" />
+        </muxc:InfoBar.ActionButton>
+      </muxc:InfoBar>
+
       <!-- 2. Hero "Right now": live card (448) | under care today + gantt; stacks below 1080 -->
       <!-- xaml-lint: allow card - hero section ground is the 110° gradient (§2.1), not a card surface -->
       <Border Style="{StaticResource HeroSection}" Margin="{StaticResource HeroTopGap}" Padding="{utu:Responsive Narrowest={StaticResource Inset12}, Normal={StaticResource Inset24}}">

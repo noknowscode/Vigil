@@ -37,11 +37,32 @@ public interface ICaseStore
     ValueTask DeleteAsync(Guid id, CancellationToken ct);
 
     ValueTask ClearAsync(CancellationToken ct);
+
+    /// <summary>
+    /// Replaces every case with <paramref name="cases"/> (Load sample day). The new cases are written first and the old
+    /// ones deleted only once all of them are saved, so a failure leaves the records as they were, never empty.
+    /// </summary>
+    ValueTask ReplaceAllAsync(IReadOnlyList<Case> cases, CancellationToken ct);
 }
 
 public sealed class SignedRecordException(Guid id) : InvalidOperationException($"Case {id} is signed and can no longer change.");
 
 public sealed class StoreReadException(string message, Exception? inner = null) : IOException(message, inner);
+
+/// <summary>A change the case's state does not allow (vitals before induction); the message is written for the user.</summary>
+public sealed class CaseRuleException(string message) : InvalidOperationException(message);
+
+/// <summary>What a failed store call tells the user. The exception's own text (file paths, record ids) is for the log.</summary>
+public static class StoreErrors
+{
+    public static string Describe(Exception ex) => ex switch
+    {
+        CaseRuleException rule => rule.Message,
+        SignedRecordException => Loc.T("Error_Signed", "This record is signed and can no longer change."),
+        KeyNotFoundException => Loc.T("Record_Gone", "This record no longer exists."),
+        _ => Loc.T("Error_NotWritten", "It could not be written to this device. Try again."),
+    };
+}
 
 [JsonSourceGenerationOptions(WriteIndented = true, UseStringEnumConverter = true)]
 [JsonSerializable(typeof(Case))]
@@ -182,6 +203,44 @@ public sealed class JsonCaseStore : ICaseStore
         }
         finally
         {
+            _gate.Release();
+        }
+        Notify();
+    }
+
+    public async ValueTask ReplaceAllAsync(IReadOnlyList<Case> cases, CancellationToken ct)
+    {
+        await _gate.WaitAsync(ct);
+        try
+        {
+            var old = Directory.Exists(_folder) ? Directory.GetFiles(_folder, "*.json") : [];
+            var written = new List<string>();
+            try
+            {
+                foreach (var c in cases)
+                {
+                    await WriteAsync(c, ct);
+                    written.Add(PathOf(c.Id));
+                }
+            }
+            catch
+            {
+                // Nothing replaced: take the new files back out and keep the old records.
+                foreach (var file in written.Except(old))
+                {
+                    File.Delete(file);
+                }
+                throw;
+            }
+            foreach (var file in old.Except(written))
+            {
+                File.Delete(file);
+            }
+        }
+        finally
+        {
+            // Read back from disk, whatever happened above.
+            _cache = null;
             _gate.Release();
         }
         Notify();

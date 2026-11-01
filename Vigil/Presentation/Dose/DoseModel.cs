@@ -1,12 +1,12 @@
 namespace Vigil.Presentation;
 
 /// <summary>The dose sheet: the shared <see cref="DoseEntry"/> for one case; Give saves and goes back.</summary>
-public partial record DoseModel(CaseRef Ref, ICaseStore Store, IFormulary Formulary, IClock Clock, INavigator Navigator, DoseFeedback Feedback)
+public partial record DoseModel(CaseRef Ref, ICaseStore Store, IFormulary Formulary, IClock Clock, INavigator Navigator, DoseFeedback Feedback, ILogger<DoseModel> Logger)
 {
     private IFeed<Case> Source { get; } = Feed<Case>.Async(
         async ct => await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(c) : Option.None<Case>(), Store.Changed);
 
-    private DoseEntry Entry => _entry ??= new(this, Ref.Id, Source, Store, Formulary, Clock, Feedback);
+    private DoseEntry Entry => _entry ??= new(this, Ref.Id, Source, Store, Formulary, Clock, Feedback, Logger);
     private DoseEntry? _entry;
 
     public IState<Drug> Selected => Entry.Selected;

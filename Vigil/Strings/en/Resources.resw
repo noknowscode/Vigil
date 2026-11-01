@@ -36,6 +36,8 @@
   <data name="Alarm_High" xml:space="preserve"><value>▲ high</value></data>
   <data name="Alarm_Low" xml:space="preserve"><value>▼ low</value></data>
   <data name="Asa_NotSet" xml:space="preserve"><value>ASA —</value></data>
+  <data name="Board_1.Title" xml:space="preserve"><value>Not saved</value></data>
+  <data name="Board_2.Content" xml:space="preserve"><value>Dismiss</value></data>
   <data name="Card_AsaPending" xml:space="preserve"><value>ASA pending</value></data>
   <data name="Card_HideDetails" xml:space="preserve"><value>Hide details</value></data>
   <data name="Card_OneYear" xml:space="preserve"><value>1 yr</value></data>
@@ -137,9 +139,11 @@
   <data name="Duration_HoursMinutes" xml:space="preserve"><value>{0}h {1}m</value></data>
   <data name="Error_InduceFirst" xml:space="preserve"><value>Induce before recording vitals.</value></data>
   <data name="Error_NotSaved" xml:space="preserve"><value>Not saved: {0}</value></data>
+  <data name="Error_NotWritten" xml:space="preserve"><value>It could not be written to this device. Try again.</value></data>
+  <data name="Error_Signed" xml:space="preserve"><value>This record is signed and can no longer change.</value></data>
   <data name="Export_Cancelled" xml:space="preserve"><value>Export cancelled.</value></data>
   <data name="Export_Copied" xml:space="preserve"><value>Summary copied: paste it into the patient file.</value></data>
-  <data name="Export_Failed" xml:space="preserve"><value>Export failed: {0}</value></data>
+  <data name="Export_FailedRetry" xml:space="preserve"><value>The export failed. Nothing was shared; try again.</value></data>
   <data name="Export_Saved" xml:space="preserve"><value>Saved {0}.</value></data>
   <data name="Flag_High" xml:space="preserve"><value>▲ High</value></data>
   <data name="Flag_Low" xml:space="preserve"><value>▼ Low</value></data>
@@ -225,8 +229,8 @@
   <data name="NewCase_DurationNeedsStart" xml:space="preserve"><value>Enter a planned start for the planned length.</value></data>
   <data name="NewCase_FastingTime" xml:space="preserve"><value>Fasting since is a time like 20:00.</value></data>
   <data name="NewCase_NameRequired" xml:space="preserve"><value>Enter the patient's name.</value></data>
+  <data name="NewCase_NotSaved" xml:space="preserve"><value>The case could not be saved on this device. Your entries are kept; try again.</value></data>
   <data name="NewCase_ProcedureRequired" xml:space="preserve"><value>Enter the procedure.</value></data>
-  <data name="NewCase_SaveFailed" xml:space="preserve"><value>The case could not be saved: {0} Your entries are kept; try again.</value></data>
   <data name="NewCase_StartTime" xml:space="preserve"><value>Planned start is a time like 14:00.</value></data>
   <data name="NewCase_TechRequired" xml:space="preserve"><value>Enter the technician running anesthesia.</value></data>
   <data name="NewCase_VetRequired" xml:space="preserve"><value>Enter the veterinarian.</value></data>
@@ -508,7 +512,6 @@
   <data name="Record_BpMap" xml:space="preserve"><value>BP {0} · MAP {1}</value></data>
   <data name="Record_DeleteAction" xml:space="preserve"><value>Delete case</value></data>
   <data name="Record_DeleteConfirm" xml:space="preserve"><value>Delete this case and everything recorded in it? This cannot be undone.</value></data>
-  <data name="Record_DeleteFailed" xml:space="preserve"><value>The case could not be deleted. Try again.</value></data>
   <data name="Record_DeleteTitle" xml:space="preserve"><value>Delete case</value></data>
   <data name="Record_DueEvery" xml:space="preserve"><value>readings due every {0} minutes</value></data>
   <data name="Record_EtCo2Rr" xml:space="preserve"><value>EtCO₂ {0} mmHg · RR {1}</value></data>
@@ -522,6 +525,7 @@
   <data name="Record_LastRecordedAt" xml:space="preserve"><value>Last recorded {0:d MMM, HH:mm}</value></data>
   <data name="Record_NoFluids" xml:space="preserve"><value>No fluids running</value></data>
   <data name="Record_NoRedose" xml:space="preserve"><value>No redose scheduled</value></data>
+  <data name="Record_NotDeleted" xml:space="preserve"><value>Not deleted: {0}</value></data>
   <data name="Record_OverdueBy" xml:space="preserve"><value>Reading overdue by {0}</value></data>
   <data name="Record_PhotoName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Record_Planned" xml:space="preserve"><value>Planned {0}</value></data>
@@ -576,11 +580,13 @@
   <data name="Settings_9.Content" xml:space="preserve"><value>System</value></data>
   <data name="Settings_ClearAction" xml:space="preserve"><value>Delete all</value></data>
   <data name="Settings_ClearConfirm" xml:space="preserve"><value>Delete every anesthesia record on this tablet? Signed records are deleted too. This cannot be undone.</value></data>
+  <data name="Settings_ClearFailed" xml:space="preserve"><value>Some records could not be deleted. Try again.</value></data>
   <data name="Settings_ClearTitle" xml:space="preserve"><value>Clear all records</value></data>
   <data name="Settings_Cleared" xml:space="preserve"><value>All records deleted from this tablet.</value></data>
   <data name="Settings_SampleAction" xml:space="preserve"><value>Replace records</value></data>
   <data name="Settings_SampleConfirm" xml:space="preserve"><value>Replace every record on this tablet with the sample surgical day?</value></data>
-  <data name="Settings_SampleLoaded" xml:space="preserve"><value>Sample day loaded: 5 cases, one under anesthesia.</value></data>
+  <data name="Settings_SampleFailed" xml:space="preserve"><value>The sample day could not be loaded. Your records are unchanged.</value></data>
+  <data name="Settings_SampleLoadedFour" xml:space="preserve"><value>Sample day loaded: 4 cases, one under anesthesia.</value></data>
   <data name="Settings_SampleTitle" xml:space="preserve"><value>Load sample day</value></data>
   <data name="Shell_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Open menu</value></data>
   <data name="Shell_2.Text" xml:space="preserve"><value>clover</value></data>

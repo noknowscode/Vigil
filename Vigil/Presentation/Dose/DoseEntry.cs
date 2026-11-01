@@ -12,13 +12,15 @@ public sealed class DoseEntry
     private readonly ICaseStore _store;
     private readonly IClock _clock;
     private readonly DoseFeedback _feedback;
+    private readonly ILogger _logger;
 
-    public DoseEntry(object owner, Guid caseId, IFeed<Case> source, ICaseStore store, IFormulary formulary, IClock clock, DoseFeedback feedback)
+    public DoseEntry(object owner, Guid caseId, IFeed<Case> source, ICaseStore store, IFormulary formulary, IClock clock, DoseFeedback feedback, ILogger logger)
     {
         _caseId = caseId;
         _store = store;
         _clock = clock;
         _feedback = feedback;
+        _logger = logger;
 
         Confirming = State.Value(owner, () => false);
         NotConfirming = Confirming.Select(c => !c);
@@ -96,7 +98,8 @@ public sealed class DoseEntry
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
         {
-            await Error.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", ex.Message), ct);
+            _logger.LogWarning(ex, "Saving a dose for case {CaseId} failed.", _caseId);
+            await Error.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", StoreErrors.Describe(ex)), ct);
             return false;
         }
         _feedback.Recorded(_caseId);

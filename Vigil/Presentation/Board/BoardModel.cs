@@ -9,7 +9,7 @@ namespace Vigil.Presentation;
 /// patient cards, "Due next" and "Where care time went". Every block reads one shared case feed, so they fail and
 /// recover together; Retry raises the store's change signal (FeedView.Refresh does not recover an upstream failure).
 /// </summary>
-public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Preferences, IFormulary Formulary, INavigator Navigator)
+public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Preferences, IFormulary Formulary, INavigator Navigator, ILogger<BoardModel> Logger)
 {
     private IFeed<IImmutableList<Case>> Cases { get; } = Feed.Async(async ct => (IImmutableList<Case>)await Store.GetAllAsync(ct), Store.Changed);
 
@@ -95,8 +95,26 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
         await Navigator.NavigateRouteAsync(this, row.Route, data: row.Pane is { } pane ? new CaseRefPane(row.CaseId, pane) : new CaseRef(row.CaseId), cancellation: ct);
 
     /// <summary>Next surgery: "Start prep" moves the booked case to Prep (stamps <see cref="Case.PrepStartedAt"/>).</summary>
-    public async ValueTask StartPrep(HeroCard hero, CancellationToken ct) =>
-        await Store.UpdateAsync(hero.Id, c => c.PrepStartedAt is null ? c with { PrepStartedAt = Clock.Now } : c, ct);
+    public async ValueTask StartPrep(HeroCard hero, CancellationToken ct)
+    {
+        try
+        {
+            await Store.UpdateAsync(hero.Id, c => c.PrepStartedAt is null ? c with { PrepStartedAt = Clock.Now } : c, ct);
+            await ActionError.UpdateAsync(_ => "", ct);
+        }
+        catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
+        {
+            Logger.LogWarning(ex, "Starting prep for case {CaseId} failed.", hero.Id);
+            await ActionError.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", StoreErrors.Describe(ex)), ct);
+        }
+    }
+
+    /// <summary>A failed action on this page (Start prep), shown above the hero until dismissed.</summary>
+    public IState<string> ActionError => State.Value(this, () => "");
+
+    public IFeed<bool> HasActionError => ActionError.Select(s => !string.IsNullOrEmpty(s));
+
+    public async ValueTask DismissError(CancellationToken ct) => await ActionError.UpdateAsync(_ => "", ct);
 
     /// <summary>Opens the New case sheet; on Create, opens the new record with Today behind it (Back returns here).</summary>
     public async ValueTask NewCase(CancellationToken ct)

@@ -1,6 +1,6 @@
 namespace Vigil.Presentation;
 
-public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, IPreferences Preferences, IRecordExporter Exporter, INavigator Navigator, DoseFeedback Feedback, IFormulary Formulary)
+public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, IPreferences Preferences, IRecordExporter Exporter, INavigator Navigator, DoseFeedback Feedback, IFormulary Formulary, ILogger<RecordModel> Logger)
 {
 #if DEBUG
     private readonly Diagnostics.LiveCounter _alive = new(nameof(RecordModel));
@@ -97,16 +97,9 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
             return;
         }
         var reading = draft.ToReading(Clock.Now);
-        var saved = false;
-        await SaveAsync(c =>
-        {
-            if (c.Status != CaseStatus.Anesthetized)
-            {
-                throw new InvalidOperationException(Loc.T("Error_InduceFirst", "Induce before recording vitals."));
-            }
-            saved = true;
-            return c with { Readings = c.Readings.Add(reading) };
-        }, ct);
+        var saved = await SaveAsync(c => c.Status == CaseStatus.Anesthetized
+            ? c with { Readings = c.Readings.Add(reading) }
+            : throw new CaseRuleException(Loc.T("Error_InduceFirst", "Induce before recording vitals.")), ct);
         if (saved)
         {
             // Next reading starts from this one: an unchanged patient is a single tap.
@@ -140,7 +133,8 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException)
         {
-            await SaveError.UpdateAsync(_ => Loc.T("Record_DeleteFailed", "The case could not be deleted. Try again."), ct);
+            Logger.LogWarning(ex, "Deleting case {CaseId} failed.", Ref.Id);
+            await SaveError.UpdateAsync(_ => Loc.F("Record_NotDeleted", "Not deleted: {0}", StoreErrors.Describe(ex)), ct);
             return;
         }
         await GoBack(ct);
@@ -235,7 +229,8 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            outcome = Loc.F("Export_Failed", "Export failed: {0}", ex.Message);
+            Logger.LogWarning(ex, "Export of case {CaseId} failed.", Ref.Id);
+            outcome = Loc.T("Export_FailedRetry", "The export failed. Nothing was shared; try again.");
         }
         await Notice.UpdateAsync(_ => outcome, ct);
     }
@@ -251,21 +246,28 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
         await SaveAsync(c => c.Status == CaseStatus.Scheduled ? c with { Preop = c.Preop.WithEdits(before, preop) } : c, ct);
     }
 
-    private async ValueTask SaveAsync(Func<Case, Case> update, CancellationToken ct)
+    /// <summary>Saves a change to the case; a failure shows in the Not saved bar (details in the log). True once saved.</summary>
+    private async ValueTask<bool> SaveAsync(Func<Case, Case> update, CancellationToken ct)
     {
         try
         {
             await Store.UpdateAsync(Ref.Id, update, ct);
             await SaveError.UpdateAsync(_ => "", ct);
+            return true;
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
         {
-            await SaveError.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", ex.Message), ct);
+            if (ex is not CaseRuleException)
+            {
+                Logger.LogWarning(ex, "Saving case {CaseId} failed.", Ref.Id);
+            }
+            await SaveError.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", StoreErrors.Describe(ex)), ct);
+            return false;
         }
     }
 
     // The dose pane: the dose entry the Dose page uses too, under Dose* names. Give closes the pane once saved.
-    private DoseEntry Dose => _dose ??= new(this, Ref.Id, Source, Store, Formulary, Clock, Feedback);
+    private DoseEntry Dose => _dose ??= new(this, Ref.Id, Source, Store, Formulary, Clock, Feedback, Logger);
     private DoseEntry? _dose;
 
     public IState<Drug> DoseSelected => Dose.Selected;

@@ -36,6 +36,8 @@
   <data name="Alarm_High" xml:space="preserve"><value>▲ élevé</value></data>
   <data name="Alarm_Low" xml:space="preserve"><value>▼ bas</value></data>
   <data name="Asa_NotSet" xml:space="preserve"><value>ASA —</value></data>
+  <data name="Board_1.Title" xml:space="preserve"><value>Non enregistré</value></data>
+  <data name="Board_2.Content" xml:space="preserve"><value>Fermer</value></data>
   <data name="Card_AsaPending" xml:space="preserve"><value>ASA à venir</value></data>
   <data name="Card_HideDetails" xml:space="preserve"><value>Masquer les détails</value></data>
   <data name="Card_OneYear" xml:space="preserve"><value>1 an</value></data>
@@ -137,9 +139,11 @@
   <data name="Duration_HoursMinutes" xml:space="preserve"><value>{0} h {1} min</value></data>
   <data name="Error_InduceFirst" xml:space="preserve"><value>Induisez avant d'enregistrer les signes vitaux.</value></data>
   <data name="Error_NotSaved" xml:space="preserve"><value>Non enregistré : {0}</value></data>
+  <data name="Error_NotWritten" xml:space="preserve"><value>Il n'a pas pu être enregistré sur cet appareil. Réessayez.</value></data>
+  <data name="Error_Signed" xml:space="preserve"><value>Ce dossier est signé et ne peut plus être modifié.</value></data>
   <data name="Export_Cancelled" xml:space="preserve"><value>Exportation annulée.</value></data>
   <data name="Export_Copied" xml:space="preserve"><value>Résumé copié : collez-le dans le dossier du patient.</value></data>
-  <data name="Export_Failed" xml:space="preserve"><value>Échec de l'exportation : {0}</value></data>
+  <data name="Export_FailedRetry" xml:space="preserve"><value>L'exportation a échoué. Rien n'a été partagé; réessayez.</value></data>
   <data name="Export_Saved" xml:space="preserve"><value>{0} enregistré.</value></data>
   <data name="Flag_High" xml:space="preserve"><value>▲ Élevé</value></data>
   <data name="Flag_Low" xml:space="preserve"><value>▼ Bas</value></data>
@@ -225,8 +229,8 @@
   <data name="NewCase_DurationNeedsStart" xml:space="preserve"><value>Indiquez une heure de début pour la durée prévue.</value></data>
   <data name="NewCase_FastingTime" xml:space="preserve"><value>« À jeun depuis » est une heure, par exemple 20:00.</value></data>
   <data name="NewCase_NameRequired" xml:space="preserve"><value>Entrez le nom du patient.</value></data>
+  <data name="NewCase_NotSaved" xml:space="preserve"><value>Le dossier n'a pas pu être enregistré sur cet appareil. Vos saisies sont conservées; réessayez.</value></data>
   <data name="NewCase_ProcedureRequired" xml:space="preserve"><value>Entrez l'intervention.</value></data>
-  <data name="NewCase_SaveFailed" xml:space="preserve"><value>Le dossier n'a pas pu être enregistré : {0} Vos saisies sont conservées; réessayez.</value></data>
   <data name="NewCase_StartTime" xml:space="preserve"><value>Le début prévu est une heure, par exemple 14:00.</value></data>
   <data name="NewCase_TechRequired" xml:space="preserve"><value>Entrez la technicienne ou le technicien responsable de l'anesthésie.</value></data>
   <data name="NewCase_VetRequired" xml:space="preserve"><value>Entrez le vétérinaire.</value></data>
@@ -508,7 +512,6 @@
   <data name="Record_BpMap" xml:space="preserve"><value>PA {0} · PAM {1}</value></data>
   <data name="Record_DeleteAction" xml:space="preserve"><value>Supprimer le dossier</value></data>
   <data name="Record_DeleteConfirm" xml:space="preserve"><value>Supprimer ce dossier et tout ce qui y est consigné? Cette action est irréversible.</value></data>
-  <data name="Record_DeleteFailed" xml:space="preserve"><value>Le dossier n'a pas pu être supprimé. Réessayez.</value></data>
   <data name="Record_DeleteTitle" xml:space="preserve"><value>Supprimer le dossier</value></data>
   <data name="Record_DueEvery" xml:space="preserve"><value>mesures prévues toutes les {0} minutes</value></data>
   <data name="Record_EtCo2Rr" xml:space="preserve"><value>EtCO₂ {0} mmHg · FR {1}</value></data>
@@ -522,6 +525,7 @@
   <data name="Record_LastRecordedAt" xml:space="preserve"><value>Dernière mesure {0:d MMM, HH:mm}</value></data>
   <data name="Record_NoFluids" xml:space="preserve"><value>Aucune perfusion en cours</value></data>
   <data name="Record_NoRedose" xml:space="preserve"><value>Aucune réadministration prévue</value></data>
+  <data name="Record_NotDeleted" xml:space="preserve"><value>Non supprimé : {0}</value></data>
   <data name="Record_OverdueBy" xml:space="preserve"><value>Mesure en retard de {0}</value></data>
   <data name="Record_PhotoName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Record_Planned" xml:space="preserve"><value>Prévue {0}</value></data>
@@ -576,11 +580,13 @@
   <data name="Settings_9.Content" xml:space="preserve"><value>Système</value></data>
   <data name="Settings_ClearAction" xml:space="preserve"><value>Tout supprimer</value></data>
   <data name="Settings_ClearConfirm" xml:space="preserve"><value>Supprimer tous les dossiers d'anesthésie de cette tablette? Les dossiers signés sont aussi supprimés. Cette action est irréversible.</value></data>
+  <data name="Settings_ClearFailed" xml:space="preserve"><value>Certains dossiers n'ont pas pu être supprimés. Réessayez.</value></data>
   <data name="Settings_ClearTitle" xml:space="preserve"><value>Effacer tous les dossiers</value></data>
   <data name="Settings_Cleared" xml:space="preserve"><value>Tous les dossiers ont été supprimés de cette tablette.</value></data>
   <data name="Settings_SampleAction" xml:space="preserve"><value>Remplacer les dossiers</value></data>
   <data name="Settings_SampleConfirm" xml:space="preserve"><value>Remplacer tous les dossiers de cette tablette par la journée chirurgicale d'exemple?</value></data>
-  <data name="Settings_SampleLoaded" xml:space="preserve"><value>Journée d'exemple chargée : 5 dossiers, dont un sous anesthésie.</value></data>
+  <data name="Settings_SampleFailed" xml:space="preserve"><value>La journée d'exemple n'a pas pu être chargée. Vos dossiers n'ont pas changé.</value></data>
+  <data name="Settings_SampleLoadedFour" xml:space="preserve"><value>Journée d'exemple chargée : 4 dossiers, dont un sous anesthésie.</value></data>
   <data name="Settings_SampleTitle" xml:space="preserve"><value>Charger une journée d'exemple</value></data>
   <data name="Shell_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Ouvrir le menu</value></data>
   <data name="Shell_2.Text" xml:space="preserve"><value>clover</value></data>

@@ -47,7 +47,7 @@ public partial record SignOffSummary(
 }
 
 /// <summary>The veterinarian's sign-off: a typed name and an explicit confirmation on a shared device (no authentication).</summary>
-public partial record SignOffModel(CaseRef Ref, ICaseStore Store, IClock Clock, INavigator Navigator)
+public partial record SignOffModel(CaseRef Ref, ICaseStore Store, IClock Clock, INavigator Navigator, ILogger<SignOffModel> Logger)
 {
     public IFeed<SignOffSummary> Summary => Feed<SignOffSummary>.Async(async ct =>
         await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(SignOffSummary.From(c)) : Option.None<SignOffSummary>(), Store.Changed);
@@ -71,11 +71,15 @@ public partial record SignOffModel(CaseRef Ref, ICaseStore Store, IClock Clock, 
         {
             await Store.UpdateAsync(Ref.Id, c => c.Status == CaseStatus.Recovery
                 ? c with { Status = CaseStatus.Signed, SignedBy = veterinarian.Trim(), SignedAt = Clock.Now }
-                : throw new InvalidOperationException(Loc.T("SignOff_EndFirst", "End anesthesia before signing.")), ct);
+                : throw new CaseRuleException(Loc.T("SignOff_EndFirst", "End anesthesia before signing.")), ct);
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
         {
-            await Error.UpdateAsync(_ => Loc.F("SignOff_NotSigned", "Not signed: {0}", ex.Message), ct);
+            if (ex is not CaseRuleException)
+            {
+                Logger.LogWarning(ex, "Signing case {CaseId} failed.", Ref.Id);
+            }
+            await Error.UpdateAsync(_ => Loc.F("SignOff_NotSigned", "Not signed: {0}", StoreErrors.Describe(ex)), ct);
             return;
         }
         await Navigator.NavigateBackAsync(this, cancellation: ct);

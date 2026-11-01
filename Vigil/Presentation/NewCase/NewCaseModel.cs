@@ -115,7 +115,7 @@ public partial record CaseDraft(
     }
 }
 
-public partial record NewCaseModel(ICaseStore Store, IClock Clock, INavigator Navigator)
+public partial record NewCaseModel(ICaseStore Store, IClock Clock, INavigator Navigator, ILogger<NewCaseModel> Logger)
 {
     public IState<CaseDraft> Draft => State.Value(this, () => CaseDraft.Empty);
 
@@ -144,7 +144,8 @@ public partial record NewCaseModel(ICaseStore Store, IClock Clock, INavigator Na
         }
         catch (IOException ex)
         {
-            await SaveError.UpdateAsync(_ => Loc.F("NewCase_SaveFailed", "The case could not be saved: {0} Your entries are kept; try again.", ex.Message), ct);
+            Logger.LogWarning(ex, "Saving a new case failed.");
+            await SaveError.UpdateAsync(_ => Loc.T("NewCase_NotSaved", "The case could not be saved on this device. Your entries are kept; try again."), ct);
             return;
         }
         await Navigator.NavigateBackWithResultAsync(this, data: new CaseRef(created.Id), cancellation: ct);

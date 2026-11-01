@@ -8,7 +8,8 @@ public partial record SettingsModel(
     IPreferences Preferences,
     ICaseStore Store,
     IClock Clock,
-    INavigator Navigator)
+    INavigator Navigator,
+    ILogger<SettingsModel> Logger)
 {
     private static readonly string[] Languages = ["en", "fr"];
 
@@ -55,12 +56,17 @@ public partial record SettingsModel(
         {
             return;
         }
-        await Store.ClearAsync(ct);
-        foreach (var c in SampleDay.Create(Clock.Now))
+        try
         {
-            await Store.SaveAsync(c, ct);
+            await Store.ReplaceAllAsync(SampleDay.Create(Clock.Now), ct);
         }
-        await Notice.UpdateAsync(_ => Loc.T("Settings_SampleLoaded", "Sample day loaded: 5 cases, one under anesthesia."), ct);
+        catch (IOException ex)
+        {
+            Logger.LogWarning(ex, "Loading the sample day failed.");
+            await Notice.UpdateAsync(_ => Loc.T("Settings_SampleFailed", "The sample day could not be loaded. Your records are unchanged."), ct);
+            return;
+        }
+        await Notice.UpdateAsync(_ => Loc.T("Settings_SampleLoadedFour", "Sample day loaded: 4 cases, one under anesthesia."), ct);
     }
 
     public async ValueTask ClearAll(CancellationToken ct)
@@ -69,7 +75,16 @@ public partial record SettingsModel(
         {
             return;
         }
-        await Store.ClearAsync(ct);
+        try
+        {
+            await Store.ClearAsync(ct);
+        }
+        catch (IOException ex)
+        {
+            Logger.LogWarning(ex, "Clearing the records failed.");
+            await Notice.UpdateAsync(_ => Loc.T("Settings_ClearFailed", "Some records could not be deleted. Try again."), ct);
+            return;
+        }
         await Notice.UpdateAsync(_ => Loc.T("Settings_Cleared", "All records deleted from this tablet."), ct);
     }
 }

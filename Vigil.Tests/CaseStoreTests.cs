@@ -161,6 +161,23 @@ public class CaseStoreTests
     }
 
     [Test]
+    public async Task ReplaceAllSwapsEveryRecordOrNone()
+    {
+        await SeedAsync(Store());
+        var sample = SampleDay.Create(DateTimeOffset.Now);
+
+        var failing = Store("store-write");
+        var replace = async () => await failing.ReplaceAllAsync(sample, CancellationToken.None);
+        await replace.Should().ThrowAsync<IOException>();
+        (await Store().GetAllAsync(CancellationToken.None)).Should().HaveCount(4, "a failed Load sample day leaves the records as they were");
+
+        var store = Store();
+        await store.ReplaceAllAsync(sample, CancellationToken.None);
+        (await store.GetAllAsync(CancellationToken.None)).Select(c => c.Id).Should().BeEquivalentTo(sample.Select(c => c.Id), "the signed record is replaced too");
+        Directory.GetFiles(_folder, "*.json").Should().HaveCount(4);
+    }
+
+    [Test]
     public async Task ClearRemovesEveryCase()
     {
         var store = Store();
