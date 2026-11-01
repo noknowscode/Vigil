@@ -2,7 +2,7 @@
   Patient care hero status card (docs/design/patient-care-values.md §3.2, "Anesthesia card"): pad 12 14, radius 14,
   tone soft fill + border, inset-strip shadow; label row (pulse dot, mono label, "since"), Martian 56 timer, the
   recorded-HR sparkline (SPEC-v2 decision 3, in place of the prototype's ECG), a two-value divider grid and the
-  overdue line. DataContext: the record's CaseView. One layout for every stage: the tone visual state (from
+  overdue line. DataContext: the record's CaseTimers. One layout for every stage: the tone visual state (from
   Status.ToneState, via utu:VisualStateManagerExtensions) swaps fill, border and inks.
 -->
 <UserControl x:Class="Vigil.Controls.CareStatusCard"

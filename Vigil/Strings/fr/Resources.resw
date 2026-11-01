@@ -130,12 +130,9 @@
   <data name="DueAction_Record" xml:space="preserve"><value>Saisir</value></data>
   <data name="DueAction_Review" xml:space="preserve"><value>Réviser</value></data>
   <data name="DueAction_Score" xml:space="preserve"><value>Évaluer</value></data>
-  <data name="Due_Next" xml:space="preserve"><value>Prochaine lecture</value></data>
   <data name="Due_NextPrep" xml:space="preserve"><value>Ensuite : préparation de {0} à {1}</value></data>
-  <data name="Due_None" xml:space="preserve"><value>Aucune lecture due</value></data>
   <data name="Due_NothingBefore" xml:space="preserve"><value>Rien à faire avant {0:HH:mm}</value></data>
   <data name="Due_NothingPlanned" xml:space="preserve"><value>Rien d'autre n'est prévu aujourd'hui.</value></data>
-  <data name="Due_Overdue" xml:space="preserve"><value>Lecture en retard</value></data>
   <data name="Duration_HoursMinutes" xml:space="preserve"><value>{0} h {1} min</value></data>
   <data name="Error_InduceFirst" xml:space="preserve"><value>Induisez avant d'enregistrer les signes vitaux.</value></data>
   <data name="Error_NotSaved" xml:space="preserve"><value>Non enregistré : {0}</value></data>

@@ -55,6 +55,9 @@ public sealed partial record Spark(string Data, double Top, double Height, doubl
         return new Spark(data, top, bottom - top, points[^1].Y);
     }
 
+    /// <summary>The last 13 recorded heart rates (status card and Circulation card).</summary>
+    public static Spark HeartRate(Case c) => From(c.Readings.Where(r => r.Hr is not null).Select(r => r.Hr!.Value).TakeLast(13).ToList(), 2.4);
+
     internal static string Num(FormattableString s) => s.ToString(CultureInfo.InvariantCulture);
 }
 

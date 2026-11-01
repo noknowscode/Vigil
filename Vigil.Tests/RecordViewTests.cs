@@ -6,7 +6,9 @@ namespace Vigil.Tests;
 public class RecordViewTests
 {
     private static CaseView View(string name, string? pane = null) =>
-        CaseView.From(Proto.Named(name), Proto.Now, Proto.Interval, Proto.Formulary, pane);
+        CaseView.From(Proto.Named(name), Proto.Now, Proto.Interval, pane);
+
+    private static CaseTimers Timers(string name) => CaseTimers.From(Proto.Named(name), Proto.Now, Proto.Interval, Proto.Formulary);
 
     [Test]
     public void ChartReproducesThePrototypeGeometry()
@@ -61,17 +63,20 @@ public class RecordViewTests
     public void KnucklesMatchesThePrototypeCopy()
     {
         var v = View("Knuckles");
-        v.Care.Chip.Should().Be("Under anesthesia");
-        $"{v.Care.Label} {v.Care.Since} {v.Care.Timer}".Should().Be("UNDER ANESTHESIA since 11:30 1:12");
-        $"{v.Care.FirstLabel} {v.Care.FirstValue} · {v.Care.SecondLabel} {v.Care.SecondValue}".Should().Be("Last reading 12:36 · Next due 12:41");
-        v.Care.Alert.Should().Be("Reading overdue 1:26");
-        v.Care.CtaPane.Should().Be("Monitor");
-        v.OverdueTitle.Should().Be("Reading overdue by 1:26");
+        var t = Timers("Knuckles");
+        t.Care.Chip.Should().Be("Under anesthesia");
+        $"{t.Care.Label} {t.Care.Since} {t.Care.Timer}".Should().Be("UNDER ANESTHESIA since 11:30 1:12");
+        $"{t.Care.FirstLabel} {t.Care.FirstValue} · {t.Care.SecondLabel} {t.Care.SecondValue}".Should().Be("Last reading 12:36 · Next due 12:41");
+        t.Care.Alert.Should().Be("Reading overdue 1:26");
+        t.Care.CtaPane.Should().Be("Monitor");
+        t.OverdueTitle.Should().Be("Reading overdue by 1:26");
+        t.IsOverdue.Should().BeTrue();
+        t.ClockText.Should().Be("overdue 1:26");
         v.OverdueDetail.Should().Be("Last recorded 28 Oct, 12:36 · readings due every 5 minutes");
         v.ProcedureMeta.Should().Be("Started 11:30 · OR 1 · Dr. Okafor, S. Tremblay");
         v.AgeOwner.Should().Be("2 years · M. Lavoie");
         $"{v.MedicationSummary} | {v.MedicationDetail}".Should().Be("Cefazolin | 4.05 mL · IV · 11:40");
-        $"{v.NextDose.Time} | {v.NextDose.Detail}".Should().Be("13:10 | Cefazolin redose · in 28 min");
+        $"{t.NextDose.Time} | {t.NextDose.Detail}".Should().Be("13:10 | Cefazolin redose · in 28 min");
         v.Fluids.Should().Be(new FluidsText("Fluids running · LRS 5 mL/kg/h", true));
         v.CirculationDetail.Should().Be("BP 109/63 · MAP 78");
         v.RespirationDetail.Should().Be("EtCO₂ 38 mmHg · RR 12");
@@ -89,14 +94,25 @@ public class RecordViewTests
     [Test]
     public void StatusCardCoversEveryStage()
     {
-        var milo = View("Milo").Care;
+        var milo = Timers("Milo").Care;
         $"{milo.Tone} {milo.Label} {milo.Since} {milo.Timer} {milo.SecondValue} {milo.CtaPane}".Should().Be("Recovery IN RECOVERY since 12:08 0:34 1 of 4 Recovery");
-        var oscar = View("Oscar").Care;
+        var oscar = Timers("Oscar").Care;
         $"{oscar.Tone} {oscar.Label} {oscar.Since} {oscar.Timer} {oscar.FirstValue} {oscar.CtaPane}".Should().Be("Neutral BOOKED starts 14:00 1:18 0 of 5 Preop");
-        var pepper = View("Pepper").Care;
+        var pepper = Timers("Pepper").Care;
         $"{pepper.Tone} {pepper.Label} {pepper.FirstValue} {pepper.CtaPane}".Should().Be("Neutral SIGNED OUT Dr. Bergeron Recovery");
         View("Oscar").Fluids.IsRunning.Should().BeFalse();
-        View("Oscar").NextDose.Detail.Should().Be("No redose scheduled");
+        Timers("Oscar").NextDose.Detail.Should().Be("No redose scheduled");
+        Timers("Milo").RecoveryAnchor.Should().Be("00:30", "extubated 4 minutes after anesthesia ended, 34 minutes ago");
         View("Oscar").Chart.HasReadings.Should().BeFalse();
+    }
+
+    [Test]
+    public void TimersAreEqualWhileNothingShownChanges()
+    {
+        var oscar = Proto.Named("Oscar");
+        CaseTimers.From(oscar, Proto.Now, Proto.Interval, Proto.Formulary)
+            .Should().Be(CaseTimers.From(oscar, Proto.Now.AddSeconds(10), Proto.Interval, Proto.Formulary), "a booked case's countdown moves by the minute");
+        CaseTimers.From(oscar, Proto.Now, Proto.Interval, Proto.Formulary)
+            .Should().NotBe(CaseTimers.From(oscar, Proto.Now.AddMinutes(1), Proto.Interval, Proto.Formulary));
     }
 }

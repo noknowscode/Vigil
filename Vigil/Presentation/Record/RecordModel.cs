@@ -38,8 +38,13 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     // Pane and PaneOpen are states (always a value), so they join the combine without None propagation; the template
     // reads the active nav item from Data (Parent.State does not resolve reliably inside a FeedView template).
-    public IFeed<CaseView> Case => Feed.Combine(Source, Now, Drugs, Pane, PaneOpen).Select(x =>
-        CaseView.From(x.Item1, x.Item2, Preferences.ReadingInterval, x.Item3, x.Item5 ? x.Item4 : null));
+    // No clock here: the view (and its reading, dose and lab lists) is rebuilt when the case changes, not every second.
+    public IFeed<CaseView> Case => Feed.Combine(Source, Pane, PaneOpen).Select(x =>
+        CaseView.From(x.Item1, Clock.Now, Preferences.ReadingInterval, x.Item3 ? x.Item2 : null));
+
+    /// <summary>The values that move with the clock (timers, countdowns), next to <see cref="Case"/>; the page binds Parent.Timers.</summary>
+    public IFeed<CaseTimers> Timers => Feed.Combine(Source, Now, Drugs).Select(x =>
+        CaseTimers.From(x.Item1, x.Item2, Preferences.ReadingInterval, x.Item3));
 
     /// <summary>Patient name for the breadcrumb (outside the FeedView, so it shows in every state).</summary>
     public IFeed<string> Name => Source.Select(c => c.Patient.Name);

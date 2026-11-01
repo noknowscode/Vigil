@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging.Abstractions;
+using Uno.Extensions.Reactive;
+using Uno.Extensions.Reactive.Core;
 using Vigil.Presentation;
 
 namespace Vigil.Tests;
@@ -13,6 +15,24 @@ internal sealed class FixedClock(DateTimeOffset now) : IClock
     {
         yield return now;
         await Task.Delay(Timeout.Infinite, ct);
+    }
+}
+
+/// <summary>A clock that moves one second every 20 ms, from <paramref name="start"/>.</summary>
+internal sealed class FastClock(DateTimeOffset start) : IClock
+{
+    private int _ticks;
+
+    public DateTimeOffset Now => start.AddSeconds(_ticks);
+
+    public async IAsyncEnumerable<DateTimeOffset> Ticks([EnumeratorCancellation] CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
+        {
+            yield return Now;
+            await Task.Delay(20, ct);
+            Interlocked.Increment(ref _ticks);
+        }
     }
 }
 
@@ -69,8 +89,8 @@ public abstract class ModelTestBase
 
 public class RecordModelTests : ModelTestBase
 {
-    private static RecordModel Open(Case c, ICaseStore store) =>
-        new(new CaseRef(c.Id), store, Clock, new Preferences(), null!, null!, new DoseFeedback(), new EmbeddedFormulary(), NullLogger<RecordModel>.Instance);
+    private static RecordModel Open(Case c, ICaseStore store, IClock? clock = null) =>
+        new(new CaseRef(c.Id), store, clock ?? Clock, new Preferences(), null!, null!, new DoseFeedback(), new EmbeddedFormulary(), NullLogger<RecordModel>.Instance);
 
     private RecordModel Open(Case c) => Open(c, Store);
 
@@ -91,6 +111,36 @@ public class RecordModelTests : ModelTestBase
         saved.Preop.BloodworkReviewed.Should().BeTrue("the checklist tick must not write back the check Mark reviewed set");
         (await model.Preop)!.BloodworkReviewed.Should().BeTrue("the checklist shows the check Mark reviewed set");
     }
+
+    [Test]
+    public async Task TheClockMovesTheTimersNotTheRecordView()
+    {
+        var knuckles = Proto.Named("Knuckles");
+        await Store.SaveAsync(knuckles, CancellationToken.None);
+        var model = Open(knuckles, Store, new FastClock(Proto.Now));
+        var context = SourceContext.GetOrCreate(model);
+        int views = 0, timers = 0;
+
+        Count(model.Case, context, () => Interlocked.Increment(ref views));
+        Count(model.Timers, context, () => Interlocked.Increment(ref timers));
+        await Task.Delay(1000);
+        await context.DisposeAsync();
+
+        views.Should().Be(1, "the readings, doses and labs are only rebuilt when the case changes");
+        timers.Should().BeGreaterThan(5, "the overdue countdown moves every (fast) second");
+    }
+
+    /// <summary>Calls <paramref name="onValue"/> for each new value of <paramref name="feed"/> until the context is disposed.</summary>
+    private static void Count<T>(IFeed<T> feed, SourceContext context, Action onValue) => _ = Task.Run(async () =>
+    {
+        await foreach (var message in feed.GetSource(context, CancellationToken.None))
+        {
+            if (message.Changes.Contains(MessageAxis.Data) && message.Current.Data.IsSome(out _))
+            {
+                onValue();
+            }
+        }
+    });
 
     [Test]
     public async Task ARuleOfTheRecordIsShownAsWritten()
