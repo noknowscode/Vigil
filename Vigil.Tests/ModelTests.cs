@@ -207,6 +207,24 @@ public class BoardModelTests : ModelTestBase
 
 public class ShellSectionTests
 {
+    [TestCase("/Today", ShellSection.Today)]
+    [TestCase("Main/Agenda", ShellSection.Agenda)]
+    [TestCase("/Settings", ShellSection.Settings)]
+    [TestCase("./-/Patients?filter=all", ShellSection.Patients)]
+    [TestCase("/Today/Record", ShellSection.Patients)]
+    [TestCase("/Today/Record/Dose", ShellSection.Patients)]
+    [TestCase("/Today/!NewCase", ShellSection.Today)]
+    [TestCase("/Board", ShellSection.Today)]
+    public void ARouteHighlightsTheSidebarItemOfItsLastFramePage(string path, string section) =>
+        ShellSection.FromPath(path).Should().Be(section);
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("/Main")]
+    [TestCase("!NewCase")]
+    public void ARouteWithoutAFramePageKeepsTheHighlight(string? path) =>
+        ShellSection.FromPath(path).Should().BeNull();
+
     [Test]
     public void SetAsideFilesRaiseAWarning()
     {
