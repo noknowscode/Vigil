@@ -18,6 +18,12 @@ public interface ICaseStore
     /// <summary>Drops a failed load so the next read retries, then raises <see cref="Changed"/> (Retry).</summary>
     void Reload();
 
+    /// <summary>
+    /// Case files that could not be read this session. Each was moved to the "damaged" folder beside the cases so the
+    /// other records still load; the shell shows a warning while the list is not empty.
+    /// </summary>
+    IReadOnlyList<string> SetAside { get; }
+
     /// <summary>Creates or replaces a case. Throws <see cref="SignedRecordException"/> when the stored case is signed.</summary>
     ValueTask SaveAsync(Case value, CancellationToken ct);
 
@@ -44,18 +50,25 @@ internal partial class VigilJsonContext : JsonSerializerContext;
 /// <summary>One JSON file per case under a folder (the app's LocalFolder), with an in-memory cache.</summary>
 public sealed class JsonCaseStore : ICaseStore
 {
+    /// <summary>Subfolder that unreadable case files are moved to (see <see cref="SetAside"/>).</summary>
+    public const string DamagedFolder = "damaged";
+
     private readonly string _folder;
     private readonly IFaultInjection _fault;
+    private readonly ILogger? _logger;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private ImmutableDictionary<Guid, Case>? _cache;
     public Signal Changed { get; } = new();
 
     public void Reload() => Notify();
 
-    public JsonCaseStore(string folder, IFaultInjection fault)
+    public IReadOnlyList<string> SetAside { get; private set; } = [];
+
+    public JsonCaseStore(string folder, IFaultInjection fault, ILogger? logger = null)
     {
         _folder = folder;
         _fault = fault;
+        _logger = logger;
     }
 
     public async ValueTask<ImmutableList<Case>> GetAllAsync(CancellationToken ct) => Order(await LoadAsync(ct));
@@ -159,8 +172,13 @@ public sealed class JsonCaseStore : ICaseStore
                 {
                     File.Delete(file);
                 }
+                if (Directory.Exists(Path.Combine(_folder, DamagedFolder)))
+                {
+                    Directory.Delete(Path.Combine(_folder, DamagedFolder), recursive: true);
+                }
             }
             _cache = ImmutableDictionary<Guid, Case>.Empty;
+            SetAside = [];
         }
         finally
         {
@@ -215,25 +233,41 @@ public sealed class JsonCaseStore : ICaseStore
         var builder = ImmutableDictionary.CreateBuilder<Guid, Case>();
         if (Directory.Exists(_folder))
         {
-            foreach (var file in Directory.EnumerateFiles(_folder, "*.json"))
+            // ToList: a damaged file moves out of the folder during the loop.
+            foreach (var file in Directory.EnumerateFiles(_folder, "*.json").ToList())
             {
                 ct.ThrowIfCancellationRequested();
-                try
+                if (await ReadAsync(file, ct) is { } c)
                 {
-                    await using var stream = File.OpenRead(file);
-                    if (await JsonSerializer.DeserializeAsync(stream, VigilJsonContext.Default.Case, ct) is { } c)
-                    {
-                        builder[c.Id] = c;
-                    }
-                }
-                catch (JsonException ex)
-                {
-                    throw new StoreReadException($"Saved record {Path.GetFileName(file)} is damaged.", ex);
+                    builder[c.Id] = c;
                 }
             }
         }
         _cache = builder.ToImmutable();
         return _cache;
+    }
+
+    /// <summary>
+    /// One case file. A file that is not a readable case is moved to <see cref="DamagedFolder"/> and skipped, so one bad
+    /// file never keeps the other records from loading (and Retry does not trip over it again).
+    /// </summary>
+    private async ValueTask<Case?> ReadAsync(string file, CancellationToken ct)
+    {
+        try
+        {
+            await using var stream = File.OpenRead(file);
+            return await JsonSerializer.DeserializeAsync(stream, VigilJsonContext.Default.Case, ct);
+        }
+        catch (JsonException ex)
+        {
+            var damaged = Path.Combine(_folder, DamagedFolder);
+            Directory.CreateDirectory(damaged);
+            var target = Path.Combine(damaged, $"{Path.GetFileNameWithoutExtension(file)}-{DateTime.UtcNow:yyyyMMddHHmmss}.json");
+            File.Move(file, target, overwrite: true);
+            SetAside = [.. SetAside, Path.GetFileName(file)];
+            _logger?.LogWarning(ex, "Case file {File} could not be read and was moved to {Target}.", file, target);
+            return null;
+        }
     }
 
     private async ValueTask WriteAsync(Case value, CancellationToken ct)

@@ -41,6 +41,10 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
     public IFeed<string> ClinicianName => Surname.Select(ShellSection.ClinicianLabel);
     public IFeed<string> ClinicianInitials => Initials;
 
+    /// <summary>Read after each load of the cases: case files the store set aside as unreadable (the others loaded).</summary>
+    public IFeed<string> StoreWarning => Cases.Select(_ => ShellSection.SetAsideText(Store.SetAside.Count));
+    public IFeed<bool> HasStoreWarning => StoreWarning.Select(s => s.Length > 0);
+
     /// <summary>Full sidebar (true) or icon rail (false) from 1080 px; below that the rail is forced by width.</summary>
     public IState<bool> IsExpanded => State.Value(this, () => true);
     public IFeed<bool> IsCollapsed => IsExpanded.Select(x => !x);

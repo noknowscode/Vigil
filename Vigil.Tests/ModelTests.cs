@@ -78,3 +78,14 @@ public class RecordModelTests : ModelTestBase
         (await model.Preop)!.BloodworkReviewed.Should().BeTrue("the checklist shows the check Mark reviewed set");
     }
 }
+
+public class ShellSectionTests
+{
+    [Test]
+    public void SetAsideFilesRaiseAWarning()
+    {
+        ShellSection.SetAsideText(0).Should().BeEmpty();
+        ShellSection.SetAsideText(1).Should().StartWith("One saved record could not be read.");
+        ShellSection.SetAsideText(3).Should().StartWith("3 saved records could not be read.");
+    }
+}

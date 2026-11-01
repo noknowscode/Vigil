@@ -584,9 +584,12 @@
   <data name="Settings_SampleTitle" xml:space="preserve"><value>Charger une journée d'exemple</value></data>
   <data name="Shell_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Ouvrir le menu</value></data>
   <data name="Shell_2.Text" xml:space="preserve"><value>clover</value></data>
+  <data name="Shell_3.Title" xml:space="preserve"><value>Certains dossiers enregistrés n'ont pas pu être lus</value></data>
   <data name="Shell_Clinician" xml:space="preserve"><value>Clinicien</value></data>
   <data name="Shell_ClinicianInitial" xml:space="preserve"><value>C</value></data>
   <data name="Shell_Doctor" xml:space="preserve"><value>Dʳ {0}</value></data>
+  <data name="Shell_SetAside" xml:space="preserve"><value>{0} dossiers enregistrés n'ont pas pu être lus. Ils ont été déplacés dans le répertoire damaged, à côté des dossiers; tous les autres dossiers ont été chargés.</value></data>
+  <data name="Shell_SetAsideOne" xml:space="preserve"><value>Un dossier enregistré n'a pas pu être lu. Il a été déplacé dans le répertoire damaged, à côté des dossiers; tous les autres dossiers ont été chargés.</value></data>
   <data name="Sidebar_1.Text" xml:space="preserve"><value>clover</value></data>
   <data name="Sidebar_10.Content" xml:space="preserve"><value>Déployer la barre latérale</value></data>
   <data name="Sidebar_11.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Nouveau patient</value></data>

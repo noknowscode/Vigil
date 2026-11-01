@@ -76,8 +76,8 @@ public partial class App : Application
                         Path.Combine(DataRoot(), "preferences.json")));
                     services.AddSingleton<IFormulary, EmbeddedFormulary>();
                     services.AddSingleton<IRecordExporter, RecordExporter>();
-                    services.AddSingleton<ICaseStore>(_ => new JsonCaseStore(
-                        Path.Combine(DataRoot(), "cases"), fault));
+                    services.AddSingleton<ICaseStore>(sp => new JsonCaseStore(
+                        Path.Combine(DataRoot(), "cases"), fault, sp.GetRequiredService<ILogger<JsonCaseStore>>()));
                 })
                 .UseNavigation(
                     ReactiveViewModelMappings.ViewModelMappings,

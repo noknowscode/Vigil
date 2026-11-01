@@ -8,6 +8,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="using:Vigil.Controls"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:uen="using:Uno.Extensions.Navigation.UI"
       xmlns:utu="using:Uno.Toolkit.UI"
       Background="{ThemeResource PageBrush}">
@@ -27,7 +28,7 @@
     <Grid Grid.Column="1" Margin="{utu:Responsive Narrowest={StaticResource FrameMarginNarrow}, Normal={StaticResource FrameMarginNormal}}">
       <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius22}" Shadows="{StaticResource ShadowFrame}">
         <Border CornerRadius="{StaticResource Radius22}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
-          <Grid RowDefinitions="Auto,*">
+          <Grid RowDefinitions="Auto,Auto,*">
             <!-- Narrow: a frame header with the menu button that opens the sidebar drawer. -->
             <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed}"
                   Padding="{StaticResource FrameHeaderInset}" ColumnDefinitions="Auto,Auto,*" ColumnSpacing="{StaticResource Space12}">
@@ -38,7 +39,10 @@
               <!-- -4: the wordmark's side bearing, so the gap reads as the sidebar's 10 px (optical). -->
               <TextBlock x:Uid="Shell_2" Grid.Column="2" Text="clover" Style="{StaticResource TypeBrand}" Margin="-4,0,0,0" VerticalAlignment="Center" />
             </Grid>
-            <Frame Grid.Row="1" uen:Region.Attached="True" />
+            <!-- Case files the store could not read were set aside and every other record loaded: say so, without blocking.
+                 Closing it collapses it, margin included. -->
+            <muxc:InfoBar x:Uid="Shell_3" Grid.Row="1" Margin="{StaticResource Inset16}" Severity="Warning" Title="Some saved records could not be read" Message="{Binding StoreWarning}" IsOpen="{Binding HasStoreWarning}" Visibility="{Binding IsOpen, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibleWhenTrue}}" />
+            <Frame Grid.Row="2" uen:Region.Attached="True" />
           </Grid>
         </Border>
       </utu:ShadowContainer>

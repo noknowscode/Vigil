@@ -142,6 +142,25 @@ public class CaseStoreTests
     }
 
     [Test]
+    public async Task ADamagedFileIsSetAsideAndTheOtherRecordsLoad()
+    {
+        await SeedAsync(Store());
+        await File.WriteAllTextAsync(Path.Combine(_folder, "broken.json"), "{ \"Id\": ");
+
+        var store = Store();
+        (await store.GetAllAsync(CancellationToken.None)).Should().HaveCount(4);
+        store.SetAside.Should().Equal("broken.json");
+        File.Exists(Path.Combine(_folder, "broken.json")).Should().BeFalse();
+        Directory.GetFiles(Path.Combine(_folder, JsonCaseStore.DamagedFolder)).Should().ContainSingle();
+
+        var next = Store();
+        (await next.GetAllAsync(CancellationToken.None)).Should().HaveCount(4);
+        next.SetAside.Should().BeEmpty("the file was moved aside, so Retry and the next launch read cleanly");
+        await next.ClearAsync(CancellationToken.None);
+        Directory.Exists(Path.Combine(_folder, JsonCaseStore.DamagedFolder)).Should().BeFalse("Clear all deletes every record, unreadable ones too");
+    }
+
+    [Test]
     public async Task ClearRemovesEveryCase()
     {
         var store = Store();

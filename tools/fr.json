@@ -744,5 +744,8 @@
   "Delete case": "Supprimer le dossier",
   "Delete this case": "Supprimer ce dossier",
   "Delete this case and everything recorded in it? This cannot be undone.": "Supprimer ce dossier et tout ce qui y est consigné? Cette action est irréversible.",
-  "The case could not be deleted. Try again.": "Le dossier n'a pas pu être supprimé. Réessayez."
+  "The case could not be deleted. Try again.": "Le dossier n'a pas pu être supprimé. Réessayez.",
+  "Some saved records could not be read": "Certains dossiers enregistrés n'ont pas pu être lus",
+  "One saved record could not be read. It was moved to the damaged folder beside the records; every other record loaded.": "Un dossier enregistré n'a pas pu être lu. Il a été déplacé dans le répertoire damaged, à côté des dossiers; tous les autres dossiers ont été chargés.",
+  "{0} saved records could not be read. They were moved to the damaged folder beside the records; every other record loaded.": "{0} dossiers enregistrés n'ont pas pu être lus. Ils ont été déplacés dans le répertoire damaged, à côté des dossiers; tous les autres dossiers ont été chargés."
 }

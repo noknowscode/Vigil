@@ -64,6 +64,14 @@ public static class ShellSection
     /// <summary>Count label beside a nav item: blank for zero, so an empty clinic shows no "0".</summary>
     public static string CountText(int count) => count > 0 ? count.ToString(System.Globalization.CultureInfo.CurrentCulture) : "";
 
+    /// <summary>The shell's warning when the store set unreadable case files aside; empty when it set none aside.</summary>
+    public static string SetAsideText(int count) => count switch
+    {
+        0 => "",
+        1 => Loc.T("Shell_SetAsideOne", "One saved record could not be read. It was moved to the damaged folder beside the records; every other record loaded."),
+        _ => Loc.F("Shell_SetAside", "{0} saved records could not be read. They were moved to the damaged folder beside the records; every other record loaded.", count),
+    };
+
     /// <summary>"Dr. Okafor" from the Settings surname, "Clinician" when none is set.</summary>
     public static string ClinicianLabel(string surname) => string.IsNullOrWhiteSpace(surname)
         ? Loc.T("Shell_Clinician", "Clinician")

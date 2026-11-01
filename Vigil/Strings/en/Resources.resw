@@ -584,9 +584,12 @@
   <data name="Settings_SampleTitle" xml:space="preserve"><value>Load sample day</value></data>
   <data name="Shell_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Open menu</value></data>
   <data name="Shell_2.Text" xml:space="preserve"><value>clover</value></data>
+  <data name="Shell_3.Title" xml:space="preserve"><value>Some saved records could not be read</value></data>
   <data name="Shell_Clinician" xml:space="preserve"><value>Clinician</value></data>
   <data name="Shell_ClinicianInitial" xml:space="preserve"><value>C</value></data>
   <data name="Shell_Doctor" xml:space="preserve"><value>Dr. {0}</value></data>
+  <data name="Shell_SetAside" xml:space="preserve"><value>{0} saved records could not be read. They were moved to the damaged folder beside the records; every other record loaded.</value></data>
+  <data name="Shell_SetAsideOne" xml:space="preserve"><value>One saved record could not be read. It was moved to the damaged folder beside the records; every other record loaded.</value></data>
   <data name="Sidebar_1.Text" xml:space="preserve"><value>clover</value></data>
   <data name="Sidebar_10.Content" xml:space="preserve"><value>Expand sidebar</value></data>
   <data name="Sidebar_11.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>New patient</value></data>
