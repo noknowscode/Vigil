@@ -183,7 +183,10 @@ jobs:
       APP_CONTENT_MARKER: Nothing in surgery
       APP_LOGCAT_MARKER: ''
       APP_ARTIFACT: vigil-android
-      APP_SETTLE_SECONDS: '20'
+      # Vigil's first screen showed 23 s after launch here, and its surface was released and rebuilt as the marker was
+      # found (run 41839566033: ANativeWindow_release, a new Vulkan device, a black capture right after), so the frame
+      # is taken 45 s after launch.
+      APP_SETTLE_SECONDS: '45'
       APP_MARKER_TIMEOUT: '90'
       EMULATOR_API: '34'
       EMULATOR_TARGET: google_apis
