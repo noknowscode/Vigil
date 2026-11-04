@@ -358,9 +358,6 @@ public partial class App : Application
 
     private static void RegisterRoutes(IViewRegistry views, IRouteRegistry routes)
     {
-        // DoseModel has two views (the Redose page and the record's Dose drawer), so their maps are kept to name the route.
-        var redosePage = new DataViewMap<DosePage, DoseModel, CaseRef>();
-        var doseDrawer = new DataViewMap<DoseDrawer, DoseModel, CaseRef>(ResultData: typeof(PaneChoice));
         views.Register(
             new ViewMap<ShellPage, ShellModel>(),
             new ViewMap<BoardPage, BoardModel>(),
@@ -371,13 +368,13 @@ public partial class App : Application
             new DataViewMap<Presentation.MenuFlyout, MenuModel, MenuContext>(ResultData: typeof(MenuChoice)),
             new DataViewMap<RecordPage, RecordModel, CaseRef>(),
             new DataViewMap<ParentPreviewPage, ParentPreviewModel, CaseRef>(),
-            redosePage,
+            new DataViewMap<DosePage, DoseModel, CaseRef>(),
             new DataViewMap<SignOffPage, SignOffModel, CaseRef>(),
             new ViewMap<SettingsPage, SettingsModel>(),
             // The record's panes: drawers (Flyout views) over the record page, each with its own model; Dose shares the
             // Redose page's model. Each hands its next step back to RecordModel as a PaneChoice.
             new DataViewMap<PreopDrawer, PreopModel, CaseRef>(ResultData: typeof(PaneChoice)),
-            doseDrawer,
+            new DataViewMap<DoseDrawer, DoseModel, CaseRef>(ResultData: typeof(PaneChoice)),
             new DataViewMap<MedicationsDrawer, MedicationsModel, CaseRef>(ResultData: typeof(PaneChoice)),
             new DataViewMap<VitalsDrawer, VitalsModel, CaseRef>(ResultData: typeof(PaneChoice)),
             new DataViewMap<RecoveryDrawer, RecoveryModel, CaseRef>(ResultData: typeof(PaneChoice)),
@@ -396,14 +393,16 @@ public partial class App : Application
                     new RouteMap("Agenda", View: views.FindByViewModel<AgendaModel>()),
                     new RouteMap("Record", View: views.FindByViewModel<RecordModel>()),
                     new RouteMap("ParentPreview", View: views.FindByViewModel<ParentPreviewModel>()),
-                    new RouteMap("Redose", View: redosePage),
+                    // DoseModel has two views (the Redose page and the record's Dose drawer): their routes find the map by
+                    // view. A route must take the registry's map, which carries the MVUX bindable model, not a new one.
+                    new RouteMap("Redose", View: views.FindByView<DosePage>()),
                     new RouteMap("SignOff", View: views.FindByViewModel<SignOffModel>()),
                     new RouteMap("Settings", View: views.FindByViewModel<SettingsModel>()),
                     new RouteMap("NewCase", View: views.FindByViewModel<NewCaseModel>()),
                     new RouteMap("EditCase", View: views.FindByViewModel<EditCaseModel>()),
                     new RouteMap("Menu", View: views.FindByViewModel<MenuModel>()),
                     new RouteMap(RecordPane.Preop, View: views.FindByViewModel<PreopModel>()),
-                    new RouteMap(RecordPane.Dose, View: doseDrawer),
+                    new RouteMap(RecordPane.Dose, View: views.FindByView<DoseDrawer>()),
                     new RouteMap(RecordPane.Drugs, View: views.FindByViewModel<MedicationsModel>()),
                     new RouteMap(RecordPane.Monitor, View: views.FindByViewModel<VitalsModel>()),
                     new RouteMap(RecordPane.Recovery, View: views.FindByViewModel<RecoveryModel>()),
