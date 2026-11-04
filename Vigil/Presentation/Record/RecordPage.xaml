@@ -781,8 +781,9 @@
                     <TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TypeH2Section}" />
                     <TextBlock Text="{Binding Data.Team}" Style="{StaticResource TypeBodyMuted}" />
                     <TextBlock x:Uid="Record_133" Text="Observations in this record" Style="{StaticResource TypeTitleM}" />
-                    <ItemsControl x:Uid="Record_39" ItemsSource="{Binding Data.Readings}" AutomationProperties.Name="Readings table">
-                      <ItemsControl.ItemTemplate>
+                    <!-- A repeater, not an ItemsControl: a long case holds a reading every 3 to 10 minutes, and only the rows in view are built. -->
+                    <muxc:ItemsRepeater x:Uid="Record_39" ItemsSource="{Binding Data.Readings}" AutomationProperties.Name="Readings table">
+                      <muxc:ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="local:ReadingRow">
                           <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
                             <Grid.ColumnDefinitions>
@@ -806,8 +807,8 @@
                             </StackPanel>
                           </Grid>
                         </DataTemplate>
-                      </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                      </muxc:ItemsRepeater.ItemTemplate>
+                    </muxc:ItemsRepeater>
                   </StackPanel>
                 </ScrollViewer>
 
