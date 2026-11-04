@@ -59,7 +59,7 @@ Critical workflows (derived from SPEC.md flows 1-6 and SPEC-v2):
 | 9 | Responsive/adaptive UI | Partial | R | 0 | 0 | 2 | 390 px: record hero clips, menu drawer opens 107 px down |
 | 10 | Platform behavior | Partial | R | 0 | 2 | 1 | Export picker fails on Linux; WebAssembly run in Chromium and Android in the CI emulator (A pass); iOS and WinAppSDK CI builds only |
 | 11 | Failure handling | Complete | R | 0 | 0 | 0 | Store faults recover through Retry, also in a drawer; crash handler and guarded preference saves (uno-audit) |
-| 12 | Accessibility | Partial | R | 0 | 0 | 1 | Names on controls (25.7 per 1,000 XAML lines); disabled buttons fade (A pass); keyboard walk with the focus log; Today's Tab order |
+| 12 | Accessibility | Partial | R | 0 | 0 | 1 | Names on controls (25.9 per 1,000 XAML lines); disabled buttons fade (A pass); keyboard walk with the focus log; Today's Tab order |
 | 13 | Performance | Partial | I | 0 | 0 | 1 | 14.7 s Release startup (2026-10-28 run), not re-measured |
 | 14 | Security/privacy | Complete | C | 0 | 0 | 0 | No network, no secrets; fault, seed and route hooks are `#if DEBUG` |
 | 15 | Visual quality | Partial | R | 0 | 0 | 1 | Mixed "Anaesthesia"/"Anesthesia" (the hard-coded clinic went with the switcher) |
@@ -159,8 +159,8 @@ None open (A pass: case correction built, the "Coming soon" controls cut).
 ### Majors (head)
 - [Platform] ios: no runtime run (CI simulator build only) - X.
 - [Platform] windows (WinAppSDK): no runtime run (CI build check only) - X.
-- android: the CI emulator smoke job installs and launches the Release APK and finds the first screen (see HANDOFF for
-  the run); no workflow beyond the launch is driven there.
+- android: the CI emulator smoke job installs and launches the Release APK and finds the first screen (run 41870428201:
+  marker after 22 s, frame not blank, no crash); no workflow beyond the launch is driven there.
 
 ### Minors
 - [Platform] The CSV save picker fails on Linux desktop (Uno `LinuxFileSaverExtension`: "Can not determine DBus session

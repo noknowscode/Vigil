@@ -24,12 +24,15 @@ The A pass of the production-readiness round (uno-lab docs/production-readiness/
 ## Last verified state
 - Build: desktop Debug and Release 0 warnings; WebAssembly Release publish (trim-analysis IL2026/IL2104 only, kept as
   warnings by design). Tests 223/223 (stable over 6 runs). Lint gate: CARD, HEX, TOKENTHEME, BACKBAR, CODEBEHIND,
-  OVERLAY, RESPONSIVE, BUILTIN, ICON all 0. Automation names 25.7 per 1,000 XAML lines (130 / 5,041).
+  OVERLAY, RESPONSIVE, BUILTIN, ICON all 0. Automation names 25.9 per 1,000 XAML lines (130 / 5,019).
 - Runtime: desktop (Xvfb, software renderer) and WebAssembly (headless Chromium), docs/evidence/a-pass-2026-11-04.
   Keyboard walk with `--vigil-focuslog` (new Debug hook).
-- CI: emulator smoke green on run 41848463515 (marker after 22 s, frame not blank, no crash); the first run
-  (41839566033) had a black capture, hence the 45 s settle. Runs 41855113111 and 41863962685 failed the Android publish on
-  a doc comment (CS1570, fixed in 2e0fcdc). See the report for the run at the head.
+- CI: run 41870428201 at 6937dba: unit tests, desktop linux-x64 and win-x64, WinAppSDK, WebAssembly, Android and the
+  Android emulator smoke test green (marker "Nothing in surgery" after 22 s, process alive at 45 s, frame not blank:
+  luma spread 30.1, 175 colours; no crash or ANR); the macOS jobs (iOS, osx-arm64) were still queued behind older runs.
+  Earlier: 41848463515 green at 7a928e7; 41839566033 failed only the blank-frame check (a black capture right after the
+  marker), hence the 45 s settle; 41855113111, 41863962685 and 41869324137 failed the Android Release publish on two
+  doc comments the other heads do not check (CS1570, CS1574; fixed in 2e0fcdc and 6937dba).
 - Docs: docs/COMPLETENESS.md (A pass: 0 Blockers, 0 functional Majors, 2 head Majors, 10 Minors), docs/UNO-AUDIT.md
   (follow-up section), docs/DECISIONS.md (D7, D8, D9).
 
