@@ -85,6 +85,7 @@
   <Thickness x:Key="GapBottom4">0,0,0,4</Thickness>
   <Thickness x:Key="GapBottom8">0,0,0,8</Thickness>
   <Thickness x:Key="GapBottom10">0,0,0,10</Thickness>
+  <Thickness x:Key="GapBottom16">0,0,0,16</Thickness>
   <Thickness x:Key="GapStart8">8,0,0,0</Thickness>
   <Thickness x:Key="GapStart10">10,0,0,0</Thickness>
   <Thickness x:Key="GapStart12">12,0,0,0</Thickness>
