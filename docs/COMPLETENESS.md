@@ -10,13 +10,20 @@ file, and after a relaunch. Evidence grades: R runtime, C code, I inferred, X no
 Fix pass 2026-11-04 (7741ede, 69d1a6f): both Blockers fixed and proven at runtime; see Findings > Fixed. The rest of
 this report is the audit at f376607, with the lines the fixes changed updated.
 
-Verdict: **Complete with gaps** (0 Blockers, 2 functional Majors, 4 head Majors, 17 Minors)
+A pass 2026-11-04 (f50c14b to the pass's last commit): both functional Majors closed (case details are correctable,
+D9; the "Coming soon" controls are cut, D7), the record's panes became drawers (D8), eight Minors fixed, and the
+WebAssembly head run in headless Chromium. See Findings > Fixed (A pass). Counts below are after the A pass.
+
+Verdict: **Complete with gaps** (0 Blockers, 0 functional Majors, 2 head Majors, 10 Minors)
 
 Safe to show (desktop, R): Today, Patients, Agenda, Settings; open a record from the hero, a card, Due next and the
 Agenda; New patient with its schedule fields; pre-op checks, ASA and Induce; record observations; administer a dose,
 including the out-of-range confirmation; end anesthesia, recovery, sign-off and export of a case created in the app
 (fix pass); theme, names and interval surviving a relaunch; error and Retry; the empty day.
-Keep off screen: CSV export on a Linux box without a desktop portal; every head except desktop.
+Since the A pass (R): correct a case's weight and details and see the dose follow; every record pane as a drawer
+(open, hand over to another pane or sheet, Escape, focus back); the prep checklist link; the same open-record and
+record-a-reading workflow in Chromium.
+Keep off screen: CSV export on a Linux box without a desktop portal; the iOS and WinAppSDK heads (CI builds only).
 
 ## Inventory
 
@@ -43,34 +50,58 @@ Critical workflows (derived from SPEC.md flows 1-6 and SPEC-v2):
 |---|---|---|---|---|---|---|---|
 | 1 | Screens | Complete | R | 0 | 0 | 0 | 11/11 present; Recovery pane reachable in every stage (fix pass) |
 | 2 | Navigation | Partial | R | 0 | 0 | 2 | End anesthesia reachable (fix pass); sidebar highlights two items after Anesthesia |
-| 3 | Interactions | Partial | R | 0 | 1 | 0 | 11 "Coming soon" controls (D6); the pill and the bell no longer claim a monitor or alerts (fix pass) |
-| 4 | Logic | Complete | R | 0 | 0 | 1 | Dose math, range check, validation proven; chart caption ignores the interval |
-| 5 | Data | Partial | R | 0 | 1 | 1 | Writes persist across a relaunch; no case can be edited after creation |
+| 3 | Interactions | Complete | R | 0 | 0 | 0 | A pass: the 11 "Coming soon" controls are cut (D7), "See the prep checklist" wired; "No monitor connected" is a status |
+| 4 | Logic | Complete | R | 0 | 0 | 0 | Dose math, range check, validation proven; the dose follows a corrected weight (A pass); chart caption fixed |
+| 5 | Data | Partial | R | 0 | 0 | 1 | Writes persist across a relaunch; case details correctable until sign-off, each correction logged (A pass, D9) |
 | 6 | States | Complete | R | 0 | 0 | 0 | Error + Retry and empty day proven; loading skeleton not captured |
-| 7 | Forms | Partial | R | 0 | 0 | 3 | Validation works; errors sit in a footer; an empty reading closes its pane; "0 years ·" |
+| 7 | Forms | Partial | R | 0 | 0 | 1 | Validation works; errors sit in a footer (an empty reading and "0 years ·" fixed in the A pass) |
 | 8 | Authentication | N/A (decision) | C | 0 | 0 | 0 | Shared clinic device, typed-name sign-off (SPEC.md) |
 | 9 | Responsive/adaptive UI | Partial | R | 0 | 0 | 2 | 390 px: record hero clips, menu drawer opens 107 px down |
-| 10 | Platform behavior | Partial | R | 0 | 4 | 1 | Export picker fails on Linux and reads "Export cancelled."; 4 heads never run |
-| 11 | Failure handling | Partial | R | 0 | 0 | 2 | Store faults recover through Retry; no crash handler; preference saves unguarded |
-| 12 | Accessibility | Partial | C | 0 | 0 | 1 | Names on controls; disabled items keep the enabled look |
+| 10 | Platform behavior | Partial | R | 0 | 2 | 1 | Export picker fails on Linux; WebAssembly run in Chromium and Android in the CI emulator (A pass); iOS and WinAppSDK CI builds only |
+| 11 | Failure handling | Complete | R | 0 | 0 | 0 | Store faults recover through Retry, also in a drawer; crash handler and guarded preference saves (uno-audit) |
+| 12 | Accessibility | Partial | R | 0 | 0 | 1 | Names on controls (25.7 per 1,000 XAML lines); disabled buttons fade (A pass); keyboard walk with the focus log; Today's Tab order |
 | 13 | Performance | Partial | I | 0 | 0 | 1 | 14.7 s Release startup (2026-10-28 run), not re-measured |
 | 14 | Security/privacy | Complete | C | 0 | 0 | 0 | No network, no secrets; fault, seed and route hooks are `#if DEBUG` |
-| 15 | Visual quality | Partial | R | 0 | 0 | 2 | Hard-coded clinic; mixed "Anaesthesia"/"Anesthesia" |
-| 16 | Testing | Partial | R | 0 | 0 | 1 | 156/156 pass; no UI suite, so the unreachable End anesthesia passed |
+| 15 | Visual quality | Partial | R | 0 | 0 | 1 | Mixed "Anaesthesia"/"Anesthesia" (the hard-coded clinic went with the switcher) |
+| 16 | Testing | Partial | R | 0 | 0 | 1 | 223/223 pass, every page and drawer model tested; no UI suite |
 
 ## Critical workflows by head
 
 | Workflow | desktop | android | ios | wasm | windows |
 |---|---|---|---|---|---|
-| 1. Open a record + Back | R (hero Record, Due next Record → Knuckles on the Monitor pane, Agenda → Ziggy, sidebar Anesthesia, Back → Today) | X (CI build only) | X (CI build only) | X (not run) | X (CI build only) |
+| 1. Open a record + Back | R (hero Record, Due next Record → Knuckles on the Monitor pane, Agenda → Ziggy, sidebar Anesthesia, Back → Today) | R, launch only (CI emulator: first screen) | X (CI build only) | R (A pass, Chromium: hero Record → Knuckles) | X (CI build only) |
 | 2. New patient to record | R (empty Create: 5 errors, no file; Ziggy saved with OR 2 and 14:30, record opened, Patients 4 → 5) | X | X | X | X |
 | 3. Pre-op + Induce | R (5 checks + ASA I in the store; Induce → Status Anesthetized 12:48:26, Anesthesia 1 → 2) | X | X | X | X |
-| 4. Record observations | R (HR stepped to 98, readings 13 → 14, overdue banner cleared, next 4:56) | X | X | X | X |
+| 4. Record observations | R (HR stepped to 98, readings 13 → 14, overdue banner cleared, next 4:56; A pass: in the Vitals drawer, the same) | X | X | R (A pass, Chromium: Vitals drawer, HR 98, next 4:47, banner cleared) | X |
 | 5. Administer a dose | R (Meloxicam 0.2 mg/kg × 18.4 kg ÷ 5 = 0.74 mL SC stored; 2 mg/kg raised the confirmation; Change dose wrote nothing) | X | X | X | X |
 | 6. End anesthesia, recovery, sign off, export | R, fix pass (Ziggy created in the app, induced, 2 readings; header End anesthesia → Recovery pane → End anesthesia: Status Recovery, EndedAt 03:41:03; extubated, sternal, pain 1, 37.8 °C, notes; Sign record → Signed by Dr. Okafor; relaunch, Review record → Export CSV wrote the CSV through a portal stand-in) | X | X | X | X |
 | 7. Settings + relaunch | R (first name, surname, 3 min, Dark in preferences.json; relaunch shows Dark, "Dr. Okafor", AO, 3-minute strip, Ziggy and the signed Milo) | X | X | X | X |
 
 ## Findings
+
+### Fixed (A pass, 2026-11-04)
+- [Data] A case could not be edited once created (was a functional Major). Built (15533c0, D9 proposed): Edit case details
+  in the Preparation drawer, until sign-off, opens the case form filled from the case (patient, weight, procedure, team,
+  room, schedule). Each changed detail is logged (time, detail, before, after), listed first in Visit history and written
+  to the CSV and the summary; readings and doses given stay as recorded. R (desktop: Knuckles 18.4 → 14.8 kg; the file
+  holds the correction; Visit history lists it; Cefazolin 22 mg/kg then draws up 3.26 mL instead of 4.05) / C (10 tests).
+- [Interactions] 11 "Coming soon" controls advertised unbuilt features (was a functional Major, D6). Cut (9376e13, D7
+  proposed, supersedes D6): the clinic switcher, Records, Messages, Reports, Help center, the account menu, search, the
+  bell (the whole top bar cluster) and the care-time report button. "See the prep checklist" is wired: it opens the next
+  booked case on its Preparation drawer (R: Oscar). The "No monitor connected" pill stays as a status.
+- [Forms] An empty reading closed the Record observations pane: the drawer now stays open with its own Not saved bar - C
+  (VitalsModelTests) / R (drawer error bar seen with a read fault).
+- [Forms] "0 years · " for a patient without an age or owner (2998f6a) - C.
+- [Logic] The chart caption ignored the interval (2998f6a) - C/R ("Observed values · 5-minute strip" from Settings).
+- [Navigation] With the Recovery pane open the record nav highlighted Preparation: a drawer without a nav item highlights
+  none (f50c14b) - C.
+- [Accessibility] Disabled controls kept the enabled look (4e37b9a) - R (Anesthesia item faded after End anesthesia).
+- [Visual] The hard-coded clinic identity went with the clinic switcher (9376e13) - R.
+- [Failure handling] No crash handler, and unguarded preference saves: fixed by the uno-audit (1b44591, f69a057) - C.
+- [Platform] wasm: run in headless Chromium (Release publish): open a record and record a reading - R
+  (docs/evidence/a-pass-2026-11-04).
+- Seen and fixed during the A pass: the Dose drawer and the Redose page showed type names in their fields (ca7c793);
+  focus stayed on the page after a drawer closed (7731f4b); 80 px of empty-row spacing under the vitals pad.
 
 ### Fixed (fix pass, 2026-11-04)
 - [Navigation] No control ended anesthesia (was Blocker 1). Fix 7741ede: the procedure header shows End anesthesia
@@ -123,50 +154,31 @@ Critical workflows (derived from SPEC.md flows 1-6 and SPEC-v2):
 None open.
 
 ### Majors (functional)
-- [Data] A case cannot be edited once created. No pane edits the patient, weight, procedure, team or schedule. Delete is
-  offered only while the case is booked (`RecordPage.xaml:572-575`). A weight mistyped on a case that is already under
-  anesthesia drives every dose and cannot be corrected - R (no edit control on any pane of Knuckles or Ziggy) / C - owner:
-  mvux, uno-toolkit.
-- [Interactions] 11 controls advertise features the app lacks: the clinic switcher, Records, Messages, Reports, Help center,
-  the account menu, the Monitoring pill, search, the bell, the care-time report button, and "See the prep checklist". The
-  last one points at a checklist that exists (Record > Preparation) (`BoardPage.xaml:697`). This is the recorded exception
-  D6, so it is graded as one Major, not eleven - C/R (rendered and inert at 1440 and 390) - owner: decision for the owner.
+None open (A pass: case correction built, the "Coming soon" controls cut).
 
 ### Majors (head)
-- [Platform] android: no runtime run of any workflow (CI builds only) - X.
 - [Platform] ios: no runtime run (CI simulator build only) - X.
-- [Platform] wasm: no runtime run this audit (CI publishes to GitHub Pages) - X.
 - [Platform] windows (WinAppSDK): no runtime run (CI build check only) - X.
+- android: the CI emulator smoke job installs and launches the Release APK and finds the first screen (see HANDOFF for
+  the run); no workflow beyond the launch is driven there.
 
 ### Minors
 - [Platform] The CSV save picker fails on Linux desktop (Uno `LinuxFileSaverExtension`: "Can not determine DBus session
   bus address"), and the app reports "Export cancelled." (`RecordExporter.cs:31-34`). A failed picker cannot be told from
   a cancel - R.
-- [Forms] Recording an empty reading shows "Not saved: Enter at least one vital sign" and closes the Record observations
-  pane, so the user has to reopen it - R.
 - [Forms] New patient lists its errors in a footer above Create, not at the fields - R.
-- [Forms] A patient without an age or owner reads "0 years · " (`CaseView.cs:135`) - C.
-- [Logic] The record chart caption says "5-minute strip" (`RecordPage.xaml:250`) with the interval set to 3 minutes. The
-  banner on the same screen says "every 3 minutes", and Today's hero says "3-minute strip" - R.
 - [Data] Copy summary shows "Summary copied"; the clipboard contents were not read (no reader in the container) - R/X.
-- [Navigation] While the Recovery pane is open, RecordNav highlights Preparation - R.
 - [Navigation] After sidebar Anesthesia, both Patients and Anesthesia stay highlighted - R.
 - [Responsive] At 390 px the record's hero tray is cut off at its right edge (the photo and the nav highlight end at
   x=348 with no border) - R.
 - [Responsive] At 390 px the menu drawer opens 107 px below the top, with no scrim, and shows the desktop
   collapse-sidebar button - R.
-- [Failure handling] No `UnhandledException` / `UnobservedTaskException` handler anywhere; `async void OnLaunched` is
-  unguarded (`App.xaml.cs:21`) - C.
-- [Failure handling] A preference is set in memory before an unguarded file write; callers never catch it
-  (`Preferences.cs:94-104`) - C.
-- [Accessibility] Disabled controls keep the enabled look (`Themes/Tokens.xaml:432`): Records, Messages and Reports read as
-  active in both themes - R.
 - [Performance] Startup to a settled Today took 14.7 s in the 2026-10-28 Release timing run (HANDOFF), against a 2 s
   target. Not re-measured here: Debug navigations settled within the 6-8 s capture waits - I.
-- [Visual] The clinic identity "Clinique Plateau · 2 suites · Montréal" is hard-coded in the sidebar
-  (`Sidebar.xaml:47-48`) - R.
 - [Visual] "Anaesthesia" (Agenda, gantt: `CareDay.cs:9`, `AgendaPage.xaml:42`) and "Anesthesia" are mixed - R.
-- [Testing] No automated UI suite. Workflow proof is this audit's log; 156/156 unit tests pass (`dotnet test`, 2 s) - R.
+- [Testing] No automated UI suite. Workflow proof is the audits' logs; 223/223 unit tests pass (`dotnet test`) - R.
+- [Accessibility] On Today, Tab alternates between the Due next rows and the care-time card's "See the prep checklist"
+  (the two columns sit side by side) - R (focus log, A pass).
 
 ### Re-checked from the 2026-10-28 audit
 - Fixed (R): New patient now captures the OR room and planned start (Ziggy: OR 2, 14:30 stored). The dose header no
@@ -192,14 +204,17 @@ None open.
   monitor connected", disabled; no dot). SPEC-v2's capability table still notes that "Monitoring off" would contradict
   the design. Original question: hide them, or reword (for example "No monitor connected") and drop the dot? D6
   covers disabled entry points. These two state facts the app does not have, and that is what made them Blockers.
-- D6 "Coming soon" controls (11): kept by the owner and graded as one Major. Revisit before any release.
+- D6 "Coming soon" controls (11): cut in the A pass under the owner's "build small, cut large" rule (D7, proposed,
+  supersedes D6). Confirm D7.
 - Resolved in the fix pass: End anesthesia sits in the procedure header while the case is under anesthesia (see Fixed).
   Original question: where should it live in v2? Candidates: a sixth RecordNav item "Recovery", or a second button in
   the stage card while the case is under anesthesia.
-- Case correction: should weight and patient details be editable until sign-off, with the edit logged?
+- Case correction: built in the A pass as "editable until sign-off, each change logged" (D9, proposed). Confirm, or ask
+  for a reason or a second signature per correction.
 - Authentication N/A: shared clinic device, typed-name sign-off (SPEC.md). Confirm.
 - Derived inventory: workflows 6 and 7 are assembled from SPEC.md flows 5-6. Confirm that ending anesthesia belongs in
   the critical set.
-- android, ios, wasm and windows have no runtime evidence. Which heads must be proven before Vigil is called done?
+- ios and windows have no runtime evidence (wasm ran in Chromium and android in the CI emulator in the A pass). Which
+  heads must be proven before Vigil is called done?
 - Formulary and alarm thresholds are sample reference data, labelled "not for clinical use", and a practice cannot load
   its own (SPEC.md). Confirm that this stays out of scope.

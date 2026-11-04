@@ -182,3 +182,23 @@ Runtime (Debug desktop, `APP_NO_HOTDESIGN=1`, `VIGIL_X11_RENDERER=software`, Xvf
 | French: the Light theme reads "Léger" (should be "Clair", `tools/fr.json`) | Native French review is already open (HANDOFF) | 5 minutes |
 | Test packages behind (table above); FluentAssertions 8 changes licence | Owner decision | 1 hour |
 | Android and WebAssembly runtime proof | This pass built both heads; no device or browser run | half a day |
+
+## Follow-up: the A pass (2026-11-04)
+
+What happened to each Remaining item above, on `feat/production-readiness` (commits f50c14b to the pass's last one).
+
+| Item | Outcome |
+|---|---|
+| Split the record workspace | Done (f50c14b, ca7c793, 7731f4b). Each pane is a `!` route to a Flyout view in the Toolkit `DrawerFlyoutPresenter` (`RecordDrawerPresenterStyle`, `DrawerLength` 640 px, which the presenter takes as min(640, window): the old clamp) with its own model: `PreopModel`, `DoseModel` (shared with the Redose page), `MedicationsModel`, `VitalsModel`, `RecoveryModel`, `HistoryModel`, `LabsModel`, over a shared `CaseDrawer` (case feed, Not saved bar, close, hand back). `RecordModel` went from 306 to about 150 lines and keeps the page; `RecordPage.xaml` from 903 to 439 lines; `RecordPage.xaml.cs` is `InitializeComponent` only. Escape and the scrim close a drawer (the flyout's light dismiss); focus goes back to the opener through `Controls/FlyoutFocus.cs`, an attached property, because Uno's flyout left it on the page (measured with `--vigil-focuslog`). Decision D8. Lint CODEBEHIND stays 0 with no allow left. |
+| Model tests for Shell, Patients, Agenda, NewCase, Menu, ParentPreview, SignOff | Done (7a928e7): 30 tests over a recording navigator (`Vigil.Tests/TestNavigation.cs`). The drawers' models add 23 (`DrawerModelTests.cs`, `ModelTests.cs`) and the case form 10 (`CaseEditTests.cs`). Every page and drawer model now has tests. |
+| Live pulse on Today (about 20 % of a core while a case is under anesthesia) | Not changed: an open owner decision (keep the design's pulse, or stop the Forever storyboard after a few cycles). |
+| A rethrown launch failure leaves a process without a window on desktop | Not changed: behaviour decision, unchanged since this audit. |
+| 144 converter `Visibility` bindings without `FallbackValue=Collapsed` | Done (fe1ecb5): all 144 carry it, ahead of the emulator run. |
+| `VitalStepper` names in English | Done (aa4ce16): `Stepper_Increase` / `Stepper_Decrease` through `Loc`, French "Augmenter : …" / "Diminuer : …". |
+| French "Léger" for the Light theme | Done (e1e253c): "Clair". `tools/fr.json` gained an `@keys` object for a key that needs its own French (the plane stays "Léger"). |
+| Test packages behind | Not changed (owner decision on FluentAssertions' licence). |
+| Android and WebAssembly runtime proof | WebAssembly: run in headless Chromium this pass (docs/evidence/a-pass-2026-11-04). Android: the emulator smoke job in CI (7ba746e, 045e80f). |
+
+Found and fixed at runtime during the pass: the Dose drawer and the Redose page showed type names in their fields
+(their routes held new ViewMaps without the bindable model, ca7c793); a drawer that handed over to a sheet could see
+its focus restore close that sheet (7731f4b); the vitals pad charged 80 px of spacing for its unused rows.
