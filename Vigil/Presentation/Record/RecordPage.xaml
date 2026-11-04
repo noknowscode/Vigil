@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   Patient care (route Main/Record, data CaseRef), docs/design/patient-care-values.md. Header (back, breadcrumb, top
   bar cluster), hero tray (identity + record nav | photo | weight + status card + CTA), overdue banner, procedure
   header, metric cards (anesthesia record chart, latest medication, circulation, respiration). Every record action
@@ -84,7 +84,7 @@
     </muxc:InfoBar>
     <mvux:FeedView x:Name="CaseFeed" Grid.Row="2" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False">
       <mvux:FeedView.ValueTemplate><DataTemplate><Grid>
-        <SplitView PanePlacement="Right" DisplayMode="Overlay" OpenPaneLength="640" IsPaneOpen="{Binding Parent.PaneOpen, Mode=TwoWay}" PaneBackground="{ThemeResource BackgroundBrush}" SizeChanged="OnWorkspaceSizeChanged" PaneOpening="OnPaneOpening" PaneOpened="OnPaneOpened" PaneClosed="OnPaneClosed" KeyDown="OnWorkspaceKeyDown">
+        <SplitView PanePlacement="Right" DisplayMode="Overlay" OpenPaneLength="640" IsPaneOpen="{Binding Parent.PaneOpen, Mode=TwoWay}" PaneBackground="{ThemeResource BackgroundBrush}" SizeChanged="OnWorkspaceSizeChanged" PaneOpening="OnPaneOpening" PaneOpened="OnPaneOpened" PaneClosed="OnPaneClosed">
           <SplitView.Content>
             <ScrollViewer HorizontalScrollMode="Disabled">
               <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageBodyInsetNarrow}, Normal={StaticResource PageBodyInsetNormal}}" MaxWidth="{StaticResource ContentMaxWidth}">
@@ -384,6 +384,7 @@
               <Grid ColumnDefinitions="*,Auto" Padding="{StaticResource Inset24x16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
                 <TextBlock Text="{Binding Parent.PaneTitle}" Style="{StaticResource TypeTitleM}" VerticalAlignment="Center" />
                 <Button x:Name="DrawerClose" x:Uid="Record_132" Grid.Column="1" Style="{StaticResource ButtonIconGhost}" Command="{Binding Parent.ClosePane}" AutomationProperties.Name="Close panel">
+                  <Button.KeyboardAccelerators><KeyboardAccelerator Key="Escape" /></Button.KeyboardAccelerators>
                   <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconX}" />
                 </Button>
               </Grid>
@@ -539,9 +540,10 @@
 
                     <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
                       <StackPanel Padding="{StaticResource Inset20}" Spacing="{StaticResource Space8}">
-                        <Grid>
-                          <TextBlock x:Uid="Record_13" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkBrush}" Text="Pre-anesthetic check" />
-                          <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Data.PreopProgress}" />
+                        <!-- Two columns, so the count never runs over a wrapped title (390 px, French). -->
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space12}">
+                          <TextBlock x:Uid="Record_13" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Text="Pre-anesthetic check" />
+                          <TextBlock Grid.Column="1" Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Center" Text="{Binding Data.PreopProgress}" />
                         </Grid>
                         <CheckBox x:Uid="Record_14" Content="Fasted (food withheld per protocol)" IsEnabled="{Binding Data.IsScheduled}" IsChecked="{Binding Parent.Preop.Fasted, Mode=TwoWay}" />
                         <CheckBox x:Uid="Record_15" Content="IV catheter placed and flushed" IsEnabled="{Binding Data.IsScheduled}" IsChecked="{Binding Parent.Preop.IvCatheter, Mode=TwoWay}" />

@@ -1,5 +1,4 @@
 using Microsoft.UI.Xaml.Input;
-using Windows.System;
 namespace Vigil.Presentation;
 public sealed partial class RecordPage : Page
 {
@@ -8,6 +7,7 @@ public sealed partial class RecordPage : Page
     {
         InitializeComponent();
     }
+    // xaml-lint: allow codebehind - SplitView.OpenPaneLength is a single number and the pane must be min(640, workspace width): a continuous clamp to the workspace (window minus sidebar), not a breakpoint {utu:Responsive} can express. The !Route drawer that would replace the SplitView is under Remaining in docs/UNO-AUDIT.md.
     private void OnWorkspaceSizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (sender is SplitView split) split.OpenPaneLength = Math.Min(640, e.NewSize.Width);
@@ -21,13 +21,5 @@ public sealed partial class RecordPage : Page
     {
         _paneTrigger?.Focus(FocusState.Programmatic);
         _paneTrigger = null;
-    }
-    private void OnWorkspaceKeyDown(object sender, KeyRoutedEventArgs e)
-    {
-        if (e.Key == VirtualKey.Escape && sender is SplitView { IsPaneOpen: true } split)
-        {
-            split.IsPaneOpen = false;
-            e.Handled = true;
-        }
     }
 }
