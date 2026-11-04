@@ -682,6 +682,8 @@
   <data name="Status_Recovery" xml:space="preserve"><value>Recovery</value></data>
   <data name="Status_Scheduled" xml:space="preserve"><value>Scheduled</value></data>
   <data name="Status_Signed" xml:space="preserve"><value>Signed</value></data>
+  <data name="Stepper_Decrease" xml:space="preserve"><value>Decrease {0}</value></data>
+  <data name="Stepper_Increase" xml:space="preserve"><value>Increase {0}</value></data>
   <data name="Strip_Anesthesia" xml:space="preserve"><value>ANESTHESIA</value></data>
   <data name="Strip_Booked" xml:space="preserve"><value>BOOKED</value></data>
   <data name="Strip_Home" xml:space="preserve"><value>SIGNED OUT</value></data>

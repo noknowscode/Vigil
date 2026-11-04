@@ -46,9 +46,10 @@ public sealed partial class VitalStepper : UserControl
 
     public string DecrementParameter => $"{Field}|-";
 
-    public string IncrementName => $"Increase {SpokenName}";
+    /// <summary>"Increase heart rate, beats per minute"; the spoken name comes localized through the stepper's x:Uid.</summary>
+    public string IncrementName => Loc.F("Stepper_Increase", "Increase {0}", SpokenName);
 
-    public string DecrementName => $"Decrease {SpokenName}";
+    public string DecrementName => Loc.F("Stepper_Decrease", "Decrease {0}", SpokenName);
 
     public string AccessibleName => SpokenName;
 
