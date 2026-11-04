@@ -164,7 +164,7 @@ public partial class App : Application
             for (var i = 0; i < 100 && navigator is null; i++)
             {
                 await Task.Delay(100);
-                shell = Find<ShellPage>(root);
+                shell = Diagnostics.VisualTree.Find<ShellPage>(root);
                 navigator = shell?.Navigator();
             }
             if (Arg("theme") is { } theme)
@@ -222,8 +222,8 @@ public partial class App : Application
             {
                 await Task.Delay(3000);
                 // The page's own scroller is the one with the tallest content (panes and cards hold smaller ones).
-                var frame = Find<Frame>(shell);
-                var viewer = frame is null ? null : All<ScrollViewer>(frame).OrderByDescending(v => v.ExtentHeight).FirstOrDefault();
+                var frame = Diagnostics.VisualTree.Find<Frame>(shell);
+                var viewer = frame is null ? null : Diagnostics.VisualTree.All<ScrollViewer>(frame).OrderByDescending(v => v.ExtentHeight).FirstOrDefault();
                 viewer?.ChangeView(null, offset, null, disableAnimation: true);
                 Console.Error.WriteLine($"VERIFY scroll={offset} viewer={viewer?.Name} extent={viewer?.ExtentHeight}");
             }
@@ -266,38 +266,6 @@ public partial class App : Application
                 GC.WaitForPendingFinalizers();
             });
         }
-    }
-
-    private static IEnumerable<T> All<T>(DependencyObject parent) where T : DependencyObject
-    {
-        for (var i = 0; i < Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
-        {
-            var child = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(parent, i);
-            if (child is T hit)
-            {
-                yield return hit;
-            }
-            foreach (var found in All<T>(child))
-            {
-                yield return found;
-            }
-        }
-    }
-
-    private static T? Find<T>(DependencyObject parent) where T : DependencyObject
-    {
-        if (parent is T hit)
-        {
-            return hit;
-        }
-        for (var i = 0; i < Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
-        {
-            if (Find<T>(Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(parent, i)) is { } found)
-            {
-                return found;
-            }
-        }
-        return null;
     }
 
     /// <summary>

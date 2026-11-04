@@ -31,8 +31,8 @@ internal static class PageTimer
                 }
             }
 
-            var shell = await PollAsync(() => Find<ShellPage>(window.Content));
-            var frame = await PollAsync(() => Find<Frame>(shell));
+            var shell = await PollAsync(() => VisualTree.Find<ShellPage>(window.Content));
+            var frame = await PollAsync(() => VisualTree.Find<Frame>(shell));
             var board = await PollAsync(() => frame.Content as BoardPage);
             var (settled, count) = await SettleAsync(board, Stopwatch.StartNew());
             rows.Add($"0,startup,{nameof(BoardPage)},,,,{(DateTime.Now - Process.GetCurrentProcess().StartTime).TotalMilliseconds:0},{count}");
@@ -135,26 +135,6 @@ internal static class PageTimer
             await Task.Delay(50);
         }
         throw new TimeoutException($"{typeof(T).Name} did not appear within {Timeout.TotalSeconds:0} s.");
-    }
-
-    private static T? Find<T>(DependencyObject? root) where T : DependencyObject
-    {
-        if (root is null)
-        {
-            return null;
-        }
-        if (root is T match)
-        {
-            return match;
-        }
-        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
-        {
-            if (Find<T>(VisualTreeHelper.GetChild(root, i)) is { } found)
-            {
-                return found;
-            }
-        }
-        return null;
     }
 
     private static int Count(DependencyObject root)
