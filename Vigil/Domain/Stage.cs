@@ -19,17 +19,4 @@ public static class Stage
 
     /// <summary>1 for Booked … 5 for Home.</summary>
     public static int Number(CareStage s) => (int)s + 1;
-
-    public static string Label(CareStage s) => s switch
-    {
-        CareStage.Prep => Loc.T("Stage_Prep", "Prep"),
-        CareStage.Surgery => Loc.T("Stage_Surgery", "Surgery"),
-        CareStage.Recovery => Loc.T("Stage_Recovery", "Recovery"),
-        CareStage.Home => Loc.T("Stage_Home", "Home"),
-        _ => Loc.T("Stage_Booked", "Booked"),
-    };
-
-    /// <summary>"Stage 3 of 5: surgery".</summary>
-    public static string AccessibleName(CareStage s) =>
-        Loc.F("Stage_Accessible", "Stage {0} of {1}: {2}", Number(s), Count, Label(s).ToLowerInvariant());
 }

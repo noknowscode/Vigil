@@ -52,17 +52,17 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
 
     public IFeed<CardsEmpty> CardsEmpty => Feed.Combine(Cases, Filter, Minute).Select(x => Presentation.CardsEmpty.From(x.Item1, x.Item2, x.Item3));
 
-    private IFeed<ImmutableList<DueTask>> Due => Feed
+    private IFeed<(ImmutableList<DueTask> Tasks, DateTimeOffset Now)> Due => Feed
         .Combine(Cases, Now, Drugs)
-        .Select(x => DueTasks.Of(x.Item1.Where(c => Today.IsToday(c, x.Item2)), x.Item2, Preferences.ReadingInterval, x.Item3));
+        .Select(x => (DueTasks.Of(x.Item1.Where(c => Today.IsToday(c, x.Item2)), x.Item2, Preferences.ReadingInterval, x.Item3), x.Item2));
 
     public IListFeed<DueRow> DueRows => Due
-        .Select(rows => (IImmutableList<DueRow>)rows.Select(DueRow.From).ToImmutableList())
+        .Select(due => (IImmutableList<DueRow>)due.Tasks.Select(t => DueRow.From(t, due.Now)).ToImmutableList())
         .AsListFeed();
 
     public IFeed<DueHeader> DueHeader => Feed
-        .Combine(Due, Cases, Now)
-        .Select(x => Presentation.DueHeader.From(x.Item1, x.Item2, x.Item3, Preferences.PlannedPrepMinutes));
+        .Combine(Due, Cases)
+        .Select(x => Presentation.DueHeader.From(x.Item1.Tasks, x.Item2, x.Item1.Now, Preferences.PlannedPrepMinutes));
 
     public IFeed<CareTimeCard> CareTime => Feed
         .Combine(Cases, Minute)

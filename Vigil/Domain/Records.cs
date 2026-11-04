@@ -18,9 +18,6 @@ public partial record Patient(string Name, Species Species, string Breed, decima
     /// <summary>Bundled image identifiers for fictional demo records; absent on existing records.</summary>
     public string? PhotoAsset { get; init; }
     public string? HeroAsset { get; init; }
-
-    /// <summary>"Canine · Labrador retriever", skipping a blank breed.</summary>
-    public string SpeciesAndBreed => string.IsNullOrWhiteSpace(Breed) ? Loc.Species(Species) : $"{Loc.Species(Species)} · {Breed}";
 }
 
 public partial record PreopCheck(
@@ -39,7 +36,8 @@ public partial record PreopCheck(
 
     public bool IsComplete => DoneCount == 5 && Asa is >= 1 and <= 5;
 
-    public string AsaLabel => Asa is >= 1 and <= 5 ? $"ASA {Roman(Asa)}{(AsaEmergency ? "E" : "")}" : Loc.T("Asa_NotSet", "ASA —");
+    /// <summary>"ASA IIE"; "ASA —" before the status is set (notation, the same in every language).</summary>
+    public string AsaLabel => Asa is >= 1 and <= 5 ? $"ASA {Roman(Asa)}{(AsaEmergency ? "E" : "")}" : "ASA —";
 
     public static string Roman(int asa) => asa switch { 1 => "I", 2 => "II", 3 => "III", 4 => "IV", 5 => "V", _ => "" };
 

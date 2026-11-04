@@ -35,7 +35,6 @@
   <data name="Agenda_Summary" xml:space="preserve"><value>{0} étapes · {1} en préparation</value></data>
   <data name="Alarm_High" xml:space="preserve"><value>▲ élevé</value></data>
   <data name="Alarm_Low" xml:space="preserve"><value>▼ bas</value></data>
-  <data name="Asa_NotSet" xml:space="preserve"><value>ASA —</value></data>
   <data name="Board_1.Title" xml:space="preserve"><value>Non enregistré</value></data>
   <data name="Board_2.Content" xml:space="preserve"><value>Fermer</value></data>
   <data name="Card_AsaPending" xml:space="preserve"><value>ASA à venir</value></data>

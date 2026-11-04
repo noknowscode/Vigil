@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace Vigil.Domain;
 
 public enum CarePhaseKind { Waiting, Prep, Anesthesia, Recovery, Planned }
@@ -15,46 +13,17 @@ public partial record PhaseSpan(Guid CaseId, string PatientName, CarePhaseKind P
     public TimeSpan Duration => End - Start;
 
     public bool IsPlanned => Phase == CarePhaseKind.Planned;
-
-    /// <summary>"Prep", "Anesthesia", "Planned prep", "Planned surgery".</summary>
-    public string Label => Phase != CarePhaseKind.Planned
-        ? CarePhases.Label(Phase)
-        : Plans == CarePhaseKind.Prep ? Loc.T("Phase_PlannedPrep", "Planned prep") : Loc.T("Phase_PlannedSurgery", "Planned surgery");
-
-    /// <summary>"Pepper · Prep 08:00–08:32", "Milo · Recovery 12:08–now".</summary>
-    public string Tooltip => $"{PatientName} · {Label} {Start:HH:mm}–{(Ongoing ? Loc.T("Phase_Now", "now") : End.ToString("HH:mm", CultureInfo.CurrentCulture))}";
 }
 
 public partial record CareTimeRow(CarePhaseKind Phase, TimeSpan Duration, double Fraction)
 {
-    public string Label => CarePhases.Label(Phase);
-
     public int Percent => (int)Math.Round(Fraction * 100, MidpointRounding.AwayFromZero);
 
-    public string DurationText => CarePhases.HoursMinutes(Duration);
-
     public string PercentText => $"{Percent}%";
-
-    /// <summary>"Anesthesia: 4h 13m, 58% of care time".</summary>
-    public string Tooltip => Loc.F("CareTime_Tooltip", "{0}: {1}, {2}% of care time", Label, DurationText, Percent);
 }
 
 /// <summary>"Where care time went": today's recorded time per phase across every case.</summary>
-public partial record CareTotals(TimeSpan Total, int PatientCount, int ProcedureCount, DateTimeOffset Now, IImmutableList<CareTimeRow> Rows)
-{
-    public string TotalText => CarePhases.HoursMinutes(Total);
-
-    /// <summary>"7h 16m across 4 patients today".</summary>
-    public string Summary => PatientCount == 1
-        ? Loc.F("CareTime_SummaryOne", "{0} across 1 patient today", TotalText)
-        : Loc.F("CareTime_Summary", "{0} across {1} patients today", TotalText, PatientCount);
-
-    /// <summary>"4 patients · 3 procedures · Wed 28 Oct".</summary>
-    public string DayLine =>
-        $"{(PatientCount == 1 ? Loc.T("CareTime_OnePatient", "1 patient") : Loc.F("CareTime_Patients", "{0} patients", PatientCount))} · " +
-        $"{(ProcedureCount == 1 ? Loc.T("CareTime_OneProcedure", "1 procedure") : Loc.F("CareTime_Procedures", "{0} procedures", ProcedureCount))} · " +
-        Now.ToString("ddd d MMM", CultureInfo.CurrentCulture);
-}
+public partial record CareTotals(TimeSpan Total, int PatientCount, int ProcedureCount, DateTimeOffset Now, IImmutableList<CareTimeRow> Rows);
 
 public static class CarePhases
 {
@@ -166,19 +135,6 @@ public static class CarePhases
         var end = new DateTimeOffset(last.Year, last.Month, last.Day, last.Hour, 0, 0, now.Offset);
         return (start, end < last ? end.AddHours(1) : end);
     }
-
-    public static string Label(CarePhaseKind p) => p switch
-    {
-        CarePhaseKind.Waiting => Loc.T("Phase_Waiting", "Waiting"),
-        CarePhaseKind.Prep => Loc.T("Phase_Prep", "Prep"),
-        CarePhaseKind.Anesthesia => Loc.T("Phase_Anesthesia", "Anesthesia"),
-        CarePhaseKind.Recovery => Loc.T("Phase_Recovery", "Recovery"),
-        _ => Loc.T("Phase_Planned", "Planned"),
-    };
-
-    /// <summary>"4h 13m", "0h 15m" (whole minutes, rounded down).</summary>
-    public static string HoursMinutes(TimeSpan t) =>
-        Loc.F("Duration_HoursMinutes", "{0}h {1}m", (int)t.TotalHours, t.Minutes);
 
     private static DateTimeOffset? Earliest(DateTimeOffset? a, DateTimeOffset? b) =>
         a is null ? b : b is null ? a : a < b ? a : b;

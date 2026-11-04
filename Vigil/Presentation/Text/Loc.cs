@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Vigil.Domain;
+namespace Vigil.Presentation;
 
 /// <summary>
 /// Localized text for strings built in code (statuses, countdowns, validation). XAML text uses x:Uid.
@@ -9,7 +9,11 @@ namespace Vigil.Domain;
 /// </summary>
 public static class Loc
 {
-    public static IStringLocalizer? Localizer { get; set; }
+    /// <summary>
+    /// Set once from the host's IStringLocalizer at launch. It stays static because the text is built inside MVUX view
+    /// records and XAML-created controls, which the container never constructs.
+    /// </summary>
+    public static IStringLocalizer? Localizer { get; internal set; }
 
     public static string T(string key, string english)
     {
@@ -26,6 +30,9 @@ public static class Loc
         Domain.Species.Feline => Loc.T("Species_Feline", "Feline"),
         _ => Loc.T("Species_Other", "Other"),
     };
+
+    /// <summary>"Canine · Labrador retriever", skipping a blank breed.</summary>
+    public static string SpeciesAndBreed(Patient p) => string.IsNullOrWhiteSpace(p.Breed) ? Species(p.Species) : $"{Species(p.Species)} · {p.Breed}";
 
     public static string Plane(Plane p) => p switch
     {

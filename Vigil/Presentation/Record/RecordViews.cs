@@ -312,7 +312,7 @@ public static class RecordText
 
     public static NextDoseText NextDose(Case c, DateTimeOffset now, IEnumerable<Drug> formulary) =>
         Redose.Next(c, formulary) is { } next
-            ? new(Today.Time(next.DueAt, now), Redose.Describe(next, now))
+            ? new(Today.Time(next.DueAt, now), CareText.Redose(next, now))
             : new("—", Loc.T("Record_NoRedose", "No redose scheduled"));
 
     public static FluidsText Fluids(Case c) =>

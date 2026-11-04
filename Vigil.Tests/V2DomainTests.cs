@@ -41,7 +41,7 @@ public class StageTests
     {
         Stage.Of(Proto.Named("Milo") with { DischargedAt = Proto.Now }).Should().Be(CareStage.Home);
         Stage.Number(CareStage.Recovery).Should().Be(4);
-        Stage.AccessibleName(CareStage.Surgery).Should().Be("Stage 3 of 5: surgery");
+        Vigil.Presentation.CareText.StageAccessibleName(CareStage.Surgery).Should().Be("Stage 3 of 5: surgery");
     }
 }
 
@@ -83,17 +83,17 @@ public class CarePhasesTests
     public void TotalsMatchWhereCareTimeWent()
     {
         var totals = CarePhases.Totals(Proto.Day, Proto.Now);
-        totals.TotalText.Should().Be("7h 16m");
-        totals.Rows.Select(r => $"{r.Label} {r.DurationText} {r.PercentText}").Should().Equal(
+        Vigil.Presentation.CareText.HoursMinutes(totals.Total).Should().Be("7h 16m");
+        totals.Rows.Select(r => $"{Vigil.Presentation.CareText.Phase(r.Phase)} {Vigil.Presentation.CareText.HoursMinutes(r.Duration)} {r.PercentText}").Should().Equal(
             "Anesthesia 4h 13m 58%", "Prep 1h 34m 22%", "Recovery 1h 14m 17%", "Waiting 0h 15m 3%");
         totals.PatientCount.Should().Be(4);
         totals.ProcedureCount.Should().Be(3);
-        totals.Summary.Should().Be("7h 16m across 4 patients today");
+        Vigil.Presentation.CareTimeCard.From(Proto.Day, Proto.Now, 25)!.Summary.Should().Be("7h 16m across 4 patients today");
         using (new CultureScope("en-US"))
         {
-            totals.DayLine.Should().Be("4 patients · 3 procedures · Wed 28 Oct");
+            Vigil.Presentation.CareTimeline.DayLineText(totals).Should().Be("4 patients · 3 procedures · Wed 28 Oct");
         }
-        totals.Rows[0].Tooltip.Should().Be("Anesthesia: 4h 13m, 58% of care time");
+        Vigil.Presentation.CareText.Tooltip(totals.Rows[0]).Should().Be("Anesthesia: 4h 13m, 58% of care time");
     }
 
     [Test]
@@ -122,20 +122,23 @@ public class DueTasksTests
     private static ImmutableList<DueTask> Rows(IEnumerable<Case>? cases = null) =>
         DueTasks.Of(cases ?? Proto.Day, Proto.Now, Proto.Interval, Proto.Formulary);
 
+    /// <summary>The row as Today shows it: the words are the presentation's.</summary>
+    private static Vigil.Presentation.DueRow Shown(DueTask task) => Vigil.Presentation.DueRow.From(task, Proto.Now);
+
     [Test]
     public void SampleDayReproducesDueNextInOrder()
     {
         var rows = Rows();
-        rows.Select(r => $"{r.DueLabel} {r.Time} | {r.Title} | {r.PatientName} · {r.Meta} | {r.Status} | {r.Action}").Should().Equal(
+        rows.Select(Shown).Select(r => $"{r.DueLabel} {r.Time} | {r.Title} | {r.PatientName} · {r.Meta} | {r.Status} | {r.Action}").Should().Equal(
             "Late 12:41 | Record observations | Knuckles · Anesthesia · 5-minute strip | Overdue 1:26 | Record",
             "Due 12:50 | Pain score | Milo · Recovery · every 15 min | In 8 min | Score",
             $"Due 13:10 | Cefazolin redose | Knuckles · {4.05m.ToString("0.00", CultureInfo.CurrentCulture)} mL · IV | In 28 min | Prepare",
             "Due 13:15 | Pre-op bloodwork | Oscar · CBC and chemistry panel | Results ready | Review",
             "Due 14:00 | Discharge call | Pepper · Pet parent · K. Gagnon | Scheduled | Call");
         rows.Select(r => r.Tone).Should().Equal(DueTone.Overdue, DueTone.Neutral, DueTone.Neutral, DueTone.Ready, DueTone.Neutral);
-        rows.Select(r => r.IsPrimary).Should().Equal(true, false, false, true, false);
+        rows.Select(Shown).Select(r => r.IsPrimary).Should().Equal(true, false, false, true, false);
         rows.Select(r => r.Stage).Should().Equal(CareStage.Surgery, CareStage.Recovery, CareStage.Surgery, CareStage.Booked, CareStage.Home);
-        DueTasks.Summary(rows).Should().Be("5 tasks before 14:00 · 1 overdue");
+        Vigil.Presentation.DueHeader.SummaryText(rows).Should().Be("5 tasks before 14:00 · 1 overdue");
     }
 
     [Test]
@@ -146,7 +149,7 @@ public class DueTasksTests
         var row = Rows([fresh]).Single(r => r.Kind == DueTaskKind.Observations);
         row.IsLate.Should().BeFalse();
         row.DueAt.Should().Be(Proto.Now.AddMinutes(4));
-        row.Status.Should().Be("In 4 min");
+        Shown(row).Status.Should().Be("In 4 min");
         Rows([bella]).Single(r => r.Kind == DueTaskKind.Observations).IsLate.Should().BeTrue();
     }
 
@@ -159,7 +162,7 @@ public class DueTasksTests
         var late = Rows([unscored]).Single();
         late.DueAt.Should().Be(milo.EndedAt!.Value.AddMinutes(15));
         late.IsLate.Should().BeTrue();
-        late.Status.Should().Be("Overdue 19:00");
+        Shown(late).Status.Should().Be("Overdue 19:00");
         Rows([Proto.Named("Knuckles")]).Should().NotContain(r => r.Kind == DueTaskKind.PainScore);
     }
 
@@ -183,7 +186,7 @@ public class DueTasksTests
         var again = bella with { Doses = bella.Doses.Add(bella.Doses.Single(d => d.DrugId == "cefazolin") with { At = Proto.At(12, 30) }) };
         Rows([again]).Single(r => r.Kind == DueTaskKind.Redose).DueAt.Should().Be(Proto.At(14, 0));
         DueTasks.Of([bella], Proto.Now, Proto.Interval, [Proto.Propofol]).Should().NotContain(r => r.Kind == DueTaskKind.Redose);
-        Redose.Describe(Redose.Next(bella, Proto.Formulary)!, Proto.Now).Should().Be("Cefazolin redose · in 28 min");
+        Vigil.Presentation.CareText.Redose(Redose.Next(bella, Proto.Formulary)!, Proto.Now).Should().Be("Cefazolin redose · in 28 min");
     }
 
     [Test]
@@ -195,7 +198,7 @@ public class DueTasksTests
         var pepper = Proto.Named("Pepper");
         Rows([pepper with { DischargeCall = pepper.DischargeCall! with { DoneAt = Proto.Now } }]).Should().BeEmpty();
         var soon = Rows([pepper with { DischargeCall = new DischargeCall(Proto.Now.AddMinutes(30), null) }]).Single();
-        soon.Status.Should().Be("In 30 min", "within the hour a countdown replaces Scheduled");
+        Shown(soon).Status.Should().Be("In 30 min", "within the hour a countdown replaces Scheduled");
         Rows([pepper with { DischargeCall = new DischargeCall(Proto.Now.AddMinutes(-2), null) }]).Single().IsLate.Should().BeTrue();
     }
 
@@ -227,7 +230,7 @@ public class DueTasksTests
     [Test]
     public void DueNextActionsOpenTheRecordOnTheirTask()
     {
-        Vigil.Presentation.DueRow Row(DueAction action) => Vigil.Presentation.DueRow.From(Rows([Proto.Named("Knuckles")])[0] with { Action = action });
+        Vigil.Presentation.DueRow Row(DueAction action) => Shown(Rows([Proto.Named("Knuckles")])[0] with { Action = action });
         Row(DueAction.Record).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Record" && r.Pane == "Monitor");
         Row(DueAction.Score).Pane.Should().Be("Recovery");
         Row(DueAction.Call).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Record" && r.Pane == "Recovery");
@@ -238,8 +241,8 @@ public class DueTasksTests
     [Test]
     public void SummaryCountsAndHandlesEmpty()
     {
-        DueTasks.Summary([]).Should().Be("Nothing due");
-        DueTasks.Summary(Rows([Proto.Named("Milo")])).Should().Be("1 task before 12:50");
+        Vigil.Presentation.DueHeader.SummaryText([]).Should().Be("Nothing due");
+        Vigil.Presentation.DueHeader.SummaryText(Rows([Proto.Named("Milo")])).Should().Be("1 task before 12:50");
     }
 }
 
@@ -251,9 +254,10 @@ public class CareInsightTests
         var insight = CareInsight.Of(Proto.Day, Proto.Now, 25)!;
         insight.AverageMinutes.Should().Be(31);
         insight.Cases.Should().Be(3);
-        insight.Text.Should().Be("Prep ran 31 minutes on average today, 6 minutes over plan.");
-        CareInsight.Of(Proto.Day, Proto.Now, 40)!.Text.Should().Be("Prep ran 31 minutes on average today, 9 minutes under plan.");
-        CareInsight.Of(Proto.Day, Proto.Now, 31)!.Text.Should().Be("Prep ran 31 minutes on average today, on plan.");
+        static string Text(CareInsight i) => Vigil.Presentation.CareTimeCard.InsightText(i);
+        Text(insight).Should().Be("Prep ran 31 minutes on average today, 6 minutes over plan.");
+        Text(CareInsight.Of(Proto.Day, Proto.Now, 40)!).Should().Be("Prep ran 31 minutes on average today, 9 minutes under plan.");
+        Text(CareInsight.Of(Proto.Day, Proto.Now, 31)!).Should().Be("Prep ran 31 minutes on average today, on plan.");
     }
 
     [Test]
@@ -272,15 +276,12 @@ public class NextSurgeryTests
     {
         var next = NextSurgery.Of(Proto.Day, Proto.Now, 25)!;
         next.Case.Patient.Name.Should().Be("Oscar");
-        next.Title.Should().Be("Next surgery · Oscar");
         next.Subtitle.Should().Be("Mass removal, left flank · OR 1");
         next.CountdownText.Should().Be("1:18");
-        next.UntilText.Should().Be("until 14:00");
         next.PrepStartsAt.Should().Be(next.PlannedStart.AddMinutes(-30), "Oscar's own planned prep (30) overrides the practice's 25");
         next.PrepStartsText.Should().Be("13:30");
-        next.PrepStartsSub.Should().Be("in 48 min");
-        next.FastingText.Should().Be("Fasting since 06:00");
-        next.NotifiedText.Should().Be("notified 12:30");
+        next.Case.FastingSince.Should().NotBeNull();
+        next.Case.ParentNotifiedAt.Should().NotBeNull();
         next.BloodworkReady.Should().BeTrue();
         next.Team.Should().Be("Dr. Okafor · S. Tremblay");
     }

@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace Vigil.Domain;
 
 public enum DueTaskKind { Observations, PainScore, Redose, Bloodwork, DischargeCall }
@@ -10,41 +8,34 @@ public enum DueAction { Record, Score, Prepare, Review, Call }
 /// <summary>How the status text reads: overdue (error), ready (success) or neutral.</summary>
 public enum DueTone { Neutral, Overdue, Ready }
 
-/// <summary>One row of "Due next".</summary>
+/// <summary>
+/// One row of "Due next", as facts: what is due, for whom, when, and the details its words are built from (the reading
+/// interval, the redose, the lab panel or the pet parent).
+/// </summary>
 public partial record DueTask(
     Guid CaseId,
     DueTaskKind Kind,
     DateTimeOffset DueAt,
     bool IsLate,
-    string Title,
     string PatientName,
     CareStage Stage,
-    string Meta,
-    string Status,
     DueTone Tone,
     DueAction Action)
 {
-    public CaseRef Case => new(CaseId);
+    /// <summary>Observations: the reading interval the case is recorded at.</summary>
+    public TimeSpan Interval { get; init; }
 
-    /// <summary>"Late" or "Due", above the time.</summary>
-    public string DueLabel => IsLate ? Loc.T("Task_Late", "Late") : Loc.T("Task_Due", "Due");
+    /// <summary>Redose: the drug due again.</summary>
+    public NextDose? Dose { get; init; }
 
-    public string Time => DueAt.ToString("HH:mm", CultureInfo.CurrentCulture);
+    /// <summary>Bloodwork: the panel that is ready.</summary>
+    public string Panel { get; init; } = "";
 
-    /// <summary>Late and ready rows get the primary button; the rest are secondary.</summary>
-    public bool IsPrimary => IsLate || Tone == DueTone.Ready;
+    /// <summary>Discharge call: the pet parent to call.</summary>
+    public string Owner { get; init; } = "";
 
-    public string ActionLabel => Action switch
-    {
-        DueAction.Record => Loc.T("DueAction_Record", "Record"),
-        DueAction.Score => Loc.T("DueAction_Score", "Score"),
-        DueAction.Prepare => Loc.T("DueAction_Prepare", "Prepare"),
-        DueAction.Review => Loc.T("DueAction_Review", "Review"),
-        _ => Loc.T("DueAction_Call", "Call"),
-    };
-
-    /// <summary>"Late 12:41, Record observations, Knuckles · Anesthesia · 5-minute strip, Overdue 1:26".</summary>
-    public string AccessibleName => $"{DueLabel} {Time}, {Title}, {PatientName} · {Meta}, {Status}";
+    /// <summary>Further away than <see cref="DueTasks.CountdownHorizon"/>: the row says "Scheduled", not a countdown.</summary>
+    public bool IsScheduled { get; init; }
 }
 
 /// <summary>
@@ -69,18 +60,15 @@ public static class DueTasks
         foreach (var c in cases)
         {
             var stage = Stage.Of(c);
-            var name = c.Patient.Name;
 
             if (c.Status == CaseStatus.Anesthetized && Schedule.NextDue(c, readingInterval) is { } due)
             {
                 var late = Schedule.State(c, readingInterval, now) == DueState.Overdue;
-                var minutes = (int)Math.Round(readingInterval.TotalMinutes);
-                rows.Add(Row(DueTaskKind.Observations, due, late, Loc.T("Task_Observations", "Record observations"),
-                    $"{CarePhases.Label(CarePhaseKind.Anesthesia)} · {Loc.F("Task_Strip", "{0}-minute strip", minutes)}", DueAction.Record));
+                rows.Add(Row(DueTaskKind.Observations, due, late, DueAction.Record) with { Interval = readingInterval });
 
                 foreach (var next in Redose.Of(c, drugs))
                 {
-                    rows.Add(Row(DueTaskKind.Redose, next.DueAt, next.DueAt < now, next.Title, next.Detail, DueAction.Prepare));
+                    rows.Add(Row(DueTaskKind.Redose, next.DueAt, next.DueAt < now, DueAction.Prepare) with { Dose = next });
                 }
             }
 
@@ -88,68 +76,31 @@ public static class DueTasks
             {
                 var last = c.Recovery.PainScores.Count > 0 ? c.Recovery.PainScores.Max(p => p.At) : ended;
                 var dueAt = last + PainScoreInterval;
-                rows.Add(Row(DueTaskKind.PainScore, dueAt, dueAt < now, Loc.T("Task_PainScore", "Pain score"),
-                    $"{CarePhases.Label(CarePhaseKind.Recovery)} · {Loc.F("Task_Every", "every {0} min", (int)PainScoreInterval.TotalMinutes)}", DueAction.Score));
+                rows.Add(Row(DueTaskKind.PainScore, dueAt, dueAt < now, DueAction.Score));
             }
 
             if (!c.IsSigned)
             {
                 foreach (var lab in c.Labs.Where(l => l.State == LabState.Ready))
                 {
-                    var title = stage is CareStage.Booked or CareStage.Prep
-                        ? Loc.T("Task_PreopBloodwork", "Pre-op bloodwork")
-                        : Loc.T("Task_Bloodwork", "Bloodwork review");
-                    rows.Add(Row(DueTaskKind.Bloodwork, lab.At, false, title, lab.Panel, DueAction.Review) with
-                    {
-                        Status = Loc.T("Task_ResultsReady", "Results ready"),
-                        Tone = DueTone.Ready,
-                    });
+                    rows.Add(Row(DueTaskKind.Bloodwork, lab.At, false, DueAction.Review) with { Panel = lab.Panel, Tone = DueTone.Ready });
                 }
             }
 
             if (c.DischargeCall is { IsDone: false } call)
             {
-                rows.Add(Row(DueTaskKind.DischargeCall, call.DueAt, call.DueAt < now, Loc.T("Task_DischargeCall", "Discharge call"),
-                    $"{Loc.T("Task_PetParent", "Pet parent")} · {c.Patient.Owner}", DueAction.Call));
+                rows.Add(Row(DueTaskKind.DischargeCall, call.DueAt, call.DueAt < now, DueAction.Call) with { Owner = c.Patient.Owner });
             }
 
-            DueTask Row(DueTaskKind kind, DateTimeOffset at, bool late, string title, string meta, DueAction action)
+            DueTask Row(DueTaskKind kind, DateTimeOffset at, bool late, DueAction action)
             {
                 at = at.ToOffset(now.Offset);
-                var status = late ? Countdown(at, now)
-                    : at - now > CountdownHorizon ? Loc.T("Task_Scheduled", "Scheduled")
-                    : Countdown(at, now);
-                return new DueTask(c.Id, kind, at, late, title, name, stage, meta, status, late ? DueTone.Overdue : DueTone.Neutral, action);
+                return new DueTask(c.Id, kind, at, late, c.Patient.Name, stage, late ? DueTone.Overdue : DueTone.Neutral, action)
+                {
+                    IsScheduled = !late && at - now > CountdownHorizon,
+                };
             }
         }
         return rows.OrderBy(r => r.DueAt).ThenBy(r => r.Kind).ToImmutableList();
-    }
-
-    /// <summary>"5 tasks before 14:00 · 1 overdue"; "Nothing due" when the list is empty.</summary>
-    public static string Summary(IReadOnlyCollection<DueTask> rows)
-    {
-        if (rows.Count == 0)
-        {
-            return Loc.T("Task_Nothing", "Nothing due");
-        }
-        var last = rows.Max(r => r.DueAt);
-        var head = rows.Count == 1
-            ? Loc.F("Task_OneTaskBefore", "1 task before {0:HH:mm}", last)
-            : Loc.F("Task_TasksBefore", "{0} tasks before {1:HH:mm}", rows.Count, last);
-        var late = rows.Count(r => r.IsLate);
-        return late > 0 ? $"{head} · {Loc.F("Task_OverdueCount", "{0} overdue", late)}" : head;
-    }
-
-    /// <summary>"In 8 min" (whole minutes, rounded up) or "Overdue 1:26".</summary>
-    public static string Countdown(DateTimeOffset due, DateTimeOffset now, bool lowercase = false)
-    {
-        var left = due - now;
-        if (left < TimeSpan.Zero)
-        {
-            var clock = Schedule.Clock(left.Duration());
-            return lowercase ? Loc.F("Task_OverdueLower", "overdue {0}", clock) : Loc.F("Task_Overdue", "Overdue {0}", clock);
-        }
-        var minutes = (int)Math.Ceiling(left.TotalMinutes);
-        return lowercase ? Loc.F("Task_InMinutesLower", "in {0} min", minutes) : Loc.F("Task_InMinutes", "In {0} min", minutes);
     }
 }

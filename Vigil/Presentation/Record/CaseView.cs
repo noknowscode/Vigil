@@ -155,7 +155,7 @@ public partial record CaseView(
             RecordText.StatusLabel(c.Status),
             p.WeightKg,
             $"{p.WeightKg:0.0}",
-            string.Join(" · ", new[] { p.SpeciesAndBreed, p.AgeYears > 0 ? Loc.F("Patient_AgeShort", "{0:0.#} y", p.AgeYears) : "", string.IsNullOrWhiteSpace(p.Owner) ? "" : Loc.F("Patient_OwnerShort", "owner {0}", p.Owner) }.Where(x => x.Length > 0)),
+            string.Join(" · ", new[] { Loc.SpeciesAndBreed(p), p.AgeYears > 0 ? Loc.F("Patient_AgeShort", "{0:0.#} y", p.AgeYears) : "", string.IsNullOrWhiteSpace(p.Owner) ? "" : Loc.F("Patient_OwnerShort", "owner {0}", p.Owner) }.Where(x => x.Length > 0)),
             c.Preop,
             Loc.F("Preop_Progress", "{0} of 5 checks", c.Preop.DoneCount),
             c.InducedAt is DateTimeOffset i ? Loc.F("Preop_InducedAt", "Induced at {0:HH:mm}", i.ToOffset(now.Offset)) : Loc.T("Preop_NotInduced", "Not induced"),

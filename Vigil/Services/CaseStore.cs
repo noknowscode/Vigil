@@ -49,18 +49,6 @@ public sealed class StoreReadException(string message, Exception? inner = null) 
 /// <summary>A change the case's state does not allow (vitals before induction); the message is written for the user.</summary>
 public sealed class CaseRuleException(string message) : InvalidOperationException(message);
 
-/// <summary>What a failed store call tells the user. The exception's own text (file paths, record ids) is for the log.</summary>
-public static class StoreErrors
-{
-    public static string Describe(Exception ex) => ex switch
-    {
-        CaseRuleException rule => rule.Message,
-        SignedRecordException => Loc.T("Error_Signed", "This record is signed and can no longer change."),
-        KeyNotFoundException => Loc.T("Record_Gone", "This record no longer exists."),
-        _ => Loc.T("Error_NotWritten", "It could not be written to this device. Try again."),
-    };
-}
-
 [JsonSourceGenerationOptions(WriteIndented = true, UseStringEnumConverter = true)]
 [JsonSerializable(typeof(Case))]
 internal partial class VigilJsonContext : JsonSerializerContext;

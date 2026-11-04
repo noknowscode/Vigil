@@ -7,14 +7,6 @@ public partial record CareInsight(int AverageMinutes, int PlannedMinutes, int Ca
 
     public bool IsOverPlan => DeltaMinutes > 0;
 
-    /// <summary>"Prep ran 31 minutes on average today, 6 minutes over plan."</summary>
-    public string Text => DeltaMinutes switch
-    {
-        > 0 => Loc.F("Insight_Over", "Prep ran {0} minutes on average today, {1} minutes over plan.", AverageMinutes, DeltaMinutes),
-        < 0 => Loc.F("Insight_Under", "Prep ran {0} minutes on average today, {1} minutes under plan.", AverageMinutes, -DeltaMinutes),
-        _ => Loc.F("Insight_OnPlan", "Prep ran {0} minutes on average today, on plan.", AverageMinutes),
-    };
-
     public static CareInsight? Of(IEnumerable<Case> cases, DateTimeOffset now, IPreferences prefs) =>
         Of(cases, now, prefs.PlannedPrepMinutes);
 

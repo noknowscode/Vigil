@@ -21,9 +21,6 @@ public partial record NextSurgery(Case Case, DateTimeOffset PlannedStart, DateTi
 
     public bool BloodworkReady => Case.Labs.Any(l => l.State is LabState.Ready or LabState.Reviewed);
 
-    /// <summary>"Next surgery · Oscar".</summary>
-    public string Title => Loc.F("Next_Title", "Next surgery · {0}", Case.Patient.Name);
-
     /// <summary>"Mass removal, left flank · OR 1" (the room only when one is assigned).</summary>
     public string Subtitle => string.IsNullOrWhiteSpace(Case.OperatingRoom) ? Case.Procedure : $"{Case.Procedure} · {Case.OperatingRoom}";
 
@@ -37,19 +34,7 @@ public partial record NextSurgery(Case Case, DateTimeOffset PlannedStart, DateTi
         }
     }
 
-    /// <summary>"until 14:00".</summary>
-    public string UntilText => Loc.F("Next_Until", "until {0:HH:mm}", PlannedStart);
-
     public string PrepStartsText => PrepStartsAt.ToString("HH:mm", CultureInfo.CurrentCulture);
-
-    /// <summary>"in 48 min".</summary>
-    public string PrepStartsSub => DueTasks.Countdown(PrepStartsAt, Now, lowercase: true);
-
-    /// <summary>"Fasting since 06:00"; empty when not recorded.</summary>
-    public string FastingText => Case.FastingSince is { } f ? Loc.F("Next_Fasting", "Fasting since {0:HH:mm}", f.ToOffset(Now.Offset)) : "";
-
-    /// <summary>"notified 12:30"; empty when the pet parent has not been told.</summary>
-    public string NotifiedText => Case.ParentNotifiedAt is { } n ? Loc.F("Next_Notified", "notified {0:HH:mm}", n.ToOffset(Now.Offset)) : "";
 
     public string Team => $"{Case.Veterinarian} · {Case.Technician}";
 

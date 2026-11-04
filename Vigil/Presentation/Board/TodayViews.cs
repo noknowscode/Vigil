@@ -179,7 +179,7 @@ public partial record HeroCard(
                 : Loc.F("Hero_NextReading", "Next reading in {0}", Schedule.Clock(remaining)),
             Loc.F("Task_Strip", "{0}-minute strip", minutes),
             new HeroStat(Loc.T("Hero_Induced", "Induced"), c.InducedAt is { } i ? Today.Time(i, now) : "—",
-                Loc.F("Hero_Ago", "{0} ago", CarePhases.HoursMinutes(elapsed)), StatTone.Live),
+                Loc.F("Hero_Ago", "{0} ago", CareText.HoursMinutes(elapsed)), StatTone.Live),
             last is null
                 ? new HeroStat(Loc.T("Hero_LastReading", "Last reading"), "—", Loc.T("Readings_None", "No readings yet"), StatTone.Muted)
                 : new HeroStat(Loc.T("Hero_LastReading", "Last reading"), Today.Time(last.At, now),
@@ -192,20 +192,22 @@ public partial record HeroCard(
     private static HeroCard Next(NextSurgery next)
     {
         var c = next.Case;
+        var offset = next.Now.Offset;
         return new HeroCard(
             c.Id,
             false,
-            next.Title,
+            Loc.F("Next_Title", "Next surgery · {0}", c.Patient.Name),
             next.Subtitle,
             next.CountdownText,
-            next.UntilText,
+            Loc.F("Next_Until", "until {0:HH:mm}", next.PlannedStart),
             false,
             next.BloodworkReady ? Loc.T("Hero_BloodworkReady", "Bloodwork ready") : "",
-            next.FastingText,
+            c.FastingSince is { } f ? Loc.F("Next_Fasting", "Fasting since {0:HH:mm}", f.ToOffset(offset)) : "",
             new HeroStat(Loc.T("Hero_PrepStarts", "Prep starts"), next.PrepStartsText,
-                next.PrepStarted ? Loc.T("Hero_PrepStarted", "started") : next.PrepStartsSub, StatTone.Prep),
+                next.PrepStarted ? Loc.T("Hero_PrepStarted", "started") : CareText.Countdown(next.PrepStartsAt, next.Now, lowercase: true), StatTone.Prep),
             new HeroStat(Loc.T("Hero_Team", "Team"), c.Veterinarian, c.Technician, StatTone.Muted, IsMono: false),
-            new HeroStat(Loc.T("Hero_PetParent", "Pet parent"), c.Patient.Owner, next.NotifiedText, StatTone.Muted, IsMono: false))
+            new HeroStat(Loc.T("Hero_PetParent", "Pet parent"), c.Patient.Owner,
+                c.ParentNotifiedAt is { } n ? Loc.F("Next_Notified", "notified {0:HH:mm}", n.ToOffset(offset)) : "", StatTone.Muted, IsMono: false))
         {
             CanStartPrep = !next.PrepStarted,
             ChipReady = next.BloodworkReady,
@@ -269,12 +271,12 @@ public partial record CareTimeline(
             {
                 var s = x.Spans[i];
                 var joined = i + 1 < x.Spans.Count && x.Spans[i + 1].Start == s.End;
-                marks.Add(new GanttMark(At(s.Start), At(s.End) - At(s.Start), joined ? SegmentGap : 0, s.Phase, false, s.Tooltip));
+                marks.Add(new GanttMark(At(s.Start), At(s.End) - At(s.Start), joined ? SegmentGap : 0, s.Phase, false, CareText.Tooltip(s)));
             }
             // The now dot marks a phase that is running: anesthesia, recovery or prep (not waiting).
             if (x.Spans.LastOrDefault(s => s.Ongoing) is { Phase: CarePhaseKind.Prep or CarePhaseKind.Anesthesia or CarePhaseKind.Recovery } running)
             {
-                marks.Add(new GanttMark(At(now), 0, 0, running.Phase, true, running.Tooltip));
+                marks.Add(new GanttMark(At(now), 0, 0, running.Phase, true, CareText.Tooltip(running)));
             }
             return new GanttRow(x.Case.Patient.Name, marks.ToImmutableList());
         }).ToImmutableList();
@@ -286,16 +288,22 @@ public partial record CareTimeline(
         var totals = CarePhases.Totals(today, now);
         var name = Loc.F("Gantt_Accessible", "Care through the day, {0} to {1}. {2}",
             start.ToString("HH:mm", CultureInfo.CurrentCulture), end.ToString("HH:mm", CultureInfo.CurrentCulture),
-            string.Join(" ", perCase.Select(x => $"{x.Case.Patient.Name}: {string.Join(", ", x.Spans.Select(s => s.Tooltip[(x.Case.Patient.Name.Length + 3)..]))}.")));
+            string.Join(" ", perCase.Select(x => $"{x.Case.Patient.Name}: {string.Join(", ", x.Spans.Select(s => CareText.Tooltip(s)[(x.Case.Patient.Name.Length + 3)..]))}.")));
         return new CareTimeline(
-            totals.TotalText,
-            totals.DayLine,
+            CareText.HoursMinutes(totals.Total),
+            DayLineText(totals),
             Loc.F("Gantt_Now", "Now {0:HH:mm}", now),
             At(now),
             rows,
             ticks,
             name);
     }
+
+    /// <summary>"4 patients · 3 procedures · Wed 28 Oct".</summary>
+    public static string DayLineText(CareTotals totals) =>
+        $"{(totals.PatientCount == 1 ? Loc.T("CareTime_OnePatient", "1 patient") : Loc.F("CareTime_Patients", "{0} patients", totals.PatientCount))} · " +
+        $"{(totals.ProcedureCount == 1 ? Loc.T("CareTime_OneProcedure", "1 procedure") : Loc.F("CareTime_Procedures", "{0} procedures", totals.ProcedureCount))} · " +
+        totals.Now.ToString("ddd d MMM", CultureInfo.CurrentCulture);
 }
 
 /// <summary>
@@ -341,7 +349,7 @@ public partial record PatientCard(
     public bool ReachedHome => Stage >= CareStage.Home;
     public bool KnobLive => Stage == CareStage.Surgery;
 
-    public string StageName => Domain.Stage.AccessibleName(Stage);
+    public string StageName => CareText.StageAccessibleName(Stage);
 
     public string ToggleText => IsExpanded ? Loc.T("Card_HideDetails", "Hide details") : Loc.T("Card_ShowDetails", "Show details");
 
@@ -440,9 +448,38 @@ public partial record DueRow(
         _ => null,
     };
 
-    public static DueRow From(DueTask t) => new(
-        t.CaseId, t.Action, t.DueLabel, t.Time, t.IsLate, t.Title, t.PatientName, t.Meta, t.Status, t.Tone, t.Stage,
-        t.ActionLabel, t.IsPrimary, t.AccessibleName);
+    public static DueRow From(DueTask t, DateTimeOffset now)
+    {
+        var dueLabel = t.IsLate ? Loc.T("Task_Late", "Late") : Loc.T("Task_Due", "Due");
+        var time = t.DueAt.ToString("HH:mm", CultureInfo.CurrentCulture);
+        var (title, meta) = t.Kind switch
+        {
+            DueTaskKind.Observations => (Loc.T("Task_Observations", "Record observations"),
+                $"{CareText.Phase(CarePhaseKind.Anesthesia)} · {Loc.F("Task_Strip", "{0}-minute strip", (int)Math.Round(t.Interval.TotalMinutes))}"),
+            DueTaskKind.Redose when t.Dose is { } dose => (CareText.Redose(dose), dose.Detail),
+            DueTaskKind.PainScore => (Loc.T("Task_PainScore", "Pain score"),
+                $"{CareText.Phase(CarePhaseKind.Recovery)} · {Loc.F("Task_Every", "every {0} min", (int)DueTasks.PainScoreInterval.TotalMinutes)}"),
+            DueTaskKind.Bloodwork => (t.Stage is CareStage.Booked or CareStage.Prep
+                ? Loc.T("Task_PreopBloodwork", "Pre-op bloodwork")
+                : Loc.T("Task_Bloodwork", "Bloodwork review"), t.Panel),
+            _ => (Loc.T("Task_DischargeCall", "Discharge call"), $"{Loc.T("Task_PetParent", "Pet parent")} · {t.Owner}"),
+        };
+        var status = t.Tone == DueTone.Ready ? Loc.T("Task_ResultsReady", "Results ready")
+            : t.IsScheduled ? Loc.T("Task_Scheduled", "Scheduled")
+            : CareText.Countdown(t.DueAt, now);
+        var action = t.Action switch
+        {
+            DueAction.Record => Loc.T("DueAction_Record", "Record"),
+            DueAction.Score => Loc.T("DueAction_Score", "Score"),
+            DueAction.Prepare => Loc.T("DueAction_Prepare", "Prepare"),
+            DueAction.Review => Loc.T("DueAction_Review", "Review"),
+            _ => Loc.T("DueAction_Call", "Call"),
+        };
+        // Late and ready rows get the primary button; the rest are secondary.
+        return new(t.CaseId, t.Action, dueLabel, time, t.IsLate, title, t.PatientName, meta, status, t.Tone, t.Stage, action,
+            t.IsLate || t.Tone == DueTone.Ready,
+            $"{dueLabel} {time}, {title}, {t.PatientName} · {meta}, {status}");
+    }
 }
 
 /// <summary>"Due next" header line and the all-caught-up line under the empty table.</summary>
@@ -452,7 +489,7 @@ public partial record DueHeader(string Summary, string NextUp)
     {
         var next = NextSurgery.Of(cases, now, plannedPrepMinutes);
         var summary = rows.Count > 0
-            ? DueTasks.Summary(rows)
+            ? SummaryText(rows)
             : next is null
                 ? Loc.T("Task_Nothing", "Nothing due")
                 : Loc.F("Due_NothingBefore", "Nothing due before {0:HH:mm}", next.PlannedStart);
@@ -460,6 +497,21 @@ public partial record DueHeader(string Summary, string NextUp)
             ? Loc.T("Due_NothingPlanned", "Nothing else is planned today.")
             : Loc.F("Due_NextPrep", "Next: {0} prep at {1}", next.Case.Patient.Name, next.PrepStartsText);
         return new DueHeader(summary, nextUp);
+    }
+
+    /// <summary>"5 tasks before 14:00 · 1 overdue"; "Nothing due" when the list is empty.</summary>
+    public static string SummaryText(IReadOnlyCollection<DueTask> rows)
+    {
+        if (rows.Count == 0)
+        {
+            return Loc.T("Task_Nothing", "Nothing due");
+        }
+        var last = rows.Max(r => r.DueAt);
+        var head = rows.Count == 1
+            ? Loc.F("Task_OneTaskBefore", "1 task before {0:HH:mm}", last)
+            : Loc.F("Task_TasksBefore", "{0} tasks before {1:HH:mm}", rows.Count, last);
+        var late = rows.Count(r => r.IsLate);
+        return late > 0 ? $"{head} · {Loc.F("Task_OverdueCount", "{0} overdue", late)}" : head;
     }
 }
 
@@ -491,14 +543,25 @@ public partial record CareTimeCard(string Summary, IImmutableList<CareBar> Bars,
         {
             return null;
         }
+        var total = CareText.HoursMinutes(totals.Total);
         return new CareTimeCard(
-            totals.Summary,
-            totals.Rows.Select(r => new CareBar(r.Phase, r.Label, r.DurationText, r.PercentText, r.Fraction, r.Tooltip)).ToImmutableList(),
-            CareInsight.Of(list, now, plannedPrepMinutes)?.Text ?? "")
+            totals.PatientCount == 1
+                ? Loc.F("CareTime_SummaryOne", "{0} across 1 patient today", total)
+                : Loc.F("CareTime_Summary", "{0} across {1} patients today", total, totals.PatientCount),
+            totals.Rows.Select(r => new CareBar(r.Phase, CareText.Phase(r.Phase), CareText.HoursMinutes(r.Duration), r.PercentText, r.Fraction, CareText.Tooltip(r))).ToImmutableList(),
+            CareInsight.Of(list, now, plannedPrepMinutes) is { } insight ? InsightText(insight) : "")
         {
             ChecklistPatient = NextSurgery.Of(list, now, plannedPrepMinutes)?.Case.Patient.Name ?? "",
         };
     }
+
+    /// <summary>"Prep ran 31 minutes on average today, 6 minutes over plan."</summary>
+    public static string InsightText(CareInsight insight) => insight.DeltaMinutes switch
+    {
+        > 0 => Loc.F("Insight_Over", "Prep ran {0} minutes on average today, {1} minutes over plan.", insight.AverageMinutes, insight.DeltaMinutes),
+        < 0 => Loc.F("Insight_Under", "Prep ran {0} minutes on average today, {1} minutes under plan.", insight.AverageMinutes, -insight.DeltaMinutes),
+        _ => Loc.F("Insight_OnPlan", "Prep ran {0} minutes on average today, on plan.", insight.AverageMinutes),
+    };
 }
 
 /// <summary>Copy for the card grid's None state: no one today, or nobody under the chosen filter.</summary>

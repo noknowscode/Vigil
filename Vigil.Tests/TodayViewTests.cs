@@ -107,7 +107,7 @@ public class TodayViewTests
     [Test]
     public void DueRowsRouteToTheirScreensAndEmptyReadsAllCaughtUp()
     {
-        var rows = DueTasks.Of(Proto.Day, Proto.Now, Proto.Interval, Proto.Formulary).Select(DueRow.From).ToList();
+        var rows = DueTasks.Of(Proto.Day, Proto.Now, Proto.Interval, Proto.Formulary).Select(t => DueRow.From(t, Proto.Now)).ToList();
         rows.Select(r => r.Route).Should().Equal("Record", "Record", "Redose", "Record", "Record");
         rows[3].IsReady.Should().BeTrue();
         rows[4].IsHome.Should().BeTrue();
