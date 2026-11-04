@@ -631,9 +631,9 @@
   <data name="Sidebar_39.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Help center, coming soon</value></data>
   <data name="Sidebar_4.Content" xml:space="preserve"><value>Coming soon</value></data>
   <data name="Sidebar_40.Text" xml:space="preserve"><value>Help center</value></data>
-  <data name="Sidebar_41.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Monitoring, coming soon</value></data>
+  <data name="Sidebar_41.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>No monitor connected, coming soon</value></data>
   <data name="Sidebar_42.Content" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="Sidebar_43.Text" xml:space="preserve"><value>Monitoring on</value></data>
+  <data name="Sidebar_43.Text" xml:space="preserve"><value>No monitor connected</value></data>
   <data name="Sidebar_44.Text" xml:space="preserve"><value>Veterinarian</value></data>
   <data name="Sidebar_45.Content" xml:space="preserve"><value>Coming soon</value></data>
   <data name="Sidebar_46.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Account menu, coming soon</value></data>

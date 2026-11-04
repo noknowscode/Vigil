@@ -1,7 +1,8 @@
 <!--
   Top bar right cluster (docs/design/shell-and-tokens.md §9), placed in the Today and Patient care headers:
-  search field 340 x 40 with the "Ctrl K" keycap, and the alerts bell 40 x 40 with its unread dot. Both are
-  disabled "Coming soon" (SPEC-v2 decision 1): there is no search or alert feed yet.
+  search field 340 x 40 with the "Ctrl K" keycap, and the alerts bell 40 x 40. Both are disabled "Coming soon"
+  (SPEC-v2 decision 1, D6): there is no search or alert feed yet, so nothing is ever unread and the bell carries no
+  unread dot (the design's red dot would claim alerts the app does not have).
 -->
 <UserControl x:Class="Vigil.Controls.TopBarCluster"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -28,11 +29,6 @@
       <Button x:Uid="TopBarCluster_6" Style="{StaticResource ButtonIconSecondary}" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="Alerts, coming soon">
         <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconBell}" Foreground="{ThemeResource InkBrush}" />
       </Button>
-      <!-- Unread dot: 8 px at top 8 / right 9, ringed 2 px in the surface colour (the 12 px ring box sits 2 px further out). -->
-      <Grid Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,6,7,0" IsHitTestVisible="False">
-        <Ellipse Fill="{ThemeResource Surface1Brush}" />
-        <Ellipse Width="8" Height="8" Fill="{ThemeResource PhaseErrorSolidBrush}" />
-      </Grid>
     </Grid>
   </Grid>
 </UserControl>

@@ -196,17 +196,17 @@
       </Grid>
     </StackPanel>
 
-    <!-- Monitoring pill: rendered disabled (no monitor connection; SPEC-v2 Unresolved Questions). -->
-    <Grid x:Uid="Sidebar_41" Grid.Row="6" Background="Transparent" AutomationProperties.Name="Monitoring, coming soon">
+    <!-- Monitoring pill (D6): disabled, because Vigil has no monitor link (SPEC.md). It says so instead of the design's
+         "Monitoring on": a hollow grey dot (all the icon rail shows) and muted text. -->
+    <Grid x:Uid="Sidebar_41" Grid.Row="6" Background="Transparent" AutomationProperties.Name="No monitor connected, coming soon">
       <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_42" Content="Coming soon" /></ToolTipService.ToolTip>
       <Border Style="{StaticResource PillSurface}">
         <StackPanel Orientation="Horizontal" Height="20">
           <Grid Width="14" Height="14" VerticalAlignment="Center" Margin="-3,0,0,0">
-            <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Opacity="0.18" />
-            <Ellipse Width="8" Height="8" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" />
+            <Ellipse Width="8" Height="8" Stroke="{ThemeResource IconMutedBrush}" StrokeThickness="1.5" />
           </Grid>
           <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <TextBlock x:Uid="Sidebar_43" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}}" Text="Monitoring on" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" Margin="7,0,0,0" VerticalAlignment="Center" />
+            <TextBlock x:Uid="Sidebar_43" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}}" Text="No monitor connected" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Margin="7,0,0,0" VerticalAlignment="Center" />
           </Grid>
         </StackPanel>
       </Border>
