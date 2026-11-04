@@ -27,7 +27,7 @@ public partial record SettingsModel(
             }
         });
 
-    public IState<bool> ReduceMotion => State.Value(this, () => (Preferences as Preferences)?.ReduceMotionSetting ?? Preferences.ReduceMotion)
+    public IState<bool> ReduceMotion => State.Value(this, () => Preferences.ReduceMotionSetting)
         .ForEach(async (value, ct) => await SavePreferenceAsync(c => Preferences.SetReduceMotionAsync(value, c), ct));
 
     /// <summary>Index into 3 / 5 / 10 minutes.</summary>

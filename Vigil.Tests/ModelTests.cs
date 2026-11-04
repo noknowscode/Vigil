@@ -356,4 +356,39 @@ public class SettingsModelTests : ModelTestBase
         await UntilAsync(async () => await model.PlannedPrepMinutes == "180");
         (await model.PlannedPrepMinutes).Should().Be("180", "text that is not a number puts back the saved value");
     }
+
+    [Test]
+    public async Task TheReduceMotionSwitchShowsTheInAppSettingOfAnyPreferences()
+    {
+        // Not the Preferences class: the model reads the setting through IPreferences alone.
+        var preferences = new PlatformReducesMotion();
+        var model = new SettingsModel(null!, null!, preferences, Store, Clock, null!, NullLogger<SettingsModel>.Instance);
+
+        (await model.ReduceMotion).Should().BeFalse("the platform's setting is not the switch's");
+
+        await model.ReduceMotion.UpdateAsync(_ => true, CancellationToken.None);
+        await UntilAsync(() => Task.FromResult(preferences.ReduceMotionSetting));
+        preferences.ReduceMotionSetting.Should().BeTrue();
+    }
+
+    /// <summary>Preferences on a platform that asks for reduced motion, with the in-app switch off.</summary>
+    private sealed class PlatformReducesMotion : IPreferences
+    {
+        public TimeSpan ReadingInterval => TimeSpan.FromMinutes(5);
+        public bool ReduceMotion => true;
+        public bool ReduceMotionSetting { get; private set; }
+        public Signal Changed { get; } = new();
+        public string ClinicianName => "";
+        public string ClinicianFirstName => "";
+        public int PlannedPrepMinutes => Preferences.DefaultPlannedPrepMinutes;
+        public ValueTask SetReadingIntervalAsync(int minutes, CancellationToken ct) => ValueTask.CompletedTask;
+        public ValueTask SetReduceMotionAsync(bool value, CancellationToken ct)
+        {
+            ReduceMotionSetting = value;
+            return ValueTask.CompletedTask;
+        }
+        public ValueTask SetClinicianNameAsync(string name, CancellationToken ct) => ValueTask.CompletedTask;
+        public ValueTask SetClinicianFirstNameAsync(string name, CancellationToken ct) => ValueTask.CompletedTask;
+        public ValueTask SetPlannedPrepMinutesAsync(int minutes, CancellationToken ct) => ValueTask.CompletedTask;
+    }
 }

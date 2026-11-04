@@ -11,6 +11,9 @@ public interface IPreferences
     /// <summary>In-app setting, OR'ed with the platform's (Skia desktop always reports animations enabled).</summary>
     bool ReduceMotion { get; }
 
+    /// <summary>The in-app setting alone, without the platform's: what the Settings switch shows.</summary>
+    bool ReduceMotionSetting { get; }
+
     /// <summary>Raised after a change; feeds that depend on preferences reload from it.</summary>
     Signal Changed { get; }
 
@@ -87,7 +90,6 @@ public sealed class Preferences : IPreferences
     public ValueTask SetPlannedPrepMinutesAsync(int minutes, CancellationToken ct) =>
         SaveAsync(_value with { PlannedPrepMinutes = Math.Clamp(minutes, 5, 180) }, ct);
 
-    /// <summary>The user's own setting, without the platform's.</summary>
     public bool ReduceMotionSetting => _value.ReduceMotion;
 
     private async ValueTask SaveAsync(PreferencesFile value, CancellationToken ct)
