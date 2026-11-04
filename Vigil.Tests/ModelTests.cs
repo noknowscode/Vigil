@@ -166,12 +166,11 @@ public class RecordModelTests : ModelTestBase
         var model = Open(oscar);
         (await model.Case)!.ActiveSection.Should().Be(RecordPane.Preop, "a booked case opens on preparation");
 
-        var opening = model.OpenPane(RecordPane.Labs, CancellationToken.None).AsTask();
-        await opening;
+        await model.OpenPane(RecordPane.Labs, CancellationToken.None);
 
         Nav.Paths.Should().Equal("!Labs");
         Nav.Data.Should().Equal(new CaseRef(oscar.Id));
-        (await model.Pane).Should().BeEmpty("the drawer closed without a choice");
+        (await SettledAsync(model.Pane, p => p == "")).Should().BeEmpty("the drawer closed without a choice");
     }
 
     [Test]
@@ -182,6 +181,7 @@ public class RecordModelTests : ModelTestBase
         Nav.Answer(new PaneChoice(RecordPane.Dose));
 
         await Open(knuckles).OpenPane(RecordPane.Drugs, CancellationToken.None);
+        await PathsAsync(2);
 
         Nav.Paths.Should().Equal("!Drugs", "!Dose");
     }
@@ -195,7 +195,9 @@ public class RecordModelTests : ModelTestBase
         Nav.Answer(new PaneChoice(PaneChoice.SignOff)).Answer(new PaneChoice(PaneChoice.EditCase));
 
         await model.OpenPane(RecordPane.Recovery, CancellationToken.None);
+        await PathsAsync(2);
         await model.OpenPane(RecordPane.Preop, CancellationToken.None);
+        await PathsAsync(4);
 
         Nav.Paths.Should().Equal("!Recovery", "!SignOff", "!Preop", "!EditCase");
         Nav.Data[1].Should().Be(new CaseRef(milo.Id));
@@ -222,6 +224,7 @@ public class RecordModelTests : ModelTestBase
         Nav.Answer(new PaneChoice(PaneChoice.DeleteCase)).Answer(true);
 
         await Open(oscar).OpenPane(RecordPane.Preop, CancellationToken.None);
+        await PathsAsync(3);
 
         (await Store.GetAsync(oscar.Id, CancellationToken.None)).Should().BeNull();
         Nav.Paths.Should().Equal("!Preop", "!xxxxmessagedialogxxxx", "-");
@@ -235,10 +238,14 @@ public class RecordModelTests : ModelTestBase
         Nav.Answer(new PaneChoice(PaneChoice.DeleteCase)).Answer(false);
 
         await Open(oscar).OpenPane(RecordPane.Preop, CancellationToken.None);
+        await PathsAsync(2);
 
         (await Store.GetAsync(oscar.Id, CancellationToken.None)).Should().NotBeNull();
         Nav.Paths.Should().Equal("!Preop", "!xxxxmessagedialogxxxx");
     }
+
+    /// <summary>What a drawer hands back is carried out after the command ends: waits for the record's next requests.</summary>
+    private async Task PathsAsync(int count) => await UntilAsync(() => Task.FromResult(Nav.Paths.Count >= count));
 
     [Test]
     public void TheNavHighlightsOnlyItsOwnItems()

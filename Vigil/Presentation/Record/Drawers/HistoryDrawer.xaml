@@ -11,7 +11,8 @@
         xmlns:local="using:Vigil.Presentation"
         xmlns:controls="using:Vigil.Controls"
         Placement="Full"
-        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}">
+        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}"
+        controls:FlyoutFocus.Restores="True">
   <Grid RowDefinitions="Auto,*" utu:SafeArea.Insets="VisibleBounds">
     <controls:DrawerHeader x:Uid="HistoryDrawer_1" Title="Visit history" CloseCommand="{Binding Close}" />
     <mvux:FeedView Grid.Row="1" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"

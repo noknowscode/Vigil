@@ -88,7 +88,10 @@ and handover, Visit history, Lab results) are `!` routes ("!Preop", "!Dose", "!D
 "!History", "!Labs"), each a Flyout view in the Toolkit's DrawerFlyoutPresenter from the right (640 px, the whole window
 when narrower) with its own model. A drawer that closes on a step for the record (open another pane, Sign off, the case
 details, Delete case) hands it back to RecordModel as a PaneChoice. The Dose drawer shares DoseModel with the Due next
-redose page, whose route is now "Redose". Escape, Close and a tap on the scrim close a drawer; the flyout returns focus.
+redose page, whose route is now "Redose". Escape, Close and a tap on the scrim close a drawer, and focus returns to the
+control that opened it (Controls/FlyoutFocus.cs: Uno's flyout left it on the page, measured with --vigil-focuslog).
+RecordModel.OpenPane ends once the drawer shows and follows up on what it hands back, so the buttons that share the
+command stay enabled to take that focus.
 Reason: the approved refactor in docs/UNO-AUDIT.md: RecordModel drove seven panes and RecordPage.xaml was 903 lines,
 with the pane width clamp and focus handling in code-behind. Measured: the Toolkit 11 presenter renders on desktop
 (it did not with Toolkit 9.1.3, MenuFlyout.xaml), and a pixel DrawerLength is min(length, window), the old clamp.

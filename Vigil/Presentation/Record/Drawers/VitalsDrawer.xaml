@@ -12,7 +12,8 @@
         xmlns:local="using:Vigil.Presentation"
         xmlns:controls="using:Vigil.Controls"
         Placement="Full"
-        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}">
+        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}"
+        controls:FlyoutFocus.Restores="True">
   <Grid RowDefinitions="Auto,Auto,*" utu:SafeArea.Insets="VisibleBounds">
     <controls:DrawerHeader x:Uid="VitalsDrawer_1" Title="Record observations" CloseCommand="{Binding Close}" />
     <muxc:InfoBar x:Uid="VitalsDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource InsetX20}">

@@ -12,7 +12,8 @@
         xmlns:domain="using:Vigil.Domain"
         xmlns:controls="using:Vigil.Controls"
         Placement="Full"
-        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}">
+        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}"
+        controls:FlyoutFocus.Restores="True">
   <Grid RowDefinitions="Auto,Auto,*" utu:SafeArea.Insets="VisibleBounds">
     <controls:DrawerHeader x:Uid="DoseDrawer_1" Title="Administer dose" CloseCommand="{Binding Cancel}" />
     <TextBlock Grid.Row="1" Margin="{StaticResource Inset24x16}" Text="{Binding Patient}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextTrimming="CharacterEllipsis" />

@@ -27,28 +27,48 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
         return "";
     });
 
-    /// <summary>Opens a pane's drawer over the record, then carries out what the drawer hands back when it closes.</summary>
+    /// <summary>
+    /// Opens a pane's drawer over the record; once it closes, <see cref="FollowAsync"/> carries out what it handed back.
+    /// The command ends when the drawer shows, not when it closes: an MVUX command is disabled while it runs, and the
+    /// record nav and header buttons that share it would sit disabled under the drawer, out of reach of the focus the
+    /// drawer gives back (FlyoutFocus).
+    /// </summary>
     public async ValueTask OpenPane(string section, CancellationToken ct)
     {
-        string? next = section;
-        while (next is not null && next is not (PaneChoice.SignOff or PaneChoice.EditCase or PaneChoice.DeleteCase))
+        await Pane.UpdateAsync(_ => section, ct);
+        var drawer = await Navigator.NavigateRouteForResultAsync<PaneChoice>(this, "!" + section, data: new CaseRef(Ref.Id));
+        _ = FollowAsync(section, drawer);
+    }
+
+    /// <summary>When the drawer closes: the next pane, the sign-off or case-details sheet, Delete case, or nothing.</summary>
+    private async Task FollowAsync(string section, NavigationResultResponse<PaneChoice>? drawer)
+    {
+        try
         {
-            await Pane.UpdateAsync(_ => next, ct);
-            var choice = await Navigator.NavigateRouteForResultAsync<PaneChoice>(this, "!" + next, data: new CaseRef(Ref.Id), cancellation: ct).AsResult();
-            next = choice.SomeOrDefault()?.Next;
+            var next = drawer?.Result is { } closing ? (await closing).SomeOrDefault()?.Next : null;
+            await Pane.UpdateAsync(_ => "", CancellationToken.None);
+            switch (next)
+            {
+                case null:
+                    break;
+                case PaneChoice.SignOff:
+                    await Navigator.NavigateRouteAsync(this, "!SignOff", data: new CaseRef(Ref.Id));
+                    break;
+                case PaneChoice.EditCase:
+                    await Navigator.NavigateRouteAsync(this, "!EditCase", data: new CaseRef(Ref.Id));
+                    break;
+                case PaneChoice.DeleteCase:
+                    await DeleteCase(CancellationToken.None);
+                    break;
+                default:
+                    await OpenPane(next, CancellationToken.None);
+                    break;
+            }
         }
-        await Pane.UpdateAsync(_ => "", ct);
-        switch (next)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            case PaneChoice.SignOff:
-                await Navigator.NavigateRouteAsync(this, "!SignOff", data: new CaseRef(Ref.Id), cancellation: ct);
-                break;
-            case PaneChoice.EditCase:
-                await Navigator.NavigateRouteAsync(this, "!EditCase", data: new CaseRef(Ref.Id), cancellation: ct);
-                break;
-            case PaneChoice.DeleteCase:
-                await DeleteCase(ct);
-                break;
+            // Not awaited by the command: a failure is logged, and the record stays open with no drawer.
+            Logger.LogWarning(ex, "Following the {Pane} pane of case {CaseId} failed.", section, Ref.Id);
         }
     }
 
