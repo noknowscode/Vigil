@@ -14,18 +14,23 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     /// <summary>
     /// The pane whose drawer is open ("" when none): the record nav highlights it. A "Due next" action opens the record
-    /// on its task's pane (<see cref="CaseRefPane"/>); this state's initializer runs once per model, as the page first
-    /// binds it, so it is where that drawer is opened.
+    /// on its task's pane (<see cref="CaseRefPane"/>); this state's initializer is where that drawer is opened, once:
+    /// two first subscribers can both run the initializer, which opened the drawer twice.
     /// </summary>
     public IState<string> Pane => State.Value(this, () =>
     {
         if (Ref is CaseRefPane landing)
         {
-            _ = LandAsync(landing.Pane);
+            if (Interlocked.Exchange(ref _landed, 1) == 0)
+            {
+                _ = LandAsync(landing.Pane);
+            }
             return landing.Pane;
         }
         return "";
     });
+
+    private int _landed;
 
     /// <summary>
     /// Opens a pane's drawer over the record; once it closes, <see cref="FollowAsync"/> carries out what it handed back.
