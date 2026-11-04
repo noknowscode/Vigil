@@ -1,70 +1,58 @@
-# HANDOFF — Vigil: v2 follow-through (data entry, perf, screen restyle, polish)
-Updated: 2026-10-28 (America/Montreal)
+# HANDOFF — Vigil: A pass (record drawers, case correction, cuts, Android emulator CI)
+Updated: 2026-11-04
 
 ## Where we are
-The v2 redesign (SPEC-v2.md) is built; `docs/COMPLETENESS.md` graded it Complete with gaps (f09f8a3). This session
-closed most of the remaining Majors in code:
-- New patient now captures room, start, length, fasting and parent notified.
-- Fluids start and stop from the record's Medication pane.
-- The avatar shows two initials from a new first-name setting.
-- Settings, New patient, Sign off, Dose, Agenda, Parent preview, Patients and the record panes all use v2 styling.
-- The details expansion animates its height.
-- Tracked font copies replace the letter-spacing Skia ignores.
-- Clover.xaml, CaseCards, CareGreeting and LiveBandView were deleted.
-- A Release timing run measured page changes (docs/evidence/perf-2026-10-28/RESULTS.md).
-
-The App MCP visual pass ran on 2026-10-29 (docs/evidence/runtime-2026-10-29/RESULTS.md). It proved the new
-New patient fields, fluids from start to stop, the AO avatar, the details animation, and that the tracked
-numbers match the prototype to within 1 px. It also found and fixed square-filled status strips, placeholder
-values that looked filled in, and the ruler label overlap. The sample patient Bella is now Knuckles (user request).
-
-## Code-review fixes (2026-11-01, branch feat/production-readiness)
-The 2026-11-01 review's Vigil findings are fixed: the pre-op checklist saves field by field (Mark reviewed survives),
-Today's next surgery is today's booking only, a booked case can be deleted (Preparation pane, confirmed; signed
-records cannot), an unreadable case file is moved to `cases/damaged` with a shell warning, fault and timing hooks are
-Debug-only (`-p:VigilPageTimer=true` for a Release timing build), the dose entry and sidebar feeds are shared, the
-record view no longer rebuilds every second (`CaseTimers`), times show in the local zone, store failures read as
-sentences (details logged), Load sample day is all-or-nothing, and Settings sets the planned prep time. Model
-commands now have tests (`Vigil.Tests/ModelTests.cs`, a temp-folder store and a fixed clock). The build fails on
-warnings and on .editorconfig style rules. "Coming soon" controls stay (docs/DECISIONS.md D6).
+The A pass of the production-readiness round (uno-lab docs/production-readiness/A-GRADE-PLAN.md) is on
+`feat/production-readiness` (PR to main, CI on every push):
+- **Record split (D8).** Each of the record's seven panes is a `!` route to a Flyout view in the Toolkit
+  `DrawerFlyoutPresenter` (`Presentation/Record/Drawers/`), with its own model over a shared `CaseDrawer`. RecordModel
+  keeps the page and carries out what a drawer hands back (`PaneChoice`: next pane, Sign off, Edit case details, Delete
+  case); a Due next task lands on its drawer. `RecordPage.xaml` 903 → 439 lines, `RecordModel` 306 → 163, no
+  code-behind. Focus returns to the opener (`Controls/FlyoutFocus.cs`). The Dose drawer shares DoseModel with the Due
+  next page, whose route is now "Redose".
+- **Case correction (D9, proposed).** Edit case details (Preparation drawer, until sign-off) reopens the case form
+  (`Presentation/CaseForm/CaseFormPage`, shared with New patient). Each change is logged in the case (`Corrections`),
+  shown first in Visit history and exported; the dose calculator follows the corrected weight.
+- **Cut (D7, proposed, supersedes D6).** The 11 "Coming soon" controls and their copy are gone (the top bar cluster with
+  them); "See the prep checklist" opens the next booked case's Preparation drawer; "No monitor connected" stays.
+- **Android readiness.** 144 `FallbackValue=Collapsed`; localized stepper names; French "Clair" (`tools/fr.json` gained
+  `@keys` for per-key French); disabled buttons fade.
+- **Tests.** 223 (was 159): every page and drawer model, through a recording navigator (`Vigil.Tests/TestNavigation.cs`).
+- **CI.** Android emulator smoke job (shared recipe; marker "Nothing in surgery", settle 45 s); workflow concurrency
+  (a newer push cancels the run it supersedes, never on main where the Pages deploy runs).
 
 ## Last verified state
-- Build: desktop Debug and Release, 0 warnings (enforced: TreatWarningsAsErrors). Tests 156/156 (2026-11-01).
-- Runtime: timing runs only (Release and Debug, no devserver). Release page changes reach first frame in 0.1–2.0 s;
-  startup takes 14.7 s to a settled Today. Both harness runs exited 0xE0434352 after `Application.Exit()`.
-- Git: `archive/local-2026-10-28`, last commit d052fb9, pushed.
-- Lint: CARD 0 · HEX 0 · BACKBAR 0 · CODEBEHIND 2 (RecordPage pane SizeChanged/Escape) · ICON 2 (CareMark logo).
+- Build: desktop Debug and Release 0 warnings; WebAssembly Release publish (trim-analysis IL2026/IL2104 only, kept as
+  warnings by design). Tests 223/223 (stable over 6 runs). Lint gate: CARD, HEX, TOKENTHEME, BACKBAR, CODEBEHIND,
+  OVERLAY, RESPONSIVE, BUILTIN, ICON all 0. Automation names 25.7 per 1,000 XAML lines (130 / 5,041).
+- Runtime: desktop (Xvfb, software renderer) and WebAssembly (headless Chromium), docs/evidence/a-pass-2026-11-04.
+  Keyboard walk with `--vigil-focuslog` (new Debug hook).
+- CI: emulator smoke green on run 41848463515 (marker after 22 s, frame not blank, no crash); the first run
+  (41839566033) had a black capture, hence the 45 s settle. Runs 41855113111 and 41863962685 failed the Android publish on
+  a doc comment (CS1570, fixed in 2e0fcdc). See the report for the run at the head.
+- Docs: docs/COMPLETENESS.md (A pass: 0 Blockers, 0 functional Majors, 2 head Majors, 10 Minors), docs/UNO-AUDIT.md
+  (follow-up section), docs/DECISIONS.md (D7, D8, D9).
 
-## Guidance applied
-| Skill / rule / decision | Applied at (file:line) |
-|---|---|
-| uno-material lightweight keys (OutlinedTextBox*, ComboBox*) | Vigil/Themes/Controls.xaml:11 |
-| Card surfaces via CardContentControl (PanelCardStyle) | Vigil/Themes/Tokens.xaml (PanelCardStyle), Settings/NewCase/SignOff/Dose/Agenda/ParentPreview pages |
-| NavigationBar for back (lint BACKBAR) | Vigil/Presentation/Parent/ParentPreviewPage.xaml |
-| MVUX command parameters from states (StartFluids) | Vigil/Presentation/Record/RecordModel.cs (StartFluids) |
-| User: Messages out of MVP, stays disabled | SPEC-v2.md capability table |
-Read, not applied: none.
+## Open (owner decisions)
+- Live pulse on Today costs about 20 % of a core while a case is under anesthesia (Forever storyboard): keep the
+  design's pulse, or stop it after a few cycles. Left as is.
+- D7 (the cut) and D9 (correction until sign-off, logged, no reason or second signature) are proposed: confirm.
+- A rethrown launch failure leaves a windowless process on desktop (exit after reporting?).
+- Test packages behind; FluentAssertions 8 changes licence.
 
-## Next actions (in order)
-1. Investigate the 0xE0434352 exit after `Application.Exit()` in PageTimer, and check that a normal window
-   close exits 0.
-2. Startup (14.7 s Release) and the first Settings visit (2.0 s): profile with `dotnet-trace`, or split the timing
-   into time to first frame.
-3. Check Settings and the forms at 700 px, then confirm the Agenda hides the hour label under the Now pill.
-4. Re-run `uno-completeness-audit` and update `docs/COMPLETENESS.md`.
-5. Still open from the audit: Android/WASM runtime proof, a UI test suite, a drawer below 760 px, and press scale
-   under reduced motion.
+## Next actions
+1. Confirm the CI run at the head is green on every job, including the emulator smoke.
+2. Minors left in docs/COMPLETENESS.md: Today's Tab order alternates between Due next and the care-time card; at 390 px
+   the record hero clips and the menu drawer opens 107 px down; New patient errors sit in a footer; mixed
+   "Anaesthesia"/"Anesthesia"; the Linux CSV picker failure reads "Export cancelled."; startup time.
+3. At 390 px a drawer leaves a 42 px strip of scrim (DrawerLength 640 against the window); decide if phones should get
+   the full width.
+4. iOS and WinAppSDK heads are CI builds only.
 
-## Open questions
-- The disabled Records, Reports, Help, search, bell and Monitoring pill stay visible by the owner's decision
-  (docs/DECISIONS.md D6).
-- Delete case is offered while a case is booked only (before induction); the store would delete any unsigned case.
-- Native French review of the 49 new strings.
-- The preview surname reads "Ehok" (typed into the running app during the pass, not by an automation step); it
-  lives only in the preview data folder.
-
-## Relaunch
-cd C:\Users\Platform006\Vigil; dotnet build Vigil/Vigil.csproj -f net10.0-desktop
-Timing run: build Release with `-p:VigilPageTimer=true` (shipped builds have no timing hook), then
-$env:VIGIL_PERF="<path>.csv"; Vigil\bin\Release\net10.0-desktop\Vigil.exe (exits by itself).
-App MCP: uno_app_start (Debug, devserver). Ask the user before any launch.
+## Relaunch (this Linux box)
+Build: `dotnet build Vigil/Vigil.csproj -f net10.0-desktop -p:VigilTargetFrameworks=net10.0-desktop`
+Run: `APP_NO_HOTDESIGN=1 VIGIL_X11_RENDERER=software DISPLAY=:<n> dotnet Vigil/bin/Debug/net10.0-desktop/Vigil.dll
+--vigil-seed=sample --vigil-now=12:42:26 --clover-size=1280x800 --vigil-route=Record:Monitor [--vigil-focuslog]`.
+Send keys without `xdotool windowfocus` while a sheet is open (window activation light-dismisses it).
+WebAssembly: `dotnet publish Vigil/Vigil.csproj -f net10.0-browserwasm -c Release -p:VigilTargetFrameworks=net10.0-browserwasm -o <dir>`,
+serve `<dir>/wwwroot`, drive with Playwright; the first screen takes 40-60 s in headless Chromium.
