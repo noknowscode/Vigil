@@ -7,24 +7,27 @@ under Xvfb (`VIGIL_X11_RENDERER=software`), driven with xdotool and the Debug ho
 `--vigil-theme`, `--vigil-route`, `VIGIL_FAULT`). Every write was checked in the case JSON files and the preferences
 file, and after a relaunch. Evidence grades: R runtime, C code, I inferred, X not checked.
 
-Verdict: **Incomplete** (2 Blockers, 2 functional Majors, 4 head Majors, 17 Minors)
+Fix pass 2026-11-04 (7741ede, 69d1a6f): both Blockers fixed and proven at runtime; see Findings > Fixed. The rest of
+this report is the audit at f376607, with the lines the fixes changed updated.
+
+Verdict: **Complete with gaps** (0 Blockers, 2 functional Majors, 4 head Majors, 17 Minors)
 
 Safe to show (desktop, R): Today, Patients, Agenda, Settings; open a record from the hero, a card, Due next and the
 Agenda; New patient with its schedule fields; pre-op checks, ASA and Induce; record observations; administer a dose,
-including the out-of-range confirmation; sign off a case that is already in recovery (the sample day's Milo); theme,
-names and interval surviving a relaunch; error and Retry; the empty day.
-Keep off screen: ending anesthesia on any case (no control reaches it); the "Monitoring on" pill and the bell's dot;
-CSV export on Linux; every head except desktop.
+including the out-of-range confirmation; end anesthesia, recovery, sign-off and export of a case created in the app
+(fix pass); theme, names and interval surviving a relaunch; error and Retry; the empty day.
+Keep off screen: CSV export on a Linux box without a desktop portal; every head except desktop.
 
 ## Inventory
 
 Screens: 11 intended, 11 present, 0 unreachable as pages, 0 missing (source: SPEC-v2 Spec Graph). Shell, Today, Patients,
 Agenda, Record (panes Preop, Monitor, Dose, Drugs, Recovery, History, Labs), ParentPreview, Dose, SignOff, Settings,
-NewCase `!`, Menu `!` (below 760). The Recovery pane cannot be opened while a case is under anesthesia (Blocker 1).
+NewCase `!`, Menu `!` (below 760). The Recovery pane opens from End anesthesia in the procedure header while a case is
+under anesthesia, and from the stage card's button in recovery and once signed (fix pass).
 Records, Messages, Reports and Help center have no screen by decision (SPEC-v2 decision 1, D6).
 Routes: 11 registered (Main + 10 nested), every one with a trigger; 0 dead references.
 Interactions: 98 XAML lines with `Command=` / `Navigation.Request`; 0 dead by construction; 11 disabled "Coming soon"
-controls (D6); 2 that show a state the app does not have (the "Monitoring on" pill, the bell's unread dot).
+controls (D6); 0 that show a state the app does not have (the pill and the bell's dot were fixed in the fix pass).
 Critical workflows (derived from SPEC.md flows 1-6 and SPEC-v2):
 1. Open a record (hero, card, Due next, Agenda, Patients, sidebar Anesthesia) and Back
 2. New patient to record
@@ -38,9 +41,9 @@ Critical workflows (derived from SPEC.md flows 1-6 and SPEC-v2):
 
 | # | Area | Status | Evidence | Blockers | Majors | Minors | Note |
 |---|---|---|---|---|---|---|---|
-| 1 | Screens | Partial | R | 0 | 0 | 0 | 11/11 present; Recovery pane unreachable for a live case (counted under Navigation) |
-| 2 | Navigation | Broken | R | 1 | 0 | 2 | No path to End anesthesia; sidebar highlights two items after Anesthesia |
-| 3 | Interactions | Simulated | R | 1 | 1 | 0 | "Monitoring on" and the bell's dot show a state the app lacks; 11 "Coming soon" controls |
+| 1 | Screens | Complete | R | 0 | 0 | 0 | 11/11 present; Recovery pane reachable in every stage (fix pass) |
+| 2 | Navigation | Partial | R | 0 | 0 | 2 | End anesthesia reachable (fix pass); sidebar highlights two items after Anesthesia |
+| 3 | Interactions | Partial | R | 0 | 1 | 0 | 11 "Coming soon" controls (D6); the pill and the bell no longer claim a monitor or alerts (fix pass) |
 | 4 | Logic | Complete | R | 0 | 0 | 1 | Dose math, range check, validation proven; chart caption ignores the interval |
 | 5 | Data | Partial | R | 0 | 1 | 1 | Writes persist across a relaunch; no case can be edited after creation |
 | 6 | States | Complete | R | 0 | 0 | 0 | Error + Retry and empty day proven; loading skeleton not captured |
@@ -64,12 +67,43 @@ Critical workflows (derived from SPEC.md flows 1-6 and SPEC-v2):
 | 3. Pre-op + Induce | R (5 checks + ASA I in the store; Induce → Status Anesthetized 12:48:26, Anesthesia 1 → 2) | X | X | X | X |
 | 4. Record observations | R (HR stepped to 98, readings 13 → 14, overdue banner cleared, next 4:56) | X | X | X | X |
 | 5. Administer a dose | R (Meloxicam 0.2 mg/kg × 18.4 kg ÷ 5 = 0.74 mL SC stored; 2 mg/kg raised the confirmation; Change dose wrote nothing) | X | X | X | X |
-| 6. End anesthesia, recovery, sign off, export | **Broken** (no control opens End anesthesia; Milo, seeded in recovery: sternal, pain 2, sign-off → Signed by Dr. Bergeron; CSV write X) | X | X | X | X |
+| 6. End anesthesia, recovery, sign off, export | R, fix pass (Ziggy created in the app, induced, 2 readings; header End anesthesia → Recovery pane → End anesthesia: Status Recovery, EndedAt 03:41:03; extubated, sternal, pain 1, 37.8 °C, notes; Sign record → Signed by Dr. Okafor; relaunch, Review record → Export CSV wrote the CSV through a portal stand-in) | X | X | X | X |
 | 7. Settings + relaunch | R (first name, surname, 3 min, Dark in preferences.json; relaunch shows Dark, "Dr. Okafor", AO, 3-minute strip, Ziggy and the signed Milo) | X | X | X | X |
 
 ## Findings
 
-### Blockers
+### Fixed (fix pass, 2026-11-04)
+- [Navigation] No control ended anesthesia (was Blocker 1). Fix 7741ede: the procedure header shows End anesthesia
+  (secondary-l, the design's button) ahead of Pre-op and Administer dose while the case is under anesthesia; it opens the
+  Recovery pane, where the existing button ends anesthesia under its "vaporizer off" note (`RecordPage.xaml:219-239`).
+  Below 600 px it sits above the pair. Chosen over the two audit candidates because both break the measured hero tray at
+  1440: a sixth RecordNav item needs 42 px the fixed 434 px identity column does not have, and a second stage-card
+  button leaves the status card about 3 px short of its content while a reading is overdue (measured on the 1440 render). The same commit keeps the
+  stage card's button enabled on a signed record: it read "Review record" but was bound to `CanChange`, so once the pane
+  was closed or the app relaunched, Export CSV was out of reach. No unit test: the bug was a missing control in XAML
+  (the model's `OpenPane`/`EndAnesthesia` already worked), so the proof is runtime - R (Debug desktop, Xvfb, xdotool,
+  1440x1000, empty store: New patient Ziggy 12.6 kg → file Scheduled; 5 checks + ASA I → `Preop` all true, Asa 1;
+  Induce → Anesthetized, InducedAt 03:38:21; HR 92 / RR 12 / SpO₂ 98 / 110/62 recorded → 1 reading, MAP 78 calculated
+  (a second reading later); header End anesthesia → Recovery & handover pane; End anesthesia → Recovery, EndedAt
+  03:41:03; Extubated now, Sternal now, pain 1, 37.8 °C, notes → `Recovery` in the file; Sign off, confirm, Sign record →
+  Signed by Dr. Okafor, SignedAt 03:42:18; relaunch: Today "Every record from today is signed", Ziggy's gantt row, Signed
+  out 1; Record → Review record → Export CSV → "Saved Ziggy-2026-11-04-anesthesia." and a 262-byte CSV with both
+  readings, written by the app through a minimal FileChooser portal stand-in on a private session bus. Header layout seen
+  at 1440, 700 (one row, dark) and 390 (End anesthesia above the pair); a booked or signed record keeps Pre-op and
+  Administer dose where they were).
+- [Interactions] "Monitoring on" and the bell's unread dot stated things the app does not do (was Blocker 2). Fix
+  69d1a6f, within D6 (both stay disabled "Coming soon" items): the pill reads "No monitor connected" (French "Aucun
+  moniteur connecté") in muted ink with a hollow grey ring, which is also all the icon rail shows, and its automation
+  name says the same; the bell has no unread dot, since nothing can be unread without an alert feed. XAML only, so no
+  unit test - R (light and dark at 1440 with the empty store and with `VIGIL_FAULT=store-read-x6`, dark with the sample
+  day at 900 px (rail): the pill shows the grey ring and the muted text, never green or "on"; no dot on the bell).
+- Seen during the fix pass, not graded: the record nav still has no Recovery item, so with the Recovery pane open it
+  keeps the previous item highlighted (the toolkit logs "failed to transition to the 'Recovery' state"; listed below as a
+  Minor); the export's suggested name carries no `.csv`, so a portal that keeps the name saves the file without the
+  extension; once, the first press of the header End anesthesia right after recording a reading did not open the pane
+  (the second did; not reproduced in three further tries).
+
+#### As found at f376607
 - [Navigation] No control ends anesthesia. "End anesthesia" lives in the Recovery pane (`RecordPage.xaml:711`), and nothing
   opens that pane while a case is under anesthesia: RecordNav has five items and no Recovery (`Controls/RecordNav.xaml:55-108`),
   the stage button opens Monitor (`RecordViews.cs:231`), and Due next opens Recovery only for pain-score and discharge-call
@@ -84,6 +118,9 @@ Critical workflows (derived from SPEC.md flows 1-6 and SPEC-v2):
   record, "Monitoring on" is a safety claim. D6 keeps the pill as a disabled item, but it is a status rather than a control,
   and it renders in full ink - R (captures with the sample day, the empty day and `VIGIL_FAULT=store-read-x6`) - owner:
   gold-standard-pass for wording; decision for the owner (see Unresolved Questions).
+
+### Blockers
+None open.
 
 ### Majors (functional)
 - [Data] A case cannot be edited once created. No pane edits the patient, weight, procedure, team or schedule. Delete is
@@ -151,10 +188,13 @@ Critical workflows (derived from SPEC.md flows 1-6 and SPEC-v2):
 - gold-standard-pass: pill wording, the mixed spelling, the 390 px record hero, and the drawer placement.
 
 ## Unresolved Questions
-- "Monitoring on" and the bell's dot: hide them, or reword (for example "No monitor connected") and drop the dot? D6
+- Resolved in the fix pass: "Monitoring on" and the bell's dot were reworded and dropped within D6 (the pill reads "No
+  monitor connected", disabled; no dot). SPEC-v2's capability table still notes that "Monitoring off" would contradict
+  the design. Original question: hide them, or reword (for example "No monitor connected") and drop the dot? D6
   covers disabled entry points. These two state facts the app does not have, and that is what made them Blockers.
 - D6 "Coming soon" controls (11): kept by the owner and graded as one Major. Revisit before any release.
-- Ending anesthesia: where should it live in v2? Candidates: a sixth RecordNav item "Recovery", or a second button in
+- Resolved in the fix pass: End anesthesia sits in the procedure header while the case is under anesthesia (see Fixed).
+  Original question: where should it live in v2? Candidates: a sixth RecordNav item "Recovery", or a second button in
   the stage card while the case is under anesthesia.
 - Case correction: should weight and patient details be editable until sign-off, with the edit logged?
 - Authentication N/A: shared clinic device, typed-name sign-off (SPEC.md). Confirm.
