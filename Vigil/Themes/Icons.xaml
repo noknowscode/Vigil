@@ -8,6 +8,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <!-- Clover logo, filled (custom, from the prototype) -->
   <x:String x:Key="IconLogo">M11 11H6.5A4.5 4.5 0 0 1 2 6.5 4.5 4.5 0 0 1 6.5 2 4.5 4.5 0 0 1 11 6.5ZM13 11V6.5A4.5 4.5 0 0 1 17.5 2 4.5 4.5 0 0 1 22 6.5 4.5 4.5 0 0 1 17.5 11ZM11 13v4.5A4.5 4.5 0 0 1 6.5 22 4.5 4.5 0 0 1 2 17.5 4.5 4.5 0 0 1 6.5 13ZM13 13h4.5a4.5 4.5 0 0 1 4.5 4.5 4.5 4.5 0 0 1-4.5 4.5 4.5 4.5 0 0 1-4.5-4.5Z</x:String>
+  <!--
+    Care mark (custom, from the prototype; 36 x 40 box, drawn by Controls/CareMark.xaml): four leaves (F1: the
+    overlapping leaves fill as one shape), the centre dot and the stem (stroke 2).
+  -->
+  <x:String x:Key="CareMarkLeaves">F1M1 10A8.5 10 0 1 0 18 10A8.5 10 0 1 0 1 10ZM18 10A8.5 10 0 1 0 35 10A8.5 10 0 1 0 18 10ZM1 26A8.5 10 0 1 0 18 26A8.5 10 0 1 0 1 26ZM18 26A8.5 10 0 1 0 35 26A8.5 10 0 1 0 18 26Z</x:String>
+  <x:String x:Key="CareMarkCentre">M14.5 18A3.5 3.5 0 1 0 21.5 18A3.5 3.5 0 1 0 14.5 18Z</x:String>
+  <x:String x:Key="CareMarkStem">M18 25C18 32 21 36 27 39</x:String>
   <!-- panel-left -->
   <x:String x:Key="IconPanelLeft">M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2ZM9 3v18</x:String>
   <!-- chevrons-up-down -->
