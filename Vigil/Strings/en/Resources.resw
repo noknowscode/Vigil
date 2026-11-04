@@ -489,12 +489,12 @@
   <data name="Record_92.Text" xml:space="preserve"><value>Administer dose</value></data>
   <data name="Record_93.Text" xml:space="preserve"><value>Dose recorded · visual acknowledgement only</value></data>
   <data name="Record_94.Text" xml:space="preserve"><value>Anesthesia record</value></data>
-  <data name="Record_95.Text" xml:space="preserve"><value>Observed values · 5-minute strip</value></data>
   <data name="Record_96.Text" xml:space="preserve"><value>HR bpm</value></data>
   <data name="Record_97.Text" xml:space="preserve"><value>BP mmHg</value></data>
   <data name="Record_98.Text" xml:space="preserve"><value>No readings recorded yet</value></data>
   <data name="Record_99.Text" xml:space="preserve"><value>Latest medication</value></data>
   <data name="Record_BpMap" xml:space="preserve"><value>BP {0} · MAP {1}</value></data>
+  <data name="Record_ChartCaption" xml:space="preserve"><value>Observed values · {0}-minute strip</value></data>
   <data name="Record_DeleteAction" xml:space="preserve"><value>Delete case</value></data>
   <data name="Record_DeleteConfirm" xml:space="preserve"><value>Delete this case and everything recorded in it? This cannot be undone.</value></data>
   <data name="Record_DeleteTitle" xml:space="preserve"><value>Delete case</value></data>

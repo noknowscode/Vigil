@@ -489,12 +489,12 @@
   <data name="Record_92.Text" xml:space="preserve"><value>Administrer une dose</value></data>
   <data name="Record_93.Text" xml:space="preserve"><value>Dose enregistrée · effet visuel uniquement</value></data>
   <data name="Record_94.Text" xml:space="preserve"><value>Dossier d'anesthésie</value></data>
-  <data name="Record_95.Text" xml:space="preserve"><value>Valeurs observées · bande de 5 minutes</value></data>
   <data name="Record_96.Text" xml:space="preserve"><value>FC bpm</value></data>
   <data name="Record_97.Text" xml:space="preserve"><value>PA mmHg</value></data>
   <data name="Record_98.Text" xml:space="preserve"><value>Aucune mesure enregistrée</value></data>
   <data name="Record_99.Text" xml:space="preserve"><value>Dernier médicament</value></data>
   <data name="Record_BpMap" xml:space="preserve"><value>PA {0} · PAM {1}</value></data>
+  <data name="Record_ChartCaption" xml:space="preserve"><value>Valeurs observées · bande de {0} minutes</value></data>
   <data name="Record_DeleteAction" xml:space="preserve"><value>Supprimer le dossier</value></data>
   <data name="Record_DeleteConfirm" xml:space="preserve"><value>Supprimer ce dossier et tout ce qui y est consigné? Cette action est irréversible.</value></data>
   <data name="Record_DeleteTitle" xml:space="preserve"><value>Supprimer le dossier</value></data>

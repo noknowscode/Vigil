@@ -81,6 +81,8 @@ public partial record CaseView(
     public string LastRr { get; init; } = "—";
     public string Alert { get; init; } = "";
     public RecordChart Chart { get; init; } = null!;
+    /// <summary>"Observed values · 3-minute strip": the reading interval set in Settings.</summary>
+    public string ChartCaption { get; init; } = "";
     public Spark HrSpark { get; init; } = Spark.Empty;
     public Spark SpO2Spark { get; init; } = Spark.Empty;
     public string ProcedureMeta { get; init; } = "";
@@ -168,10 +170,12 @@ public partial record CaseView(
         {
             Photo = PatientMedia.Photo(p), HeroPhoto = PatientMedia.Hero(p),
             Breed = string.IsNullOrWhiteSpace(p.Breed) ? Loc.Species(p.Species) : p.Breed,
-            AgeOwner = $"{(p.AgeYears == 1 ? Loc.T("Patient_OneYear", "1 year") : Loc.F("Patient_AgeYears", "{0:0.#} years", p.AgeYears))} · {p.Owner}",
+            // A walk-in may have no age or owner on file: the line keeps what is known ("0 years ·" read as a value).
+            AgeOwner = string.Join(" · ", new[] { p.AgeYears <= 0 ? "" : p.AgeYears == 1 ? Loc.T("Patient_OneYear", "1 year") : Loc.F("Patient_AgeYears", "{0:0.#} years", p.AgeYears), p.Owner.Trim() }.Where(x => x.Length > 0)),
             WeightDate = Loc.F("Weight_RecordedAt", "Recorded {0:d MMM, HH:mm}", c.CreatedAt.ToOffset(now.Offset)), VisitDate = $"{c.CreatedAt.ToOffset(now.Offset):dd MMM yyyy}",
             // The window follows the readings and the due time, not the clock: building it with the case is enough.
             Chart = RecordChart.From(c, now, interval),
+            ChartCaption = Loc.F("Record_ChartCaption", "Observed values · {0}-minute strip", (int)interval.TotalMinutes),
             HrSpark = Spark.HeartRate(c),
             SpO2Spark = Spark.From(c.Readings.Where(r => r.SpO2 is not null).Select(r => r.SpO2!.Value).TakeLast(13).ToList(), 4),
             ProcedureMeta = RecordText.ProcedureMeta(c, now),

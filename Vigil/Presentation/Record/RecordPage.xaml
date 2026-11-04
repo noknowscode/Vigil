@@ -249,7 +249,7 @@
                   <Border CornerRadius="{StaticResource Radius18}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="{StaticResource MetricTileInset}">
                     <StackPanel>
                       <TextBlock x:Uid="Record_94" Text="Anesthesia record" Style="{StaticResource TypeH3Card}" />
-                      <TextBlock x:Uid="Record_95" Text="Observed values · 5-minute strip" Style="{StaticResource TypeBodyS}" />
+                      <TextBlock Text="{Binding Data.ChartCaption}" Style="{StaticResource TypeBodyS}" />
                       <StackPanel Margin="{StaticResource GapTop10}" Orientation="Horizontal" Spacing="{StaticResource Space14}">
                         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}"><Rectangle Width="12" Height="2" RadiusX="{StaticResource RectRadius1}" RadiusY="{StaticResource RectRadius1}" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="Record_96" Text="HR bpm" Style="{StaticResource TypeCaption}" /></StackPanel>
                         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}"><Rectangle Width="4" Height="12" RadiusX="{StaticResource RectRadius2}" RadiusY="{StaticResource RectRadius2}" Fill="{ThemeResource PhaseRecoverySolidBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="Record_97" Text="BP mmHg" Style="{StaticResource TypeCaption}" /></StackPanel>

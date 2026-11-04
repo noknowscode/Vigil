@@ -778,6 +778,7 @@
   "yes": "oui",
   "{0:d MMM, HH:mm}": "{0:d MMM, HH:mm}",
   "{0}: {1} → {2}": "{0} : {1} → {2}",
+  "Observed values · {0}-minute strip": "Valeurs observées · bande de {0} minutes",
   "@keys": {
     "Settings_10.Content": "Clair"
   }

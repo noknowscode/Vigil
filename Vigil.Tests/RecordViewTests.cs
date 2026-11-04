@@ -133,4 +133,22 @@ public class RecordViewTests
         CaseTimers.From(oscar, Proto.Now, Proto.Interval, Proto.Formulary)
             .Should().NotBe(CaseTimers.From(oscar, Proto.Now.AddMinutes(1), Proto.Interval, Proto.Formulary));
     }
+
+    [Test]
+    public void TheChartCaptionNamesTheReadingInterval()
+    {
+        var knuckles = Proto.Named("Knuckles");
+
+        CaseView.From(knuckles, Proto.Now, TimeSpan.FromMinutes(3)).ChartCaption.Should().Be("Observed values · 3-minute strip");
+        CaseView.From(knuckles, Proto.Now, TimeSpan.FromMinutes(5)).ChartCaption.Should().Be("Observed values · 5-minute strip");
+    }
+
+    [Test]
+    public void AnUnknownAgeOrOwnerIsLeftOut()
+    {
+        var knuckles = Proto.Named("Knuckles");
+
+        CaseView.From(knuckles with { Patient = knuckles.Patient with { AgeYears = 0, Owner = "" } }, Proto.Now, Proto.Interval).AgeOwner.Should().BeEmpty();
+        CaseView.From(knuckles with { Patient = knuckles.Patient with { AgeYears = 0 } }, Proto.Now, Proto.Interval).AgeOwner.Should().Be("M. Lavoie");
+    }
 }
