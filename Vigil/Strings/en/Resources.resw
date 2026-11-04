@@ -109,28 +109,6 @@
   <data name="Discharge_Done" xml:space="preserve"><value>Discharge call to {0} · done {1:HH:mm}</value></data>
   <data name="Discharge_Due" xml:space="preserve"><value>Discharge call to {0} · due {1:HH:mm}</value></data>
   <data name="DoseDrawer_1.Title" xml:space="preserve"><value>Administer dose</value></data>
-  <data name="DoseDrawer_10.Text" xml:space="preserve"><value>DRAW UP</value></data>
-  <data name="DoseDrawer_11.Text" xml:space="preserve"><value>Pick a drug</value></data>
-  <data name="DoseDrawer_12.Text" xml:space="preserve"><value>The volume appears here with its formula once a drug and a dose in mg/kg are set.</value></data>
-  <data name="DoseDrawer_13.Header" xml:space="preserve"><value>Route</value></data>
-  <data name="DoseDrawer_14.Content" xml:space="preserve"><value>IV</value></data>
-  <data name="DoseDrawer_15.Content" xml:space="preserve"><value>IM</value></data>
-  <data name="DoseDrawer_16.Content" xml:space="preserve"><value>SC</value></data>
-  <data name="DoseDrawer_17.Content" xml:space="preserve"><value>PO</value></data>
-  <data name="DoseDrawer_18.Content" xml:space="preserve"><value>Give dose</value></data>
-  <data name="DoseDrawer_18.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Give dose</value></data>
-  <data name="DoseDrawer_19.Content" xml:space="preserve"><value>Change dose</value></data>
-  <data name="DoseDrawer_2.Text" xml:space="preserve"><value>DRUG · sample formulary, not for clinical use</value></data>
-  <data name="DoseDrawer_20.Content" xml:space="preserve"><value>Give anyway</value></data>
-  <data name="DoseDrawer_20.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Give the out-of-range dose anyway</value></data>
-  <data name="DoseDrawer_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Drugs</value></data>
-  <data name="DoseDrawer_4.Text" xml:space="preserve"><value> mg/mL</value></data>
-  <data name="DoseDrawer_5.Header" xml:space="preserve"><value>Dose (mg/kg)</value></data>
-  <data name="DoseDrawer_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Dose in milligrams per kilogram</value></data>
-  <data name="DoseDrawer_6.Text" xml:space="preserve"><value>DRAW UP</value></data>
-  <data name="DoseDrawer_7.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Volume to draw up</value></data>
-  <data name="DoseDrawer_8.Text" xml:space="preserve"><value>Reference range</value></data>
-  <data name="DoseDrawer_9.Text" xml:space="preserve"><value>Outside the reference range: you will be asked to confirm.</value></data>
   <data name="Dose_1.Label" xml:space="preserve"><value>Cancel</value></data>
   <data name="Dose_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Close the dose sheet</value></data>
   <data name="Dose_10.Text" xml:space="preserve"><value>Reference range</value></data>
