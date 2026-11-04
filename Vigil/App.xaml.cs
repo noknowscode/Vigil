@@ -33,7 +33,7 @@ public partial class App : Application
         OnLaunching();
         var builder = this.CreateBuilder(args)
             .UseToolkitNavigation()
-            .Configure(host => host
+            .Configure((host, window) => host
 #if DEBUG
                 .UseEnvironment(Environments.Development)
 #endif
@@ -65,7 +65,8 @@ public partial class App : Application
                     services.AddSingleton<IPreferences>(_ => new Preferences(
                         Path.Combine(DataRoot(), "preferences.json")));
                     services.AddSingleton<IFormulary, EmbeddedFormulary>();
-                    services.AddSingleton<IRecordExporter, RecordExporter>();
+                    // The main window: the exporter runs its pickers on the window's UI thread, and WinAppSDK pickers need its handle.
+                    services.AddSingleton<IRecordExporter>(_ => new RecordExporter(window));
                     services.AddSingleton<ICaseStore>(sp => new JsonCaseStore(
                         Path.Combine(DataRoot(), "cases"), fault, sp.GetRequiredService<ILogger<JsonCaseStore>>()));
                 })
@@ -76,8 +77,6 @@ public partial class App : Application
                     configure: config => config with { AddressBarUpdateEnabled = false })
             );
         MainWindow = builder.Window;
-        UiThread.Queue = MainWindow.DispatcherQueue;
-        UiThread.Window = MainWindow;
         OnWindowCreated(MainWindow);
 
 #if DEBUG && !NO_UNO_STUDIO
@@ -94,6 +93,7 @@ public partial class App : Application
             async () =>
             {
                 var host = builder.Build();
+                // Static: the crash handlers are attached before the host exists, so they get its logger once it does.
                 CrashReporter.Logger = host.Services.GetRequiredService<ILogger<App>>();
                 Loc.Localizer = host.Services.GetRequiredService<IStringLocalizer>();
 #if DEBUG

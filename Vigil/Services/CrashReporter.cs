@@ -11,7 +11,10 @@ public static class CrashReporter
 {
     private const string ReportedKey = "Vigil.CrashReporter.Reported";
 
-    /// <summary>The app log; null until the host is built, when reports go to the console as well as the file.</summary>
+    /// <summary>
+    /// The app log; null until the host is built, when reports go to the console as well as the file. Static, like the
+    /// reporter: its handlers are attached before the host (and its container) exists.
+    /// </summary>
     public static ILogger? Logger { get; set; }
 
     /// <summary>The crash file, appended to; null writes no file.</summary>

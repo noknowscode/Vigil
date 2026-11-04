@@ -12,20 +12,21 @@ public interface IRecordExporter
     ValueTask<string> CopySummaryAsync(Case record, CancellationToken ct);
 }
 
-public sealed class RecordExporter : IRecordExporter
+/// <param name="window">The main window: pickers and the clipboard run on its UI thread, and WinAppSDK pickers need its handle.</param>
+public sealed class RecordExporter(Window window) : IRecordExporter
 {
     public async ValueTask<string> ExportCsvAsync(Case record, CancellationToken ct)
     {
         var csv = CsvExport.ToCsv(record);
         var name = $"{Safe(record.Patient.Name)}-{record.CreatedAt:yyyy-MM-dd}-anesthesia";
         // Pickers must run on the UI thread; MVUX commands may not (runtime gotcha).
-        return await UiThread.RunAsync(async () =>
+        return await OnUiThreadAsync(async () =>
         {
             var picker = new FileSavePicker { SuggestedFileName = name, SuggestedStartLocation = PickerLocationId.DocumentsLibrary };
             picker.FileTypeChoices.Add("CSV", new List<string> { ".csv" });
 #if WINDOWS
             // WinAppSDK pickers throw without an owner window.
-            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(UiThread.Window));
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(window));
 #endif
             var file = await picker.PickSaveFileAsync();
             if (file is null)
@@ -40,13 +41,39 @@ public sealed class RecordExporter : IRecordExporter
     public async ValueTask<string> CopySummaryAsync(Case record, CancellationToken ct)
     {
         var text = CsvExport.ToSummary(record);
-        return await UiThread.RunAsync(() =>
+        return await OnUiThreadAsync(() =>
         {
             var package = new DataPackage();
             package.SetText(text);
             Clipboard.SetContent(package);
             return Task.FromResult(Loc.T("Export_Copied", "Summary copied: paste it into the patient file."));
         });
+    }
+
+    /// <summary>Runs <paramref name="work"/> on the window's UI thread: MVUX commands may run elsewhere.</summary>
+    private Task<T> OnUiThreadAsync<T>(Func<Task<T>> work)
+    {
+        var queue = window.DispatcherQueue;
+        if (queue.HasThreadAccess)
+        {
+            return work();
+        }
+        var tcs = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (!queue.TryEnqueue(async () =>
+            {
+                try
+                {
+                    tcs.SetResult(await work());
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            }))
+        {
+            tcs.SetException(new InvalidOperationException("The UI thread is not available."));
+        }
+        return tcs.Task;
     }
 
     private static string Safe(string s) => string.Concat(s.Where(char.IsLetterOrDigit)) is { Length: > 0 } x ? x : "record";
