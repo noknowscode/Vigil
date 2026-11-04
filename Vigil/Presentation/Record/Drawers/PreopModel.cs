@@ -5,17 +5,8 @@ namespace Vigil.Presentation;
 /// field while the case is booked, Induce, and the hand-backs for premedication, case details and Delete case.
 /// </summary>
 public partial record PreopModel(CaseRef Ref, ICaseStore Store, IClock Clock, IPreferences Preferences, INavigator Navigator, ILogger<PreopModel> Logger)
+    : CaseDrawerModel(Ref, Store, Clock, Preferences, Navigator, Logger)
 {
-    private CaseDrawer Drawer => _drawer ??= new(this, Ref, Store, Clock, Preferences, Navigator, Logger);
-    private CaseDrawer? _drawer;
-
-    public IFeed<CaseView> Case => Drawer.View;
-    public IState<string> SaveError => Drawer.Error;
-    public IFeed<bool> HasSaveError => Drawer.HasError;
-    public async ValueTask DismissError(CancellationToken ct) => await Drawer.DismissErrorAsync(ct);
-    public void Retry() => Drawer.Retry();
-    public async ValueTask Close(CancellationToken ct) => await Drawer.CloseAsync(ct);
-
     /// <summary>
     /// The pre-op checklist, edited in place and saved on every change while the case is scheduled. A save writes only
     /// the fields the user changed, so a check set elsewhere (Mark reviewed ticks the bloodwork) is never written over.
@@ -30,20 +21,20 @@ public partial record PreopModel(CaseRef Ref, ICaseStore Store, IClock Clock, IP
     /// <summary>Starts anesthesia (the reading clock) once the checks are complete, then closes the drawer.</summary>
     public async ValueTask Induce(CancellationToken ct)
     {
-        if (await Drawer.SaveAsync(c => c.Status == CaseStatus.Scheduled ? c with { Status = CaseStatus.Anesthetized, InducedAt = Clock.Now } : c, ct))
+        if (await SaveAsync(c => c.Status == CaseStatus.Scheduled ? c with { Status = CaseStatus.Anesthetized, InducedAt = Clock.Now } : c, ct))
         {
-            await Drawer.CloseAsync(ct);
+            await Close(ct);
         }
     }
 
     /// <summary>Give premedication: the dose drawer.</summary>
-    public async ValueTask GivePremedication(CancellationToken ct) => await Drawer.HandBackAsync(RecordPane.Dose, ct);
+    public async ValueTask GivePremedication(CancellationToken ct) => await HandBackAsync(RecordPane.Dose, ct);
 
     /// <summary>Correct the patient, weight, procedure or schedule: the case-details sheet.</summary>
-    public async ValueTask EditDetails(CancellationToken ct) => await Drawer.HandBackAsync(PaneChoice.EditCase, ct);
+    public async ValueTask EditDetails(CancellationToken ct) => await HandBackAsync(PaneChoice.EditCase, ct);
 
     /// <summary>A booked case made by mistake: the record confirms, deletes it and leaves.</summary>
-    public async ValueTask DeleteCase(CancellationToken ct) => await Drawer.HandBackAsync(PaneChoice.DeleteCase, ct);
+    public async ValueTask DeleteCase(CancellationToken ct) => await HandBackAsync(PaneChoice.DeleteCase, ct);
 
     private async ValueTask SavePreopAsync(PreopCheck? preop, CancellationToken ct)
     {
@@ -53,6 +44,6 @@ public partial record PreopModel(CaseRef Ref, ICaseStore Store, IClock Clock, IP
         }
         var before = _preopShown;
         _preopShown = preop;
-        await Drawer.SaveAsync(c => c.Status == CaseStatus.Scheduled ? c with { Preop = c.Preop.WithEdits(before, preop) } : c, ct);
+        await SaveAsync(c => c.Status == CaseStatus.Scheduled ? c with { Preop = c.Preop.WithEdits(before, preop) } : c, ct);
     }
 }

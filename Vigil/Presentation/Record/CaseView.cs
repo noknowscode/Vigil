@@ -237,6 +237,14 @@ public partial record CaseView(
 /// </summary>
 public sealed partial record CaseTimers(StatusCard Care, Spark HrSpark, string ClockText, bool IsOverdue, string OverdueTitle, NextDoseText NextDose, string RecoveryAnchor)
 {
+    /// <summary>
+    /// The timers of the case in <paramref name="source"/>, rebuilt on every tick of <paramref name="now"/> and every
+    /// change of the case, over the formulary's redose intervals. The record page and its drawers each show one.
+    /// </summary>
+    public static IFeed<CaseTimers> Ticking(IFeed<Case> source, IFeed<DateTimeOffset> now, IFormulary formulary, IPreferences preferences) =>
+        Feed.Combine(source, now, Feed.Async(async ct => (IImmutableList<Drug>)await formulary.GetDrugsAsync(ct)))
+            .Select(x => From(x.Item1, x.Item2, preferences.ReadingInterval, x.Item3));
+
     /// <param name="formulary">Drugs with their redose intervals (Next dose card).</param>
     public static CaseTimers From(Case c, DateTimeOffset now, TimeSpan interval, IReadOnlyList<Drug> formulary)
     {

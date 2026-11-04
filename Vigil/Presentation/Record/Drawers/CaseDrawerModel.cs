@@ -32,55 +32,65 @@ public sealed record PaneChoice(string Next)
 }
 
 /// <summary>
-/// What every record drawer model shares: its case (None once it is gone), the record's view of it, a save that
-/// reports a failure in the drawer's Not saved bar, and the two ways out (close, or hand a step back to the record).
-/// Each drawer model owns one and exposes the members its view binds, as <see cref="DoseEntry"/> does for the dose.
+/// The base of every record drawer model: its case (None once it is gone) and the record's view of it, a save that
+/// reports a failure in the drawer's Not saved bar, the drawer's Retry, and the two ways out (close, or hand a step
+/// back to the record). MVUX generates its view model, which each drawer's generated view model extends, so the
+/// members the drawers bind (Case, SaveError, HasSaveError, DismissError, Retry, Close) are written once here.
 /// </summary>
-public sealed class CaseDrawer
+public abstract partial record CaseDrawerModel
 {
-    private readonly object _owner;
     private readonly Guid _caseId;
     private readonly ICaseStore _store;
+    private readonly IClock _clock;
+    private readonly IPreferences _preferences;
     private readonly INavigator _navigator;
     private readonly ILogger _logger;
 
-    public CaseDrawer(object owner, CaseRef caseRef, ICaseStore store, IClock clock, IPreferences preferences, INavigator navigator, ILogger logger)
+    protected CaseDrawerModel(CaseRef caseRef, ICaseStore store, IClock clock, IPreferences preferences, INavigator navigator, ILogger logger)
     {
-        _owner = owner;
         _caseId = caseRef.Id;
         _store = store;
+        _clock = clock;
+        _preferences = preferences;
         _navigator = navigator;
         _logger = logger;
         Source = Feed<Case>.Async(async ct => await store.GetAsync(_caseId, ct) is { } c ? Option.Some(c) : Option.None<Case>(), store.Changed);
-        View = Source.Select(c => CaseView.From(c, clock.Now, preferences.ReadingInterval));
-        Error = State.Value(owner, () => "");
-        HasError = Error.Select(s => !string.IsNullOrEmpty(s));
+        Case = Source.Select(c => CaseView.From(c, clock.Now, preferences.ReadingInterval));
+        SaveError = State.Value(this, () => "");
+        HasSaveError = SaveError.Select(s => !string.IsNullOrEmpty(s));
     }
 
-    /// <summary>The stored case, reloaded on every store change; None once deleted.</summary>
-    public IFeed<Case> Source { get; }
-
     /// <summary>The record's read-only view of the case (the drawer's FeedView source).</summary>
-    public IFeed<CaseView> View { get; }
+    public IFeed<CaseView> Case { get; }
 
     /// <summary>A failed save or a rule of the record, as a sentence (the drawer's Not saved bar).</summary>
-    public IState<string> Error { get; }
+    public IState<string> SaveError { get; }
 
-    public IFeed<bool> HasError { get; }
+    public IFeed<bool> HasSaveError { get; }
+
+    public async ValueTask DismissError(CancellationToken ct) => await SaveError.UpdateAsync(_ => "", ct);
 
     public void Retry() => _store.Reload();
 
-    public async ValueTask ShowErrorAsync(string message, CancellationToken ct) => await Error.UpdateAsync(_ => message, ct);
+    /// <summary>Closes the drawer (Close, Escape and a tap on the scrim do the same).</summary>
+    public async ValueTask Close(CancellationToken ct) => await _navigator.NavigateBackAsync(this, cancellation: ct);
 
-    public async ValueTask DismissErrorAsync(CancellationToken ct) => await Error.UpdateAsync(_ => "", ct);
+    /// <summary>The stored case, reloaded on every store change; None once deleted.</summary>
+    protected IFeed<Case> Source { get; }
+
+    /// <summary>The case's timers, moving with the clock (<see cref="CaseTimers.Ticking"/>).</summary>
+    protected IFeed<CaseTimers> TimersOver(IFormulary formulary) =>
+        CaseTimers.Ticking(Source, Feed.AsyncEnumerable(_clock.Ticks), formulary, _preferences);
+
+    protected async ValueTask ShowErrorAsync(string message, CancellationToken ct) => await SaveError.UpdateAsync(_ => message, ct);
 
     /// <summary>Saves a change to the case; a failure shows in the Not saved bar (details in the log). True once saved.</summary>
-    public async ValueTask<bool> SaveAsync(Func<Case, Case> update, CancellationToken ct)
+    protected async ValueTask<bool> SaveAsync(Func<Case, Case> update, CancellationToken ct)
     {
         try
         {
             await _store.UpdateAsync(_caseId, update, ct);
-            await Error.UpdateAsync(_ => "", ct);
+            await SaveError.UpdateAsync(_ => "", ct);
             return true;
         }
         catch (Exception ex) when (StoreErrors.IsReported(ex))
@@ -89,15 +99,12 @@ public sealed class CaseDrawer
             {
                 _logger.LogWarning(ex, "Saving case {CaseId} failed.", _caseId);
             }
-            await Error.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", StoreErrors.Describe(ex)), ct);
+            await SaveError.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", StoreErrors.Describe(ex)), ct);
             return false;
         }
     }
 
-    /// <summary>Closes the drawer (Close, Escape and a tap on the scrim do the same).</summary>
-    public async ValueTask CloseAsync(CancellationToken ct) => await _navigator.NavigateBackAsync(_owner, cancellation: ct);
-
     /// <summary>Closes the drawer and hands <paramref name="next"/> to the record, which opens it.</summary>
-    public async ValueTask HandBackAsync(string next, CancellationToken ct) =>
-        await _navigator.NavigateBackWithResultAsync(_owner, data: new PaneChoice(next), cancellation: ct);
+    protected async ValueTask HandBackAsync(string next, CancellationToken ct) =>
+        await _navigator.NavigateBackWithResultAsync(this, data: new PaneChoice(next), cancellation: ct);
 }

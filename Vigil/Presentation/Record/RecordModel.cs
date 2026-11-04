@@ -3,7 +3,7 @@ namespace Vigil.Presentation;
 /// <summary>
 /// The record page (route Main/Record): the hero tray, the overdue banner, the procedure header and the metric cards
 /// for one case, and the way into its panes. Each pane is a drawer with its own model (<see cref="RecordPane"/>,
-/// <see cref="CaseDrawer"/>); a drawer that closes on a step for the record (another pane, Sign off, the case details,
+/// <see cref="CaseDrawerModel"/>); a drawer that closes on a step for the record (another pane, Sign off, the case details,
 /// Delete case) hands it back here.
 /// </summary>
 public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, IPreferences Preferences, INavigator Navigator, DoseFeedback Feedback, IFormulary Formulary, ILogger<RecordModel> Logger)
@@ -102,8 +102,6 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     private IFeed<DateTimeOffset> Now { get; } = Feed.AsyncEnumerable(Clock.Ticks);
 
-    private IFeed<IImmutableList<Drug>> Drugs { get; } = Feed.Async(async ct => (IImmutableList<Drug>)await Formulary.GetDrugsAsync(ct));
-
     // Pane is a state (always a value), so it joins the combine without None propagation; the template reads the active
     // nav item from Data (Parent.State does not resolve reliably inside a FeedView template).
     // No clock here: the view (and its reading, dose and lab lists) is rebuilt when the case changes, not every second.
@@ -111,8 +109,7 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
         CaseView.From(x.Item1, Clock.Now, Preferences.ReadingInterval, string.IsNullOrEmpty(x.Item2) ? null : x.Item2));
 
     /// <summary>The values that move with the clock (timers, countdowns), next to <see cref="Case"/>; the page binds Parent.Timers.</summary>
-    public IFeed<CaseTimers> Timers => Feed.Combine(Source, Now, Drugs).Select(x =>
-        CaseTimers.From(x.Item1, x.Item2, Preferences.ReadingInterval, x.Item3));
+    public IFeed<CaseTimers> Timers => CaseTimers.Ticking(Source, Now, Formulary, Preferences);
 
     /// <summary>Patient name for the breadcrumb (outside the FeedView, so it shows in every state).</summary>
     public IFeed<string> Name => Source.Select(c => c.Patient.Name);
