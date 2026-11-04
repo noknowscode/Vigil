@@ -2,7 +2,7 @@ namespace Vigil.Presentation;
 
 /// <summary>
 /// Editable text part of the recovery log. Times are stamped by commands, and pain scores are recorded one at a time
-/// (<see cref="RecordModel.ScorePain"/>), so the draft never writes the score.
+/// (<see cref="RecoveryModel.ScorePain"/>), so the draft never writes the score.
 /// </summary>
 public partial record RecoveryDraft(string TempC, string Notes)
 {
