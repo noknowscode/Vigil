@@ -129,7 +129,6 @@ public partial record CaseView(
     public bool IsAnesthetized => Status == CaseStatus.Anesthetized;
 
     public bool IsSigned => Status == CaseStatus.Signed;
-    public bool HasAnaesthesiaRecord => !IsScheduled;
 
     public bool CanInduce => IsScheduled && Preop.IsComplete;
 

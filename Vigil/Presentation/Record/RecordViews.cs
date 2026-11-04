@@ -16,8 +16,6 @@ public sealed partial record Spark(string Data, double Top, double Height, doubl
 
     public bool HasLine => Data.Length > 0;
 
-    public bool HasNoLine => !HasLine;
-
     /// <summary>Line element margin: 4 px in from each side (x 4 to 156 of 160), top at the highest point.</summary>
     public Thickness LineMargin => new(4, Top, 4, 0);
 

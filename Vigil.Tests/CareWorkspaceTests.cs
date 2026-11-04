@@ -10,7 +10,6 @@ public class CareWorkspaceTests
         foreach (var c in SampleDay.Create(Now))
         {
             var view = CaseView.From(c, Now, TimeSpan.FromMinutes(5));
-            view.HasAnaesthesiaRecord.Should().Be(c.InducedAt is not null);
             view.IsAnesthetized.Should().Be(c.Status == CaseStatus.Anesthetized);
             view.CanEditRecovery.Should().Be(c.Status == CaseStatus.Recovery);
             view.CanChange.Should().Be(c.Status != CaseStatus.Signed);

@@ -240,8 +240,7 @@ public class AgendaModelTests : ModelTestBase
         var agenda = await model.Agenda;
         var ruler = await model.CareRhythm;
 
-        agenda!.HasEvents.Should().BeTrue();
-        agenda.Events.Select(e => e.Name).Should().Equal("Pepper", "Knuckles", "Milo");
+        agenda!.Events.Select(e => e.Name).Should().Equal("Pepper", "Knuckles", "Milo");
         agenda.Preparing.Select(e => e.Name).Should().Equal("Oscar");
         ruler!.IsEmpty.Should().BeFalse();
     }

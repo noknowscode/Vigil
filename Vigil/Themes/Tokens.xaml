@@ -33,10 +33,8 @@
       <SolidColorBrush x:Key="InkGridlineBrush" Color="#141B212F" />
       <SolidColorBrush x:Key="OnPrimaryInkBrush" Color="#FFFFFF" />
       <SolidColorBrush x:Key="PrimaryStrongBrush" Color="#1C3A2B" />
-      <!-- Borders: sides, top, bottom of the tri-tone border, and internal dividers -->
+      <!-- Borders: card sides and internal dividers -->
       <SolidColorBrush x:Key="EdgeBrush" Color="#E4E4E6" />
-      <SolidColorBrush x:Key="EdgeTopBrush" Color="#ECECEE" />
-      <SolidColorBrush x:Key="EdgeBottomBrush" Color="#D9D9DC" />
       <SolidColorBrush x:Key="DividerBrush" Color="#EBEBED" />
       <!-- Tri-tone border: XAML Border has one brush, so a vertical gradient puts the light tone on the top edge and the dark one on the bottom. -->
       <LinearGradientBrush x:Key="TriToneBorderBrush" StartPoint="0,0" EndPoint="0,1">
@@ -56,7 +54,6 @@
       <SolidColorBrush x:Key="PhasePrepSoftBrush" Color="#FCE3C6" />
       <SolidColorBrush x:Key="PhasePrepStepBrush" Color="#FCE3C6" />
       <SolidColorBrush x:Key="PhaseRecoverySolidBrush" Color="#5F78E2" />
-      <SolidColorBrush x:Key="PhaseRecoveryDeepBrush" Color="#1B212F" />
       <SolidColorBrush x:Key="PhaseRecoverySoftBrush" Color="#E5E8F9" />
       <SolidColorBrush x:Key="PhaseRecoverySoftBorderBrush" Color="#CDD3F3" />
       <SolidColorBrush x:Key="PhaseRecoveryStepBrush" Color="#D3D9F7" />
@@ -135,8 +132,6 @@
       <SolidColorBrush x:Key="OnPrimaryInkBrush" Color="#0B2418" />
       <SolidColorBrush x:Key="PrimaryStrongBrush" Color="#A9DCC0" />
       <SolidColorBrush x:Key="EdgeBrush" Color="#2F3238" />
-      <SolidColorBrush x:Key="EdgeTopBrush" Color="#373A41" />
-      <SolidColorBrush x:Key="EdgeBottomBrush" Color="#25282D" />
       <SolidColorBrush x:Key="DividerBrush" Color="#26292E" />
       <LinearGradientBrush x:Key="TriToneBorderBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#373A41" Offset="0" />
@@ -154,7 +149,6 @@
       <SolidColorBrush x:Key="PhasePrepSoftBrush" Color="#3D2A16" />
       <SolidColorBrush x:Key="PhasePrepStepBrush" Color="#3D2A16" />
       <SolidColorBrush x:Key="PhaseRecoverySolidBrush" Color="#9AAAF0" />
-      <SolidColorBrush x:Key="PhaseRecoveryDeepBrush" Color="#E6E7EA" />
       <SolidColorBrush x:Key="PhaseRecoverySoftBrush" Color="#262B45" />
       <SolidColorBrush x:Key="PhaseRecoverySoftBorderBrush" Color="#3A4166" />
       <SolidColorBrush x:Key="PhaseRecoveryStepBrush" Color="#2F3557" />
@@ -232,7 +226,6 @@
   <!-- Fonts (§1). Weights resolve through the .ttf.manifest files (static instances per weight). -->
   <FontFamily x:Key="FontSans">ms-appx:///Assets/Fonts/HankenGrotesk.ttf#Hanken Grotesk</FontFamily>
   <FontFamily x:Key="FontMono">ms-appx:///Assets/Fonts/MartianMono.ttf#Martian Mono</FontFamily>
-  <FontFamily x:Key="FontSerif">ms-appx:///Assets/Fonts/Newsreader.ttf#Newsreader</FontFamily>
   <!-- Tracked copies (tools/track_fonts.py): the prototype's negative letter-spacing baked into the advance widths,
        because Skia ignores CharacterSpacing. Txx = -0.0xx em. -->
   <FontFamily x:Key="FontMonoT50">ms-appx:///Assets/Fonts/MartianMonoT50.ttf#Vigil Mono T50</FontFamily>
@@ -244,7 +237,6 @@
 
   <!-- Radii (§3) -->
   <CornerRadius x:Key="Radius3">3</CornerRadius>
-  <CornerRadius x:Key="Radius4">4</CornerRadius>
   <CornerRadius x:Key="Radius6">6</CornerRadius>
   <CornerRadius x:Key="Radius8">8</CornerRadius>
   <CornerRadius x:Key="Radius10">10</CornerRadius>
@@ -256,8 +248,6 @@
   <CornerRadius x:Key="Radius24">24</CornerRadius>
   <CornerRadius x:Key="Radius26">26</CornerRadius>
   <CornerRadius x:Key="Radius11">11</CornerRadius>
-  <CornerRadius x:Key="Radius19">19</CornerRadius>
-  <CornerRadius x:Key="Radius20">20</CornerRadius>
   <!-- Patient card header tray (17 under the 18 px tray, 18 at its foot) and the Show details toggle's foot. -->
   <CornerRadius x:Key="RadiusTrayHeader">17,17,18,18</CornerRadius>
   <CornerRadius x:Key="RadiusToggleBottom">0,0,17,17</CornerRadius>

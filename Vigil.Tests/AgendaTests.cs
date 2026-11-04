@@ -39,7 +39,7 @@ public class AgendaTests
     public void EmptyAgendaDoesNotInventAppointmentsOrReminders()
     {
         var agenda = BoardAgenda.From([], Now);
-        agenda.NoEvents.Should().BeTrue();
+        agenda.Events.Should().BeEmpty();
         agenda.NoPreparing.Should().BeTrue();
         AgendaReminder.From([], Now, TimeSpan.FromMinutes(5)).Should().BeNull();
     }

@@ -11,10 +11,7 @@ public partial record AgendaEntry(Guid Id, string Name, string Detail, string St
 
 public partial record BoardAgenda(IImmutableList<AgendaEntry> Events, IImmutableList<AgendaEntry> Preparing)
 {
-    public bool HasEvents => Events.Count > 0;
-    public bool NoEvents => !HasEvents;
-    public bool HasPreparing => Preparing.Count > 0;
-    public bool NoPreparing => !HasPreparing;
+    public bool NoPreparing => Preparing.Count == 0;
     public string Summary => Loc.F("Agenda_Summary", "{0} milestones · {1} preparing", Events.Count, Preparing.Count);
 
     public static BoardAgenda From(IEnumerable<Case> cases, DateTimeOffset now)
