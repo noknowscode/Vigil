@@ -187,8 +187,34 @@ public class MedicationsModelTests : ModelTestBase
 
 public class RecoveryModelTests : ModelTestBase
 {
-    private RecoveryModel Recovery(Case c, ICaseStore? store = null) =>
-        new(new CaseRef(c.Id), store ?? Store, Clock, new Preferences(), new EmbeddedFormulary(), null!, Nav, NullLogger<RecoveryModel>.Instance);
+    private RecoveryModel Recovery(Case c, ICaseStore? store = null, IRecordExporter? exporter = null) =>
+        new(new CaseRef(c.Id), store ?? Store, Clock, new Preferences(), new EmbeddedFormulary(), exporter!, Nav, NullLogger<RecoveryModel>.Instance);
+
+    [TestCase(ExportStatus.Saved, "Saved Pepper-2026-10-28-anesthesia.csv.")]
+    [TestCase(ExportStatus.Cancelled, "Export cancelled.")]
+    [TestCase(ExportStatus.Unavailable, "No save dialog could open on this device, so nothing was exported.")]
+    public async Task AnExportSaysHowItEnded(ExportStatus status, string notice)
+    {
+        var pepper = Proto.Named("Pepper");
+        await Store.SaveAsync(pepper, CancellationToken.None);
+        var model = Recovery(pepper, exporter: new Exporter(new ExportResult(status, status == ExportStatus.Saved ? RecordExporter.SuggestedFileName(pepper) : "")));
+
+        await model.Export(CancellationToken.None);
+
+        (await SettledAsync(model.Notice, n => n != "")).Should().Be(notice);
+    }
+
+    [Test]
+    public void TheSuggestedFileNameCarriesItsExtension() =>
+        RecordExporter.SuggestedFileName(Proto.Named("Pepper") with { Patient = Proto.Named("Pepper").Patient with { Name = "Mr. Pepper" } })
+            .Should().Be("MrPepper-2026-10-28-anesthesia.csv");
+
+    /// <summary>An exporter that ends every export the same way.</summary>
+    private sealed class Exporter(ExportResult result) : IRecordExporter
+    {
+        public ValueTask<ExportResult> ExportCsvAsync(Case record, CancellationToken ct) => ValueTask.FromResult(result);
+        public ValueTask CopySummaryAsync(Case record, CancellationToken ct) => ValueTask.CompletedTask;
+    }
 
     [Test]
     public async Task EndingAnesthesiaStartsRecovery()

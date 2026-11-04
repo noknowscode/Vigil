@@ -781,5 +781,6 @@
   "Observed values · {0}-minute strip": "Valeurs observées · bande de {0} minutes",
   "@keys": {
     "Settings_10.Content": "Clair"
-  }
+  },
+  "No save dialog could open on this device, so nothing was exported.": "Aucune fenêtre d'enregistrement n'a pu s'ouvrir sur cet appareil : rien n'a été exporté."
 }

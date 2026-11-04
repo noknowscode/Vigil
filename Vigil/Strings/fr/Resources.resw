@@ -165,6 +165,7 @@
   <data name="Export_Cancelled" xml:space="preserve"><value>Exportation annulée.</value></data>
   <data name="Export_Copied" xml:space="preserve"><value>Résumé copié : collez-le dans le dossier du patient.</value></data>
   <data name="Export_FailedRetry" xml:space="preserve"><value>L'exportation a échoué. Rien n'a été partagé; réessayez.</value></data>
+  <data name="Export_NoDialog" xml:space="preserve"><value>Aucune fenêtre d'enregistrement n'a pu s'ouvrir sur cet appareil : rien n'a été exporté.</value></data>
   <data name="Export_Saved" xml:space="preserve"><value>{0} enregistré.</value></data>
   <data name="Flag_High" xml:space="preserve"><value>▲ Élevé</value></data>
   <data name="Flag_Low" xml:space="preserve"><value>▼ Bas</value></data>

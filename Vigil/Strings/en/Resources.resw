@@ -165,6 +165,7 @@
   <data name="Export_Cancelled" xml:space="preserve"><value>Export cancelled.</value></data>
   <data name="Export_Copied" xml:space="preserve"><value>Summary copied: paste it into the patient file.</value></data>
   <data name="Export_FailedRetry" xml:space="preserve"><value>The export failed. Nothing was shared; try again.</value></data>
+  <data name="Export_NoDialog" xml:space="preserve"><value>No save dialog could open on this device, so nothing was exported.</value></data>
   <data name="Export_Saved" xml:space="preserve"><value>Saved {0}.</value></data>
   <data name="Flag_High" xml:space="preserve"><value>▲ High</value></data>
   <data name="Flag_Low" xml:space="preserve"><value>▼ Low</value></data>

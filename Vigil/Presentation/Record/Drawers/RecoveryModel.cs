@@ -54,10 +54,20 @@ public partial record RecoveryModel(CaseRef Ref, ICaseStore Store, IClock Clock,
     /// <summary>Sign off: the sign-off sheet, opened by the record.</summary>
     public async ValueTask SignOff(CancellationToken ct) => await HandBackAsync(PaneChoice.SignOff, ct);
 
-    public async ValueTask Export(CancellationToken ct) => await HandOffAsync(Exporter.ExportCsvAsync, ct);
+    public async ValueTask Export(CancellationToken ct) => await HandOffAsync(async (c, token) => (await Exporter.ExportCsvAsync(c, token)) switch
+    {
+        { Status: ExportStatus.Saved } saved => Loc.F("Export_Saved", "Saved {0}.", saved.FileName),
+        { Status: ExportStatus.Unavailable } => Loc.T("Export_NoDialog", "No save dialog could open on this device, so nothing was exported."),
+        _ => Loc.T("Export_Cancelled", "Export cancelled."),
+    }, ct);
 
-    public async ValueTask CopySummary(CancellationToken ct) => await HandOffAsync(Exporter.CopySummaryAsync, ct);
+    public async ValueTask CopySummary(CancellationToken ct) => await HandOffAsync(async (c, token) =>
+    {
+        await Exporter.CopySummaryAsync(c, token);
+        return Loc.T("Export_Copied", "Summary copied: paste it into the patient file.");
+    }, ct);
 
+    /// <summary>Exports the stored case and shows how it ended under the export buttons; a failure is logged and said so.</summary>
     private async ValueTask HandOffAsync(Func<Case, CancellationToken, ValueTask<string>> action, CancellationToken ct)
     {
         string outcome;
