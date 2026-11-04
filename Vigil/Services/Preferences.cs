@@ -51,7 +51,9 @@ public sealed class Preferences : IPreferences
     private readonly string? _path;
     private PreferencesFile _value = new(5, false);
 
-    public Preferences(string? path = null)
+    /// <param name="path">The preferences file; null keeps them in memory (tests).</param>
+    /// <param name="logger">Where a preferences file that cannot be read is reported.</param>
+    public Preferences(string? path = null, ILogger? logger = null)
     {
         _path = path;
         if (_path is not null && File.Exists(_path))
@@ -60,9 +62,10 @@ public sealed class Preferences : IPreferences
             {
                 _value = JsonSerializer.Deserialize(File.ReadAllText(_path), PreferencesJsonContext.Default.PreferencesFile) ?? _value;
             }
-            catch (JsonException)
+            catch (Exception ex) when (ex is JsonException or IOException or UnauthorizedAccessException)
             {
-                // A damaged preferences file falls back to defaults; the record data is unaffected.
+                // A damaged or unreadable preferences file falls back to defaults; the record data is unaffected.
+                logger?.LogWarning(ex, "The preferences file could not be read; the defaults apply.");
             }
         }
     }

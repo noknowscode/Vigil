@@ -11,18 +11,22 @@ public partial record SettingsModel(
 {
     private static readonly string[] Languages = ["en", "fr"];
 
-    /// <summary>0 system, 1 light (Paper), 2 dark (Theatre). Applied on user change only (post-load: theme gotcha).</summary>
+    /// <summary>
+    /// 0 system, 1 light (Paper), 2 dark (Theatre). Applied on user change only (post-load: theme gotcha). The theme
+    /// service saves the choice; a save that fails says so under the settings, as every other preference does.
+    /// </summary>
     public IState<int> ThemeIndex => State.Value(this, () => Theme.Theme switch { AppTheme.Light => 1, AppTheme.Dark => 2, _ => 0 })
-        .ForEach(async (index, ct) => await Theme.SetThemeAsync(index switch { 1 => AppTheme.Light, 2 => AppTheme.Dark, _ => AppTheme.System }));
+        .ForEach(async (index, ct) => await SavePreferenceAsync(
+            async _ => await Theme.SetThemeAsync(index switch { 1 => AppTheme.Light, 2 => AppTheme.Dark, _ => AppTheme.System }), ct));
 
-    /// <summary>0 English, 1 French. Saved now, applied at the next start.</summary>
+    /// <summary>0 English, 1 French. Saved now, applied at the next start; the restart notice shows once it is saved.</summary>
     public IState<int> LanguageIndex => State.Value(this, () => Localization.CurrentCulture.TwoLetterISOLanguageName == "fr" ? 1 : 0)
         .ForEach(async (index, ct) =>
         {
             var culture = Languages[Math.Clamp(index, 0, 1)];
-            if (Localization.CurrentCulture.TwoLetterISOLanguageName != culture)
+            if (Localization.CurrentCulture.TwoLetterISOLanguageName != culture
+                && await SavePreferenceAsync(async _ => await Localization.SetCurrentCultureAsync(new System.Globalization.CultureInfo(culture)), ct))
             {
-                await Localization.SetCurrentCultureAsync(new System.Globalization.CultureInfo(culture));
                 await LanguageNotice.UpdateAsync(_ => culture == "fr" ? "Langue enregistrée : redémarrez Clover pour l'appliquer." : "Language saved: restart Clover to apply it.", ct);
             }
         });
@@ -71,7 +75,8 @@ public partial record SettingsModel(
 
     public async ValueTask DismissSaveError(CancellationToken ct) => await SaveError.UpdateAsync(_ => "", ct);
 
-    private async ValueTask SavePreferenceAsync(Func<CancellationToken, ValueTask> save, CancellationToken ct)
+    /// <summary>Saves one preference; a failure is logged and shown under the settings. True once saved.</summary>
+    private async ValueTask<bool> SavePreferenceAsync(Func<CancellationToken, ValueTask> save, CancellationToken ct)
     {
         try
         {
@@ -81,9 +86,10 @@ public partial record SettingsModel(
         {
             Logger.LogWarning(ex, "Saving a preference failed.");
             await SaveError.UpdateAsync(_ => Loc.T("Settings_PreferenceNotSaved", "This setting applies until Clover closes, but it could not be saved on this device."), ct);
-            return;
+            return false;
         }
         await SaveError.UpdateAsync(_ => "", ct);
+        return true;
     }
 
     public IState<string> LanguageNotice => State.Value(this, () => "");

@@ -62,8 +62,8 @@ public partial class App : Application
                         return clock;
                     });
                     services.AddSingleton<DoseFeedback>();
-                    services.AddSingleton<IPreferences>(_ => new Preferences(
-                        Path.Combine(DataRoot(), "preferences.json")));
+                    services.AddSingleton<IPreferences>(sp => new Preferences(
+                        Path.Combine(DataRoot(), "preferences.json"), sp.GetRequiredService<ILogger<Preferences>>()));
                     services.AddSingleton<IFormulary, EmbeddedFormulary>();
                     // The main window: the exporter runs its pickers on the window's UI thread, and WinAppSDK pickers need its handle.
                     services.AddSingleton<IRecordExporter>(_ => new RecordExporter(window));

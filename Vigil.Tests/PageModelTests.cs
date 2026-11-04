@@ -8,7 +8,7 @@ public class ShellModelTests : ModelTestBase
 {
     private readonly FakeRouteNotifier _routes = new();
 
-    private ShellModel Shell() => new(Nav, _routes, Store, new Preferences(), Clock);
+    private ShellModel Shell() => new(Nav, _routes, Store, new Preferences(), Clock, NullLogger<ShellModel>.Instance);
 
     [Test]
     public async Task ASidebarPickHighlightsItAndClearsTheFrame()
@@ -110,7 +110,7 @@ public class ShellModelTests : ModelTestBase
         await File.WriteAllTextAsync(Path.Combine(Folder, $"{Guid.NewGuid()}.json"), "{ not json");
 
         // A fresh start over the folder: the store reads every file and sets the damaged one aside.
-        var shell = new ShellModel(Nav, _routes, new JsonCaseStore(Folder, NoFaultInjection.Instance), new Preferences(), Clock);
+        var shell = new ShellModel(Nav, _routes, new JsonCaseStore(Folder, NoFaultInjection.Instance), new Preferences(), Clock, NullLogger<ShellModel>.Instance);
 
         (await shell.StoreWarning).Should().StartWith("One saved record could not be read.");
         (await shell.HasStoreWarning).Should().BeTrue();

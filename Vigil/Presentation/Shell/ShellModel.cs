@@ -6,7 +6,7 @@ namespace Vigil.Presentation;
 /// FrameNavigator drops a request for a route already in its stack, so plain region navigation strands a second
 /// visit (uno-runtime-gotchas, "FrameNavigator ignores a route already in its FullRoute").
 /// </summary>
-public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, ICaseStore Store, IPreferences Preferences, IClock Clock)
+public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, ICaseStore Store, IPreferences Preferences, IClock Clock, ILogger<ShellModel> Logger)
 {
     private const string ClearToFrame = Qualifiers.Nested + Qualifiers.ClearBackStack;
 
@@ -21,6 +21,9 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
         Routes.RouteChanged += OnRouteChanged;
         return ShellSection.Today;
     });
+
+    /// <summary>The last highlight update a route change started: the next one waits for it, and a failure is logged.</summary>
+    private Task _sectionUpdate = Task.CompletedTask;
 
     private SidebarFeeds Sidebar => _sidebar ??= new(Store, Preferences, Clock, Section);
     private SidebarFeeds? _sidebar;
@@ -108,7 +111,22 @@ public partial record ShellModel(INavigator Navigator, IRouteNotifier Routes, IC
         var route = e.Navigator?.Route;
         if (ShellSection.FromPath($"{route?.Base}/{route?.Path}") is { } section)
         {
-            _ = Section.UpdateAsync(_ => section, CancellationToken.None);
+            // An event handler cannot await: the update is chained after the previous one, and observed there.
+            _sectionUpdate = HighlightAsync(_sectionUpdate, section);
+        }
+    }
+
+    private async Task HighlightAsync(Task previous, string section)
+    {
+        try
+        {
+            await previous;
+            await Section.UpdateAsync(_ => section, CancellationToken.None);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            // The highlight stays on the previous item; navigation itself already happened.
+            Logger.LogWarning(ex, "Highlighting the sidebar item {Section} failed.", section);
         }
     }
 }
