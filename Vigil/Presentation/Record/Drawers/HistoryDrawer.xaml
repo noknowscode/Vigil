@@ -1,6 +1,7 @@
 <!--
-  The Visit history drawer (route "!History", HistoryModel): the visit, its team and every reading in this record,
-  newest first, in a repeater (a long case holds a reading every 3 to 10 minutes; only the rows in view are built).
+  The Visit history drawer (route "!History", HistoryModel): the visit, its team, the corrections made to the case's
+  details (Edit case details) and every reading in this record, newest first, the readings in a repeater (a long case
+  holds a reading every 3 to 10 minutes; only the rows in view are built).
 -->
 <Flyout x:Class="Vigil.Presentation.HistoryDrawer"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -24,6 +25,21 @@
               <TextBlock Text="{Binding Data.VisitDate}" Style="{StaticResource TypeEyebrow}" />
               <TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TypeH2Section}" />
               <TextBlock Text="{Binding Data.Team}" Style="{StaticResource TypeBodyMuted}" />
+              <!-- Corrections to the case's details (Edit case details), newest first, above the readings:
+                   a corrected weight changes every dose given after it. -->
+              <StackPanel Spacing="{StaticResource Space8}" Visibility="{Binding Data.HasCorrections, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                <TextBlock x:Uid="HistoryDrawer_11" Text="Corrections to this record" Style="{StaticResource TypeTitleM}" />
+                <ItemsControl x:Uid="HistoryDrawer_12" ItemsSource="{Binding Data.Corrections}" AutomationProperties.Name="Corrections to this record">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:CorrectionRow">
+                      <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="Auto,*" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+                        <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
+                        <TextBlock Grid.Column="1" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Text="{x:Bind Text}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
               <TextBlock x:Uid="HistoryDrawer_2" Text="Observations in this record" Style="{StaticResource TypeTitleM}" />
               <!-- A repeater, not an ItemsControl: a long case holds a reading every 3 to 10 minutes, and only the rows in view are built. -->
               <muxc:ItemsRepeater x:Uid="HistoryDrawer_3" ItemsSource="{Binding Data.Readings}" AutomationProperties.Name="Readings table">
@@ -53,20 +69,6 @@
                   </DataTemplate>
                 </muxc:ItemsRepeater.ItemTemplate>
               </muxc:ItemsRepeater>
-              <!-- Corrections to the case's details (Edit case details), newest first: what changed and when. -->
-              <StackPanel Spacing="{StaticResource Space8}" Visibility="{Binding Data.HasCorrections, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
-                <TextBlock x:Uid="HistoryDrawer_11" Text="Corrections to this record" Style="{StaticResource TypeTitleM}" />
-                <ItemsControl x:Uid="HistoryDrawer_12" ItemsSource="{Binding Data.Corrections}" AutomationProperties.Name="Corrections to this record">
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="local:CorrectionRow">
-                      <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="96,*" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
-                        <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
-                        <TextBlock Grid.Column="1" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Text="{x:Bind Text}" />
-                      </Grid>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-              </StackPanel>
             </StackPanel>
           </ScrollViewer>
         </DataTemplate>
