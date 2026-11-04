@@ -40,7 +40,7 @@ public partial record EditCaseModel(CaseRef Ref, ICaseStore Store, IClock Clock,
         {
             await Store.UpdateAsync(Ref.Id, c => draft.ApplyTo(c, Clock.Now), ct);
         }
-        catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
             if (ex is not CaseRuleException)
             {

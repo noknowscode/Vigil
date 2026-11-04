@@ -211,7 +211,7 @@ public partial record NewCaseModel(ICaseStore Store, IClock Clock, INavigator Na
         {
             await Store.SaveAsync(created, ct);
         }
-        catch (IOException ex)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
             Logger.LogWarning(ex, "Saving a new case failed.");
             await SaveError.UpdateAsync(_ => Loc.T("NewCase_NotSaved", "The case could not be saved on this device. Your entries are kept; try again."), ct);

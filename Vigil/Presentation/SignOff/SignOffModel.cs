@@ -74,7 +74,7 @@ public partial record SignOffModel(CaseRef Ref, ICaseStore Store, IClock Clock, 
                 ? c with { Status = CaseStatus.Signed, SignedBy = veterinarian.Trim(), SignedAt = Clock.Now }
                 : throw new CaseRuleException(Loc.T("SignOff_EndFirst", "End anesthesia before signing.")), ct);
         }
-        catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
             if (ex is not CaseRuleException)
             {

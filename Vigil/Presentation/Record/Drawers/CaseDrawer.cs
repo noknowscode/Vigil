@@ -83,7 +83,7 @@ public sealed class CaseDrawer
             await Error.UpdateAsync(_ => "", ct);
             return true;
         }
-        catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
             if (ex is not CaseRuleException)
             {

@@ -157,7 +157,7 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
         {
             await Store.DeleteAsync(Ref.Id, ct);
         }
-        catch (Exception ex) when (ex is IOException or InvalidOperationException)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
             Logger.LogWarning(ex, "Deleting case {CaseId} failed.", Ref.Id);
             await SaveError.UpdateAsync(_ => Loc.F("Record_NotDeleted", "Not deleted: {0}", StoreErrors.Describe(ex)), ct);

@@ -98,7 +98,7 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
             await Store.UpdateAsync(hero.Id, c => c.PrepStartedAt is null ? c with { PrepStartedAt = Clock.Now } : c, ct);
             await ActionError.UpdateAsync(_ => "", ct);
         }
-        catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
             Logger.LogWarning(ex, "Starting prep for case {CaseId} failed.", hero.Id);
             await ActionError.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", StoreErrors.Describe(ex)), ct);

@@ -100,7 +100,7 @@ public partial record SettingsModel(
         {
             await Store.ReplaceAllAsync(SampleDay.Create(Clock.Now), ct);
         }
-        catch (IOException ex)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
             Logger.LogWarning(ex, "Loading the sample day failed.");
             await Notice.UpdateAsync(_ => Loc.T("Settings_SampleFailed", "The sample day could not be loaded. Your records are unchanged."), ct);
@@ -119,7 +119,7 @@ public partial record SettingsModel(
         {
             await Store.ClearAsync(ct);
         }
-        catch (IOException ex)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
             Logger.LogWarning(ex, "Clearing the records failed.");
             await Notice.UpdateAsync(_ => Loc.T("Settings_ClearFailed", "Some records could not be deleted. Try again."), ct);

@@ -96,7 +96,7 @@ public sealed class DoseEntry
         {
             await _store.UpdateAsync(_caseId, c => c with { Doses = c.Doses.Add(dose) }, ct);
         }
-        catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
             _logger.LogWarning(ex, "Saving a dose for case {CaseId} failed.", _caseId);
             await Error.UpdateAsync(_ => Loc.F("Error_NotSaved", "Not saved: {0}", StoreErrors.Describe(ex)), ct);
