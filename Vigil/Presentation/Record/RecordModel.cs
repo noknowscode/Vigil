@@ -6,7 +6,6 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
     private readonly Diagnostics.LiveCounter _alive = new(nameof(RecordModel));
 #endif
 
-    // The stored case; null (deleted or never existed) renders the None template.
     // A "Due next" action opens the record on its task's pane (CaseRefPane); everything else opens it closed.
     public IState<bool> PaneOpen => State.Value(this, () => Ref is CaseRefPane);
     public IState<string> Pane => State.Value(this, () => Ref is CaseRefPane open ? open.Pane : "Preop");
@@ -29,6 +28,7 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
     public IFeed<long> DosePulse => Now.Select(_ => Feedback.PulseFor(Ref.Id));
     public IFeed<bool> ShowAcknowledgement => DosePulse.Select(x => x > 0);
 
+    // The stored case; null (deleted or never existed) renders the None template.
     private IFeed<Case> Source { get; } = Feed<Case>.Async(
         async ct => await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(c) : Option.None<Case>(), Store.Changed);
 
@@ -87,7 +87,7 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
 
     public IFeed<DraftFlags> Flags => Feed.Combine(Draft, Source).Select(x => DraftFlags.From(x.Item1, x.Item2.Patient.Species));
 
-    /// <summary>In-app setting OR'ed with the platform's; the strip draws new columns final instead of fading them.</summary>
+    /// <summary>In-app setting OR'ed with the platform's; the care mark skips its acknowledgement turn.</summary>
     public IFeed<bool> ReduceMotion => Feed.Async(_ => ValueTask.FromResult(Preferences.ReduceMotion), Preferences.Changed);
 
     public async ValueTask Step(string arg, CancellationToken ct) =>

@@ -1,5 +1,4 @@
 using System.Globalization;
-using Vigil.Domain;
 
 namespace Vigil.Presentation;
 

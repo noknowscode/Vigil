@@ -1,5 +1,3 @@
-using Uno.Extensions.Toolkit;
-
 namespace Vigil.Presentation;
 
 public partial record SettingsModel(

@@ -3,9 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <!--
     Rung-4 custom tokens: vital-sign series colours follow the patient-monitor convention and have no
-    Material role. Each series also carries a glyph in the strip (colour is never the only cue):
+    Material role. Each series also carries a glyph on the vitals pad (colour is never the only cue):
     HR dot, BP chevrons, SpO2 ring, EtCO2 cross, Temp square.
-    The Skia strip reads these from a palette snapshot taken on ActualThemeChanged (never a converter).
   -->
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">

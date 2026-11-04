@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:utu="using:Uno.Toolkit.UI"
              x:Name="Root">
-  <!-- One vital on the pad: label with its strip glyph, 48 px − / value / +, range flag as text. -->
+  <!-- One vital on the pad: label with its series glyph, 48 px − / value / +, range flag as text. -->
   <Grid RowSpacing="{StaticResource Space4}">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />

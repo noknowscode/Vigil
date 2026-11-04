@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace Vigil.Domain;
 
 public enum Species { Canine, Feline, Other }

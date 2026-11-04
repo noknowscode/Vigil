@@ -1,7 +1,5 @@
 #if DEBUG || PAGE_TIMER
 using System.Diagnostics;
-using System.Windows.Input;
-using Microsoft.UI.Xaml.Media;
 
 namespace Vigil.Diagnostics;
 

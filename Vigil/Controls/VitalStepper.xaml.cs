@@ -1,5 +1,3 @@
-using System.Windows.Input;
-
 namespace Vigil.Controls;
 
 /// <summary>Pad stepper. Pure dependency properties: no handlers, the model owns every change.</summary>

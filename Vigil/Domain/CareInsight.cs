@@ -1,5 +1,3 @@
-using Vigil.Services;
-
 namespace Vigil.Domain;
 
 /// <summary>The care-time insight: how long preparation ran today against the practice's plan.</summary>
