@@ -4,10 +4,6 @@ namespace Vigil;
 
 public partial class App : Application
 {
-    /// <summary>
-    /// Initializes the singleton application object. This is the first line of authored code
-    /// executed, and as such is the logical equivalent of main() or WinMain().
-    /// </summary>
     public App()
     {
         this.InitializeComponent();
@@ -16,9 +12,30 @@ public partial class App : Application
     protected Window? MainWindow { get; private set; }
     protected IHost? Host { get; private set; }
 
-    [SuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Uno.Extensions APIs are used in a way that is safe for trimming in this template context.")]
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
+        CrashReporter.Attach(this, Path.Combine(DataRoot(), "crash.log"));
+        try
+        {
+            await LaunchAsync(args);
+        }
+        catch (Exception ex)
+        {
+            // async void: a launch failure would vanish unrecorded (Uno's dispatcher swallows it on desktop; WinAppSDK ends the process).
+            CrashReporter.Report(nameof(OnLaunched), ex);
+            throw;
+        }
+    }
+
+    [SuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Uno.Extensions APIs are used in a way that is safe for trimming in this template context.")]
+    private async Task LaunchAsync(LaunchActivatedEventArgs args)
+    {
+#if DEBUG
+        if (Environment.GetCommandLineArgs().Contains("--vigil-crash=launch"))
+        {
+            throw new InvalidOperationException("Verification crash during launch (--vigil-crash=launch).");
+        }
+#endif
         var builder = this.CreateBuilder(args)
             .UseToolkitNavigation()
             .Configure(host => host
@@ -79,11 +96,11 @@ public partial class App : Application
         MainWindow.SetWindowIcon();
         MainWindow.Title = "Clover";
 
-
         Host = await MainWindow.InitializeNavigationAsync(
             async () =>
             {
                 var host = builder.Build();
+                CrashReporter.Logger = host.Services.GetRequiredService<ILogger<App>>();
                 Loc.Localizer = host.Services.GetRequiredService<IStringLocalizer>();
 #if DEBUG
                 await SeedForVerificationAsync(host.Services);
@@ -117,6 +134,7 @@ public partial class App : Application
 #if DEBUG
         // After any --clover-size resize: a sheet opened before a resize would be dismissed by it.
         await ApplyVerificationViewAsync();
+        RaiseVerificationCrash();
 #endif
     }
 
@@ -213,6 +231,40 @@ public partial class App : Application
         catch (Exception ex)
         {
             Console.Error.WriteLine($"VERIFY failed: {ex}");
+        }
+    }
+
+    /// <summary>
+    /// Crash-report hooks, each landing in the log and in crash.log (<see cref="CrashReporter"/>):
+    /// <c>--vigil-crash=launch</c> throws inside the launch, <c>--vigil-crash=ui</c> from an element's Loaded handler
+    /// (Uno raises those as Application.UnhandledException), <c>--vigil-crash=task</c> leaves a faulted task unobserved.
+    /// Key handlers and DispatcherQueue work are no probe: Uno 7 on desktop catches what they throw and only traces it
+    /// (measured), so it never reaches a handler.
+    /// </summary>
+    private void RaiseVerificationCrash()
+    {
+        var crash = Environment.GetCommandLineArgs()
+            .FirstOrDefault(a => a.StartsWith("--vigil-crash=", StringComparison.OrdinalIgnoreCase))?.Split('=', 2)[1];
+        if (crash is null)
+        {
+            return;
+        }
+        Console.Error.WriteLine($"VERIFY crash={crash} log={CrashReporter.LogPath}");
+        if (crash == "ui" && MainWindow?.Content is FrameworkElement content)
+        {
+            var probe = new Border();
+            probe.Loaded += (_, _) => throw new InvalidOperationException("Verification crash on the UI thread (--vigil-crash=ui).");
+            _ = new Microsoft.UI.Xaml.Controls.Primitives.Popup { Child = probe, XamlRoot = content.XamlRoot, IsOpen = true };
+        }
+        else if (crash == "task")
+        {
+            _ = Task.Run(() => throw new InvalidOperationException("Verification crash in an unobserved task (--vigil-crash=task)."));
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(500);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            });
         }
     }
 
