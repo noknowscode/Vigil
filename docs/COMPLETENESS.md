@@ -1,151 +1,165 @@
-# Completeness audit: Vigil v2 redesign (2026-10-28, Uno.Sdk 6.7.30, heads: desktop, android, ios, wasm)
+# Completeness audit: Vigil (2026-11-04, Uno.Sdk 7.0.0-dev.115, heads: desktop, android, ios, wasm, windows)
 
-Scope: app shell (sidebar, top bar, routes), Today (route Today, `BoardPage`), Patient care (route Record) and every
-workflow through them. Sources: SPEC-v2.md (decisions, capability inventory, State designs, Quality Gates), HANDOFF.md,
-docs/design/*.md, the two reference renders, docs/evidence/v2/*. Method: `uno-completeness-audit` with runtime proof
-through the App MCP on `net10.0-desktop` (`--clover-preview --clover-size=1440x1084`, sample day reseeded per launch),
-store files read from `%LOCALAPPDATA%\Clover\com.unoplatform.vigil\LocalState\clover-design-preview\cases` after each
-write. Evidence grades: R runtime, C code, I inferred, X not checked.
+Audited at f376607 (`feat/production-readiness`). Report mode, no code changed. Sources: SPEC.md, SPEC-v2.md,
+HANDOFF.md, docs/DECISIONS.md, docs/design/*, the code-review notes of 2026-11-01, and the previous audit (2026-10-28,
+Uno 6.7.30), whose findings were re-checked here rather than carried over. Runtime: Debug `net10.0-desktop` on Linux
+under Xvfb (`VIGIL_X11_RENDERER=software`), driven with xdotool and the Debug hooks (`--vigil-seed`, `--vigil-now`,
+`--vigil-theme`, `--vigil-route`, `VIGIL_FAULT`). Every write was checked in the case JSON files and the preferences
+file, and after a relaunch. Evidence grades: R runtime, C code, I inferred, X not checked.
 
-**Verdict: Complete with gaps** (0 Blockers, 5 Majors, 9 Minors) at 2a10457.
-Initial grade at 4881137 was **Incomplete** (2 Blockers, 7 Majors, 9 Minors); 2 Blockers and 3 Majors were fixed in
-this pass (see Fixed).
+Verdict: **Incomplete** (2 Blockers, 2 functional Majors, 4 head Majors, 17 Minors)
 
-Safe to show (desktop, R this session): Today hero, cards, Due next and every Due next action; open a record from
-Today, sidebar Anesthesia and New patient; record observations; pre-op checklist + ASA + Induce; administer dose;
-pain score; lab review; discharge call; export panel of a signed record.
-Keep off screen: the 10-35 s blank load between pages (Debug), anything on android/wasm/ios, a new patient's OR room
-and planned start (not captured), fluids (sample only).
+Safe to show (desktop, R): Today, Patients, Agenda, Settings; open a record from the hero, a card, Due next and the
+Agenda; New patient with its schedule fields; pre-op checks, ASA and Induce; record observations; administer a dose,
+including the out-of-range confirmation; sign off a case that is already in recovery (the sample day's Milo); theme,
+names and interval surviving a relaunch; error and Retry; the empty day.
+Keep off screen: ending anesthesia on any case (no control reaches it); the "Monitoring on" pill and the bell's dot;
+CSV export on Linux; every head except desktop.
 
-## Inventory (source: SPEC-v2 Spec Graph + capability inventory)
+## Inventory
 
-Screens: 10 intended, 10 present, 0 unreachable (Shell, Today, Patients, Agenda, Record with 7 panes, Dose, SignOff,
-ParentPreview, Settings, NewCase `!`, Menu `!` below 760). Record panes: Preop, Monitor, Dose, Drugs, Recovery,
-History, Labs, all reachable (Recovery for a signed record only since this pass).
-Routes: 11 registered under Main; 0 dead references.
-Interactions: 88 XAML triggers (`Command=` / `Navigation.Request`). 0 dead by construction. Disabled by user decision:
-Records, Messages, Reports, Help center, clinic switcher, search, bell, account menu, Monitoring pill; also disabled
-"Coming soon" beyond that list: care-time report button and "See the prep checklist" (Minor below).
-Critical workflows:
-1. Open a record (Today card / hero Record / Due next row, Patients, sidebar Anesthesia, New patient) and Back
-2. Record observations
-3. Pre-op checklist + ASA + Induce
-4. Administer dose (calculation, persistence, redose)
-5. Recovery: pain score, extubation, sign-off, export, discharge call
-6. Due next actions (Record, Score, Prepare, Review, Call) clear their task
-7. Settings (surname, theme, language), parent preview, agenda, breadcrumb
+Screens: 11 intended, 11 present, 0 unreachable as pages, 0 missing (source: SPEC-v2 Spec Graph). Shell, Today, Patients,
+Agenda, Record (panes Preop, Monitor, Dose, Drugs, Recovery, History, Labs), ParentPreview, Dose, SignOff, Settings,
+NewCase `!`, Menu `!` (below 760). The Recovery pane cannot be opened while a case is under anesthesia (Blocker 1).
+Records, Messages, Reports and Help center have no screen by decision (SPEC-v2 decision 1, D6).
+Routes: 11 registered (Main + 10 nested), every one with a trigger; 0 dead references.
+Interactions: 98 XAML lines with `Command=` / `Navigation.Request`; 0 dead by construction; 11 disabled "Coming soon"
+controls (D6); 2 that show a state the app does not have (the "Monitoring on" pill, the bell's unread dot).
+Critical workflows (derived from SPEC.md flows 1-6 and SPEC-v2):
+1. Open a record (hero, card, Due next, Agenda, Patients, sidebar Anesthesia) and Back
+2. New patient to record
+3. Pre-op checks, ASA and Induce
+4. Record observations
+5. Administer a dose (calculation, out-of-range confirmation)
+6. End anesthesia, recovery, sign off, export
+7. Settings, then relaunch with everything kept
 
 ## Completeness by area
 
 | # | Area | Status | Evidence | Blockers | Majors | Minors | Note |
 |---|---|---|---|---|---|---|---|
-| 1 | Screens | Complete | R | 0 | 0 | 1 | 10/10; New case and pane bodies keep the old Clover styling |
-| 2 | Navigation | Complete | R | 0 | 0 | 1 | Wrong-patient record fixed; sidebar highlight stays on Patients after Back to Today |
-| 3 | Interactions | Complete | R | 0 | 0 | 1 | Review/Call/Score/export now reachable; two extra "Coming soon" buttons |
-| 4 | Logic | Complete | R | 0 | 0 | 0 | 121 unit tests; pain, lab review, discharge call rules added with tests |
-| 5 | Data | Partial | R | 0 | 2 | 0 | Writes persist (store files read back); v2 fields for new patients and fluids are sample-only |
-| 6 | States | Complete | R | 0 | 0 | 0 | Loading/empty/error/retry captured 2026-10-28 (docs/evidence/v2 today-*, patient-*); not re-run here |
-| 7 | Forms | Partial | R | 0 | 0 | 2 | New case validates and creates (Ziggy); dose TextBox header overlaps value; "0 years ·" residue |
-| 8 | Authentication | N/A (decision) | C | 0 | 0 | 0 | Local single-device record, no accounts (SPEC.md) |
-| 9 | Responsive/adaptive UI | Complete | R | 0 | 0 | 0 | 1440/1000/700 captured 2026-10-28 (shell-*, today-*, patient-*); not re-run here |
-| 10 | Platform behavior | Partial | C | 0 | 1 | 0 | wasm and android build clean; no v2 runtime on any head but desktop |
-| 11 | Failure handling | Complete | R | 0 | 0 | 0 | Write failures surface in the InfoBar; signed-record writes refused except the discharge call (test) |
-| 12 | Accessibility | Partial | C | 0 | 0 | 1 | Named controls and composed names present; disabled controls keep the enabled look by design |
-| 13 | Performance | Broken | R | 0 | 1 | 0 | 10-35 s blank between pages in Debug; Release not measured |
-| 14 | Security/privacy | Complete | C | 0 | 0 | 0 | No network, no secrets; records unencrypted in app storage |
-| 15 | Visual quality | Partial | R | 0 | 0 | 2 | Hot Design toolbar overlaps the logo (Debug); pane bodies off the v2 type ramp |
-| 16 | Testing | Partial | R | 0 | 1 | 1 | 121 tests pass; no automated UI suite; App MCP proof is this session's log |
+| 1 | Screens | Partial | R | 0 | 0 | 0 | 11/11 present; Recovery pane unreachable for a live case (counted under Navigation) |
+| 2 | Navigation | Broken | R | 1 | 0 | 2 | No path to End anesthesia; sidebar highlights two items after Anesthesia |
+| 3 | Interactions | Simulated | R | 1 | 1 | 0 | "Monitoring on" and the bell's dot show a state the app lacks; 11 "Coming soon" controls |
+| 4 | Logic | Complete | R | 0 | 0 | 1 | Dose math, range check, validation proven; chart caption ignores the interval |
+| 5 | Data | Partial | R | 0 | 1 | 1 | Writes persist across a relaunch; no case can be edited after creation |
+| 6 | States | Complete | R | 0 | 0 | 0 | Error + Retry and empty day proven; loading skeleton not captured |
+| 7 | Forms | Partial | R | 0 | 0 | 3 | Validation works; errors sit in a footer; an empty reading closes its pane; "0 years ·" |
+| 8 | Authentication | N/A (decision) | C | 0 | 0 | 0 | Shared clinic device, typed-name sign-off (SPEC.md) |
+| 9 | Responsive/adaptive UI | Partial | R | 0 | 0 | 2 | 390 px: record hero clips, menu drawer opens 107 px down |
+| 10 | Platform behavior | Partial | R | 0 | 4 | 1 | Export picker fails on Linux and reads "Export cancelled."; 4 heads never run |
+| 11 | Failure handling | Partial | R | 0 | 0 | 2 | Store faults recover through Retry; no crash handler; preference saves unguarded |
+| 12 | Accessibility | Partial | C | 0 | 0 | 1 | Names on controls; disabled items keep the enabled look |
+| 13 | Performance | Partial | I | 0 | 0 | 1 | 14.7 s Release startup (2026-10-28 run), not re-measured |
+| 14 | Security/privacy | Complete | C | 0 | 0 | 0 | No network, no secrets; fault, seed and route hooks are `#if DEBUG` |
+| 15 | Visual quality | Partial | R | 0 | 0 | 2 | Hard-coded clinic; mixed "Anaesthesia"/"Anesthesia" |
+| 16 | Testing | Partial | R | 0 | 0 | 1 | 156/156 pass; no UI suite, so the unreachable End anesthesia passed |
 
 ## Critical workflows by head
 
-| Workflow | desktop | android | ios | wasm |
-|---|---|---|---|---|
-| 1. Open a record + Back | R (Oscar → Anesthesia → Bella stays Bella 20 s with pane open; Back → Today; New patient "Ziggy" → record, Patients 4 → 5) | X (build only) | X (no Mac) | X (build only) |
-| 2. Record observations | R (overdue 3:11 → "next 5:00", chart and banner updated) | X | X | X |
-| 3. Pre-op + Induce | R (Oscar 5/5 checks + ASA I in store, Induce → Status Anesthetized, InducedAt 12:45:38, Anesthesia count 1 → 2) | X | X | X |
-| 4. Administer dose | R (Cefazolin 22 mg/kg × 6.8 kg = 1.50 mL IV in store; next dose 14:16 = +90 min) | X | X | X |
-| 5. Recovery, sign-off, export, call | R (pain "2" → PainScores gains 12:44 entry; Pepper "Call made" → DoneAt in store, still Signed; Export/Copy visible); sign-off itself R 2026-10-08 audit, not re-run | X | X | X |
-| 6. Due next actions clear | R (Review → Labs pane → "Mark reviewed": Reviewed + pre-op check, 5 → 4 tasks; Call → row gone; Score → due 12:59; Record → reading saved) | X | X | X |
-| 7. Settings, parent preview, agenda, breadcrumb | R 2026-10-28 earlier session (shell-agenda, shell-patients, patient-back-from-sidebar captures); Settings surname/theme/language C this session | X | X | X |
-
-## Fixed in this pass
-
-- **Blocker, Navigation**: opening a record from the shell (sidebar Anesthesia, New patient) while a record was open
-  showed the previous patient's data under the new name once a pane opened. The shell now clears to Today and opens
-  the record from there. Fix cycle 1 (single `Today/Record` route) failed at runtime; cycle 2 held. - 0140e26 - R.
-- **Blocker, Interactions**: a signed record's CTA opened History, so Export CSV / Copy summary were unreachable. It now
-  opens Recovery & handover. - 2a10457 - R.
-- **Major, Logic**: pain score wrote only the legacy field; the 15-minute task never cleared and the status card
-  ("1 of 4") disagreed with the pane. Each tap of 0-4 now records a timed score (`RecoveryLog.WithPainScore`). - a400bc7 - R + 3 tests.
-- **Major, Interactions**: Due next "Review" had no completion; the Lab results pane now lists panels with
-  "Mark reviewed" (`Case.WithLabReviewed`). - 2a10457 - R + test.
-- **Major, Interactions**: Due next "Call" opened Sign-off; it now opens Recovery & handover with "Call made"
-  (`Case.WithDischargeCallDone`); the store accepts that one follow-up on a signed record (`Case.OnlyFollowUpDiffers`). - 2a10457 - R + 2 tests.
-- Every Due next action opens the record on its pane (`CaseRefPane`). - 2a10457 - R + test.
+| Workflow | desktop | android | ios | wasm | windows |
+|---|---|---|---|---|---|
+| 1. Open a record + Back | R (hero Record, Due next Record → Knuckles on the Monitor pane, Agenda → Ziggy, sidebar Anesthesia, Back → Today) | X (CI build only) | X (CI build only) | X (not run) | X (CI build only) |
+| 2. New patient to record | R (empty Create: 5 errors, no file; Ziggy saved with OR 2 and 14:30, record opened, Patients 4 → 5) | X | X | X | X |
+| 3. Pre-op + Induce | R (5 checks + ASA I in the store; Induce → Status Anesthetized 12:48:26, Anesthesia 1 → 2) | X | X | X | X |
+| 4. Record observations | R (HR stepped to 98, readings 13 → 14, overdue banner cleared, next 4:56) | X | X | X | X |
+| 5. Administer a dose | R (Meloxicam 0.2 mg/kg × 18.4 kg ÷ 5 = 0.74 mL SC stored; 2 mg/kg raised the confirmation; Change dose wrote nothing) | X | X | X | X |
+| 6. End anesthesia, recovery, sign off, export | **Broken** (no control opens End anesthesia; Milo, seeded in recovery: sternal, pain 2, sign-off → Signed by Dr. Bergeron; CSV write X) | X | X | X | X |
+| 7. Settings + relaunch | R (first name, surname, 3 min, Dark in preferences.json; relaunch shows Dark, "Dr. Okafor", AO, 3-minute strip, Ziggy and the signed Milo) | X | X | X | X |
 
 ## Findings
 
 ### Blockers
-None.
+- [Navigation] No control ends anesthesia. "End anesthesia" lives in the Recovery pane (`RecordPage.xaml:711`), and nothing
+  opens that pane while a case is under anesthesia: RecordNav has five items and no Recovery (`Controls/RecordNav.xaml:55-108`),
+  the stage button opens Monitor (`RecordViews.cs:231`), and Due next opens Recovery only for pain-score and discharge-call
+  tasks (`TodayViews.cs:439`). A case started in the app can never reach recovery, sign-off or export; only a case seeded
+  in recovery can. The v2 rebuild (4a7b33a) removed the old "Recovery & handover" card. The model test calls
+  `EndAnesthesia` directly, so the suite passes - R (Ziggy induced: Vitals, Preparation, Medications and the stage button
+  checked at 1440x1380, none offers it; the Debug hook `--vigil-route=Record:Recovery` shows the button, and pressing it
+  set Status Recovery, EndedAt 12:53:27) - owner: uno-navigation, mvux.
+- [Interactions] The sidebar says "Monitoring on" next to a green dot (`Controls/Sidebar.xaml:199-213`), and the bell
+  carries a red unread dot (`Controls/TopBarCluster.xaml:31-35`). Vigil has no monitor link (SPEC.md: monitor integration
+  omitted) and no alert feed. Both stayed on with an empty store and while every store read failed. In an anesthesia
+  record, "Monitoring on" is a safety claim. D6 keeps the pill as a disabled item, but it is a status rather than a control,
+  and it renders in full ink - R (captures with the sample day, the empty day and `VIGIL_FAULT=store-read-x6`) - owner:
+  gold-standard-pass for wording; decision for the owner (see Unresolved Questions).
 
-### Majors
-- [Data] New patient captures no OR room, planned start/minutes, fasting time or parent notification
-  (`NewCasePage.xaml`): a new case shows "starts —", no OR, no planned gantt slot, no next-surgery stats. These v2 fields
-  are written only by `SampleDay` - C/R ("Ziggy" record) - owner: mvux + uno-toolkit (form).
-- [Data] Fluids ("Fluids running · LRS 5 mL/kg/h") have no entry or stop action anywhere; only the sample day sets
-  `Case.Fluids` - C - owner: mvux. Needs a UI decision (see Unresolved Questions).
-- [Performance] Each navigation renders a blank frame (header only, no Progress skeleton) for 10-35 s in Debug before the
-  record or Today appears (measured by screenshot polling: Today revisit ~16 s, Record via Due next 20-35 s, New patient
-  → record ~40 s). The first launch renders Today in under 5 s. Cause not traced (I: page construction on the UI thread,
-  or record models that stay alive after navigation and keep their 1 Hz clock feeds). Release not measured - R (Debug) /
-  X (Release) - owner: uno-audit / uno-hill-climb.
-- [Platform] android and wasm: `dotnet build` 0 warnings, 0 errors this session, no runtime run of v2 - X.
-  ios: not built (Windows host) - X.
-- [Testing] No automated UI suite; workflow proof is this session's App MCP log and store reads - C.
+### Majors (functional)
+- [Data] A case cannot be edited once created. No pane edits the patient, weight, procedure, team or schedule. Delete is
+  offered only while the case is booked (`RecordPage.xaml:572-575`). A weight mistyped on a case that is already under
+  anesthesia drives every dose and cannot be corrected - R (no edit control on any pane of Knuckles or Ziggy) / C - owner:
+  mvux, uno-toolkit.
+- [Interactions] 11 controls advertise features the app lacks: the clinic switcher, Records, Messages, Reports, Help center,
+  the account menu, the Monitoring pill, search, the bell, the care-time report button, and "See the prep checklist". The
+  last one points at a checklist that exists (Record > Preparation) (`BoardPage.xaml:697`). This is the recorded exception
+  D6, so it is graded as one Major, not eleven - C/R (rendered and inert at 1440 and 390) - owner: decision for the owner.
+
+### Majors (head)
+- [Platform] android: no runtime run of any workflow (CI builds only) - X.
+- [Platform] ios: no runtime run (CI simulator build only) - X.
+- [Platform] wasm: no runtime run this audit (CI publishes to GitHub Pages) - X.
+- [Platform] windows (WinAppSDK): no runtime run (CI build check only) - X.
 
 ### Minors
-- [Navigation] After Back from a record to Today the sidebar keeps "Patients" highlighted - R.
-- [Interactions] "See the prep checklist" and the care-time report button are "Coming soon" although a prep checklist
-  exists (Record > Preparation) - C.
-- [Forms] Dose pane: the "Dose (mg/kg)" header overlaps the typed value - R.
-- [Forms] A new patient without age and owner reads "0 years ·" - R.
-- [Screens/Visual] New case sheet and the record pane bodies (Preop, Monitor, Dose, Recovery, History) keep the v1
-  Clover/Material styling, not the v2 type ramp - R - owner: gold-standard-pass.
-- [Visual] Hot Design toolbar overlaps the logo in Debug - R.
-- [Accessibility] Disabled controls keep the enabled look (`Themes/Tokens.xaml:378`), so a disabled button reads as
-  active by sight; screen readers get IsEnabled - C.
-- [Testing] Record and Today state captures (loading/empty/error/retry, dark, 1000/700) are from the earlier session
-  today, not re-run after these fixes - R (prior).
-- [Performance] Clock-driven feeds re-render the record every second while a pane is open (I).
+- [Platform] The CSV save picker fails on Linux desktop (Uno `LinuxFileSaverExtension`: "Can not determine DBus session
+  bus address"), and the app reports "Export cancelled." (`RecordExporter.cs:31-34`). A failed picker cannot be told from
+  a cancel - R.
+- [Forms] Recording an empty reading shows "Not saved: Enter at least one vital sign" and closes the Record observations
+  pane, so the user has to reopen it - R.
+- [Forms] New patient lists its errors in a footer above Create, not at the fields - R.
+- [Forms] A patient without an age or owner reads "0 years · " (`CaseView.cs:135`) - C.
+- [Logic] The record chart caption says "5-minute strip" (`RecordPage.xaml:250`) with the interval set to 3 minutes. The
+  banner on the same screen says "every 3 minutes", and Today's hero says "3-minute strip" - R.
+- [Data] Copy summary shows "Summary copied"; the clipboard contents were not read (no reader in the container) - R/X.
+- [Navigation] While the Recovery pane is open, RecordNav highlights Preparation - R.
+- [Navigation] After sidebar Anesthesia, both Patients and Anesthesia stay highlighted - R.
+- [Responsive] At 390 px the record's hero tray is cut off at its right edge (the photo and the nav highlight end at
+  x=348 with no border) - R.
+- [Responsive] At 390 px the menu drawer opens 107 px below the top, with no scrim, and shows the desktop
+  collapse-sidebar button - R.
+- [Failure handling] No `UnhandledException` / `UnobservedTaskException` handler anywhere; `async void OnLaunched` is
+  unguarded (`App.xaml.cs:21`) - C.
+- [Failure handling] A preference is set in memory before an unguarded file write; callers never catch it
+  (`Preferences.cs:94-104`) - C.
+- [Accessibility] Disabled controls keep the enabled look (`Themes/Tokens.xaml:432`): Records, Messages and Reports read as
+  active in both themes - R.
+- [Performance] Startup to a settled Today took 14.7 s in the 2026-10-28 Release timing run (HANDOFF), against a 2 s
+  target. Not re-measured here: Debug navigations settled within the 6-8 s capture waits - I.
+- [Visual] The clinic identity "Clinique Plateau · 2 suites · Montréal" is hard-coded in the sidebar
+  (`Sidebar.xaml:47-48`) - R.
+- [Visual] "Anaesthesia" (Agenda, gantt: `CareDay.cs:9`, `AgendaPage.xaml:42`) and "Anesthesia" are mixed - R.
+- [Testing] No automated UI suite. Workflow proof is this audit's log; 156/156 unit tests pass (`dotnet test`, 2 s) - R.
 
-## Debug checkpoint (closed)
-
-Wrong-patient record: tried (1) navigating `Today/Record` with a cleared frame: the new page still showed Oscar after a
-pane opened; (2) clearing to Today with `Go`, then navigating Record from there: held for 20 s with the pane open and
-after Back. Evidence: `uno_app_get_element_datacontext` on the page returned Bella's model while the FeedView template
-showed Oscar. Cause not traced (I: a stale FeedView subscription when the shell navigator opens Record directly). Not
-reduced to a minimal repro; candidate runtime gotcha.
+### Re-checked from the 2026-10-28 audit
+- Fixed (R): New patient now captures the OR room and planned start (Ziggy: OR 2, 14:30 stored). The dose header no
+  longer overlaps its value. Debug navigations settled within the 6-8 s capture waits (was 10-35 s), not timed finer.
+- Fixed (C): Fluids start, change rate and stop on the Medications pane (seen on Knuckles, not driven).
+- Still open: "0 years ·" residue; disabled controls look enabled; no UI suite; heads other than desktop not run.
 
 ## Not checked (X)
-- Release-build navigation timing - Debug only - time the same three navigations in a Release desktop run.
-- android, wasm, ios runtime for every workflow - not run this session - `uno_app_start` per TFM, emulator/browser.
-- Dark theme, French and 760/393 widths after this pass's XAML changes (Labs pane list, pain buttons, discharge block) - not re-captured.
-- Sign-off itself and CSV export file write - covered by the 2026-10-08 audit, not re-run.
+- CSV file write: no DBus portal in the container. Check: run on Windows or a Linux desktop session, export Milo, open the file.
+- Loading skeletons (`VIGIL_SLOW_MS`, `record-slow`): not captured. Check: launch with `VIGIL_FAULT=record-slow`.
+- "Next surgery" hero, Start prep and Due next Prepare/Review/Call: not driven. Check: `--vigil-seed=next`.
+- Pet-parent view, Labs "Mark reviewed", fluids start/stop, Delete case confirm: present, not driven.
+- android, ios, wasm, windows: every workflow. Check: emulator, simulator, browser (Playwright on the Pages build), Windows machine.
+- French strings and reduce motion: not run.
 
 ## Noted for other skills
-- uno-audit: `RecordPage.xaml` is 830 lines with seven panes in one template; split panes into controls (load time).
-- gold-standard-pass: restyle the pane bodies and New case to the v2 ramp; fix the dose TextBox header overlap.
+- uno-audit: `RecordPage.xaml` holds seven panes in one template, and `RecordModel` carries every pane's commands;
+  splitting them per pane would have made the missing Recovery entry visible.
+- gold-standard-pass: pill wording, the mixed spelling, the 390 px record hero, and the drawer placement.
 
 ## Unresolved Questions
-- User decision 1 (kept): Records, Messages, Reports, Help center, clinic switcher, search, bell and account menu are
-  visible but disabled with "Coming soon". They advertise features the app does not have; revisit before release.
-- "Monitoring on" pill (kept, user decision): it reads as an active monitor link while Vigil has none; the "Monitor
-  signal lost" and "Monitoring paused" states are omitted. Revisit if a monitor integration is wanted.
-- Waveforms are recorded-HR sparklines by decision; no live monitor by decision; not a tablet app (no 56 px rule).
-- Fluids: add a start/stop fluid action (where: Dose pane or a Fluids pane?) or label the card as recorded elsewhere?
-- New patient: add OR room and planned start (time picker) to the New case form, or schedule them elsewhere (Agenda)?
-- Due next actions now open the record on the task's pane (Monitor, Recovery, Labs); confirm this is the intended flow.
-- A signed record accepts one change after sign-off: marking the discharge call made. Confirm that rule.
-- Authentication N/A: local single-device record by design (SPEC.md); confirm.
-- android, wasm, ios: no v2 runtime evidence; which heads must be proven before calling v2 done?
-- Performance: is the 10-35 s Debug navigation acceptable for demos, or should Release be measured and the record page split?
+- "Monitoring on" and the bell's dot: hide them, or reword (for example "No monitor connected") and drop the dot? D6
+  covers disabled entry points. These two state facts the app does not have, and that is what made them Blockers.
+- D6 "Coming soon" controls (11): kept by the owner and graded as one Major. Revisit before any release.
+- Ending anesthesia: where should it live in v2? Candidates: a sixth RecordNav item "Recovery", or a second button in
+  the stage card while the case is under anesthesia.
+- Case correction: should weight and patient details be editable until sign-off, with the edit logged?
+- Authentication N/A: shared clinic device, typed-name sign-off (SPEC.md). Confirm.
+- Derived inventory: workflows 6 and 7 are assembled from SPEC.md flows 5-6. Confirm that ending anesthesia belongs in
+  the critical set.
+- android, ios, wasm and windows have no runtime evidence. Which heads must be proven before Vigil is called done?
+- Formulary and alarm thresholds are sample reference data, labelled "not for clinical use", and a practice cannot load
+  its own (SPEC.md). Confirm that this stays out of scope.
