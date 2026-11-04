@@ -547,7 +547,7 @@
   <data name="Ruler_Recovery" xml:space="preserve"><value>Réveil</value></data>
   <data name="Ruler_Since" xml:space="preserve"><value>Depuis {0:HH:mm}</value></data>
   <data name="Settings_1.Text" xml:space="preserve"><value>Paramètres</value></data>
-  <data name="Settings_10.Content" xml:space="preserve"><value>Léger</value></data>
+  <data name="Settings_10.Content" xml:space="preserve"><value>Clair</value></data>
   <data name="Settings_11.Content" xml:space="preserve"><value>Sombre</value></data>
   <data name="Settings_12.Text" xml:space="preserve"><value>Réduire les animations</value></data>
   <data name="Settings_13.Text" xml:space="preserve"><value>Les détails des fiches, le pouls en direct et les nouvelles colonnes du graphique apparaissent sans animation.</value></data>

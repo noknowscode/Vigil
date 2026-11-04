@@ -760,5 +760,8 @@
   "Planned preparation time per case, in minutes": "Temps de préparation prévu par dossier, en minutes",
   "Preparation starts this long before a booked case's planned start, unless the case sets its own. Today's care-time insight compares against it.": "La préparation commence ce temps avant le début prévu d'un dossier réservé, sauf si le dossier fixe le sien. L'analyse du temps de soins du jour s'y compare.",
   "Planned prep (minutes)": "Prép. prévue (minutes)",
-  "This setting applies until Clover closes, but it could not be saved on this device.": "Ce réglage s'applique jusqu'à la fermeture de Clover, mais il n'a pas pu être enregistré sur cet appareil."
+  "This setting applies until Clover closes, but it could not be saved on this device.": "Ce réglage s'applique jusqu'à la fermeture de Clover, mais il n'a pas pu être enregistré sur cet appareil.",
+  "@keys": {
+    "Settings_10.Content": "Clair"
+  }
 }
