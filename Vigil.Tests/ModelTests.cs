@@ -46,16 +46,23 @@ public abstract class ModelTestBase
 
     protected JsonCaseStore Store { get; private set; } = null!;
 
+    /// <summary>The store's folder, for a second store over the same files or a damaged file.</summary>
+    protected string Folder => _folder;
+
     /// <summary>A second store over the same folder whose writes fail (the sample day is saved through <see cref="Store"/>).</summary>
     protected JsonCaseStore FailingStore => new(_folder, new FaultInjection("store-write", 0));
 
     protected static readonly IClock Clock = new FixedClock(Proto.Now);
+
+    /// <summary>Records the navigation the model under test asks for (a new one per test).</summary>
+    internal FakeNavigator Nav { get; private set; } = null!;
 
     [SetUp]
     public void SetUpStore()
     {
         _folder = Path.Combine(Path.GetTempPath(), "vigil-tests", Guid.NewGuid().ToString("N"));
         Store = new JsonCaseStore(_folder, NoFaultInjection.Instance);
+        Nav = new FakeNavigator();
     }
 
     [TearDown]
@@ -75,6 +82,33 @@ public abstract class ModelTestBase
         {
             await Store.SaveAsync(c, CancellationToken.None);
         }
+    }
+
+    /// <summary>Saves the sample day (one set of ids) and returns it.</summary>
+    protected async Task<IReadOnlyList<Case>> SeedDayAsync()
+    {
+        var day = Proto.Day;
+        await SeedAsync(day);
+        return day;
+    }
+
+    /// <summary>
+    /// The feed's value once <paramref name="settled"/> holds, or its last value after 5 s. A command's state update can
+    /// land after the command returns on a loaded machine, so an assertion on a message reads it this way.
+    /// </summary>
+    protected static async Task<T?> SettledAsync<T>(IFeed<T> feed, Func<T?, bool> settled) where T : notnull
+    {
+        T? value = default;
+        for (var i = 0; i < 100; i++)
+        {
+            value = await feed;
+            if (settled(value))
+            {
+                break;
+            }
+            await Task.Delay(50);
+        }
+        return value;
     }
 
     /// <summary>Polls <paramref name="condition"/> until it holds, for up to 5 s.</summary>
@@ -151,7 +185,7 @@ public class RecordModelTests : ModelTestBase
 
         await model.RecordReading(VitalsDraft.From(Proto.Named("Knuckles").Readings[^1]), CancellationToken.None);
 
-        (await model.SaveError).Should().Be("Not saved: Induce before recording vitals.");
+        (await SettledAsync(model.SaveError, e => e != "")).Should().Be("Not saved: Induce before recording vitals.");
         (await SavedAsync(oscar.Id)).Readings.Should().BeEmpty();
     }
 
@@ -164,7 +198,7 @@ public class RecordModelTests : ModelTestBase
 
         await model.EndAnesthesia(CancellationToken.None);
 
-        (await model.SaveError).Should().Be("Not saved: It could not be written to this device. Try again.");
+        (await SettledAsync(model.SaveError, e => e != "")).Should().Be("Not saved: It could not be written to this device. Try again.");
         (await SavedAsync(knuckles.Id)).Status.Should().Be(CaseStatus.Anesthetized);
     }
 }
@@ -181,7 +215,7 @@ public class DoseModelTests : ModelTestBase
 
         await model.Give(calc, Proto.Cefazolin, 0, CancellationToken.None);
 
-        var error = await model.Error;
+        var error = await SettledAsync(model.Error, e => e != "");
         error.Should().Be("Not saved: This record is signed and can no longer change.");
         error.Should().NotContain(pepper.Id.ToString());
         (await SavedAsync(pepper.Id)).Doses.Should().BeEmpty();
@@ -200,7 +234,7 @@ public class BoardModelTests : ModelTestBase
 
         await model.StartPrep(hero, CancellationToken.None);
 
-        (await model.ActionError).Should().Be("Not saved: It could not be written to this device. Try again.");
+        (await SettledAsync(model.ActionError, e => e != "")).Should().Be("Not saved: It could not be written to this device. Try again.");
         (await SavedAsync(hero.Id)).PrepStartedAt.Should().BeNull();
     }
 }
