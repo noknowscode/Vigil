@@ -12,13 +12,24 @@
 
   <ScrollViewer HorizontalScrollMode="Disabled">
     <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ContentMaxWidth}">
-      <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space24}" RowSpacing="{StaticResource Space16}">
-        <StackPanel Spacing="{StaticResource Space8}" Grid.Row="{utu:Responsive Narrowest=1, Widest=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1}">
-          <TextBlock x:Uid="Settings_1" Text="Settings" Style="{StaticResource TypeDisplayTitle}" />
-          <TextBlock x:Uid="Settings_2" Text="Preferences for this device. Records and settings stay on it." Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
-        </StackPanel>
-        <controls:TopBarCluster Grid.Column="{utu:Responsive Narrowest=0, Widest=1}" VerticalAlignment="Top" />
-      </Grid>
+      <!-- No Spacing here: the closed bar is collapsed, and a spaced StackPanel still charges a gap for it on Uno. -->
+      <StackPanel>
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space24}" RowSpacing="{StaticResource Space16}">
+          <StackPanel Spacing="{StaticResource Space8}" Grid.Row="{utu:Responsive Narrowest=1, Widest=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1}">
+            <TextBlock x:Uid="Settings_1" Text="Settings" Style="{StaticResource TypeDisplayTitle}" />
+            <TextBlock x:Uid="Settings_2" Text="Preferences for this device. Records and settings stay on it." Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+          </StackPanel>
+          <controls:TopBarCluster Grid.Column="{utu:Responsive Narrowest=0, Widest=1}" VerticalAlignment="Top" />
+        </Grid>
+        <!-- A preference the device could not write (it still applies until the app closes). The capped star column
+             keeps the bar as wide as the cards below, left-aligned. -->
+        <Grid Margin="{StaticResource GapTop24}" Visibility="{Binding HasSaveError, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="*" MaxWidth="{StaticResource SettingsMaxWidth}" /></Grid.ColumnDefinitions>
+          <muxc:InfoBar x:Uid="Settings_32" Severity="Warning" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False">
+            <muxc:InfoBar.ActionButton><Button x:Uid="Settings_33" Content="Dismiss" Command="{Binding DismissSaveError}" /></muxc:InfoBar.ActionButton>
+          </muxc:InfoBar>
+        </Grid>
+      </StackPanel>
 
       <StackPanel Spacing="{StaticResource Space16}" MaxWidth="{StaticResource SettingsMaxWidth}" HorizontalAlignment="Left">
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">

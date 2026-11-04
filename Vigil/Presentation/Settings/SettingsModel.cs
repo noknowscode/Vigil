@@ -28,11 +28,11 @@ public partial record SettingsModel(
         });
 
     public IState<bool> ReduceMotion => State.Value(this, () => (Preferences as Preferences)?.ReduceMotionSetting ?? Preferences.ReduceMotion)
-        .ForEach(async (value, ct) => await Preferences.SetReduceMotionAsync(value, ct));
+        .ForEach(async (value, ct) => await SavePreferenceAsync(c => Preferences.SetReduceMotionAsync(value, c), ct));
 
     /// <summary>Index into 3 / 5 / 10 minutes.</summary>
     public IState<int> IntervalIndex => State.Value(this, () => Math.Max(0, Array.IndexOf(Services.Preferences.Intervals, (int)Preferences.ReadingInterval.TotalMinutes)))
-        .ForEach(async (index, ct) => await Preferences.SetReadingIntervalAsync(Services.Preferences.Intervals[Math.Clamp(index, 0, 2)], ct));
+        .ForEach(async (index, ct) => await SavePreferenceAsync(c => Preferences.SetReadingIntervalAsync(Services.Preferences.Intervals[Math.Clamp(index, 0, 2)], c), ct));
 
     /// <summary>
     /// Planned preparation per case, in minutes, as typed; saved when the field loses focus. A number out of range is
@@ -43,7 +43,7 @@ public partial record SettingsModel(
         {
             if (int.TryParse(text, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture, out var minutes))
             {
-                await Preferences.SetPlannedPrepMinutesAsync(minutes, ct);
+                await SavePreferenceAsync(c => Preferences.SetPlannedPrepMinutesAsync(minutes, c), ct);
             }
             var saved = Text(Preferences.PlannedPrepMinutes);
             if (text != saved)
@@ -56,13 +56,35 @@ public partial record SettingsModel(
 
     /// <summary>Surname for the board greeting; saved when the field loses focus.</summary>
     public IState<string> ClinicianName => State.Value(this, () => Preferences.ClinicianName)
-        .ForEach(async (name, ct) => await Preferences.SetClinicianNameAsync(name ?? "", ct));
+        .ForEach(async (name, ct) => await SavePreferenceAsync(c => Preferences.SetClinicianNameAsync(name ?? "", c), ct));
 
     /// <summary>First name, for the sidebar avatar initials only; saved when the field loses focus.</summary>
     public IState<string> ClinicianFirstName => State.Value(this, () => Preferences.ClinicianFirstName)
-        .ForEach(async (name, ct) => await Preferences.SetClinicianFirstNameAsync(name ?? "", ct));
+        .ForEach(async (name, ct) => await SavePreferenceAsync(c => Preferences.SetClinicianFirstNameAsync(name ?? "", c), ct));
 
     public IState<string> Notice => State.Value(this, () => "");
+
+    /// <summary>Why the last preference change was not saved on the device (it still applies until the app closes); empty once one saves.</summary>
+    public IState<string> SaveError => State.Value(this, () => "");
+
+    public IFeed<bool> HasSaveError => SaveError.Select(s => !string.IsNullOrEmpty(s));
+
+    public async ValueTask DismissSaveError(CancellationToken ct) => await SaveError.UpdateAsync(_ => "", ct);
+
+    private async ValueTask SavePreferenceAsync(Func<CancellationToken, ValueTask> save, CancellationToken ct)
+    {
+        try
+        {
+            await save(ct);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            Logger.LogWarning(ex, "Saving a preference failed.");
+            await SaveError.UpdateAsync(_ => Loc.T("Settings_PreferenceNotSaved", "This setting applies until Clover closes, but it could not be saved on this device."), ct);
+            return;
+        }
+        await SaveError.UpdateAsync(_ => "", ct);
+    }
 
     public IState<string> LanguageNotice => State.Value(this, () => "");
 

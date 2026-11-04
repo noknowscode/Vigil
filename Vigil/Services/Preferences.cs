@@ -96,13 +96,18 @@ public sealed class Preferences : IPreferences
         {
             return;
         }
+        // Applied first: when the write below fails, the app still uses the new value until it closes, and the
+        // exception tells the caller it was not saved.
         _value = value;
+        Changed.Raise();
         if (_path is not null)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
-            await File.WriteAllTextAsync(_path, JsonSerializer.Serialize(value, PreferencesJsonContext.Default.PreferencesFile), ct);
+            // Written beside the file, then moved over it: a failed or interrupted write never leaves a half file.
+            var temp = _path + ".tmp";
+            await File.WriteAllTextAsync(temp, JsonSerializer.Serialize(value, PreferencesJsonContext.Default.PreferencesFile), ct);
+            File.Move(temp, _path, overwrite: true);
         }
-        Changed.Raise();
     }
 
     private static bool PlatformAnimationsEnabled()

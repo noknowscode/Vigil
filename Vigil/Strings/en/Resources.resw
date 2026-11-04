@@ -572,6 +572,8 @@
   <data name="Settings_30.Header" xml:space="preserve"><value>Planned prep (minutes)</value></data>
   <data name="Settings_30.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Planned preparation time per case, in minutes</value></data>
   <data name="Settings_31.Text" xml:space="preserve"><value>Preparation starts this long before a booked case's planned start, unless the case sets its own. Today's care-time insight compares against it.</value></data>
+  <data name="Settings_32.Title" xml:space="preserve"><value>Not saved</value></data>
+  <data name="Settings_33.Content" xml:space="preserve"><value>Dismiss</value></data>
   <data name="Settings_4.Text" xml:space="preserve"><value>Today greets you as Dr. Okafor and the sidebar shows your initials. Leave both empty for a plain greeting.</value></data>
   <data name="Settings_5.Header" xml:space="preserve"><value>First name</value></data>
   <data name="Settings_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Your first name for the avatar initials</value></data>
@@ -585,6 +587,7 @@
   <data name="Settings_ClearFailed" xml:space="preserve"><value>Some records could not be deleted. Try again.</value></data>
   <data name="Settings_ClearTitle" xml:space="preserve"><value>Clear all records</value></data>
   <data name="Settings_Cleared" xml:space="preserve"><value>All records deleted from this tablet.</value></data>
+  <data name="Settings_PreferenceNotSaved" xml:space="preserve"><value>This setting applies until Clover closes, but it could not be saved on this device.</value></data>
   <data name="Settings_SampleAction" xml:space="preserve"><value>Replace records</value></data>
   <data name="Settings_SampleConfirm" xml:space="preserve"><value>Replace every record on this tablet with the sample surgical day?</value></data>
   <data name="Settings_SampleFailed" xml:space="preserve"><value>The sample day could not be loaded. Your records are unchanged.</value></data>
