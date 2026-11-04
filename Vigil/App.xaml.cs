@@ -135,6 +135,7 @@ public partial class App : Application
         // After any --clover-size resize: a sheet opened before a resize would be dismissed by it.
         await ApplyVerificationViewAsync();
         RaiseVerificationCrash();
+        StartFocusLog();
 #endif
     }
 
@@ -142,7 +143,7 @@ public partial class App : Application
     /// <summary>
     /// Screenshot-matrix hooks. <c>--vigil-theme=light|dark</c> sets the window content's theme (the switch the theme
     /// service flips). <c>--vigil-route=&lt;route&gt;[:&lt;pane&gt;]</c> opens a shell destination (Today, Patients, Agenda,
-    /// Settings), a case page (Record, Redose, ParentPreview) or a sheet (!NewCase, !SignOff, !Menu) the way the app's own
+    /// Settings), a case page (Record, Redose, ParentPreview) or a sheet (!NewCase, !EditCase, !SignOff, !Menu) the way the app's own
     /// commands do: in the shell's content frame, with the case under anesthesia (or the first case) as data.
     /// <c>Record:Monitor</c> opens the record with that pane's drawer; <c>--vigil-scroll=&lt;px&gt;</c> then scrolls the page. Each step
     /// prints a <c>VERIFY</c> line to stderr. Sheets and panes close when the window resizes (light dismiss), so the
@@ -199,7 +200,7 @@ public partial class App : Application
             var target = cases.FirstOrDefault(c => c.Status == CaseStatus.Anesthetized) ?? cases.FirstOrDefault();
             object? data = name switch
             {
-                "Record" or "Redose" or "SignOff" or "ParentPreview" when target is not null =>
+                "Record" or "Redose" or "SignOff" or "EditCase" or "ParentPreview" when target is not null =>
                     parts.Length == 2 ? new CaseRefPane(target.Id, parts[1]) : new CaseRef(target.Id),
                 "Menu" => new MenuContext(ShellSection.Today),
                 _ => null,
@@ -232,6 +233,20 @@ public partial class App : Application
         {
             Console.Error.WriteLine($"VERIFY failed: {ex}");
         }
+    }
+
+    /// <summary>
+    /// Keyboard check hook: <c>--vigil-focuslog</c> prints each element that gets focus (type and automation name) as a
+    /// <c>VERIFY focus=</c> line, so a keyboard-only walk can be read back without a focus visual in the capture.
+    /// </summary>
+    private static void StartFocusLog()
+    {
+        if (!Environment.GetCommandLineArgs().Contains("--vigil-focuslog"))
+        {
+            return;
+        }
+        Microsoft.UI.Xaml.Input.FocusManager.GotFocus += (_, e) => Console.Error.WriteLine(
+            $"VERIFY focus={e.NewFocusedElement?.GetType().Name} name=\"{(e.NewFocusedElement is DependencyObject d ? Microsoft.UI.Xaml.Automation.AutomationProperties.GetName(d) : "")}\"");
     }
 
     /// <summary>
