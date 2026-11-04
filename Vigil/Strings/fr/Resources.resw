@@ -511,6 +511,8 @@
   <data name="Record_DeleteConfirm" xml:space="preserve"><value>Supprimer ce dossier et tout ce qui y est consigné? Cette action est irréversible.</value></data>
   <data name="Record_DeleteTitle" xml:space="preserve"><value>Supprimer le dossier</value></data>
   <data name="Record_DueEvery" xml:space="preserve"><value>mesures prévues toutes les {0} minutes</value></data>
+  <data name="Record_EndAnesthesia.Content" xml:space="preserve"><value>Terminer l'anesthésie</value></data>
+  <data name="Record_EndAnesthesia.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Terminer l'anesthésie, ouvre Réveil et transfert</value></data>
   <data name="Record_EtCo2Rr" xml:space="preserve"><value>EtCO₂ {0} mmHg · FR {1}</value></data>
   <data name="Record_FluidName.Header" xml:space="preserve"><value>Soluté</value></data>
   <data name="Record_FluidName.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Nom du soluté</value></data>

@@ -511,6 +511,8 @@
   <data name="Record_DeleteConfirm" xml:space="preserve"><value>Delete this case and everything recorded in it? This cannot be undone.</value></data>
   <data name="Record_DeleteTitle" xml:space="preserve"><value>Delete case</value></data>
   <data name="Record_DueEvery" xml:space="preserve"><value>readings due every {0} minutes</value></data>
+  <data name="Record_EndAnesthesia.Content" xml:space="preserve"><value>End anesthesia</value></data>
+  <data name="Record_EndAnesthesia.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>End anesthesia, opens Recovery and handover</value></data>
   <data name="Record_EtCo2Rr" xml:space="preserve"><value>EtCO₂ {0} mmHg · RR {1}</value></data>
   <data name="Record_FluidName.Header" xml:space="preserve"><value>Fluid</value></data>
   <data name="Record_FluidName.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Fluid name</value></data>

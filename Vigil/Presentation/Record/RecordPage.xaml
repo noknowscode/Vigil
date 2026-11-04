@@ -167,7 +167,8 @@
                         </utu:ShadowContainer>
                       </Grid>
 
-                      <!-- Status column 300: weight card, status card (flex 1), CTA 48 -->
+                      <!-- Status column 300: weight card, status card (flex 1), CTA 48. The CTA stays enabled on a signed record:
+                           there it is "Review record", the way back to the read-only Recovery pane and its Export CSV. -->
                       <Grid Grid.Column="{utu:Responsive Narrowest=0, Widest=2}" Grid.Row="{utu:Responsive Narrowest=2, Wide=1, Widest=0}"
                             Grid.ColumnSpan="{utu:Responsive Narrowest=3, Widest=1}" RowDefinitions="Auto,*,Auto" RowSpacing="{StaticResource Space8}">
                         <!-- xaml-lint: allow card - weight tile inside the hero tray (tri-tone gradient edge, exact radius 14 / padding 16 15) -->
@@ -185,7 +186,7 @@
                           </StackPanel>
                         </Border>
                         <controls:CareStatusCard Grid.Row="1" DataContext="{Binding Parent.Timers}" MinHeight="{utu:Responsive Narrowest=200, Widest=0}" />
-                        <Button Grid.Row="2" Style="{StaticResource ButtonPrimaryXL}" Command="{Binding Parent.OpenPane}" CommandParameter="{Binding Parent.Timers.Care.CtaPane}" IsEnabled="{Binding Data.CanChange}" AutomationProperties.Name="{Binding Parent.Timers.Care.Cta}">
+                        <Button Grid.Row="2" Style="{StaticResource ButtonPrimaryXL}" Command="{Binding Parent.OpenPane}" CommandParameter="{Binding Parent.Timers.Care.CtaPane}" AutomationProperties.Name="{Binding Parent.Timers.Care.Cta}">
                           <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                             <TextBlock Text="{Binding Parent.Timers.Care.Cta}" Style="{StaticResource TypeTitleS}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
                             <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" Visibility="{Binding Parent.Timers.Care.IsSurgery, Converter={StaticResource VisibleWhenTrue}}" />
@@ -215,20 +216,25 @@
                 </Border>
                 <muxc:InfoBar x:Uid="Record_89" Margin="{StaticResource GapTop16}" Severity="Warning" Title="Latest recorded observations need attention" Message="{Binding Data.Alert}" IsOpen="{Binding Data.HasAlert}" Visibility="{Binding Data.HasAlert, Converter={StaticResource VisibleWhenTrue}}" IsClosable="False" />
 
-                <!-- 4. Procedure header: h2 20/28 + meta; Pre-op (secondary-l), Administer dose (primary-l + syringe) -->
+                <!-- 4. Procedure header: h2 20/28 + meta; Pre-op (secondary-l), Administer dose (primary-l + syringe).
+                     Under anesthesia, End anesthesia (secondary-l) comes first: it opens the Recovery pane, which holds the
+                     command with its "vaporizer off" note and then the recovery log. Below 600 px it sits above the pair. -->
                 <Grid Margin="{StaticResource GapTop32}" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space16}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space12}, Wide=0}">
                   <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TypeH2Section}" TextWrapping="WrapWholeWords" />
                     <TextBlock Margin="{StaticResource GapTop2}" Text="{Binding Data.ProcedureMeta}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
                   </StackPanel>
-                  <StackPanel Grid.Column="{utu:Responsive Narrowest=0, Wide=1}" Grid.Row="{utu:Responsive Narrowest=1, Wide=0}" Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <Button x:Uid="Record_90" Style="{StaticResource ButtonSecondaryL}" Content="Pre-op" Command="{Binding Parent.OpenPane}" CommandParameter="Preop" AutomationProperties.Name="Pre-op preparation" />
-                    <Button x:Uid="Record_91" Style="{StaticResource ButtonPrimaryL}" IsEnabled="{Binding Data.CanChange}" Command="{Binding Parent.OpenPane}" CommandParameter="Dose" AutomationProperties.Name="Administer dose">
-                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
-                        <TextBlock x:Uid="Record_92" Text="Administer dose" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
-                        <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconSyringe}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
-                      </StackPanel>
-                    </Button>
+                  <StackPanel Grid.Column="{utu:Responsive Narrowest=0, Wide=1}" Grid.Row="{utu:Responsive Narrowest=1, Wide=0}" Orientation="{utu:Responsive Narrowest=Vertical, Normal=Horizontal}" Spacing="{StaticResource Space8}" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <Button x:Uid="Record_EndAnesthesia" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" Content="End anesthesia" Visibility="{Binding Data.IsAnesthetized, Converter={StaticResource VisibleWhenTrue}}" Command="{Binding Parent.OpenPane}" CommandParameter="Recovery" AutomationProperties.Name="End anesthesia, opens Recovery and handover" />
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
+                      <Button x:Uid="Record_90" Style="{StaticResource ButtonSecondaryL}" Content="Pre-op" Command="{Binding Parent.OpenPane}" CommandParameter="Preop" AutomationProperties.Name="Pre-op preparation" />
+                      <Button x:Uid="Record_91" Style="{StaticResource ButtonPrimaryL}" IsEnabled="{Binding Data.CanChange}" Command="{Binding Parent.OpenPane}" CommandParameter="Dose" AutomationProperties.Name="Administer dose">
+                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
+                          <TextBlock x:Uid="Record_92" Text="Administer dose" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
+                          <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconSyringe}" Foreground="{ThemeResource OnPrimaryInkBrush}" VerticalAlignment="Center" />
+                        </StackPanel>
+                      </Button>
+                    </StackPanel>
                   </StackPanel>
                 </Grid>
                 <!-- xaml-lint: allow card - transient acknowledgement chip -->
