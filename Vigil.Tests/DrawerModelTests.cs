@@ -58,17 +58,18 @@ public class PreopModelTests : ModelTestBase
     }
 
     [Test]
-    public async Task PremedicationAndDeleteAreHandedToTheRecord()
+    public async Task PremedicationDetailsAndDeleteAreHandedToTheRecord()
     {
         var oscar = Proto.Named("Oscar");
         await Store.SaveAsync(oscar, CancellationToken.None);
         var model = Preop(oscar);
 
         await model.GivePremedication(CancellationToken.None);
+        await model.EditDetails(CancellationToken.None);
         await model.DeleteCase(CancellationToken.None);
 
-        Nav.Paths.Should().Equal("-", "-");
-        Nav.Data.Should().Equal(new PaneChoice(RecordPane.Dose), new PaneChoice(PaneChoice.DeleteCase));
+        Nav.Paths.Should().Equal("-", "-", "-");
+        Nav.Data.Should().Equal(new PaneChoice(RecordPane.Dose), new PaneChoice(PaneChoice.EditCase), new PaneChoice(PaneChoice.DeleteCase));
         (await SavedAsync(oscar.Id)).Should().NotBeNull("the record deletes, after asking");
     }
 }

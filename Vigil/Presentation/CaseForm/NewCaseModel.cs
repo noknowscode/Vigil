@@ -76,6 +76,40 @@ public partial record CaseDraft(
         return errors.ToImmutable();
     }
 
+    /// <summary>The form filled from a saved case (Edit case details); times read in the local zone of <paramref name="now"/>.</summary>
+    public static CaseDraft From(Case c, DateTimeOffset now)
+    {
+        static string Dec(decimal v, string format) => v.ToString(format, CultureInfo.InvariantCulture);
+        string Time(DateTimeOffset? t) => t is { } v ? v.ToOffset(now.Offset).ToString("HH:mm", CultureInfo.InvariantCulture) : "";
+        var p = c.Patient;
+        return new(p.Name, p.Species switch { Species.Feline => 1, Species.Other => 2, _ => 0 }, p.Breed, Dec(p.WeightKg, "0.0"),
+            p.AgeYears > 0 ? Dec(p.AgeYears, "0.#") : "", p.Owner, c.Procedure, c.Veterinarian, c.Technician, c.OperatingRoom,
+            Time(c.PlannedStart), c.PlannedMinutes?.ToString(CultureInfo.InvariantCulture) ?? "", Time(c.FastingSince), c.ParentNotifiedAt is not null);
+    }
+
+    /// <summary>
+    /// <paramref name="c"/> corrected to this form (<see cref="Case.WithDetailsFrom"/> logs each change). A time left as it
+    /// was keeps its saved date; a changed planned start stays on the case's day, a changed fasting time is the last one.
+    /// </summary>
+    public Case ApplyTo(Case c, DateTimeOffset now)
+    {
+        var was = From(c, now);
+        var day = (c.PlannedStart ?? c.CreatedAt).ToOffset(now.Offset);
+        var edited = c with
+        {
+            Patient = c.Patient with { Name = Name.Trim(), Species = Species, Breed = Breed.Trim(), WeightKg = Math.Round(WeightKg ?? 0, 1), AgeYears = AgeYears ?? 0, Owner = Owner.Trim() },
+            Procedure = Procedure.Trim(),
+            Veterinarian = Veterinarian.Trim(),
+            Technician = Technician.Trim(),
+            OperatingRoom = OperatingRoom.Trim(),
+            PlannedStart = PlannedStartText.Trim() == was.PlannedStartText ? c.PlannedStart : ParseTime(PlannedStartText) is TimeSpan start ? On(day, start) : null,
+            PlannedMinutes = int.TryParse(PlannedMinutesText.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var minutes) ? minutes : null,
+            FastingSince = FastingSinceText.Trim() == was.FastingSinceText ? c.FastingSince : ParseTime(FastingSinceText) is TimeSpan fast ? LastAt(now, fast) : null,
+            ParentNotifiedAt = ParentNotified ? c.ParentNotifiedAt ?? now : null,
+        };
+        return c.WithDetailsFrom(edited, now);
+    }
+
     public Case ToCase(DateTimeOffset now) => Case.New(
         new Patient(Name.Trim(), Species, Breed.Trim(), Math.Round(WeightKg ?? 0, 1), AgeYears ?? 0, Owner.Trim()),
         Procedure.Trim(), Veterinarian.Trim(), Technician.Trim(), now) with
@@ -115,25 +149,60 @@ public partial record CaseDraft(
     }
 }
 
+/// <summary>
+/// What the case form shows besides its fields, for both of its models: errors once the user has tried to save (then
+/// live), the save failure, and whether the footer has anything to say.
+/// </summary>
+public sealed class CaseFormState
+{
+    public CaseFormState(object owner, IState<CaseDraft> draft)
+    {
+        Attempted = State.Value(owner, () => false);
+        ErrorText = Feed.Combine(draft, Attempted).Select(x => x.Item2 ? string.Join(Environment.NewLine, x.Item1.Validate()) : "");
+        SaveError = State.Value(owner, () => "");
+        HasErrors = Feed.Combine(ErrorText, SaveError).Select(x => !string.IsNullOrEmpty(x.Item1) || !string.IsNullOrEmpty(x.Item2));
+    }
+
+    /// <summary>Set by the first save attempt so errors appear after the user tries, then update live.</summary>
+    public IState<bool> Attempted { get; }
+
+    public IFeed<string> ErrorText { get; }
+
+    public IState<string> SaveError { get; }
+
+    /// <summary>The footer's error lines take no space until there is something to say.</summary>
+    public IFeed<bool> HasErrors { get; }
+
+    /// <summary>Marks the attempt; true when the draft is valid to save.</summary>
+    public async ValueTask<bool> AcceptsAsync(CaseDraft draft, CancellationToken ct)
+    {
+        await Attempted.UpdateAsync(_ => true, ct);
+        return draft.Validate().Count == 0;
+    }
+}
+
+/// <summary>New patient (route "!NewCase"): an empty form; Save books the case and hands it back to open its record.</summary>
 public partial record NewCaseModel(ICaseStore Store, IClock Clock, INavigator Navigator, ILogger<NewCaseModel> Logger)
 {
     public IState<CaseDraft> Draft => State.Value(this, () => CaseDraft.Empty);
 
-    /// <summary>Set by the first Create attempt so errors appear after the user tries, then update live.</summary>
-    public IState<bool> Attempted => State.Value(this, () => false);
+    private CaseFormState Form => _form ??= new(this, Draft);
+    private CaseFormState? _form;
 
-    public IFeed<string> ErrorText => Feed.Combine(Draft, Attempted)
-        .Select(x => x.Item2 ? string.Join(Environment.NewLine, x.Item1.Validate()) : "");
+    public string Heading => Loc.T("NewCase_Heading", "New patient");
+    public string Intro => Loc.T("NewCase_Intro", "Weight sets every dose, so it is the one number to get right.");
+    public string ActionLabel => Loc.T("NewCase_Action", "Create case");
+    public string Note => "";
+    public bool HasNote => false;
 
-    public IState<string> SaveError => State.Value(this, () => "");
+    public IState<bool> Attempted => Form.Attempted;
+    public IFeed<string> ErrorText => Form.ErrorText;
+    public IState<string> SaveError => Form.SaveError;
+    public IFeed<bool> HasErrors => Form.HasErrors;
 
-    /// <summary>The footer's error lines take no space until there is something to say.</summary>
-    public IFeed<bool> HasErrors => Feed.Combine(ErrorText, SaveError).Select(x => !string.IsNullOrEmpty(x.Item1) || !string.IsNullOrEmpty(x.Item2));
-
-    public async ValueTask Create(CaseDraft draft, CancellationToken ct)
+    public async ValueTask Save(CaseDraft draft, CancellationToken ct)
     {
-        await Attempted.UpdateAsync(_ => true, ct);
-        if (draft.Validate().Count > 0)
+        if (!await Form.AcceptsAsync(draft, ct))
         {
             return;
         }

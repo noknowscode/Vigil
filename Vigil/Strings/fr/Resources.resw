@@ -85,10 +85,28 @@
   <data name="Clock_Next" xml:space="preserve"><value>prochaine {0}</value></data>
   <data name="Clock_Overdue" xml:space="preserve"><value>en retard {0}</value></data>
   <data name="Common_Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Correction_At" xml:space="preserve"><value>{0:d MMM, HH:mm}</value></data>
+  <data name="Correction_Text" xml:space="preserve"><value>{0} : {1} → {2}</value></data>
   <data name="Count_Doses" xml:space="preserve"><value>{0} doses</value></data>
   <data name="Count_OneDose" xml:space="preserve"><value>1 dose</value></data>
   <data name="Count_OneReading" xml:space="preserve"><value>1 lecture</value></data>
   <data name="Count_Readings" xml:space="preserve"><value>{0} lectures</value></data>
+  <data name="Detail_Age" xml:space="preserve"><value>Âge (ans)</value></data>
+  <data name="Detail_Breed" xml:space="preserve"><value>Race</value></data>
+  <data name="Detail_FastingSince" xml:space="preserve"><value>À jeun depuis</value></data>
+  <data name="Detail_Name" xml:space="preserve"><value>Nom</value></data>
+  <data name="Detail_No" xml:space="preserve"><value>non</value></data>
+  <data name="Detail_Owner" xml:space="preserve"><value>Propriétaire</value></data>
+  <data name="Detail_ParentNotified" xml:space="preserve"><value>Parent informé du plan</value></data>
+  <data name="Detail_PlannedLength" xml:space="preserve"><value>Durée (min)</value></data>
+  <data name="Detail_PlannedStart" xml:space="preserve"><value>Début prévu</value></data>
+  <data name="Detail_Procedure" xml:space="preserve"><value>Intervention</value></data>
+  <data name="Detail_Room" xml:space="preserve"><value>Salle</value></data>
+  <data name="Detail_Species" xml:space="preserve"><value>Espèce</value></data>
+  <data name="Detail_Technician" xml:space="preserve"><value>Technicien(ne)</value></data>
+  <data name="Detail_Veterinarian" xml:space="preserve"><value>Vétérinaire</value></data>
+  <data name="Detail_Weight" xml:space="preserve"><value>Poids (kg)</value></data>
+  <data name="Detail_Yes" xml:space="preserve"><value>oui</value></data>
   <data name="Discharge_Done" xml:space="preserve"><value>Appel de congé à {0} · fait à {1:HH:mm}</value></data>
   <data name="Discharge_Due" xml:space="preserve"><value>Appel de congé à {0} · prévu à {1:HH:mm}</value></data>
   <data name="DoseDrawer_1.Title" xml:space="preserve"><value>Administrer une dose</value></data>
@@ -158,6 +176,11 @@
   <data name="Due_NothingBefore" xml:space="preserve"><value>Rien à faire avant {0:HH:mm}</value></data>
   <data name="Due_NothingPlanned" xml:space="preserve"><value>Rien d'autre n'est prévu aujourd'hui.</value></data>
   <data name="Duration_HoursMinutes" xml:space="preserve"><value>{0} h {1} min</value></data>
+  <data name="EditCase_Action" xml:space="preserve"><value>Enregistrer les modifications</value></data>
+  <data name="EditCase_DoseNote" xml:space="preserve"><value>Les doses déjà administrées gardent le volume préparé à ce moment. Les nouvelles doses utilisent le poids corrigé.</value></data>
+  <data name="EditCase_Heading" xml:space="preserve"><value>Détails du dossier</value></data>
+  <data name="EditCase_Intro" xml:space="preserve"><value>Corrigez le patient, l'intervention ou l'horaire. Chaque modification est conservée dans l'historique du dossier.</value></data>
+  <data name="EditCase_NotSaved" xml:space="preserve"><value>Non enregistré : {0} Vos saisies sont conservées.</value></data>
   <data name="Error_InduceFirst" xml:space="preserve"><value>Induisez avant d'enregistrer les signes vitaux.</value></data>
   <data name="Error_NotSaved" xml:space="preserve"><value>Non enregistré : {0}</value></data>
   <data name="Error_NotWritten" xml:space="preserve"><value>Il n'a pas pu être enregistré sur cet appareil. Réessayez.</value></data>
@@ -197,6 +220,8 @@
   <data name="Hero_UnderAnesthesia" xml:space="preserve"><value>sous anesthésie</value></data>
   <data name="HistoryDrawer_1.Title" xml:space="preserve"><value>Historique de la visite</value></data>
   <data name="HistoryDrawer_10.Text" xml:space="preserve"><value> T</value></data>
+  <data name="HistoryDrawer_11.Text" xml:space="preserve"><value>Corrections de ce dossier</value></data>
+  <data name="HistoryDrawer_12.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Corrections de ce dossier</value></data>
   <data name="HistoryDrawer_2.Text" xml:space="preserve"><value>Observations de ce dossier</value></data>
   <data name="HistoryDrawer_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Tableau des lectures</value></data>
   <data name="HistoryDrawer_4.Text" xml:space="preserve"><value>FC</value></data>
@@ -239,7 +264,7 @@
   <data name="MedicationsDrawer_8.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Doses administrées</value></data>
   <data name="MedicationsDrawer_9.Text" xml:space="preserve"><value>Solutés</value></data>
   <data name="NewCase_1.Label" xml:space="preserve"><value>Annuler</value></data>
-  <data name="NewCase_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Annuler le nouveau dossier</value></data>
+  <data name="NewCase_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Annuler et fermer le formulaire</value></data>
   <data name="NewCase_10.Header" xml:space="preserve"><value>Race</value></data>
   <data name="NewCase_10.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Race</value></data>
   <data name="NewCase_11.Header" xml:space="preserve"><value>Poids (kg)</value></data>
@@ -257,7 +282,6 @@
   <data name="NewCase_17.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Technicien(ne)</value></data>
   <data name="NewCase_18.Text" xml:space="preserve"><value>HORAIRE</value></data>
   <data name="NewCase_19.Text" xml:space="preserve"><value>Facultatif. Les heures s'écrivent comme 14:00. Une heure de début place le patient sur la ligne du temps d'Aujourd'hui et dans la fiche Prochaine chirurgie.</value></data>
-  <data name="NewCase_2.Text" xml:space="preserve"><value>Nouveau patient</value></data>
   <data name="NewCase_20.Header" xml:space="preserve"><value>Salle</value></data>
   <data name="NewCase_20.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Salle d'opération</value></data>
   <data name="NewCase_21.Header" xml:space="preserve"><value>Début prévu</value></data>
@@ -269,9 +293,6 @@
   <data name="NewCase_24.Content" xml:space="preserve"><value>Parent informé du plan</value></data>
   <data name="NewCase_24.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Le parent de l'animal a été informé du plan</value></data>
   <data name="NewCase_25.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Erreurs du formulaire</value></data>
-  <data name="NewCase_26.Content" xml:space="preserve"><value>Créer le dossier</value></data>
-  <data name="NewCase_26.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Créer le dossier</value></data>
-  <data name="NewCase_3.Text" xml:space="preserve"><value>Le poids détermine chaque dose : c'est le chiffre à ne pas manquer.</value></data>
   <data name="NewCase_4.Text" xml:space="preserve"><value>PATIENT</value></data>
   <data name="NewCase_5.Header" xml:space="preserve"><value>Nom</value></data>
   <data name="NewCase_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Nom du patient</value></data>
@@ -280,10 +301,13 @@
   <data name="NewCase_7.Content" xml:space="preserve"><value>Canin</value></data>
   <data name="NewCase_8.Content" xml:space="preserve"><value>Félin</value></data>
   <data name="NewCase_9.Content" xml:space="preserve"><value>Autre</value></data>
+  <data name="NewCase_Action" xml:space="preserve"><value>Créer le dossier</value></data>
   <data name="NewCase_AgeNumber" xml:space="preserve"><value>L'âge doit être un nombre d'années.</value></data>
   <data name="NewCase_Duration" xml:space="preserve"><value>La durée prévue va de 5 à 600 minutes.</value></data>
   <data name="NewCase_DurationNeedsStart" xml:space="preserve"><value>Indiquez une heure de début pour la durée prévue.</value></data>
   <data name="NewCase_FastingTime" xml:space="preserve"><value>« À jeun depuis » est une heure, par exemple 20:00.</value></data>
+  <data name="NewCase_Heading" xml:space="preserve"><value>Nouveau patient</value></data>
+  <data name="NewCase_Intro" xml:space="preserve"><value>Le poids détermine chaque dose : c'est le chiffre à ne pas manquer.</value></data>
   <data name="NewCase_NameRequired" xml:space="preserve"><value>Entrez le nom du patient.</value></data>
   <data name="NewCase_NotSaved" xml:space="preserve"><value>Le dossier n'a pas pu être enregistré sur cet appareil. Vos saisies sont conservées; réessayez.</value></data>
   <data name="NewCase_ProcedureRequired" xml:space="preserve"><value>Entrez l'intervention.</value></data>
@@ -392,6 +416,8 @@
   <data name="PreopDrawer_26.Text" xml:space="preserve"><value>Réservé par erreur, ou le patient ne viendra pas? Supprimez le dossier, puis réservez-le de nouveau avec les bons renseignements.</value></data>
   <data name="PreopDrawer_27.Content" xml:space="preserve"><value>Supprimer le dossier</value></data>
   <data name="PreopDrawer_27.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Supprimer ce dossier</value></data>
+  <data name="PreopDrawer_28.Content" xml:space="preserve"><value>Modifier le dossier</value></data>
+  <data name="PreopDrawer_28.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Modifier le patient, le poids, l'intervention et l'horaire</value></data>
   <data name="PreopDrawer_3.Content" xml:space="preserve"><value>Fermer</value></data>
   <data name="PreopDrawer_4.Text" xml:space="preserve"><value>POIDS</value></data>
   <data name="PreopDrawer_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Poids du patient en kilogrammes</value></data>

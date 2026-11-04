@@ -187,16 +187,17 @@ public class RecordModelTests : ModelTestBase
     }
 
     [Test]
-    public async Task SignOffOpensAsASheetAfterTheDrawer()
+    public async Task SignOffAndTheCaseDetailsOpenAsSheetsAfterTheDrawer()
     {
         var milo = Proto.Named("Milo");
         await Store.SaveAsync(milo, CancellationToken.None);
         var model = Open(milo);
-        Nav.Answer(new PaneChoice(PaneChoice.SignOff));
+        Nav.Answer(new PaneChoice(PaneChoice.SignOff)).Answer(new PaneChoice(PaneChoice.EditCase));
 
         await model.OpenPane(RecordPane.Recovery, CancellationToken.None);
+        await model.OpenPane(RecordPane.Preop, CancellationToken.None);
 
-        Nav.Paths.Should().Equal("!Recovery", "!SignOff");
+        Nav.Paths.Should().Equal("!Recovery", "!SignOff", "!Preop", "!EditCase");
         Nav.Data[1].Should().Be(new CaseRef(milo.Id));
     }
 

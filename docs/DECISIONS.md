@@ -77,3 +77,15 @@ with the pane width clamp and focus handling in code-behind. Measured: the Toolk
 (it did not with Toolkit 9.1.3, MenuFlyout.xaml), and a pixel DrawerLength is min(length, window), the old clamp.
 Tradeoff: a drawer covers the sidebar with a scrim, where the SplitView pane sat beside it; a save failure shows in the
 drawer's own Not saved bar.
+
+## D9. Case details stay correctable until sign-off, and every correction is logged (2026-11-04, proposed)
+
+Decision: Edit case details (Preparation drawer, until the record is signed) reopens the case form filled from the
+case: patient (name, species, breed, weight, age, owner), procedure, team and schedule. Each changed detail is kept as a
+correction (time, detail, before, after) in the case, listed in Visit history and exported in the CSV and the summary.
+What was recorded never changes: readings, doses with the volume drawn up at the time, stage, recovery. Everything
+calculated from the case follows the correction: the dose calculator and its reference range, the vitals alarms for
+the species, Today's timeline.
+Reason: a weight mistyped at booking drives every dose and could not be corrected once the case was under anesthesia
+(docs/COMPLETENESS.md, Data Major). "Build small, cut large": the form already existed.
+Tradeoff: no per-field reason or second signature for a correction; the signed record stays read-only.

@@ -1,9 +1,11 @@
 <!--
-  New patient sheet (route !NewCase, opened from the sidebar). v2 utility layout: serif title and muted subtitle, then
-  three panel cards (Patient, Procedure, Schedule). The Schedule card feeds Today's gantt and the Next surgery card;
-  every field in it is optional. The action bar stays pinned under the scroll area.
+  The case form sheet, two routes over one view: New patient (!NewCase, NewCaseModel, opened from the sidebar) and Case
+  details (!EditCase, EditCaseModel, from the record's Preparation drawer). v2 utility layout: serif title and muted
+  subtitle (the model's Heading and Intro), the model's Note when it has one, then three panel cards (Patient,
+  Procedure, Schedule). The Schedule card feeds Today's gantt and the Next surgery card; every field in it is optional.
+  The action bar (the model's ActionLabel, Save) stays pinned under the scroll area.
 -->
-<Page x:Class="Vigil.Presentation.NewCasePage"
+<Page x:Class="Vigil.Presentation.CaseFormPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:utu="using:Uno.Toolkit.UI"
@@ -20,7 +22,7 @@
     <utu:NavigationBar Content="" Background="Transparent">
       <utu:NavigationBar.MainCommand>
         <AppBarButton x:Uid="NewCase_1" Label="Cancel"
-                      AutomationProperties.Name="Cancel new case"
+                      AutomationProperties.Name="Cancel and close the form"
                       Command="{Binding Cancel}">
           <AppBarButton.Icon>
             <SymbolIcon Symbol="Cancel" />
@@ -32,8 +34,9 @@
     <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled">
       <StackPanel Padding="{StaticResource SheetInsetFlush}" Spacing="{StaticResource Space16}">
         <StackPanel Spacing="{StaticResource Space6}" Margin="{StaticResource GapBottom8}">
-          <TextBlock x:Uid="NewCase_2" Text="New patient" Style="{StaticResource TypeDisplayTitle}" />
-          <TextBlock x:Uid="NewCase_3" Text="Weight sets every dose, so it is the one number to get right." Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+          <TextBlock Text="{Binding Heading}" Style="{StaticResource TypeDisplayTitle}" AutomationProperties.HeadingLevel="Level1" />
+          <TextBlock Text="{Binding Intro}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+          <TextBlock Text="{Binding Note}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Visibility="{Binding HasNote, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
         </StackPanel>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
@@ -140,11 +143,11 @@
                    TextWrapping="WrapWholeWords"
                    Text="{Binding SaveError}" />
       </StackPanel>
-      <Button x:Uid="NewCase_26" Style="{StaticResource ButtonPrimaryXL}"
+      <Button Style="{StaticResource ButtonPrimaryXL}"
               HorizontalAlignment="Stretch"
-              Content="Create case"
-              AutomationProperties.Name="Create case"
-              Command="{Binding Create}" />
+              Content="{Binding ActionLabel}"
+              AutomationProperties.Name="{Binding ActionLabel}"
+              Command="{Binding Save}" />
     </StackPanel>
   </Grid>
 </Page>

@@ -24,6 +24,9 @@ public sealed record PaneChoice(string Next)
     /// <summary>The sign-off sheet.</summary>
     public const string SignOff = "SignOff";
 
+    /// <summary>The case-details sheet.</summary>
+    public const string EditCase = "EditCase";
+
     /// <summary>Delete the booked case (the record asks first, then leaves).</summary>
     public const string DeleteCase = "DeleteCase";
 }

@@ -85,10 +85,28 @@
   <data name="Clock_Next" xml:space="preserve"><value>next {0}</value></data>
   <data name="Clock_Overdue" xml:space="preserve"><value>overdue {0}</value></data>
   <data name="Common_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Correction_At" xml:space="preserve"><value>{0:d MMM, HH:mm}</value></data>
+  <data name="Correction_Text" xml:space="preserve"><value>{0}: {1} → {2}</value></data>
   <data name="Count_Doses" xml:space="preserve"><value>{0} doses</value></data>
   <data name="Count_OneDose" xml:space="preserve"><value>1 dose</value></data>
   <data name="Count_OneReading" xml:space="preserve"><value>1 reading</value></data>
   <data name="Count_Readings" xml:space="preserve"><value>{0} readings</value></data>
+  <data name="Detail_Age" xml:space="preserve"><value>Age (years)</value></data>
+  <data name="Detail_Breed" xml:space="preserve"><value>Breed</value></data>
+  <data name="Detail_FastingSince" xml:space="preserve"><value>Fasting since</value></data>
+  <data name="Detail_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Detail_No" xml:space="preserve"><value>no</value></data>
+  <data name="Detail_Owner" xml:space="preserve"><value>Owner</value></data>
+  <data name="Detail_ParentNotified" xml:space="preserve"><value>Pet parent told the plan</value></data>
+  <data name="Detail_PlannedLength" xml:space="preserve"><value>Length (min)</value></data>
+  <data name="Detail_PlannedStart" xml:space="preserve"><value>Planned start</value></data>
+  <data name="Detail_Procedure" xml:space="preserve"><value>Procedure</value></data>
+  <data name="Detail_Room" xml:space="preserve"><value>Room</value></data>
+  <data name="Detail_Species" xml:space="preserve"><value>Species</value></data>
+  <data name="Detail_Technician" xml:space="preserve"><value>Technician</value></data>
+  <data name="Detail_Veterinarian" xml:space="preserve"><value>Veterinarian</value></data>
+  <data name="Detail_Weight" xml:space="preserve"><value>Weight (kg)</value></data>
+  <data name="Detail_Yes" xml:space="preserve"><value>yes</value></data>
   <data name="Discharge_Done" xml:space="preserve"><value>Discharge call to {0} · done {1:HH:mm}</value></data>
   <data name="Discharge_Due" xml:space="preserve"><value>Discharge call to {0} · due {1:HH:mm}</value></data>
   <data name="DoseDrawer_1.Title" xml:space="preserve"><value>Administer dose</value></data>
@@ -158,6 +176,11 @@
   <data name="Due_NothingBefore" xml:space="preserve"><value>Nothing due before {0:HH:mm}</value></data>
   <data name="Due_NothingPlanned" xml:space="preserve"><value>Nothing else is planned today.</value></data>
   <data name="Duration_HoursMinutes" xml:space="preserve"><value>{0}h {1}m</value></data>
+  <data name="EditCase_Action" xml:space="preserve"><value>Save changes</value></data>
+  <data name="EditCase_DoseNote" xml:space="preserve"><value>Doses already given keep the volume drawn up at the time. New doses use the corrected weight.</value></data>
+  <data name="EditCase_Heading" xml:space="preserve"><value>Case details</value></data>
+  <data name="EditCase_Intro" xml:space="preserve"><value>Correct the patient, the procedure or the schedule. Each change is kept in the record's history.</value></data>
+  <data name="EditCase_NotSaved" xml:space="preserve"><value>Not saved: {0} Your entries are kept.</value></data>
   <data name="Error_InduceFirst" xml:space="preserve"><value>Induce before recording vitals.</value></data>
   <data name="Error_NotSaved" xml:space="preserve"><value>Not saved: {0}</value></data>
   <data name="Error_NotWritten" xml:space="preserve"><value>It could not be written to this device. Try again.</value></data>
@@ -197,6 +220,8 @@
   <data name="Hero_UnderAnesthesia" xml:space="preserve"><value>under anesthesia</value></data>
   <data name="HistoryDrawer_1.Title" xml:space="preserve"><value>Visit history</value></data>
   <data name="HistoryDrawer_10.Text" xml:space="preserve"><value> T</value></data>
+  <data name="HistoryDrawer_11.Text" xml:space="preserve"><value>Corrections to this record</value></data>
+  <data name="HistoryDrawer_12.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Corrections to this record</value></data>
   <data name="HistoryDrawer_2.Text" xml:space="preserve"><value>Observations in this record</value></data>
   <data name="HistoryDrawer_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Readings table</value></data>
   <data name="HistoryDrawer_4.Text" xml:space="preserve"><value>HR</value></data>
@@ -239,7 +264,7 @@
   <data name="MedicationsDrawer_8.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Doses given</value></data>
   <data name="MedicationsDrawer_9.Text" xml:space="preserve"><value>Fluids</value></data>
   <data name="NewCase_1.Label" xml:space="preserve"><value>Cancel</value></data>
-  <data name="NewCase_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Cancel new case</value></data>
+  <data name="NewCase_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Cancel and close the form</value></data>
   <data name="NewCase_10.Header" xml:space="preserve"><value>Breed</value></data>
   <data name="NewCase_10.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Breed</value></data>
   <data name="NewCase_11.Header" xml:space="preserve"><value>Weight (kg)</value></data>
@@ -257,7 +282,6 @@
   <data name="NewCase_17.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Technician</value></data>
   <data name="NewCase_18.Text" xml:space="preserve"><value>SCHEDULE</value></data>
   <data name="NewCase_19.Text" xml:space="preserve"><value>Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card.</value></data>
-  <data name="NewCase_2.Text" xml:space="preserve"><value>New patient</value></data>
   <data name="NewCase_20.Header" xml:space="preserve"><value>Room</value></data>
   <data name="NewCase_20.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Operating room</value></data>
   <data name="NewCase_21.Header" xml:space="preserve"><value>Planned start</value></data>
@@ -269,9 +293,6 @@
   <data name="NewCase_24.Content" xml:space="preserve"><value>Pet parent told the plan</value></data>
   <data name="NewCase_24.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Pet parent has been told the plan</value></data>
   <data name="NewCase_25.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Form errors</value></data>
-  <data name="NewCase_26.Content" xml:space="preserve"><value>Create case</value></data>
-  <data name="NewCase_26.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Create case</value></data>
-  <data name="NewCase_3.Text" xml:space="preserve"><value>Weight sets every dose, so it is the one number to get right.</value></data>
   <data name="NewCase_4.Text" xml:space="preserve"><value>PATIENT</value></data>
   <data name="NewCase_5.Header" xml:space="preserve"><value>Name</value></data>
   <data name="NewCase_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Patient name</value></data>
@@ -280,10 +301,13 @@
   <data name="NewCase_7.Content" xml:space="preserve"><value>Canine</value></data>
   <data name="NewCase_8.Content" xml:space="preserve"><value>Feline</value></data>
   <data name="NewCase_9.Content" xml:space="preserve"><value>Other</value></data>
+  <data name="NewCase_Action" xml:space="preserve"><value>Create case</value></data>
   <data name="NewCase_AgeNumber" xml:space="preserve"><value>Age must be a number of years.</value></data>
   <data name="NewCase_Duration" xml:space="preserve"><value>Planned length is 5 to 600 minutes.</value></data>
   <data name="NewCase_DurationNeedsStart" xml:space="preserve"><value>Enter a planned start for the planned length.</value></data>
   <data name="NewCase_FastingTime" xml:space="preserve"><value>Fasting since is a time like 20:00.</value></data>
+  <data name="NewCase_Heading" xml:space="preserve"><value>New patient</value></data>
+  <data name="NewCase_Intro" xml:space="preserve"><value>Weight sets every dose, so it is the one number to get right.</value></data>
   <data name="NewCase_NameRequired" xml:space="preserve"><value>Enter the patient's name.</value></data>
   <data name="NewCase_NotSaved" xml:space="preserve"><value>The case could not be saved on this device. Your entries are kept; try again.</value></data>
   <data name="NewCase_ProcedureRequired" xml:space="preserve"><value>Enter the procedure.</value></data>
@@ -392,6 +416,8 @@
   <data name="PreopDrawer_26.Text" xml:space="preserve"><value>Booked by mistake, or the patient is not coming? Delete the case, then book it again with the right details.</value></data>
   <data name="PreopDrawer_27.Content" xml:space="preserve"><value>Delete case</value></data>
   <data name="PreopDrawer_27.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Delete this case</value></data>
+  <data name="PreopDrawer_28.Content" xml:space="preserve"><value>Edit case details</value></data>
+  <data name="PreopDrawer_28.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Edit the patient, weight, procedure and schedule</value></data>
   <data name="PreopDrawer_3.Content" xml:space="preserve"><value>Dismiss</value></data>
   <data name="PreopDrawer_4.Text" xml:space="preserve"><value>WEIGHT</value></data>
   <data name="PreopDrawer_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Patient weight in kilograms</value></data>

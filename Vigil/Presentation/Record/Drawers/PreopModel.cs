@@ -2,7 +2,7 @@ namespace Vigil.Presentation;
 
 /// <summary>
 /// The Preparation drawer (route "!Preop"): weight and signalment, the pre-op checklist and ASA status saved field by
-/// field while the case is booked, Induce, and the hand-backs for premedication and Delete case.
+/// field while the case is booked, Induce, and the hand-backs for premedication, case details and Delete case.
 /// </summary>
 public partial record PreopModel(CaseRef Ref, ICaseStore Store, IClock Clock, IPreferences Preferences, INavigator Navigator, ILogger<PreopModel> Logger)
 {
@@ -38,6 +38,9 @@ public partial record PreopModel(CaseRef Ref, ICaseStore Store, IClock Clock, IP
 
     /// <summary>Give premedication: the dose drawer.</summary>
     public async ValueTask GivePremedication(CancellationToken ct) => await Drawer.HandBackAsync(RecordPane.Dose, ct);
+
+    /// <summary>Correct the patient, weight, procedure or schedule: the case-details sheet.</summary>
+    public async ValueTask EditDetails(CancellationToken ct) => await Drawer.HandBackAsync(PaneChoice.EditCase, ct);
 
     /// <summary>A booked case made by mistake: the record confirms, deletes it and leaves.</summary>
     public async ValueTask DeleteCase(CancellationToken ct) => await Drawer.HandBackAsync(PaneChoice.DeleteCase, ct);

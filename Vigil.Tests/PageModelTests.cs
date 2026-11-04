@@ -271,7 +271,7 @@ public class NewCaseModelTests : ModelTestBase
         var model = new NewCaseModel(Store, Clock, Nav, NullLogger<NewCaseModel>.Instance);
         (await model.ErrorText).Should().BeEmpty();
 
-        await model.Create(CaseDraft.Empty, CancellationToken.None);
+        await model.Save(CaseDraft.Empty, CancellationToken.None);
 
         (await SettledAsync(model.ErrorText, e => e != "")).Should().Contain("Enter the patient's name.").And.Contain("every dose is calculated from it");
         (await model.HasErrors).Should().BeTrue();
@@ -284,7 +284,7 @@ public class NewCaseModelTests : ModelTestBase
     {
         var model = new NewCaseModel(Store, Clock, Nav, NullLogger<NewCaseModel>.Instance);
 
-        await model.Create(Ziggy, CancellationToken.None);
+        await model.Save(Ziggy, CancellationToken.None);
 
         var saved = (await Store.GetAllAsync(CancellationToken.None)).Should().ContainSingle().Subject;
         saved.Patient.WeightKg.Should().Be(12.6m);
@@ -300,7 +300,7 @@ public class NewCaseModelTests : ModelTestBase
         var model = new NewCaseModel(FailingStore, Clock, Nav, NullLogger<NewCaseModel>.Instance);
         await model.Draft.UpdateAsync(_ => Ziggy, CancellationToken.None);
 
-        await model.Create(Ziggy, CancellationToken.None);
+        await model.Save(Ziggy, CancellationToken.None);
 
         (await SettledAsync(model.SaveError, e => e != "")).Should().Be("The case could not be saved on this device. Your entries are kept; try again.");
         (await model.Draft).Should().Be(Ziggy);

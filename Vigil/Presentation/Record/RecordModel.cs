@@ -3,8 +3,8 @@ namespace Vigil.Presentation;
 /// <summary>
 /// The record page (route Main/Record): the hero tray, the overdue banner, the procedure header and the metric cards
 /// for one case, and the way into its panes. Each pane is a drawer with its own model (<see cref="RecordPane"/>,
-/// <see cref="CaseDrawer"/>); a drawer that closes on a step for the record (another pane, Sign off, Delete case)
-/// hands it back here.
+/// <see cref="CaseDrawer"/>); a drawer that closes on a step for the record (another pane, Sign off, the case details,
+/// Delete case) hands it back here.
 /// </summary>
 public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, IPreferences Preferences, INavigator Navigator, DoseFeedback Feedback, IFormulary Formulary, ILogger<RecordModel> Logger)
 {
@@ -31,7 +31,7 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
     public async ValueTask OpenPane(string section, CancellationToken ct)
     {
         string? next = section;
-        while (next is not null && next is not (PaneChoice.SignOff or PaneChoice.DeleteCase))
+        while (next is not null && next is not (PaneChoice.SignOff or PaneChoice.EditCase or PaneChoice.DeleteCase))
         {
             await Pane.UpdateAsync(_ => next, ct);
             var choice = await Navigator.NavigateRouteForResultAsync<PaneChoice>(this, "!" + next, data: new CaseRef(Ref.Id), cancellation: ct).AsResult();
@@ -42,6 +42,9 @@ public partial record RecordModel(CaseRef Ref, ICaseStore Store, IClock Clock, I
         {
             case PaneChoice.SignOff:
                 await Navigator.NavigateRouteAsync(this, "!SignOff", data: new CaseRef(Ref.Id), cancellation: ct);
+                break;
+            case PaneChoice.EditCase:
+                await Navigator.NavigateRouteAsync(this, "!EditCase", data: new CaseRef(Ref.Id), cancellation: ct);
                 break;
             case PaneChoice.DeleteCase:
                 await DeleteCase(ct);

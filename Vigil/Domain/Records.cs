@@ -126,6 +126,31 @@ public enum LabState { Pending, Ready, Reviewed }
 /// <summary>A lab panel. <see cref="At"/> is when the result is expected (Pending) or due for review (Ready).</summary>
 public partial record LabResult(string Panel, LabState State, DateTimeOffset At);
 
+/// <summary>
+/// A correction to a case's details after booking (a mistyped weight, the wrong room): which detail
+/// (<see cref="CaseDetail"/>), its value before and after (invariant text), and when it was made.
+/// </summary>
+public partial record CaseCorrection(DateTimeOffset At, string Field, string Before, string After);
+
+/// <summary>The details a correction can change, as <see cref="CaseCorrection.Field"/> names.</summary>
+public static class CaseDetail
+{
+    public const string Name = "Name";
+    public const string Species = "Species";
+    public const string Breed = "Breed";
+    public const string Weight = "Weight";
+    public const string Age = "Age";
+    public const string Owner = "Owner";
+    public const string Procedure = "Procedure";
+    public const string Veterinarian = "Veterinarian";
+    public const string Technician = "Technician";
+    public const string Room = "Room";
+    public const string PlannedStart = "PlannedStart";
+    public const string PlannedLength = "PlannedLength";
+    public const string FastingSince = "FastingSince";
+    public const string ParentNotified = "ParentNotified";
+}
+
 /// <summary>The follow-up call to the pet parent after discharge.</summary>
 public partial record DischargeCall(DateTimeOffset DueAt, DateTimeOffset? DoneAt)
 {
@@ -179,6 +204,59 @@ public partial record Case(
     public DateTimeOffset? FastingSince { get; init; }
 
     public DateTimeOffset? ParentNotifiedAt { get; init; }
+
+    /// <summary>Corrections to the case's details since booking, oldest first (<see cref="WithDetailsFrom"/>).</summary>
+    public ImmutableList<CaseCorrection> Corrections { get; init => field = value ?? []; } = [];
+
+    /// <summary>
+    /// This case with the details of <paramref name="edited"/>: the patient (name, species, breed, weight, age, owner),
+    /// the procedure, the team and the schedule. Each changed detail is logged as a <see cref="CaseCorrection"/> at
+    /// <paramref name="at"/>. What was recorded stays this case's: readings, doses (with the volume drawn up at the
+    /// time), stage and recovery; a dose given after the correction is calculated from the corrected weight.
+    /// </summary>
+    public Case WithDetailsFrom(Case edited, DateTimeOffset at)
+    {
+        static string Dec(decimal v, string format) => v.ToString(format, System.Globalization.CultureInfo.InvariantCulture);
+        string Time(DateTimeOffset? t) => t is { } v ? v.ToOffset(at.Offset).ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture) : "";
+        var changes = new (string Field, string Before, string After)[]
+        {
+            (CaseDetail.Name, Patient.Name, edited.Patient.Name),
+            (CaseDetail.Species, Patient.Species.ToString(), edited.Patient.Species.ToString()),
+            (CaseDetail.Breed, Patient.Breed, edited.Patient.Breed),
+            (CaseDetail.Weight, Dec(Patient.WeightKg, "0.0"), Dec(edited.Patient.WeightKg, "0.0")),
+            (CaseDetail.Age, Dec(Patient.AgeYears, "0.#"), Dec(edited.Patient.AgeYears, "0.#")),
+            (CaseDetail.Owner, Patient.Owner, edited.Patient.Owner),
+            (CaseDetail.Procedure, Procedure, edited.Procedure),
+            (CaseDetail.Veterinarian, Veterinarian, edited.Veterinarian),
+            (CaseDetail.Technician, Technician, edited.Technician),
+            (CaseDetail.Room, OperatingRoom, edited.OperatingRoom),
+            (CaseDetail.PlannedStart, Time(PlannedStart), Time(edited.PlannedStart)),
+            (CaseDetail.PlannedLength, PlannedMinutes?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "", edited.PlannedMinutes?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? ""),
+            (CaseDetail.FastingSince, Time(FastingSince), Time(edited.FastingSince)),
+            (CaseDetail.ParentNotified, ParentNotifiedAt is null ? "no" : "yes", edited.ParentNotifiedAt is null ? "no" : "yes"),
+        };
+        return this with
+        {
+            Patient = Patient with
+            {
+                Name = edited.Patient.Name,
+                Species = edited.Patient.Species,
+                Breed = edited.Patient.Breed,
+                WeightKg = edited.Patient.WeightKg,
+                AgeYears = edited.Patient.AgeYears,
+                Owner = edited.Patient.Owner,
+            },
+            Procedure = edited.Procedure,
+            Veterinarian = edited.Veterinarian,
+            Technician = edited.Technician,
+            OperatingRoom = edited.OperatingRoom,
+            PlannedStart = edited.PlannedStart,
+            PlannedMinutes = edited.PlannedMinutes,
+            FastingSince = edited.FastingSince,
+            ParentNotifiedAt = edited.ParentNotifiedAt,
+            Corrections = Corrections.AddRange(changes.Where(x => x.Before != x.After).Select(x => new CaseCorrection(at, x.Field, x.Before, x.After))),
+        };
+    }
 
     /// <summary>
     /// Marks every Ready panel named <paramref name="panel"/> as reviewed (the "Bloodwork review" task clears). Before

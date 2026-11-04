@@ -764,6 +764,19 @@
   "Increase {0}": "Augmenter : {0}",
   "Decrease {0}": "Diminuer : {0}",
   "Loading the record": "Chargement du dossier",
+  "Cancel and close the form": "Annuler et fermer le formulaire",
+  "Case details": "Détails du dossier",
+  "Correct the patient, the procedure or the schedule. Each change is kept in the record's history.": "Corrigez le patient, l'intervention ou l'horaire. Chaque modification est conservée dans l'historique du dossier.",
+  "Corrections to this record": "Corrections de ce dossier",
+  "Doses already given keep the volume drawn up at the time. New doses use the corrected weight.": "Les doses déjà administrées gardent le volume préparé à ce moment. Les nouvelles doses utilisent le poids corrigé.",
+  "Edit case details": "Modifier le dossier",
+  "Edit the patient, weight, procedure and schedule": "Modifier le patient, le poids, l'intervention et l'horaire",
+  "Not saved: {0} Your entries are kept.": "Non enregistré : {0} Vos saisies sont conservées.",
+  "Save changes": "Enregistrer les modifications",
+  "no": "non",
+  "yes": "oui",
+  "{0:d MMM, HH:mm}": "{0:d MMM, HH:mm}",
+  "{0}: {1} → {2}": "{0} : {1} → {2}",
   "@keys": {
     "Settings_10.Content": "Clair"
   }

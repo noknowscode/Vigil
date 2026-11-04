@@ -52,6 +52,20 @@
                   </DataTemplate>
                 </muxc:ItemsRepeater.ItemTemplate>
               </muxc:ItemsRepeater>
+              <!-- Corrections to the case's details (Edit case details), newest first: what changed and when. -->
+              <StackPanel Spacing="{StaticResource Space8}" Visibility="{Binding Data.HasCorrections, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                <TextBlock x:Uid="HistoryDrawer_11" Text="Corrections to this record" Style="{StaticResource TypeTitleM}" />
+                <ItemsControl x:Uid="HistoryDrawer_12" ItemsSource="{Binding Data.Corrections}" AutomationProperties.Name="Corrections to this record">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:CorrectionRow">
+                      <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="96,*" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+                        <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
+                        <TextBlock Grid.Column="1" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Text="{x:Bind Text}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
             </StackPanel>
           </ScrollViewer>
         </DataTemplate>

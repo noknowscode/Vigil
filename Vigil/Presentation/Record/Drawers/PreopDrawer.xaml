@@ -30,6 +30,8 @@
                   <TextBlock x:Uid="PreopDrawer_6" Style="{StaticResource TypeH2Section}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Bottom" Margin="{StaticResource GapBottom10}" Text="kg" />
                 </StackPanel>
                 <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="{Binding Data.Signalment}" />
+                <!-- A mistyped weight drives every dose: the details stay correctable until the record is signed (logged in Visit history). -->
+                <Button x:Uid="PreopDrawer_28" Style="{StaticResource ButtonSecondaryM}" Margin="{StaticResource GapTop8}" HorizontalAlignment="Left" Content="Edit case details" Visibility="{Binding Data.CanChange, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.EditDetails}" AutomationProperties.Name="Edit the patient, weight, procedure and schedule" />
               </StackPanel>
 
               <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">

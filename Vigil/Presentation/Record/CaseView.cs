@@ -7,6 +7,39 @@ public partial record LabRow(string Panel, string StateText, bool IsReady);
 
 public partial record DoseRow(string Time, string Drug, string Dose, string Volume, string Route, string Flag);
 
+/// <summary>A logged correction in Visit history: "4 Nov, 12:50" and "Weight: 18.4 kg → 14.8 kg".</summary>
+public partial record CorrectionRow(string Time, string Text)
+{
+    public static CorrectionRow From(CaseCorrection c, DateTimeOffset now)
+    {
+        var label = c.Field switch
+        {
+            CaseDetail.Name => Loc.T("Detail_Name", "Name"),
+            CaseDetail.Species => Loc.T("Detail_Species", "Species"),
+            CaseDetail.Breed => Loc.T("Detail_Breed", "Breed"),
+            CaseDetail.Weight => Loc.T("Detail_Weight", "Weight (kg)"),
+            CaseDetail.Age => Loc.T("Detail_Age", "Age (years)"),
+            CaseDetail.Owner => Loc.T("Detail_Owner", "Owner"),
+            CaseDetail.Procedure => Loc.T("Detail_Procedure", "Procedure"),
+            CaseDetail.Veterinarian => Loc.T("Detail_Veterinarian", "Veterinarian"),
+            CaseDetail.Technician => Loc.T("Detail_Technician", "Technician"),
+            CaseDetail.Room => Loc.T("Detail_Room", "Room"),
+            CaseDetail.PlannedStart => Loc.T("Detail_PlannedStart", "Planned start"),
+            CaseDetail.PlannedLength => Loc.T("Detail_PlannedLength", "Length (min)"),
+            CaseDetail.FastingSince => Loc.T("Detail_FastingSince", "Fasting since"),
+            CaseDetail.ParentNotified => Loc.T("Detail_ParentNotified", "Pet parent told the plan"),
+            _ => c.Field,
+        };
+        string Value(string v) => c.Field switch
+        {
+            CaseDetail.Species => Enum.TryParse<Species>(v, out var s) ? Loc.Species(s) : v,
+            CaseDetail.ParentNotified => v == "yes" ? Loc.T("Detail_Yes", "yes") : Loc.T("Detail_No", "no"),
+            _ => v.Length == 0 ? "—" : v,
+        };
+        return new(Loc.F("Correction_At", "{0:d MMM, HH:mm}", c.At.ToOffset(now.Offset)), Loc.F("Correction_Text", "{0}: {1} → {2}", label, Value(c.Before), Value(c.After)));
+    }
+}
+
 /// <summary>
 /// Read-only projection of a case for the record page, rebuilt when the case (or the open pane) changes. Values that
 /// move with the clock are in <see cref="CaseTimers"/>, so the reading, dose and lab lists keep their items between ticks.
@@ -56,6 +89,9 @@ public partial record CaseView(
     /// <summary>"Last score 1 at 12:35" under the pain score buttons.</summary>
     public string PainText { get; init; } = "";
     public IImmutableList<LabRow> LabRows { get; init; } = ImmutableList<LabRow>.Empty;
+    /// <summary>Corrections to the case's details, newest first (Visit history).</summary>
+    public IImmutableList<CorrectionRow> Corrections { get; init; } = ImmutableList<CorrectionRow>.Empty;
+    public bool HasCorrections => Corrections.Count > 0;
     public bool HasLabs => LabRows.Count > 0;
     public bool HasNoLabs => !HasLabs;
     /// <summary>"Discharge call to K. Gagnon · due 14:00" or "... · done 14:02"; empty when none is planned.</summary>
@@ -141,6 +177,7 @@ public partial record CaseView(
             ProcedureMeta = RecordText.ProcedureMeta(c, now),
             OverdueDetail = RecordText.OverdueDetail(c, now, interval),
             Fluids = RecordText.Fluids(c),
+            Corrections = c.Corrections.Reverse().Select(x => CorrectionRow.From(x, now)).ToImmutableList(),
             LabRows = c.Labs.Select(l => new LabRow(l.Panel, l.State switch
             {
                 LabState.Ready => Loc.T("Lab_Ready", "Results ready"),
