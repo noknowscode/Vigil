@@ -391,6 +391,8 @@
     <Setter Property="FocusVisualSecondaryThickness" Value="0" />
     <Setter Property="FocusVisualMargin" Value="-4" />
   </Style>
+  <!-- Disabled buttons (primary, secondary, nav item) fade to this, so an unavailable action never reads as available. -->
+  <x:Double x:Key="DisabledOpacity">0.45</x:Double>
   <ControlTemplate x:Key="PrimaryButtonTemplate" TargetType="Button">
     <Grid x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
           BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" RenderTransformOrigin="0.5,0.5">
@@ -406,7 +408,7 @@
               <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleY" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
             </Storyboard>
           </VisualState>
-          <VisualState x:Name="Disabled" />
+          <VisualState x:Name="Disabled"><VisualState.Setters><Setter Target="Root.Opacity" Value="{StaticResource DisabledOpacity}" /></VisualState.Setters></VisualState>
         </VisualStateGroup>
       </VisualStateManager.VisualStateGroups>
       <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -430,8 +432,8 @@
               <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleY" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
             </Storyboard>
           </VisualState>
-          <!-- Disabled controls keep the prototype's look ("Coming soon" items, SPEC-v2 decision 1). -->
-          <VisualState x:Name="Disabled" />
+          <!-- A disabled button reads as unavailable (Induce before the checks, Administer dose on a signed record). -->
+          <VisualState x:Name="Disabled"><VisualState.Setters><Setter Target="Root.Opacity" Value="{StaticResource DisabledOpacity}" /></VisualState.Setters></VisualState>
         </VisualStateGroup>
       </VisualStateManager.VisualStateGroups>
       <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -643,7 +645,7 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Hover.Background" Value="{ThemeResource InkHoverBrush}" /></VisualState.Setters></VisualState>
                 <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Hover.Background" Value="{ThemeResource InkGridlineBrush}" /></VisualState.Setters></VisualState>
-                <VisualState x:Name="Disabled" />
+                <VisualState x:Name="Disabled"><VisualState.Setters><Setter Target="Root.Opacity" Value="{StaticResource DisabledOpacity}" /></VisualState.Setters></VisualState>
               </VisualStateGroup>
               <VisualStateGroup x:Name="NavStates">
                 <VisualState x:Name="Inactive" />
