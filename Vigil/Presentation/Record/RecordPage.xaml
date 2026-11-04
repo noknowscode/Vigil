@@ -37,10 +37,7 @@
         </Setter.Value>
       </Setter>
     </Style>
-    <Style x:Key="ChartLabel" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}">
-      <Setter Property="FontSize" Value="10" />
-      <Setter Property="LineHeight" Value="12" />
-      <Setter Property="Foreground" Value="{ThemeResource InkMutedBrush}" />
+    <Style x:Key="ChartLabel" TargetType="TextBlock" BasedOn="{StaticResource TypeMonoChart}">
       <Setter Property="VerticalAlignment" Value="Top" />
       <Setter Property="HorizontalAlignment" Value="Left" />
     </Style>
