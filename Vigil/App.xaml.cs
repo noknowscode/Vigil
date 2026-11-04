@@ -142,9 +142,9 @@ public partial class App : Application
     /// <summary>
     /// Screenshot-matrix hooks. <c>--vigil-theme=light|dark</c> sets the window content's theme (the switch the theme
     /// service flips). <c>--vigil-route=&lt;route&gt;[:&lt;pane&gt;]</c> opens a shell destination (Today, Patients, Agenda,
-    /// Settings), a case page (Record, Dose, ParentPreview) or a sheet (!NewCase, !SignOff, !Menu) the way the app's own
+    /// Settings), a case page (Record, Redose, ParentPreview) or a sheet (!NewCase, !SignOff, !Menu) the way the app's own
     /// commands do: in the shell's content frame, with the case under anesthesia (or the first case) as data.
-    /// <c>Record:Monitor</c> opens the record on that pane; <c>--vigil-scroll=&lt;px&gt;</c> then scrolls the page. Each step
+    /// <c>Record:Monitor</c> opens the record with that pane's drawer; <c>--vigil-scroll=&lt;px&gt;</c> then scrolls the page. Each step
     /// prints a <c>VERIFY</c> line to stderr. Sheets and panes close when the window resizes (light dismiss), so the
     /// matrix opens them per width with <c>--clover-size</c> instead of live-resizing.
     /// </summary>
@@ -199,7 +199,7 @@ public partial class App : Application
             var target = cases.FirstOrDefault(c => c.Status == CaseStatus.Anesthetized) ?? cases.FirstOrDefault();
             object? data = name switch
             {
-                "Record" or "Dose" or "SignOff" or "ParentPreview" when target is not null =>
+                "Record" or "Redose" or "SignOff" or "ParentPreview" when target is not null =>
                     parts.Length == 2 ? new CaseRefPane(target.Id, parts[1]) : new CaseRef(target.Id),
                 "Menu" => new MenuContext(ShellSection.Today),
                 _ => null,
@@ -358,6 +358,9 @@ public partial class App : Application
 
     private static void RegisterRoutes(IViewRegistry views, IRouteRegistry routes)
     {
+        // DoseModel has two views (the Redose page and the record's Dose drawer), so their maps are kept to name the route.
+        var redosePage = new DataViewMap<DosePage, DoseModel, CaseRef>();
+        var doseDrawer = new DataViewMap<DoseDrawer, DoseModel, CaseRef>(ResultData: typeof(PaneChoice));
         views.Register(
             new ViewMap<ShellPage, ShellModel>(),
             new ViewMap<BoardPage, BoardModel>(),
@@ -367,9 +370,18 @@ public partial class App : Application
             new DataViewMap<Presentation.MenuFlyout, MenuModel, MenuContext>(ResultData: typeof(MenuChoice)),
             new DataViewMap<RecordPage, RecordModel, CaseRef>(),
             new DataViewMap<ParentPreviewPage, ParentPreviewModel, CaseRef>(),
-            new DataViewMap<DosePage, DoseModel, CaseRef>(),
+            redosePage,
             new DataViewMap<SignOffPage, SignOffModel, CaseRef>(),
-            new ViewMap<SettingsPage, SettingsModel>()
+            new ViewMap<SettingsPage, SettingsModel>(),
+            // The record's panes: drawers (Flyout views) over the record page, each with its own model; Dose shares the
+            // Redose page's model. Each hands its next step back to RecordModel as a PaneChoice.
+            new DataViewMap<PreopDrawer, PreopModel, CaseRef>(ResultData: typeof(PaneChoice)),
+            doseDrawer,
+            new DataViewMap<MedicationsDrawer, MedicationsModel, CaseRef>(ResultData: typeof(PaneChoice)),
+            new DataViewMap<VitalsDrawer, VitalsModel, CaseRef>(ResultData: typeof(PaneChoice)),
+            new DataViewMap<RecoveryDrawer, RecoveryModel, CaseRef>(ResultData: typeof(PaneChoice)),
+            new DataViewMap<HistoryDrawer, HistoryModel, CaseRef>(ResultData: typeof(PaneChoice)),
+            new DataViewMap<LabsDrawer, LabsModel, CaseRef>(ResultData: typeof(PaneChoice))
         );
 
         // Main = ShellPage (sidebar + content Frame). Sidebar destinations and detail pages all open in that Frame,
@@ -383,11 +395,18 @@ public partial class App : Application
                     new RouteMap("Agenda", View: views.FindByViewModel<AgendaModel>()),
                     new RouteMap("Record", View: views.FindByViewModel<RecordModel>()),
                     new RouteMap("ParentPreview", View: views.FindByViewModel<ParentPreviewModel>()),
-                    new RouteMap("Dose", View: views.FindByViewModel<DoseModel>()),
+                    new RouteMap("Redose", View: redosePage),
                     new RouteMap("SignOff", View: views.FindByViewModel<SignOffModel>()),
                     new RouteMap("Settings", View: views.FindByViewModel<SettingsModel>()),
                     new RouteMap("NewCase", View: views.FindByViewModel<NewCaseModel>()),
                     new RouteMap("Menu", View: views.FindByViewModel<MenuModel>()),
+                    new RouteMap(RecordPane.Preop, View: views.FindByViewModel<PreopModel>()),
+                    new RouteMap(RecordPane.Dose, View: doseDrawer),
+                    new RouteMap(RecordPane.Drugs, View: views.FindByViewModel<MedicationsModel>()),
+                    new RouteMap(RecordPane.Monitor, View: views.FindByViewModel<VitalsModel>()),
+                    new RouteMap(RecordPane.Recovery, View: views.FindByViewModel<RecoveryModel>()),
+                    new RouteMap(RecordPane.History, View: views.FindByViewModel<HistoryModel>()),
+                    new RouteMap(RecordPane.Labs, View: views.FindByViewModel<LabsModel>()),
                 ])
         );
     }

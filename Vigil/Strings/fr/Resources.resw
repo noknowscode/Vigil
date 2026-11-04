@@ -91,6 +91,29 @@
   <data name="Count_Readings" xml:space="preserve"><value>{0} lectures</value></data>
   <data name="Discharge_Done" xml:space="preserve"><value>Appel de congé à {0} · fait à {1:HH:mm}</value></data>
   <data name="Discharge_Due" xml:space="preserve"><value>Appel de congé à {0} · prévu à {1:HH:mm}</value></data>
+  <data name="DoseDrawer_1.Title" xml:space="preserve"><value>Administrer une dose</value></data>
+  <data name="DoseDrawer_10.Text" xml:space="preserve"><value>À PRÉLEVER</value></data>
+  <data name="DoseDrawer_11.Text" xml:space="preserve"><value>Choisissez un médicament</value></data>
+  <data name="DoseDrawer_12.Text" xml:space="preserve"><value>Le volume s'affiche ici avec sa formule dès qu'un médicament et une dose en mg/kg sont choisis.</value></data>
+  <data name="DoseDrawer_13.Header" xml:space="preserve"><value>Voie</value></data>
+  <data name="DoseDrawer_14.Content" xml:space="preserve"><value>IV</value></data>
+  <data name="DoseDrawer_15.Content" xml:space="preserve"><value>IM</value></data>
+  <data name="DoseDrawer_16.Content" xml:space="preserve"><value>SC</value></data>
+  <data name="DoseDrawer_17.Content" xml:space="preserve"><value>PO</value></data>
+  <data name="DoseDrawer_18.Content" xml:space="preserve"><value>Administrer la dose</value></data>
+  <data name="DoseDrawer_18.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer la dose</value></data>
+  <data name="DoseDrawer_19.Content" xml:space="preserve"><value>Modifier la dose</value></data>
+  <data name="DoseDrawer_2.Text" xml:space="preserve"><value>MÉDICAMENT · formulaire d'exemple, usage non clinique</value></data>
+  <data name="DoseDrawer_20.Content" xml:space="preserve"><value>Administrer quand même</value></data>
+  <data name="DoseDrawer_20.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer la dose hors plage quand même</value></data>
+  <data name="DoseDrawer_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Médicaments</value></data>
+  <data name="DoseDrawer_4.Text" xml:space="preserve"><value> mg/mL</value></data>
+  <data name="DoseDrawer_5.Header" xml:space="preserve"><value>Dose (mg/kg)</value></data>
+  <data name="DoseDrawer_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Dose en milligrammes par kilogramme</value></data>
+  <data name="DoseDrawer_6.Text" xml:space="preserve"><value>À PRÉLEVER</value></data>
+  <data name="DoseDrawer_7.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Volume à prélever</value></data>
+  <data name="DoseDrawer_8.Text" xml:space="preserve"><value>Plage de référence</value></data>
+  <data name="DoseDrawer_9.Text" xml:space="preserve"><value>Hors de la plage de référence : une confirmation sera demandée.</value></data>
   <data name="Dose_1.Label" xml:space="preserve"><value>Annuler</value></data>
   <data name="Dose_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Fermer la feuille de dose</value></data>
   <data name="Dose_10.Text" xml:space="preserve"><value>Plage de référence</value></data>
@@ -123,6 +146,7 @@
   <data name="Dose_ConfirmText" xml:space="preserve"><value>La plage de référence de {0} est {1}. {2:0.###} mg/kg correspond à {3}.</value></data>
   <data name="Dose_ConfirmTitle" xml:space="preserve"><value>Administrer {0:0.###} mg/kg?</value></data>
   <data name="Dose_OutOfRangeConfirmed" xml:space="preserve"><value>Hors plage, confirmé</value></data>
+  <data name="DrawerHeader_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Fermer le panneau</value></data>
   <data name="Drugs_None" xml:space="preserve"><value>Aucune dose consignée</value></data>
   <data name="Drugs_NoneDetail" xml:space="preserve"><value>L'historique des médicaments reste associé à cette visite.</value></data>
   <data name="DueAction_Call" xml:space="preserve"><value>Appeler</value></data>
@@ -171,14 +195,49 @@
   <data name="Hero_ReadingOverdue" xml:space="preserve"><value>Relevé en retard de {0}</value></data>
   <data name="Hero_Team" xml:space="preserve"><value>Équipe</value></data>
   <data name="Hero_UnderAnesthesia" xml:space="preserve"><value>sous anesthésie</value></data>
+  <data name="HistoryDrawer_1.Title" xml:space="preserve"><value>Historique de la visite</value></data>
+  <data name="HistoryDrawer_10.Text" xml:space="preserve"><value> T</value></data>
+  <data name="HistoryDrawer_2.Text" xml:space="preserve"><value>Observations de ce dossier</value></data>
+  <data name="HistoryDrawer_3.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Tableau des lectures</value></data>
+  <data name="HistoryDrawer_4.Text" xml:space="preserve"><value>FC</value></data>
+  <data name="HistoryDrawer_5.Text" xml:space="preserve"><value> FR</value></data>
+  <data name="HistoryDrawer_6.Text" xml:space="preserve"><value> SpO₂</value></data>
+  <data name="HistoryDrawer_7.Text" xml:space="preserve"><value> PA</value></data>
+  <data name="HistoryDrawer_8.Text" xml:space="preserve"><value> PAM</value></data>
+  <data name="HistoryDrawer_9.Text" xml:space="preserve"><value> EtCO₂</value></data>
   <data name="Insight_OnPlan" xml:space="preserve"><value>La préparation a duré {0} minutes en moyenne aujourd'hui, comme prévu.</value></data>
   <data name="Insight_Over" xml:space="preserve"><value>La préparation a duré {0} minutes en moyenne aujourd'hui, {1} minutes de plus que prévu.</value></data>
   <data name="Insight_Under" xml:space="preserve"><value>La préparation a duré {0} minutes en moyenne aujourd'hui, {1} minutes de moins que prévu.</value></data>
   <data name="Lab_Pending" xml:space="preserve"><value>En attente · prévu à {0:HH:mm}</value></data>
   <data name="Lab_Ready" xml:space="preserve"><value>Résultats prêts</value></data>
   <data name="Lab_Reviewed" xml:space="preserve"><value>Revu</value></data>
+  <data name="LabsDrawer_1.Title" xml:space="preserve"><value>Résultats de laboratoire</value></data>
+  <data name="LabsDrawer_2.Title" xml:space="preserve"><value>Non enregistré</value></data>
+  <data name="LabsDrawer_3.Content" xml:space="preserve"><value>Fermer</value></data>
+  <data name="LabsDrawer_4.Text" xml:space="preserve"><value>Analyses de laboratoire de cette visite</value></data>
+  <data name="LabsDrawer_5.Text" xml:space="preserve"><value>Vigil suit les analyses en attente, prêtes et revues. Les rapports et leurs valeurs restent dans votre système de laboratoire.</value></data>
+  <data name="LabsDrawer_6.Text" xml:space="preserve"><value>Aucune analyse de laboratoire pour cette visite.</value></data>
+  <data name="LabsDrawer_7.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Analyses de laboratoire</value></data>
+  <data name="LabsDrawer_8.Content" xml:space="preserve"><value>Marquer comme revu</value></data>
+  <data name="LabsDrawer_8.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Marquer l'analyse comme revue</value></data>
+  <data name="LabsDrawer_9.Content" xml:space="preserve"><value>Voir la préparation</value></data>
   <data name="Map_Calc" xml:space="preserve"><value>{0} calc.</value></data>
   <data name="Map_CalcHint" xml:space="preserve"><value>calc. {0}</value></data>
+  <data name="MedicationsDrawer_1.Title" xml:space="preserve"><value>Registre des médicaments</value></data>
+  <data name="MedicationsDrawer_10.Header" xml:space="preserve"><value>Soluté</value></data>
+  <data name="MedicationsDrawer_10.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Nom du soluté</value></data>
+  <data name="MedicationsDrawer_11.Header" xml:space="preserve"><value>Débit (mL/kg/h)</value></data>
+  <data name="MedicationsDrawer_11.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Débit du soluté en millilitres par kilogramme par heure</value></data>
+  <data name="MedicationsDrawer_12.Content" xml:space="preserve"><value>Arrêter le soluté</value></data>
+  <data name="MedicationsDrawer_12.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Arrêter le soluté</value></data>
+  <data name="MedicationsDrawer_2.Title" xml:space="preserve"><value>Non enregistré</value></data>
+  <data name="MedicationsDrawer_3.Content" xml:space="preserve"><value>Fermer</value></data>
+  <data name="MedicationsDrawer_4.Text" xml:space="preserve"><value>Doses administrées</value></data>
+  <data name="MedicationsDrawer_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer une dose</value></data>
+  <data name="MedicationsDrawer_6.Text" xml:space="preserve"><value>Administrer une dose</value></data>
+  <data name="MedicationsDrawer_7.Text" xml:space="preserve"><value>Aucune dose pour l'instant. La prémédication, les agents d'induction et les antibiotiques de ce dossier s'affichent ici avec leur volume.</value></data>
+  <data name="MedicationsDrawer_8.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Doses administrées</value></data>
+  <data name="MedicationsDrawer_9.Text" xml:space="preserve"><value>Solutés</value></data>
   <data name="NewCase_1.Label" xml:space="preserve"><value>Annuler</value></data>
   <data name="NewCase_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Annuler le nouveau dossier</value></data>
   <data name="NewCase_10.Header" xml:space="preserve"><value>Race</value></data>
@@ -236,13 +295,6 @@
   <data name="Next_Notified" xml:space="preserve"><value>avisé à {0:HH:mm}</value></data>
   <data name="Next_Title" xml:space="preserve"><value>Prochaine chirurgie · {0}</value></data>
   <data name="Next_Until" xml:space="preserve"><value>avant {0:HH:mm}</value></data>
-  <data name="Pane_Dose" xml:space="preserve"><value>Administrer une dose</value></data>
-  <data name="Pane_Drugs" xml:space="preserve"><value>Registre des médicaments</value></data>
-  <data name="Pane_History" xml:space="preserve"><value>Historique de la visite</value></data>
-  <data name="Pane_Labs" xml:space="preserve"><value>Résultats de laboratoire</value></data>
-  <data name="Pane_Monitor" xml:space="preserve"><value>Saisir les observations</value></data>
-  <data name="Pane_Preop" xml:space="preserve"><value>Préparation préopératoire</value></data>
-  <data name="Pane_Recovery" xml:space="preserve"><value>Réveil et transfert</value></data>
   <data name="ParentPreview_1.Text" xml:space="preserve"><value>clover</value></data>
   <data name="ParentPreview_10.Text" xml:space="preserve"><value>Pour des nouvelles personnalisées, contactez votre clinique aux coordonnées figurant sur votre confirmation de rendez-vous.</value></data>
   <data name="ParentPreview_11.Text" xml:space="preserve"><value>Les soins continuent. Pour ceux que vous aimez.</value></data>
@@ -317,6 +369,36 @@
   <data name="Plane_Deep" xml:space="preserve"><value>Profond</value></data>
   <data name="Plane_Light" xml:space="preserve"><value>Léger</value></data>
   <data name="Plane_Surgical" xml:space="preserve"><value>Chirurgical</value></data>
+  <data name="PreopDrawer_1.Title" xml:space="preserve"><value>Préparation préopératoire</value></data>
+  <data name="PreopDrawer_10.Content" xml:space="preserve"><value>Appareil d'anesthésie et circuit vérifiés (étanchéité)</value></data>
+  <data name="PreopDrawer_11.Content" xml:space="preserve"><value>Consentement du propriétaire signé</value></data>
+  <data name="PreopDrawer_12.Content" xml:space="preserve"><value>Bilan sanguin préanesthésique révisé</value></data>
+  <data name="PreopDrawer_13.Text" xml:space="preserve"><value>Statut physique ASA</value></data>
+  <data name="PreopDrawer_14.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Statut physique ASA</value></data>
+  <data name="PreopDrawer_15.Content" xml:space="preserve"><value>Non défini</value></data>
+  <data name="PreopDrawer_16.Content" xml:space="preserve"><value>I</value></data>
+  <data name="PreopDrawer_17.Content" xml:space="preserve"><value>II</value></data>
+  <data name="PreopDrawer_18.Content" xml:space="preserve"><value>III</value></data>
+  <data name="PreopDrawer_19.Content" xml:space="preserve"><value>IV</value></data>
+  <data name="PreopDrawer_2.Title" xml:space="preserve"><value>Non enregistré</value></data>
+  <data name="PreopDrawer_20.Content" xml:space="preserve"><value>V</value></data>
+  <data name="PreopDrawer_21.Content" xml:space="preserve"><value>E : intervention d'urgence</value></data>
+  <data name="PreopDrawer_22.Header" xml:space="preserve"><value>Notes</value></data>
+  <data name="PreopDrawer_23.Content" xml:space="preserve"><value>Administrer la prémédication</value></data>
+  <data name="PreopDrawer_23.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer la prémédication</value></data>
+  <data name="PreopDrawer_24.Content" xml:space="preserve"><value>Induire</value></data>
+  <data name="PreopDrawer_24.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Induire l'anesthésie</value></data>
+  <data name="PreopDrawer_25.Text" xml:space="preserve"><value>Cochez les cinq vérifications et indiquez le statut ASA pour induire. L'induction démarre le chronomètre des lectures.</value></data>
+  <data name="PreopDrawer_26.Text" xml:space="preserve"><value>Réservé par erreur, ou le patient ne viendra pas? Supprimez le dossier, puis réservez-le de nouveau avec les bons renseignements.</value></data>
+  <data name="PreopDrawer_27.Content" xml:space="preserve"><value>Supprimer le dossier</value></data>
+  <data name="PreopDrawer_27.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Supprimer ce dossier</value></data>
+  <data name="PreopDrawer_3.Content" xml:space="preserve"><value>Fermer</value></data>
+  <data name="PreopDrawer_4.Text" xml:space="preserve"><value>POIDS</value></data>
+  <data name="PreopDrawer_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Poids du patient en kilogrammes</value></data>
+  <data name="PreopDrawer_6.Text" xml:space="preserve"><value>kg</value></data>
+  <data name="PreopDrawer_7.Text" xml:space="preserve"><value>Vérification préanesthésique</value></data>
+  <data name="PreopDrawer_8.Content" xml:space="preserve"><value>À jeun (selon le protocole)</value></data>
+  <data name="PreopDrawer_9.Content" xml:space="preserve"><value>Cathéter IV posé et rincé</value></data>
   <data name="Preop_InducedAt" xml:space="preserve"><value>Induit à {0:HH:mm}</value></data>
   <data name="Preop_NotInduced" xml:space="preserve"><value>Non induit</value></data>
   <data name="Preop_Progress" xml:space="preserve"><value>{0} sur 5 vérifications</value></data>
@@ -334,6 +416,13 @@
   <data name="Recap_Recovering" xml:space="preserve"><value>{0} au réveil.</value></data>
   <data name="Recap_RecoveringCount" xml:space="preserve"><value>{0} au réveil</value></data>
   <data name="Recap_SignedOutCount" xml:space="preserve"><value>{0} parti(s) aujourd'hui</value></data>
+  <data name="RecordDrawer_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Chargement du dossier</value></data>
+  <data name="RecordDrawer_2.Text" xml:space="preserve"><value>Ce dossier n'existe plus.</value></data>
+  <data name="RecordDrawer_3.Text" xml:space="preserve"><value>Il a peut-être été effacé de cet appareil.</value></data>
+  <data name="RecordDrawer_4.Text" xml:space="preserve"><value>Impossible de lire ce dossier.</value></data>
+  <data name="RecordDrawer_5.Text" xml:space="preserve"><value>Le fichier du dossier n'a pas pu être lu. Rien n'a été modifié.</value></data>
+  <data name="RecordDrawer_6.Content" xml:space="preserve"><value>Réessayer</value></data>
+  <data name="RecordDrawer_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Réessayer la lecture du dossier</value></data>
   <data name="RecordNav_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Préparation</value></data>
   <data name="RecordNav_10.Text" xml:space="preserve"><value>Médicaments</value></data>
   <data name="RecordNav_2.Text" xml:space="preserve"><value>Préparation</value></data>
@@ -345,7 +434,6 @@
   <data name="RecordNav_8.Text" xml:space="preserve"><value>Résultats de laboratoire</value></data>
   <data name="RecordNav_9.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Médicaments</value></data>
   <data name="Record_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retour</value></data>
-  <data name="Record_10.Text" xml:space="preserve"><value>POIDS</value></data>
   <data name="Record_100.Text" xml:space="preserve"><value>Prochaine dose</value></data>
   <data name="Record_101.Text" xml:space="preserve"><value>Circulation</value></data>
   <data name="Record_102.Text" xml:space="preserve"><value>Fréquence cardiaque · bpm</value></data>
@@ -357,137 +445,10 @@
   <data name="Record_108.Text" xml:space="preserve"><value>Le fichier du dossier n'a pas pu être lu. Rien n'a été modifié.</value></data>
   <data name="Record_109.Content" xml:space="preserve"><value>Réessayer</value></data>
   <data name="Record_109.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Réessayer la lecture du dossier</value></data>
-  <data name="Record_11.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Poids du patient en kilogrammes</value></data>
-  <data name="Record_12.Text" xml:space="preserve"><value>kg</value></data>
-  <data name="Record_13.Text" xml:space="preserve"><value>Vérification préanesthésique</value></data>
-  <data name="Record_132.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Fermer le panneau</value></data>
-  <data name="Record_133.Text" xml:space="preserve"><value>Observations de ce dossier</value></data>
-  <data name="Record_137.Content" xml:space="preserve"><value>Voir la préparation</value></data>
-  <data name="Record_14.Content" xml:space="preserve"><value>À jeun (selon le protocole)</value></data>
-  <data name="Record_140.Text" xml:space="preserve"><value>MÉDICAMENT · formulaire d'exemple, usage non clinique</value></data>
-  <data name="Record_141.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Médicaments</value></data>
-  <data name="Record_142.Text" xml:space="preserve"><value> mg/mL</value></data>
-  <data name="Record_143.Header" xml:space="preserve"><value>Dose (mg/kg)</value></data>
-  <data name="Record_143.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Dose en milligrammes par kilogramme</value></data>
-  <data name="Record_144.Text" xml:space="preserve"><value>À PRÉLEVER</value></data>
-  <data name="Record_145.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Volume à prélever</value></data>
-  <data name="Record_146.Text" xml:space="preserve"><value>Plage de référence</value></data>
-  <data name="Record_147.Text" xml:space="preserve"><value>Hors de la plage de référence : une confirmation sera demandée.</value></data>
-  <data name="Record_148.Text" xml:space="preserve"><value>À PRÉLEVER</value></data>
-  <data name="Record_149.Text" xml:space="preserve"><value>Choisissez un médicament</value></data>
-  <data name="Record_15.Content" xml:space="preserve"><value>Cathéter IV posé et rincé</value></data>
-  <data name="Record_150.Text" xml:space="preserve"><value>Le volume s'affiche ici avec sa formule dès qu'un médicament et une dose en mg/kg sont choisis.</value></data>
-  <data name="Record_151.Header" xml:space="preserve"><value>Voie</value></data>
-  <data name="Record_152.Content" xml:space="preserve"><value>IV</value></data>
-  <data name="Record_153.Content" xml:space="preserve"><value>IM</value></data>
-  <data name="Record_154.Content" xml:space="preserve"><value>SC</value></data>
-  <data name="Record_155.Content" xml:space="preserve"><value>PO</value></data>
-  <data name="Record_156.Content" xml:space="preserve"><value>Administrer la dose</value></data>
-  <data name="Record_156.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer la dose</value></data>
-  <data name="Record_157.Content" xml:space="preserve"><value>Modifier la dose</value></data>
-  <data name="Record_158.Content" xml:space="preserve"><value>Administrer quand même</value></data>
-  <data name="Record_158.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer la dose hors plage quand même</value></data>
-  <data name="Record_159.Text" xml:space="preserve"><value>Score de douleur (0 aucune à 4 sévère)</value></data>
-  <data name="Record_16.Content" xml:space="preserve"><value>Appareil d'anesthésie et circuit vérifiés (étanchéité)</value></data>
-  <data name="Record_160.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 0</value></data>
-  <data name="Record_161.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 1</value></data>
-  <data name="Record_162.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 2</value></data>
-  <data name="Record_163.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 3</value></data>
-  <data name="Record_164.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 4</value></data>
-  <data name="Record_165.Text" xml:space="preserve"><value>Analyses de laboratoire de cette visite</value></data>
-  <data name="Record_166.Text" xml:space="preserve"><value>Vigil suit les analyses en attente, prêtes et revues. Les rapports et leurs valeurs restent dans votre système de laboratoire.</value></data>
-  <data name="Record_167.Text" xml:space="preserve"><value>Aucune analyse de laboratoire pour cette visite.</value></data>
-  <data name="Record_168.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Analyses de laboratoire</value></data>
-  <data name="Record_169.Content" xml:space="preserve"><value>Marquer comme revu</value></data>
-  <data name="Record_169.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Marquer l'analyse comme revue</value></data>
-  <data name="Record_17.Content" xml:space="preserve"><value>Consentement du propriétaire signé</value></data>
-  <data name="Record_170.Text" xml:space="preserve"><value>Appel de suivi après le congé</value></data>
-  <data name="Record_171.Content" xml:space="preserve"><value>Appel fait</value></data>
-  <data name="Record_171.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter l'appel de congé comme fait</value></data>
-  <data name="Record_18.Content" xml:space="preserve"><value>Bilan sanguin préanesthésique révisé</value></data>
-  <data name="Record_19.Text" xml:space="preserve"><value>Statut physique ASA</value></data>
   <data name="Record_2.Content" xml:space="preserve"><value>Patients</value></data>
   <data name="Record_2.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Liste des patients</value></data>
-  <data name="Record_20.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Statut physique ASA</value></data>
-  <data name="Record_21.Content" xml:space="preserve"><value>Non défini</value></data>
-  <data name="Record_22.Content" xml:space="preserve"><value>I</value></data>
-  <data name="Record_23.Content" xml:space="preserve"><value>II</value></data>
-  <data name="Record_24.Content" xml:space="preserve"><value>III</value></data>
-  <data name="Record_25.Content" xml:space="preserve"><value>IV</value></data>
-  <data name="Record_26.Content" xml:space="preserve"><value>V</value></data>
-  <data name="Record_27.Content" xml:space="preserve"><value>E : intervention d'urgence</value></data>
-  <data name="Record_28.Header" xml:space="preserve"><value>Notes</value></data>
-  <data name="Record_29.Content" xml:space="preserve"><value>Administrer la prémédication</value></data>
-  <data name="Record_29.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer la prémédication</value></data>
   <data name="Record_3.Title" xml:space="preserve"><value>Non enregistré</value></data>
-  <data name="Record_30.Content" xml:space="preserve"><value>Induire</value></data>
-  <data name="Record_30.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Induire l'anesthésie</value></data>
-  <data name="Record_31.Text" xml:space="preserve"><value>Cochez les cinq vérifications et indiquez le statut ASA pour induire. L'induction démarre le chronomètre des lectures.</value></data>
-  <data name="Record_32.Text" xml:space="preserve"><value>Doses administrées</value></data>
-  <data name="Record_33.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Administrer une dose</value></data>
-  <data name="Record_34.Text" xml:space="preserve"><value>Administrer une dose</value></data>
-  <data name="Record_35.Text" xml:space="preserve"><value>Aucune dose pour l'instant. La prémédication, les agents d'induction et les antibiotiques de ce dossier s'affichent ici avec leur volume.</value></data>
-  <data name="Record_36.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Doses administrées</value></data>
-  <data name="Record_39.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Tableau des lectures</value></data>
   <data name="Record_4.Content" xml:space="preserve"><value>Fermer</value></data>
-  <data name="Record_40.Text" xml:space="preserve"><value>FC</value></data>
-  <data name="Record_41.Text" xml:space="preserve"><value> FR</value></data>
-  <data name="Record_42.Text" xml:space="preserve"><value> SpO₂</value></data>
-  <data name="Record_43.Text" xml:space="preserve"><value> PA</value></data>
-  <data name="Record_44.Text" xml:space="preserve"><value> PAM</value></data>
-  <data name="Record_45.Text" xml:space="preserve"><value> EtCO₂</value></data>
-  <data name="Record_46.Text" xml:space="preserve"><value> T</value></data>
-  <data name="Record_47.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Enregistrer la lecture</value></data>
-  <data name="Record_48.Text" xml:space="preserve"><value>Enregistrer la lecture</value></data>
-  <data name="Record_49.Label" xml:space="preserve"><value>FC</value></data>
-  <data name="Record_49.SpokenName" xml:space="preserve"><value>fréquence cardiaque, battements par minute</value></data>
-  <data name="Record_5.Text" xml:space="preserve"><value>Réservé par erreur, ou le patient ne viendra pas? Supprimez le dossier, puis réservez-le de nouveau avec les bons renseignements.</value></data>
-  <data name="Record_50.Label" xml:space="preserve"><value>FR</value></data>
-  <data name="Record_50.SpokenName" xml:space="preserve"><value>fréquence respiratoire, respirations par minute</value></data>
-  <data name="Record_51.Label" xml:space="preserve"><value>SpO₂</value></data>
-  <data name="Record_51.SpokenName" xml:space="preserve"><value>saturation en oxygène, pourcentage</value></data>
-  <data name="Record_52.Label" xml:space="preserve"><value>EtCO₂</value></data>
-  <data name="Record_52.SpokenName" xml:space="preserve"><value>CO2 de fin d'expiration, millimètres de mercure</value></data>
-  <data name="Record_53.Label" xml:space="preserve"><value>SYS</value></data>
-  <data name="Record_53.SpokenName" xml:space="preserve"><value>pression systolique</value></data>
-  <data name="Record_54.Label" xml:space="preserve"><value>DIA</value></data>
-  <data name="Record_54.SpokenName" xml:space="preserve"><value>pression diastolique</value></data>
-  <data name="Record_55.Label" xml:space="preserve"><value>PAM</value></data>
-  <data name="Record_55.SpokenName" xml:space="preserve"><value>pression artérielle moyenne</value></data>
-  <data name="Record_56.Label" xml:space="preserve"><value>Temp</value></data>
-  <data name="Record_56.SpokenName" xml:space="preserve"><value>température, degrés Celsius</value></data>
-  <data name="Record_57.Label" xml:space="preserve"><value>Sévo</value></data>
-  <data name="Record_57.SpokenName" xml:space="preserve"><value>réglage du vaporisateur, pourcentage</value></data>
-  <data name="Record_58.Label" xml:space="preserve"><value>O₂</value></data>
-  <data name="Record_58.SpokenName" xml:space="preserve"><value>débit d'oxygène, litres par minute</value></data>
-  <data name="Record_59.Text" xml:space="preserve"><value>PAM laissée vide : calculée par (SYS + 2·DIA) / 3 :</value></data>
-  <data name="Record_6.Content" xml:space="preserve"><value>Supprimer le dossier</value></data>
-  <data name="Record_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Supprimer ce dossier</value></data>
-  <data name="Record_60.Header" xml:space="preserve"><value>Plan anesthésique</value></data>
-  <data name="Record_61.Content" xml:space="preserve"><value>Léger</value></data>
-  <data name="Record_62.Content" xml:space="preserve"><value>Chirurgical</value></data>
-  <data name="Record_63.Content" xml:space="preserve"><value>Profond</value></data>
-  <data name="Record_64.Header" xml:space="preserve"><value>Note (facultative)</value></data>
-  <data name="Record_64.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Note pour cette lecture</value></data>
-  <data name="Record_65.Text" xml:space="preserve"><value>Le patient est sous anesthésie</value></data>
-  <data name="Record_66.Text" xml:space="preserve"><value>Terminez l'anesthésie quand le vaporisateur est fermé. Le chronomètre s'arrête et le réveil commence.</value></data>
-  <data name="Record_67.Content" xml:space="preserve"><value>Terminer l'anesthésie</value></data>
-  <data name="Record_67.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Terminer l'anesthésie</value></data>
-  <data name="Record_68.Text" xml:space="preserve"><value>RÉVEIL</value></data>
-  <data name="Record_69.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Temps au réveil</value></data>
-  <data name="Record_70.Text" xml:space="preserve"><value>Suivi du réveil</value></data>
-  <data name="Record_71.Content" xml:space="preserve"><value>Extubé maintenant</value></data>
-  <data name="Record_71.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Consigner l'extubation maintenant</value></data>
-  <data name="Record_72.Content" xml:space="preserve"><value>Sternal maintenant</value></data>
-  <data name="Record_72.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Consigner le décubitus sternal maintenant</value></data>
-  <data name="Record_75.Header" xml:space="preserve"><value>Température (°C)</value></data>
-  <data name="Record_76.Header" xml:space="preserve"><value>Notes</value></data>
-  <data name="Record_77.Content" xml:space="preserve"><value>Signer</value></data>
-  <data name="Record_77.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Signer le dossier</value></data>
-  <data name="Record_78.Content" xml:space="preserve"><value>Exporter en CSV</value></data>
-  <data name="Record_78.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Exporter le dossier en CSV</value></data>
-  <data name="Record_79.Content" xml:space="preserve"><value>Copier le résumé</value></data>
-  <data name="Record_79.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Copier un résumé texte</value></data>
   <data name="Record_83.Text" xml:space="preserve"><value>Photo du patient non ajoutée</value></data>
   <data name="Record_84.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Vue du propriétaire</value></data>
   <data name="Record_85.Text" xml:space="preserve"><value>Vue du propriétaire</value></data>
@@ -514,11 +475,6 @@
   <data name="Record_EndAnesthesia.Content" xml:space="preserve"><value>Terminer l'anesthésie</value></data>
   <data name="Record_EndAnesthesia.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Terminer l'anesthésie, ouvre Réveil et transfert</value></data>
   <data name="Record_EtCo2Rr" xml:space="preserve"><value>EtCO₂ {0} mmHg · FR {1}</value></data>
-  <data name="Record_FluidName.Header" xml:space="preserve"><value>Soluté</value></data>
-  <data name="Record_FluidName.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Nom du soluté</value></data>
-  <data name="Record_FluidRate.Header" xml:space="preserve"><value>Débit (mL/kg/h)</value></data>
-  <data name="Record_FluidRate.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Débit du soluté en millilitres par kilogramme par heure</value></data>
-  <data name="Record_Fluids.Text" xml:space="preserve"><value>Solutés</value></data>
   <data name="Record_FluidsRunning" xml:space="preserve"><value>Perfusion en cours · {0}</value></data>
   <data name="Record_Gone" xml:space="preserve"><value>Ce dossier n'existe plus.</value></data>
   <data name="Record_LastRecordedAt" xml:space="preserve"><value>Dernière mesure {0:d MMM, HH:mm}</value></data>
@@ -529,8 +485,37 @@
   <data name="Record_PhotoName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Record_Planned" xml:space="preserve"><value>Prévue {0}</value></data>
   <data name="Record_Started" xml:space="preserve"><value>Commencée {0}</value></data>
-  <data name="Record_StopFluids.Content" xml:space="preserve"><value>Arrêter le soluté</value></data>
-  <data name="Record_StopFluids.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Arrêter le soluté</value></data>
+  <data name="RecoveryDrawer_1.Title" xml:space="preserve"><value>Réveil et transfert</value></data>
+  <data name="RecoveryDrawer_10.Content" xml:space="preserve"><value>Extubé maintenant</value></data>
+  <data name="RecoveryDrawer_10.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Consigner l'extubation maintenant</value></data>
+  <data name="RecoveryDrawer_11.Content" xml:space="preserve"><value>Sternal maintenant</value></data>
+  <data name="RecoveryDrawer_11.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Consigner le décubitus sternal maintenant</value></data>
+  <data name="RecoveryDrawer_12.Text" xml:space="preserve"><value>Score de douleur (0 aucune à 4 sévère)</value></data>
+  <data name="RecoveryDrawer_13.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 0</value></data>
+  <data name="RecoveryDrawer_14.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 1</value></data>
+  <data name="RecoveryDrawer_15.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 2</value></data>
+  <data name="RecoveryDrawer_16.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 3</value></data>
+  <data name="RecoveryDrawer_17.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter la douleur à 4</value></data>
+  <data name="RecoveryDrawer_18.Header" xml:space="preserve"><value>Température (°C)</value></data>
+  <data name="RecoveryDrawer_19.Header" xml:space="preserve"><value>Notes</value></data>
+  <data name="RecoveryDrawer_2.Title" xml:space="preserve"><value>Non enregistré</value></data>
+  <data name="RecoveryDrawer_20.Content" xml:space="preserve"><value>Signer</value></data>
+  <data name="RecoveryDrawer_20.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Signer le dossier</value></data>
+  <data name="RecoveryDrawer_21.Content" xml:space="preserve"><value>Exporter en CSV</value></data>
+  <data name="RecoveryDrawer_21.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Exporter le dossier en CSV</value></data>
+  <data name="RecoveryDrawer_22.Content" xml:space="preserve"><value>Copier le résumé</value></data>
+  <data name="RecoveryDrawer_22.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Copier un résumé texte</value></data>
+  <data name="RecoveryDrawer_23.Text" xml:space="preserve"><value>Appel de suivi après le congé</value></data>
+  <data name="RecoveryDrawer_24.Content" xml:space="preserve"><value>Appel fait</value></data>
+  <data name="RecoveryDrawer_24.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Noter l'appel de congé comme fait</value></data>
+  <data name="RecoveryDrawer_3.Content" xml:space="preserve"><value>Fermer</value></data>
+  <data name="RecoveryDrawer_4.Text" xml:space="preserve"><value>Le patient est sous anesthésie</value></data>
+  <data name="RecoveryDrawer_5.Text" xml:space="preserve"><value>Terminez l'anesthésie quand le vaporisateur est fermé. Le chronomètre s'arrête et le réveil commence.</value></data>
+  <data name="RecoveryDrawer_6.Content" xml:space="preserve"><value>Terminer l'anesthésie</value></data>
+  <data name="RecoveryDrawer_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Terminer l'anesthésie</value></data>
+  <data name="RecoveryDrawer_7.Text" xml:space="preserve"><value>RÉVEIL</value></data>
+  <data name="RecoveryDrawer_8.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Temps au réveil</value></data>
+  <data name="RecoveryDrawer_9.Text" xml:space="preserve"><value>Suivi du réveil</value></data>
   <data name="Recovery_Extubated" xml:space="preserve"><value>Extubé {0:HH:mm}</value></data>
   <data name="Recovery_LastPain" xml:space="preserve"><value>Dernier score {0} à {1:HH:mm}</value></data>
   <data name="Recovery_NoPain" xml:space="preserve"><value>Pas encore évalué</value></data>
@@ -785,5 +770,37 @@
   <data name="Vital_Systolic" xml:space="preserve"><value>Systolique</value></data>
   <data name="Vital_Temperature" xml:space="preserve"><value>Température</value></data>
   <data name="Vital_Vaporizer" xml:space="preserve"><value>Vaporisateur</value></data>
+  <data name="VitalsDrawer_1.Title" xml:space="preserve"><value>Saisir les observations</value></data>
+  <data name="VitalsDrawer_10.Label" xml:space="preserve"><value>SYS</value></data>
+  <data name="VitalsDrawer_10.SpokenName" xml:space="preserve"><value>pression systolique</value></data>
+  <data name="VitalsDrawer_11.Label" xml:space="preserve"><value>DIA</value></data>
+  <data name="VitalsDrawer_11.SpokenName" xml:space="preserve"><value>pression diastolique</value></data>
+  <data name="VitalsDrawer_12.Label" xml:space="preserve"><value>PAM</value></data>
+  <data name="VitalsDrawer_12.SpokenName" xml:space="preserve"><value>pression artérielle moyenne</value></data>
+  <data name="VitalsDrawer_13.Label" xml:space="preserve"><value>Temp</value></data>
+  <data name="VitalsDrawer_13.SpokenName" xml:space="preserve"><value>température, degrés Celsius</value></data>
+  <data name="VitalsDrawer_14.Label" xml:space="preserve"><value>Sévo</value></data>
+  <data name="VitalsDrawer_14.SpokenName" xml:space="preserve"><value>réglage du vaporisateur, pourcentage</value></data>
+  <data name="VitalsDrawer_15.Label" xml:space="preserve"><value>O₂</value></data>
+  <data name="VitalsDrawer_15.SpokenName" xml:space="preserve"><value>débit d'oxygène, litres par minute</value></data>
+  <data name="VitalsDrawer_16.Text" xml:space="preserve"><value>PAM laissée vide : calculée par (SYS + 2·DIA) / 3 :</value></data>
+  <data name="VitalsDrawer_17.Header" xml:space="preserve"><value>Plan anesthésique</value></data>
+  <data name="VitalsDrawer_18.Content" xml:space="preserve"><value>Léger</value></data>
+  <data name="VitalsDrawer_19.Content" xml:space="preserve"><value>Chirurgical</value></data>
+  <data name="VitalsDrawer_2.Title" xml:space="preserve"><value>Non enregistré</value></data>
+  <data name="VitalsDrawer_20.Content" xml:space="preserve"><value>Profond</value></data>
+  <data name="VitalsDrawer_21.Header" xml:space="preserve"><value>Note (facultative)</value></data>
+  <data name="VitalsDrawer_21.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Note pour cette lecture</value></data>
+  <data name="VitalsDrawer_3.Content" xml:space="preserve"><value>Fermer</value></data>
+  <data name="VitalsDrawer_4.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Enregistrer la lecture</value></data>
+  <data name="VitalsDrawer_5.Text" xml:space="preserve"><value>Enregistrer la lecture</value></data>
+  <data name="VitalsDrawer_6.Label" xml:space="preserve"><value>FC</value></data>
+  <data name="VitalsDrawer_6.SpokenName" xml:space="preserve"><value>fréquence cardiaque, battements par minute</value></data>
+  <data name="VitalsDrawer_7.Label" xml:space="preserve"><value>FR</value></data>
+  <data name="VitalsDrawer_7.SpokenName" xml:space="preserve"><value>fréquence respiratoire, respirations par minute</value></data>
+  <data name="VitalsDrawer_8.Label" xml:space="preserve"><value>SpO₂</value></data>
+  <data name="VitalsDrawer_8.SpokenName" xml:space="preserve"><value>saturation en oxygène, pourcentage</value></data>
+  <data name="VitalsDrawer_9.Label" xml:space="preserve"><value>EtCO₂</value></data>
+  <data name="VitalsDrawer_9.SpokenName" xml:space="preserve"><value>CO2 de fin d'expiration, millimètres de mercure</value></data>
   <data name="Weight_RecordedAt" xml:space="preserve"><value>Enregistré {0:d MMM, HH:mm}</value></data>
 </root>

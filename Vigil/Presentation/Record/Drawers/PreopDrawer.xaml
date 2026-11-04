@@ -1,0 +1,84 @@
+<!--
+  The Preparation drawer (route "!Preop", PreopModel): weight and signalment, the pre-op checklist and ASA status (saved
+  field by field while the case is booked), Give premedication and Induce, and Delete case for a booking made by mistake.
+-->
+<Flyout x:Class="Vigil.Presentation.PreopDrawer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+        xmlns:mvux="using:Uno.Extensions.Reactive.UI"
+        xmlns:utu="using:Uno.Toolkit.UI"
+        xmlns:local="using:Vigil.Presentation"
+        xmlns:controls="using:Vigil.Controls"
+        Placement="Full"
+        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}">
+  <Grid RowDefinitions="Auto,Auto,*" utu:SafeArea.Insets="VisibleBounds">
+    <controls:DrawerHeader x:Uid="PreopDrawer_1" Title="Preoperative preparation" CloseCommand="{Binding Close}" />
+    <muxc:InfoBar x:Uid="PreopDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource InsetX20}">
+      <muxc:InfoBar.ActionButton><Button x:Uid="PreopDrawer_3" Content="Dismiss" Command="{Binding DismissError}" /></muxc:InfoBar.ActionButton>
+    </muxc:InfoBar>
+    <mvux:FeedView Grid.Row="2" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"
+                   ProgressTemplate="{StaticResource DrawerProgressTemplate}" NoneTemplate="{StaticResource DrawerNoneTemplate}" ErrorTemplate="{StaticResource DrawerErrorTemplate}">
+      <mvux:FeedView.ValueTemplate>
+        <DataTemplate>
+          <ScrollViewer HorizontalScrollMode="Disabled">
+            <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
+              <StackPanel Spacing="{StaticResource Space4}">
+                <TextBlock x:Uid="PreopDrawer_4" Style="{StaticResource TypeEyebrow}" Text="WEIGHT" />
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
+                  <TextBlock x:Uid="PreopDrawer_5" Style="{StaticResource TypeMonoVital}" Foreground="{ThemeResource InkBrush}" Text="{Binding Data.WeightText}" AutomationProperties.Name="Patient weight in kilograms" />
+                  <TextBlock x:Uid="PreopDrawer_6" Style="{StaticResource TypeH2Section}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Bottom" Margin="{StaticResource GapBottom10}" Text="kg" />
+                </StackPanel>
+                <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="{Binding Data.Signalment}" />
+              </StackPanel>
+
+              <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
+                <StackPanel Padding="{StaticResource Inset20}" Spacing="{StaticResource Space8}">
+                  <!-- Two columns, so the count never runs over a wrapped title (390 px, French). -->
+                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space12}">
+                    <TextBlock x:Uid="PreopDrawer_7" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Text="Pre-anesthetic check" />
+                    <TextBlock Grid.Column="1" Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Center" Text="{Binding Data.PreopProgress}" />
+                  </Grid>
+                  <CheckBox x:Uid="PreopDrawer_8" Content="Fasted (food withheld per protocol)" IsEnabled="{Binding Data.IsScheduled}" IsChecked="{Binding Parent.Preop.Fasted, Mode=TwoWay}" />
+                  <CheckBox x:Uid="PreopDrawer_9" Content="IV catheter placed and flushed" IsEnabled="{Binding Data.IsScheduled}" IsChecked="{Binding Parent.Preop.IvCatheter, Mode=TwoWay}" />
+                  <CheckBox x:Uid="PreopDrawer_10" Content="Anesthesia machine and circuit leak-checked" IsEnabled="{Binding Data.IsScheduled}" IsChecked="{Binding Parent.Preop.MachineChecked, Mode=TwoWay}" />
+                  <CheckBox x:Uid="PreopDrawer_11" Content="Owner consent signed" IsEnabled="{Binding Data.IsScheduled}" IsChecked="{Binding Parent.Preop.ConsentSigned, Mode=TwoWay}" />
+                  <CheckBox x:Uid="PreopDrawer_12" Content="Pre-anesthetic bloodwork reviewed" IsEnabled="{Binding Data.IsScheduled}" IsChecked="{Binding Parent.Preop.BloodworkReviewed, Mode=TwoWay}" />
+                </StackPanel>
+              </utu:CardContentControl>
+
+              <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
+                <StackPanel Padding="{StaticResource Inset20}" Spacing="{StaticResource Space12}">
+                  <TextBlock x:Uid="PreopDrawer_13" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource InkBrush}" Text="ASA physical status" />
+                  <muxc:RadioButtons x:Uid="PreopDrawer_14" MaxColumns="3" IsEnabled="{Binding Data.IsScheduled}" SelectedIndex="{Binding Parent.Preop.Asa, Mode=TwoWay}" AutomationProperties.Name="ASA physical status">
+                    <RadioButton x:Uid="PreopDrawer_15" Content="Not set" />
+                    <RadioButton x:Uid="PreopDrawer_16" Content="I" />
+                    <RadioButton x:Uid="PreopDrawer_17" Content="II" />
+                    <RadioButton x:Uid="PreopDrawer_18" Content="III" />
+                    <RadioButton x:Uid="PreopDrawer_19" Content="IV" />
+                    <RadioButton x:Uid="PreopDrawer_20" Content="V" />
+                  </muxc:RadioButtons>
+                  <CheckBox x:Uid="PreopDrawer_21" Content="E: emergency procedure" IsEnabled="{Binding Data.IsScheduled}" IsChecked="{Binding Parent.Preop.AsaEmergency, Mode=TwoWay}" />
+                  <TextBox x:Uid="PreopDrawer_22" Header="Notes" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80" IsEnabled="{Binding Data.IsScheduled}" Text="{Binding Parent.Preop.Notes, Mode=TwoWay}" />
+                </StackPanel>
+              </utu:CardContentControl>
+
+              <StackPanel Spacing="{StaticResource Space8}">
+                <Button x:Uid="PreopDrawer_23" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Give premedication" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.GivePremedication}" AutomationProperties.Name="Give premedication" />
+                <Button x:Uid="PreopDrawer_24" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Induce" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" IsEnabled="{Binding Data.CanInduce}" Command="{Binding Parent.Induce}" AutomationProperties.Name="Induce anesthesia" />
+                <TextBlock x:Uid="PreopDrawer_25" TextWrapping="WrapWholeWords" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="Complete the five checks and set the ASA status to induce. Induction starts the reading clock." />
+                <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{Binding Data.InducedText}" />
+              </StackPanel>
+
+              <!-- A booking made by mistake (a mistyped weight drives every dose) is deleted and booked again. -->
+              <StackPanel Spacing="{StaticResource Space8}" Padding="{StaticResource GapTop16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                <TextBlock x:Uid="PreopDrawer_26" TextWrapping="WrapWholeWords" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="Booked by mistake, or the patient is not coming? Delete the case, then book it again with the right details." />
+                <Button x:Uid="PreopDrawer_27" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Content="Delete case" Command="{Binding Parent.DeleteCase}" AutomationProperties.Name="Delete this case" />
+              </StackPanel>
+            </StackPanel>
+          </ScrollViewer>
+        </DataTemplate>
+      </mvux:FeedView.ValueTemplate>
+    </mvux:FeedView>
+  </Grid>
+</Flyout>

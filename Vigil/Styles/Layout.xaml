@@ -124,7 +124,10 @@
   <!-- Flyout sheets (New patient, Sign off). -->
   <Thickness x:Key="SheetInset">24,12,24,24</Thickness>
   <Thickness x:Key="SheetInsetFlush">24,0,24,24</Thickness>
-  <!-- Record side pane content. -->
+  <!-- Record drawers: 640 wide from the right, the whole window when it is narrower (DrawerFlyoutPresenter takes a
+       pixel length as min(length, window)). -->
+  <GridLength x:Key="RecordDrawerLength">640</GridLength>
+  <!-- Record drawer content. -->
   <Thickness x:Key="PaneInsetNarrow">16,8,16,16</Thickness>
   <Thickness x:Key="PaneInsetWide">24,8,24,24</Thickness>
 

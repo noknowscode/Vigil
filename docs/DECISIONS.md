@@ -63,3 +63,17 @@ are disabled. The code review of 2026-11-01 asked to hide them, build them or re
 the design.
 Tradeoff: the app advertises features it does not have (docs/COMPLETENESS.md). Building or hiding any of them
 retires its part of this exception.
+
+## D8. The record's panes are drawers with their own models (2026-11-04)
+
+Decision: the seven panes of the record (Preparation, Administer dose, Medication record, Record observations, Recovery
+and handover, Visit history, Lab results) are `!` routes ("!Preop", "!Dose", "!Drugs", "!Monitor", "!Recovery",
+"!History", "!Labs"), each a Flyout view in the Toolkit's DrawerFlyoutPresenter from the right (640 px, the whole window
+when narrower) with its own model. A drawer that closes on a step for the record (open another pane, Sign off, the case
+details, Delete case) hands it back to RecordModel as a PaneChoice. The Dose drawer shares DoseModel with the Due next
+redose page, whose route is now "Redose". Escape, Close and a tap on the scrim close a drawer; the flyout returns focus.
+Reason: the approved refactor in docs/UNO-AUDIT.md: RecordModel drove seven panes and RecordPage.xaml was 903 lines,
+with the pane width clamp and focus handling in code-behind. Measured: the Toolkit 11 presenter renders on desktop
+(it did not with Toolkit 9.1.3, MenuFlyout.xaml), and a pixel DrawerLength is min(length, window), the old clamp.
+Tradeoff: a drawer covers the sidebar with a scrim, where the SplitView pane sat beside it; a save failure shows in the
+drawer's own Not saved bar.

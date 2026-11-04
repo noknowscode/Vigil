@@ -10,7 +10,7 @@ public enum DoseRoute { IV, IM, SC, PO }
 
 public partial record CaseRef(Guid Id);
 
-/// <summary>Opens a record with one of its side panes open ("Labs", "Recovery", ...): a "Due next" action lands on its task.</summary>
+/// <summary>Opens a record with one of its panes' drawers open ("Labs", "Recovery", ...): a "Due next" action lands on its task.</summary>
 public partial record CaseRefPane(Guid Id, string Pane) : CaseRef(Id);
 
 public partial record Patient(string Name, Species Species, string Breed, decimal WeightKg, decimal AgeYears, string Owner)

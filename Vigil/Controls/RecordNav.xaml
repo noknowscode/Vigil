@@ -1,6 +1,6 @@
 <!--
   Patient care record nav (patient-care-values.md §3.2): the sidebar's nav item (h40, radius 12, icon 18 + 14/20
-  Medium, gap 2) for Preparation, Vitals, Medical history, Lab results and Medications; each opens its side pane.
+  Medium, gap 2) for Preparation, Vitals, Medical history, Lab results and Medications; each opens its drawer.
   DataContext: the record FeedView's state (Data + Parent). The active item (Data.ActiveSection: the open pane, else
   Vitals, Preparation before induction) gets the nav-on surface and a primary icon. The states live on this
   UserControl's root, which exists before the binding delivers its first value; on a templated Button they would not

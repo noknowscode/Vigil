@@ -123,35 +123,17 @@ public abstract class ModelTestBase
 
 public class RecordModelTests : ModelTestBase
 {
-    private static RecordModel Open(Case c, ICaseStore store, IClock? clock = null) =>
-        new(new CaseRef(c.Id), store, clock ?? Clock, new Preferences(), null!, null!, new DoseFeedback(), new EmbeddedFormulary(), NullLogger<RecordModel>.Instance);
+    private RecordModel Open(Case c, IClock? clock = null) => Open(new CaseRef(c.Id), clock);
 
-    private RecordModel Open(Case c) => Open(c, Store);
-
-    [Test]
-    public async Task MarkReviewedSurvivesTheNextChecklistTick()
-    {
-        var oscar = Proto.Named("Oscar");
-        await Store.SaveAsync(oscar, CancellationToken.None);
-        var model = Open(oscar);
-        (await model.Preop)!.BloodworkReviewed.Should().BeFalse();
-
-        await model.ReviewLab("CBC and chemistry panel", CancellationToken.None);
-        await model.Preop.UpdateAsync(p => p! with { Fasted = true }, CancellationToken.None);
-        await UntilAsync(async () => (await SavedAsync(oscar.Id)).Preop.Fasted);
-
-        var saved = await SavedAsync(oscar.Id);
-        saved.Preop.Fasted.Should().BeTrue();
-        saved.Preop.BloodworkReviewed.Should().BeTrue("the checklist tick must not write back the check Mark reviewed set");
-        (await model.Preop)!.BloodworkReviewed.Should().BeTrue("the checklist shows the check Mark reviewed set");
-    }
+    private RecordModel Open(CaseRef caseRef, IClock? clock = null) =>
+        new(caseRef, Store, clock ?? Clock, new Preferences(), Nav, new DoseFeedback(), new EmbeddedFormulary(), NullLogger<RecordModel>.Instance);
 
     [Test]
     public async Task TheClockMovesTheTimersNotTheRecordView()
     {
         var knuckles = Proto.Named("Knuckles");
         await Store.SaveAsync(knuckles, CancellationToken.None);
-        var model = Open(knuckles, Store, new FastClock(Proto.Now));
+        var model = Open(knuckles, new FastClock(Proto.Now));
         var context = SourceContext.GetOrCreate(model);
         int views = 0, timers = 0;
 
@@ -177,29 +159,93 @@ public class RecordModelTests : ModelTestBase
     });
 
     [Test]
-    public async Task ARuleOfTheRecordIsShownAsWritten()
+    public async Task APaneOpensAsADrawerAndHighlightsItsNavItem()
     {
         var oscar = Proto.Named("Oscar");
         await Store.SaveAsync(oscar, CancellationToken.None);
         var model = Open(oscar);
+        (await model.Case)!.ActiveSection.Should().Be(RecordPane.Preop, "a booked case opens on preparation");
 
-        await model.RecordReading(VitalsDraft.From(Proto.Named("Knuckles").Readings[^1]), CancellationToken.None);
+        var opening = model.OpenPane(RecordPane.Labs, CancellationToken.None).AsTask();
+        await opening;
 
-        (await SettledAsync(model.SaveError, e => e != "")).Should().Be("Not saved: Induce before recording vitals.");
-        (await SavedAsync(oscar.Id)).Readings.Should().BeEmpty();
+        Nav.Paths.Should().Equal("!Labs");
+        Nav.Data.Should().Equal(new CaseRef(oscar.Id));
+        (await model.Pane).Should().BeEmpty("the drawer closed without a choice");
     }
 
     [Test]
-    public async Task AFailedWriteSaysSoWithoutPathsOrIds()
+    public async Task ADrawerHandsTheNextPaneBack()
     {
         var knuckles = Proto.Named("Knuckles");
         await Store.SaveAsync(knuckles, CancellationToken.None);
-        var model = Open(knuckles, FailingStore);
+        Nav.Answer(new PaneChoice(RecordPane.Dose));
 
-        await model.EndAnesthesia(CancellationToken.None);
+        await Open(knuckles).OpenPane(RecordPane.Drugs, CancellationToken.None);
 
-        (await SettledAsync(model.SaveError, e => e != "")).Should().Be("Not saved: It could not be written to this device. Try again.");
-        (await SavedAsync(knuckles.Id)).Status.Should().Be(CaseStatus.Anesthetized);
+        Nav.Paths.Should().Equal("!Drugs", "!Dose");
+    }
+
+    [Test]
+    public async Task SignOffOpensAsASheetAfterTheDrawer()
+    {
+        var milo = Proto.Named("Milo");
+        await Store.SaveAsync(milo, CancellationToken.None);
+        var model = Open(milo);
+        Nav.Answer(new PaneChoice(PaneChoice.SignOff));
+
+        await model.OpenPane(RecordPane.Recovery, CancellationToken.None);
+
+        Nav.Paths.Should().Equal("!Recovery", "!SignOff");
+        Nav.Data[1].Should().Be(new CaseRef(milo.Id));
+    }
+
+    [Test]
+    public async Task ADueNextTaskLandsOnItsDrawer()
+    {
+        var knuckles = Proto.Named("Knuckles");
+        await Store.SaveAsync(knuckles, CancellationToken.None);
+        var model = Open(new CaseRefPane(knuckles.Id, RecordPane.Monitor));
+
+        (await model.Pane).Should().Be(RecordPane.Monitor, "the record shows the task's pane as active while its drawer opens");
+        await UntilAsync(() => Task.FromResult(Nav.Paths.Count > 0));
+
+        Nav.Paths.Should().Equal("!Monitor");
+    }
+
+    [Test]
+    public async Task DeleteAsksFirstThenLeaves()
+    {
+        var oscar = Proto.Named("Oscar");
+        await Store.SaveAsync(oscar, CancellationToken.None);
+        Nav.Answer(new PaneChoice(PaneChoice.DeleteCase)).Answer(true);
+
+        await Open(oscar).OpenPane(RecordPane.Preop, CancellationToken.None);
+
+        (await Store.GetAsync(oscar.Id, CancellationToken.None)).Should().BeNull();
+        Nav.Paths.Should().Equal("!Preop", "!xxxxmessagedialogxxxx", "-");
+    }
+
+    [Test]
+    public async Task ADeleteThatIsNotConfirmedKeepsTheCase()
+    {
+        var oscar = Proto.Named("Oscar");
+        await Store.SaveAsync(oscar, CancellationToken.None);
+        Nav.Answer(new PaneChoice(PaneChoice.DeleteCase)).Answer(false);
+
+        await Open(oscar).OpenPane(RecordPane.Preop, CancellationToken.None);
+
+        (await Store.GetAsync(oscar.Id, CancellationToken.None)).Should().NotBeNull();
+        Nav.Paths.Should().Equal("!Preop", "!xxxxmessagedialogxxxx");
+    }
+
+    [Test]
+    public void TheNavHighlightsOnlyItsOwnItems()
+    {
+        var knuckles = Proto.Named("Knuckles");
+        CaseView.From(knuckles, Proto.Now, Proto.Interval, RecordPane.Labs).ActiveSection.Should().Be(RecordPane.Labs);
+        CaseView.From(knuckles, Proto.Now, Proto.Interval, RecordPane.Recovery).ActiveSection.Should().Be("None", "the record nav has no Recovery item");
+        CaseView.From(knuckles, Proto.Now, Proto.Interval, null).ActiveSection.Should().Be(RecordPane.Monitor);
     }
 }
 

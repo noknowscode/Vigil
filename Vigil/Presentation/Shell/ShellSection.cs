@@ -39,7 +39,7 @@ public static class ShellSection
             section = segment switch
             {
                 "Board" or Today => Today,
-                Patients or "Record" or "Dose" or "SignOff" or "ParentPreview" => Patients,
+                Patients or "Record" or "Redose" or "Dose" or "SignOff" or "ParentPreview" => Patients,
                 Agenda => Agenda,
                 Settings => Settings,
                 _ => section,

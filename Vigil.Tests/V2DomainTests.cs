@@ -232,7 +232,7 @@ public class DueTasksTests
         Row(DueAction.Score).Pane.Should().Be("Recovery");
         Row(DueAction.Call).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Record" && r.Pane == "Recovery");
         Row(DueAction.Review).Pane.Should().Be("Labs");
-        Row(DueAction.Prepare).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Dose" && r.Pane == null);
+        Row(DueAction.Prepare).Should().Match<Vigil.Presentation.DueRow>(r => r.Route == "Redose" && r.Pane == null);
     }
 
     [Test]

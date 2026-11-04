@@ -66,7 +66,7 @@ public partial record CaseView(
     public string RespirationDetail => Loc.F("Record_EtCo2Rr", "EtCO₂ {0} mmHg · RR {1}", LastEtCo2, LastRr);
     public bool HasNoReadings => ReadingCount == 0;
 
-    /// <summary>Pane behind the active record-nav item (the open pane, else Vitals; Preparation before induction).</summary>
+    /// <summary>The active record-nav item: the open drawer's pane, else Vitals (Preparation before induction).</summary>
     public string ActiveSection { get; init; } = "Monitor";
     public bool HasAlert => Alert.Length > 0;
     public string MedicationSummary => HasNoDoses ? Loc.T("Drugs_None", "No doses recorded") : Doses[0].Drug;
@@ -104,7 +104,7 @@ public partial record CaseView(
     public static CaseView From(Case c, DateTimeOffset now, TimeSpan interval) => From(c, now, interval, null);
 
     /// <param name="now">When the view is built: the chart's window and the local time zone for the times shown.</param>
-    /// <param name="openPane">The open side pane, or null: picks the active record-nav item.</param>
+    /// <param name="openPane">The pane whose drawer is open, or null: picks the active record-nav item.</param>
     public static CaseView From(Case c, DateTimeOffset now, TimeSpan interval, string? openPane)
     {
         var p = c.Patient;
@@ -156,7 +156,9 @@ public partial record CaseView(
             PainText = c.Recovery.PainScores.LastOrDefault() is { } ps
                 ? Loc.F("Recovery_LastPain", "Last score {0} at {1:HH:mm}", ps.Score, ps.At.ToOffset(now.Offset))
                 : c.Recovery.PainScore is int legacy ? Loc.F("Recovery_PainOnly", "Last score {0}", legacy) : Loc.T("Recovery_NoPain", "Not scored yet"),
-            ActiveSection = openPane ?? (Stage.Of(c) is CareStage.Booked or CareStage.Prep ? "Preop" : "Monitor"),
+            // The open drawer's nav item; a drawer without one (Dose, Recovery) highlights none ("None" is the nav's empty state).
+            ActiveSection = openPane is null ? (Stage.Of(c) is CareStage.Booked or CareStage.Prep ? RecordPane.Preop : RecordPane.Monitor)
+                : RecordPane.IsNavItem(openPane) ? openPane : "None",
             LastHr = c.Readings.LastOrDefault()?.Hr?.ToString() ?? "—",
             LastSpo2 = c.Readings.LastOrDefault()?.SpO2?.ToString() ?? "—",
             LastBp = c.Readings.LastOrDefault() is { } bp ? $"{bp.Sys?.ToString() ?? "—"}/{bp.Dia?.ToString() ?? "—"}" : "—",

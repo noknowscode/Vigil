@@ -428,10 +428,10 @@ public partial record DueRow(
     public bool IsWaiting => Stage == CareStage.Booked;
     public bool IsHome => Stage == CareStage.Home;
 
-    /// <summary>Where the row's button goes: the dose screen (redose), else the record.</summary>
-    public string Route => Action == DueAction.Prepare ? "Dose" : "Record";
+    /// <summary>Where the row's button goes: the redose page, else the record.</summary>
+    public string Route => Action == DueAction.Prepare ? "Redose" : "Record";
 
-    /// <summary>The record pane the row's button opens on: observations, recovery (pain score, discharge call) or labs.</summary>
+    /// <summary>The record pane whose drawer the row's button opens: observations, recovery (pain score, discharge call) or labs.</summary>
     public string? Pane => Action switch
     {
         DueAction.Record => "Monitor",

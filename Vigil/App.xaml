@@ -35,6 +35,8 @@
         <ResourceDictionary Source="ms-appx:///Themes/Controls.xaml" />
         <!-- Layout tokens: spacing scale, insets per responsive category, content widths, the content-split breakpoint -->
         <ResourceDictionary Source="ms-appx:///Styles/Layout.xaml" />
+        <!-- The record's drawers: presenter style and FeedView states (after Tokens and Layout, which they use) -->
+        <ResourceDictionary Source="ms-appx:///Presentation/Record/Drawers/RecordDrawer.xaml" />
       </ResourceDictionary.MergedDictionaries>
       <!-- bool -> Visibility for {Binding}: WinUI has no implicit conversion outside x:Bind. -->
       <controls:VisibleWhenTrueConverter x:Key="VisibleWhenTrue" />

@@ -763,6 +763,7 @@
   "This setting applies until Clover closes, but it could not be saved on this device.": "Ce réglage s'applique jusqu'à la fermeture de Clover, mais il n'a pas pu être enregistré sur cet appareil.",
   "Increase {0}": "Augmenter : {0}",
   "Decrease {0}": "Diminuer : {0}",
+  "Loading the record": "Chargement du dossier",
   "@keys": {
     "Settings_10.Content": "Clair"
   }
