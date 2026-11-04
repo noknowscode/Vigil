@@ -154,16 +154,13 @@
   <ScrollViewer x:Name="TodayScroll" HorizontalScrollMode="Disabled">
     <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" MaxWidth="{StaticResource ContentMaxWidth}">
 
-      <!-- 1. Header: greeting + recap, top bar cluster (top-aligned, gap 24) -->
-      <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space24}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space16}, Widest=0}">
-        <StackPanel Grid.Row="{utu:Responsive Narrowest=1, Widest=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Widest=1}">
-          <!-- Newsreader sits 4 px lower than the browser places it at 40/46: pulled up to the render. -->
-          <TextBlock Text="{Binding Greeting.Title}" Style="{StaticResource TypeDisplayTitle}" Margin="0,-4,0,0" />
-          <!-- Recap: the most urgent fact in bold, then the other counts. -->
-          <TextBlock Margin="{StaticResource GapTop10}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" AutomationProperties.LiveSetting="Off"><Run Text="{Binding Greeting.Lead}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" /><Run Text="{Binding Greeting.Rest}" /></TextBlock>
-        </StackPanel>
-        <controls:TopBarCluster Grid.Column="{utu:Responsive Narrowest=0, Widest=1}" VerticalAlignment="Top" />
-      </Grid>
+      <!-- 1. Header: greeting + recap -->
+      <StackPanel>
+        <!-- Newsreader sits 4 px lower than the browser places it at 40/46: pulled up to the render. -->
+        <TextBlock Text="{Binding Greeting.Title}" Style="{StaticResource TypeDisplayTitle}" Margin="0,-4,0,0" />
+        <!-- Recap: the most urgent fact in bold, then the other counts. -->
+        <TextBlock Margin="{StaticResource GapTop10}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" AutomationProperties.LiveSetting="Off"><Run Text="{Binding Greeting.Lead}" FontWeight="SemiBold" Foreground="{ThemeResource InkBrush}" /><Run Text="{Binding Greeting.Rest}" /></TextBlock>
+      </StackPanel>
 
       <!-- A failed action (Start prep) says why, above the hero, until dismissed. -->
       <muxc:InfoBar x:Uid="Board_1" Margin="{StaticResource HeroTopGap}" Severity="Error" Title="Not saved" Message="{Binding ActionError}" IsOpen="{Binding HasActionError}" IsClosable="False"
@@ -646,18 +643,10 @@
                     Padding="{utu:Responsive Narrowest='0', Widest={StaticResource GapStart40}, Layout={StaticResource SplitLayout}}"
                     BorderThickness="{utu:Responsive Narrowest='0', Widest='1,0,0,0', Layout={StaticResource SplitLayout}}"
                     BorderBrush="{ThemeResource DividerBrush}">
-          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space16}">
-            <StackPanel>
-              <TextBlock x:Uid="TodayPage_41" Text="Where care time went" Style="{StaticResource TypeH2Section}" />
-              <TextBlock Text="{Binding CareTime.Summary}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Margin="{StaticResource GapTop2}" />
-            </StackPanel>
-            <Grid Grid.Column="1" Background="Transparent" VerticalAlignment="Top">
-              <ToolTipService.ToolTip><ToolTip x:Uid="TodayPage_42" Content="Coming soon" /></ToolTipService.ToolTip>
-              <Button x:Uid="TodayPage_43" Style="{StaticResource ButtonIconSecondaryS}" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="Open the care time report, coming soon">
-                <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconArrowUpRight}" Foreground="{ThemeResource InkBrush}" />
-              </Button>
-            </Grid>
-          </Grid>
+          <StackPanel>
+            <TextBlock x:Uid="TodayPage_41" Text="Where care time went" Style="{StaticResource TypeH2Section}" />
+            <TextBlock Text="{Binding CareTime.Summary}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Margin="{StaticResource GapTop2}" />
+          </StackPanel>
           <mvux:FeedView x:Name="CareFeed" Source="{Binding CareTime}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch" Margin="{StaticResource GapTop20}">
             <mvux:FeedView.ValueTemplate>
               <DataTemplate>
@@ -692,10 +681,9 @@
                       </Grid>
                       <StackPanel Grid.Column="1" Spacing="{StaticResource Space4}">
                         <TextBlock Text="{Binding Data.Insight}" Style="{StaticResource TypeBody}" TextWrapping="WrapWholeWords" />
-                        <Grid Background="Transparent" HorizontalAlignment="Left">
-                          <ToolTipService.ToolTip><ToolTip x:Uid="TodayPage_44" Content="Coming soon" /></ToolTipService.ToolTip>
-                          <Button x:Uid="TodayPage_45" Style="{StaticResource LinkButton}" Content="See the prep checklist" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="See the prep checklist, coming soon" />
-                        </Grid>
+                        <!-- The next case to prepare, on its record's Preparation drawer; hidden when nothing is booked. -->
+                        <Button x:Uid="TodayPage_45" Style="{StaticResource LinkButton}" HorizontalAlignment="Left" Content="See the prep checklist" Visibility="{Binding Data.HasChecklist, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}"
+                                Command="{Binding DataContext.OpenPrepChecklist, ElementName=CareFeed}" AutomationProperties.Name="{Binding Data.ChecklistName}" />
                       </StackPanel>
                     </Grid>
                   </Border>

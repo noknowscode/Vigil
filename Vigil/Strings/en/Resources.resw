@@ -230,6 +230,7 @@
   <data name="HistoryDrawer_7.Text" xml:space="preserve"><value> BP</value></data>
   <data name="HistoryDrawer_8.Text" xml:space="preserve"><value> MAP</value></data>
   <data name="HistoryDrawer_9.Text" xml:space="preserve"><value> EtCO₂</value></data>
+  <data name="Insight_ChecklistName" xml:space="preserve"><value>See the prep checklist for {0}</value></data>
   <data name="Insight_OnPlan" xml:space="preserve"><value>Prep ran {0} minutes on average today, on plan.</value></data>
   <data name="Insight_Over" xml:space="preserve"><value>Prep ran {0} minutes on average today, {1} minutes over plan.</value></data>
   <data name="Insight_Under" xml:space="preserve"><value>Prep ran {0} minutes on average today, {1} minutes under plan.</value></data>
@@ -630,33 +631,14 @@
   <data name="Sidebar_23.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Anesthesia</value></data>
   <data name="Sidebar_24.Content" xml:space="preserve"><value>Anesthesia</value></data>
   <data name="Sidebar_25.Text" xml:space="preserve"><value>Anesthesia</value></data>
-  <data name="Sidebar_26.Content" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="Sidebar_27.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Records, coming soon</value></data>
-  <data name="Sidebar_28.Text" xml:space="preserve"><value>Records</value></data>
-  <data name="Sidebar_29.Content" xml:space="preserve"><value>Coming soon</value></data>
   <data name="Sidebar_3.Content" xml:space="preserve"><value>Collapse sidebar</value></data>
-  <data name="Sidebar_30.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Messages, coming soon</value></data>
-  <data name="Sidebar_31.Text" xml:space="preserve"><value>Messages</value></data>
-  <data name="Sidebar_32.Content" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="Sidebar_33.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Reports, coming soon</value></data>
-  <data name="Sidebar_34.Text" xml:space="preserve"><value>Reports</value></data>
   <data name="Sidebar_35.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Settings</value></data>
   <data name="Sidebar_36.Content" xml:space="preserve"><value>Settings</value></data>
   <data name="Sidebar_37.Text" xml:space="preserve"><value>Settings</value></data>
-  <data name="Sidebar_38.Content" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="Sidebar_39.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Help center, coming soon</value></data>
-  <data name="Sidebar_4.Content" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="Sidebar_40.Text" xml:space="preserve"><value>Help center</value></data>
-  <data name="Sidebar_41.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>No monitor connected, coming soon</value></data>
-  <data name="Sidebar_42.Content" xml:space="preserve"><value>Coming soon</value></data>
+  <data name="Sidebar_41.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>No monitor connected</value></data>
+  <data name="Sidebar_42.Content" xml:space="preserve"><value>No monitor connected</value></data>
   <data name="Sidebar_43.Text" xml:space="preserve"><value>No monitor connected</value></data>
   <data name="Sidebar_44.Text" xml:space="preserve"><value>Veterinarian</value></data>
-  <data name="Sidebar_45.Content" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="Sidebar_46.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Account menu, coming soon</value></data>
-  <data name="Sidebar_5.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Switch clinic, coming soon</value></data>
-  <data name="Sidebar_6.Text" xml:space="preserve"><value>CP</value></data>
-  <data name="Sidebar_7.Text" xml:space="preserve"><value>Clinique Plateau</value></data>
-  <data name="Sidebar_8.Text" xml:space="preserve"><value>2 suites · Montréal</value></data>
   <data name="Sidebar_9.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Expand sidebar</value></data>
   <data name="SignOff_1.Label" xml:space="preserve"><value>Cancel</value></data>
   <data name="SignOff_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Close sign-off</value></data>
@@ -757,11 +739,7 @@
   <data name="TodayPage_4.Text" xml:space="preserve"><value>Nothing in surgery</value></data>
   <data name="TodayPage_40.Text" xml:space="preserve"><value>Retry</value></data>
   <data name="TodayPage_41.Text" xml:space="preserve"><value>Where care time went</value></data>
-  <data name="TodayPage_42.Content" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="TodayPage_43.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Open the care time report, coming soon</value></data>
-  <data name="TodayPage_44.Content" xml:space="preserve"><value>Coming soon</value></data>
   <data name="TodayPage_45.Content" xml:space="preserve"><value>See the prep checklist</value></data>
-  <data name="TodayPage_45.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>See the prep checklist, coming soon</value></data>
   <data name="TodayPage_46.Text" xml:space="preserve"><value>No care time recorded yet today.</value></data>
   <data name="TodayPage_47.Text" xml:space="preserve"><value>Couldn't total today's care time.</value></data>
   <data name="TodayPage_48.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Retry reading records</value></data>
@@ -780,12 +758,6 @@
   <data name="Today_NoneSignedOut" xml:space="preserve"><value>No one has gone home yet today.</value></data>
   <data name="Today_NoneSignedOutBody" xml:space="preserve"><value>Signed-out patients appear here.</value></data>
   <data name="Today_NoneTitle" xml:space="preserve"><value>No one is booked in for today yet.</value></data>
-  <data name="TopBarCluster_1.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Search, coming soon</value></data>
-  <data name="TopBarCluster_2.Content" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="TopBarCluster_3.Text" xml:space="preserve"><value>Search patients, owners, records</value></data>
-  <data name="TopBarCluster_4.Text" xml:space="preserve"><value>Ctrl K</value></data>
-  <data name="TopBarCluster_5.Content" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="TopBarCluster_6.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Alerts, coming soon</value></data>
   <data name="Validation_Number" xml:space="preserve"><value>{0} must be a number.</value></data>
   <data name="Validation_OneVital" xml:space="preserve"><value>Enter at least one vital sign.</value></data>
   <data name="Validation_WholeNumber" xml:space="preserve"><value>{0} must be a whole number.</value></data>

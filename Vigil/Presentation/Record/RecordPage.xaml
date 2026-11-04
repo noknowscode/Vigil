@@ -64,9 +64,9 @@
   </Page.Resources>
 
   <Grid utu:SafeArea.Insets="VisibleBounds" RowDefinitions="Auto,Auto,*">
-    <!-- 1. Header: back, breadcrumb, top bar cluster (40 px). Outside the FeedView so it shows in every state. -->
-    <Grid Padding="{utu:Responsive Narrowest={StaticResource PageHeaderInsetNarrow}, Normal={StaticResource PageHeaderInsetNormal}}" ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space24}" MaxWidth="{StaticResource ContentMaxWidth}">
-      <!-- A grid, not a horizontal StackPanel, so a long patient name trims instead of running under the top bar. -->
+    <!-- 1. Header: back and breadcrumb (40 px). Outside the FeedView so it shows in every state. A grid, not a horizontal
+         StackPanel, so a long patient name trims. -->
+    <Grid Padding="{utu:Responsive Narrowest={StaticResource PageHeaderInsetNarrow}, Normal={StaticResource PageHeaderInsetNormal}}" MaxWidth="{StaticResource ContentMaxWidth}">
       <Grid ColumnDefinitions="Auto,Auto,Auto,*" ColumnSpacing="{StaticResource Space12}" VerticalAlignment="Center">
         <Button x:Uid="Record_1" Style="{StaticResource ButtonIconSecondary}" Command="{Binding GoBack}" AutomationProperties.Name="Back">
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconArrowLeft}" Foreground="{ThemeResource InkBrush}" />
@@ -75,7 +75,6 @@
         <TextBlock Grid.Column="2" Text="/" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkFaintBrush}" VerticalAlignment="Center" />
         <TextBlock Grid.Column="3" Text="{Binding Name}" Style="{StaticResource TypeBodyStrong}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
       </Grid>
-      <controls:TopBarCluster Grid.Column="1" VerticalAlignment="Center" Visibility="{utu:Responsive Narrowest=Collapsed, Widest=Visible}" />
     </Grid>
     <muxc:InfoBar x:Uid="Record_3" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{utu:Responsive Narrowest={StaticResource InsetX20}, Normal={StaticResource InsetX40}}">
       <muxc:InfoBar.ActionButton><Button x:Uid="Record_4" Content="Dismiss" Command="{Binding DismissError}" /></muxc:InfoBar.ActionButton>

@@ -471,10 +471,17 @@ public partial record CareBar(CarePhaseKind Phase, string Label, string Duration
     public bool IsWaiting => Phase == CarePhaseKind.Waiting;
 }
 
-/// <summary>"Where care time went": totals per phase and the prep insight.</summary>
+/// <summary>"Where care time went": totals per phase, the prep insight and the next case to prepare (its checklist link).</summary>
 public partial record CareTimeCard(string Summary, IImmutableList<CareBar> Bars, string Insight)
 {
     public bool HasInsight => Insight.Length > 0;
+
+    /// <summary>The next booked case's name: "See the prep checklist" opens its Preparation drawer. Empty when none is booked.</summary>
+    public string ChecklistPatient { get; init; } = "";
+
+    public bool HasChecklist => ChecklistPatient.Length > 0;
+
+    public string ChecklistName => Loc.F("Insight_ChecklistName", "See the prep checklist for {0}", ChecklistPatient);
 
     public static CareTimeCard? From(IEnumerable<Case> cases, DateTimeOffset now, int plannedPrepMinutes)
     {
@@ -487,7 +494,10 @@ public partial record CareTimeCard(string Summary, IImmutableList<CareBar> Bars,
         return new CareTimeCard(
             totals.Summary,
             totals.Rows.Select(r => new CareBar(r.Phase, r.Label, r.DurationText, r.PercentText, r.Fraction, r.Tooltip)).ToImmutableList(),
-            CareInsight.Of(list, now, plannedPrepMinutes)?.Text ?? "");
+            CareInsight.Of(list, now, plannedPrepMinutes)?.Text ?? "")
+        {
+            ChecklistPatient = NextSurgery.Of(list, now, plannedPrepMinutes)?.Case.Patient.Name ?? "",
+        };
     }
 }
 

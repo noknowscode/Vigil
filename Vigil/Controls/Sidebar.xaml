@@ -3,8 +3,9 @@
   drawer on phones (both expose the same members). Width: 256 full, 72 as the icon rail (Normal and Wide, 600-1080 px,
   or collapsed by the user from Widest, 1080). Labels are "full only": an outer element carries the width rule (utu:Responsive) and an inner one the
   model's IsExpanded, so width and state stay separate (uno-scaffolding, Breakpoints).
-  Items without a screen are disabled with a "Coming soon" tooltip (SPEC-v2 decision 1); a disabled control gets no
-  pointer input, so the tooltip sits on a transparent wrapper.
+  Only working destinations are listed: the design's clinic switcher, Records, Messages, Reports, Help center and
+  account menu have no screen and were cut (docs/DECISIONS.md D7, superseding D6). The "No monitor connected" pill
+  stays as a status: Vigil has no monitor link.
 -->
 <UserControl x:Class="Vigil.Controls.Sidebar"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -31,28 +32,8 @@
       </Grid>
     </Grid>
 
-    <!-- Clinic switcher (disabled): margin-top 8. In the collapsed rail this row holds the expand button instead. -->
+    <!-- The collapsed rail's expand button (from Widest). -->
     <Grid Grid.Row="1" Margin="{StaticResource GapTop8}">
-      <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-        <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Background="Transparent">
-          <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_4" Content="Coming soon" /></ToolTipService.ToolTip>
-          <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius14}" Shadows="{StaticResource ShadowXs}">
-            <Button x:Uid="Sidebar_5" Style="{StaticResource ButtonSecondary}" Height="56" Padding="{StaticResource SwitcherInset}" CornerRadius="{StaticResource Radius14}" IsEnabled="False" IsHitTestVisible="False"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" AutomationProperties.Name="Switch clinic, coming soon">
-              <Grid ColumnDefinitions="34,*,16" ColumnSpacing="{StaticResource Space12}">
-                <Border Style="{StaticResource MonogramTile}">
-                  <TextBlock x:Uid="Sidebar_6" Text="CP" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource InkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </Border>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                  <TextBlock x:Uid="Sidebar_7" Text="Clinique Plateau" Style="{StaticResource TypeBodyStrong}" TextTrimming="CharacterEllipsis" />
-                  <TextBlock x:Uid="Sidebar_8" Text="2 suites · Montréal" Style="{StaticResource TypeCaption}" TextTrimming="CharacterEllipsis" />
-                </StackPanel>
-                <ContentControl Grid.Column="2" Style="{StaticResource LineIcon16}" Content="{StaticResource IconChevronsUpDown}" />
-              </Grid>
-            </Button>
-          </utu:ShadowContainer>
-        </Grid>
-      </Grid>
       <Grid Visibility="{utu:Responsive Narrowest=Collapsed, Widest=Visible}">
         <Button x:Uid="Sidebar_9" Visibility="{Binding IsCollapsed, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Style="{StaticResource ButtonIconGhost}" HorizontalAlignment="Center" Command="{Binding ToggleSidebar}" AutomationProperties.Name="Expand sidebar">
           <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_10" Content="Expand sidebar" /></ToolTipService.ToolTip>
@@ -126,45 +107,6 @@
           </Grid>
         </Grid>
       </Button>
-      <Grid Background="Transparent">
-        <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_26" Content="Coming soon" /></ToolTipService.ToolTip>
-        <Button x:Uid="Sidebar_27" Style="{StaticResource NavItemButtonStyle}" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="Records, coming soon">
-          <Grid ColumnDefinitions="18,*">
-            <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconFileText}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
-            <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
-              <TextBlock x:Uid="Sidebar_28" Text="Records" Style="{StaticResource TypeBodyMedium}" VerticalAlignment="Center" />
-            </Grid>
-          </Grid>
-          </Grid>
-        </Button>
-      </Grid>
-      <Grid Background="Transparent">
-        <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_29" Content="Coming soon" /></ToolTipService.ToolTip>
-        <Button x:Uid="Sidebar_30" Style="{StaticResource NavItemButtonStyle}" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="Messages, coming soon">
-          <Grid ColumnDefinitions="18,*">
-            <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconMessageSquare}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
-            <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
-              <TextBlock x:Uid="Sidebar_31" Text="Messages" Style="{StaticResource TypeBodyMedium}" VerticalAlignment="Center" />
-            </Grid>
-          </Grid>
-          </Grid>
-        </Button>
-      </Grid>
-      <Grid Background="Transparent">
-        <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_32" Content="Coming soon" /></ToolTipService.ToolTip>
-        <Button x:Uid="Sidebar_33" Style="{StaticResource NavItemButtonStyle}" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="Reports, coming soon">
-          <Grid ColumnDefinitions="18,*">
-            <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconBarChart}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
-            <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
-              <TextBlock x:Uid="Sidebar_34" Text="Reports" Style="{StaticResource TypeBodyMedium}" VerticalAlignment="Center" />
-            </Grid>
-          </Grid>
-          </Grid>
-        </Button>
-      </Grid>
     </StackPanel>
 
     <!-- Footer nav, bottom-aligned. -->
@@ -181,25 +123,12 @@
           </Grid>
         </Grid>
       </Button>
-      <Grid Background="Transparent">
-        <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_38" Content="Coming soon" /></ToolTipService.ToolTip>
-        <Button x:Uid="Sidebar_39" Style="{StaticResource NavItemButtonStyle}" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="Help center, coming soon">
-          <Grid ColumnDefinitions="18,*">
-            <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconCircleHelp}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
-            <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
-              <TextBlock x:Uid="Sidebar_40" Text="Help center" Style="{StaticResource TypeBodyMedium}" VerticalAlignment="Center" />
-            </Grid>
-          </Grid>
-          </Grid>
-        </Button>
-      </Grid>
     </StackPanel>
 
-    <!-- Monitoring pill (D6): disabled, because Vigil has no monitor link (SPEC.md). It says so instead of the design's
-         "Monitoring on": a hollow grey dot (all the icon rail shows) and muted text. -->
-    <Grid x:Uid="Sidebar_41" Grid.Row="6" Background="Transparent" AutomationProperties.Name="No monitor connected, coming soon">
-      <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_42" Content="Coming soon" /></ToolTipService.ToolTip>
+    <!-- Monitor status (D7): Vigil has no monitor link (SPEC.md), and the pill says so instead of the design's
+         "Monitoring on": a hollow grey dot (all the icon rail shows) and muted text. A status, not a control. -->
+    <Grid x:Uid="Sidebar_41" Grid.Row="6" Background="Transparent" AutomationProperties.Name="No monitor connected">
+      <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_42" Content="No monitor connected" /></ToolTipService.ToolTip>
       <Border Style="{StaticResource PillSurface}">
         <StackPanel Orientation="Horizontal" Height="20">
           <Grid Width="14" Height="14" VerticalAlignment="Center" Margin="-3,0,0,0">
@@ -212,10 +141,10 @@
       </Border>
     </Grid>
 
-    <!-- User row: avatar initials, "Dr. <surname>" from Settings, role; account menu (disabled). -->
-    <!-- No ColumnSpacing: it would still apply around the collapsed columns and widen the rail; the full-only parts carry the
-         10 px gap. The -2 margin keeps 8 + 34 px inside the 40 px rail; the account button's right margin restores pad R4. -->
-    <Grid Grid.Row="7" Padding="{StaticResource UserRowInset}" Margin="0,0,-2,0" ColumnDefinitions="Auto,*,Auto">
+    <!-- User row: avatar initials, "Dr. <surname>" from Settings (Settings is where they change), role. -->
+    <!-- No ColumnSpacing: it would still apply around the collapsed column and widen the rail; the full-only part carries
+         the 10 px gap. The -2 margin keeps 8 + 34 px inside the 40 px rail. -->
+    <Grid Grid.Row="7" Padding="{StaticResource UserRowInset}" Margin="0,0,-2,0" ColumnDefinitions="Auto,*">
       <Border Style="{StaticResource AvatarCircle}">
         <TextBlock Text="{Binding ClinicianInitials}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" LineHeight="16" Foreground="{ThemeResource AvatarInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
       </Border>
@@ -224,14 +153,6 @@
           <TextBlock Text="{Binding ClinicianName}" Style="{StaticResource TypeBodyStrong}" TextTrimming="CharacterEllipsis" />
           <TextBlock x:Uid="Sidebar_44" Text="Veterinarian" Style="{StaticResource TypeCaption}" />
         </StackPanel>
-      </Grid>
-      <Grid Grid.Column="2" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-        <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Background="Transparent" Margin="10,0,6,0">
-          <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_45" Content="Coming soon" /></ToolTipService.ToolTip>
-          <Button x:Uid="Sidebar_46" Style="{StaticResource ButtonIconGhost}" IsEnabled="False" IsHitTestVisible="False" AutomationProperties.Name="Account menu, coming soon">
-            <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconEllipsisVertical}" />
-          </Button>
-        </Grid>
       </Grid>
     </Grid>
   </Grid>

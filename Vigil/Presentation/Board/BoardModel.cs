@@ -122,6 +122,15 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
         }
     }
 
+    /// <summary>"See the prep checklist" (care-time insight): the next booked case's record, on its Preparation drawer.</summary>
+    public async ValueTask OpenPrepChecklist(CancellationToken ct)
+    {
+        if (NextSurgery.Of(await Store.GetAllAsync(ct), Clock.Now, Preferences.PlannedPrepMinutes) is { } next)
+        {
+            await Navigator.NavigateRouteAsync(this, "Record", data: new CaseRefPane(next.CaseId, RecordPane.Preop), cancellation: ct);
+        }
+    }
+
     public async ValueTask OpenAgenda(CancellationToken ct) =>
         await Navigator.NavigateRouteAsync(this, "Agenda", cancellation: ct);
 

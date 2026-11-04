@@ -53,6 +53,8 @@ Tradeoff: no deep links or browser Back on the web head; the in-app Back (Naviga
 
 ## D6. The "Coming soon" controls stay: an exception to "every control functional" (2026-11-01)
 
+Superseded by D7 (2026-11-04): the controls are cut.
+
 Decision: the controls without a screen stay visible and disabled, with a "Coming soon" tooltip and automation
 name: in the sidebar the clinic switcher, Records, Messages, Reports, Help center and the account menu, plus the
 Monitoring pill; in the top bar search and the notification bell; on Today the care-time report button and "See the
@@ -63,6 +65,21 @@ are disabled. The code review of 2026-11-01 asked to hide them, build them or re
 the design.
 Tradeoff: the app advertises features it does not have (docs/COMPLETENESS.md). Building or hiding any of them
 retires its part of this exception.
+
+## D7. The "Coming soon" controls are cut; D6 is superseded (2026-11-04, proposed)
+
+Decision: remove the controls and copy that advertised features Vigil does not have: in the sidebar the clinic
+switcher (with its hard-coded "Clinique Plateau · 2 suites · Montréal"), Records, Messages, Reports, Help center and the
+account menu; the top bar's search field and notification bell (the whole top bar cluster, on Today, Patients, Agenda,
+Settings and the record); on Today the care-time report button. "See the prep checklist" is wired instead of cut: it
+opens the next booked case's record on its Preparation drawer, and it hides when nothing is booked. The "No monitor
+connected" pill stays as a status (no tooltip, no "coming soon" in its name): Vigil has no monitor link, and the pill
+says so.
+Reason: the A-grade plan's owner rule "build small, cut large" (uno-lab docs/production-readiness/A-GRADE-PLAN.md).
+Each of these is a large unbuilt feature (multi-clinic, a records archive, messaging, reporting, help content, accounts,
+search, an alert feed), and a disabled control that promises one counts as a functional Major (docs/COMPLETENESS.md).
+Tradeoff: the sidebar and headers no longer match the v2 design frames (SPEC-v2 decision 1 showed every item). Building
+any of these features brings its control back with it.
 
 ## D8. The record's panes are drawers with their own models (2026-11-04)
 

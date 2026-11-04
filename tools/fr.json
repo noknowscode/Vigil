@@ -773,6 +773,7 @@
   "Edit the patient, weight, procedure and schedule": "Modifier le patient, le poids, l'intervention et l'horaire",
   "Not saved: {0} Your entries are kept.": "Non enregistré : {0} Vos saisies sont conservées.",
   "Save changes": "Enregistrer les modifications",
+  "See the prep checklist for {0}": "Voir la liste de préparation de {0}",
   "no": "non",
   "yes": "oui",
   "{0:d MMM, HH:mm}": "{0:d MMM, HH:mm}",
