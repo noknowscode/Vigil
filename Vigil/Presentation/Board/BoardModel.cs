@@ -6,9 +6,8 @@ namespace Vigil.Presentation;
 /// recover together; Retry raises the store's change signal (FeedView.Refresh does not recover an upstream failure).
 /// </summary>
 public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Preferences, IFormulary Formulary, INavigator Navigator, ILogger<BoardModel> Logger)
+    : PatientCardsModel(Store, Preferences)
 {
-    private IFeed<IImmutableList<Case>> Cases { get; } = Feed.Async(async ct => (IImmutableList<Case>)await Store.GetAllAsync(ct), Store.Changed);
-
     private IFeed<DateTimeOffset> Now { get; } = Feed.AsyncEnumerable(Clock.Ticks);
 
     /// <summary>When the page model started: the minute clock steps from here.</summary>
@@ -22,8 +21,6 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
 
     private IFeed<ImmutableList<Drug>> Drugs { get; } = Feed.Async(async ct => await Formulary.GetDrugsAsync(ct));
 
-    private IFeed<bool> ReduceMotion { get; } = Feed.Async(_ => ValueTask.FromResult(Preferences.ReduceMotion), Preferences.Changed);
-
     // Re-read on the store signal and every tick, so the greeting turns over at noon and 18:00 and the recap follows the board.
     public IFeed<BoardGreeting> Greeting => Feed.Combine(Cases, Now).Select(x => BoardGreeting.From(x.Item1, x.Item2, Preferences.ReadingInterval, Preferences.ClinicianName));
 
@@ -36,9 +33,6 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
         .Select(x => CareTimeline.From(x.Item1, x.Item2, Preferences.PlannedPrepMinutes)!);
 
     public IState<CardFilter> Filter => State.Value(this, () => CardFilter.InClinic);
-
-    /// <summary>Cards whose details are open (each card toggles independently; all closed on arrival).</summary>
-    public IState<IImmutableSet<Guid>> Expanded => State.Value(this, () => (IImmutableSet<Guid>)ImmutableHashSet<Guid>.Empty);
 
     public IListFeed<FilterTab> Tabs => Feed
         .Combine(Cases, Filter, Minute)
@@ -68,12 +62,7 @@ public partial record BoardModel(ICaseStore Store, IClock Clock, IPreferences Pr
         .Combine(Cases, Minute)
         .Select(x => CareTimeCard.From(x.Item1.Where(c => Today.IsToday(c, x.Item2)), x.Item2, Preferences.PlannedPrepMinutes)!);
 
-    public void Retry() => Store.Reload();
-
     public async ValueTask ShowFilter(FilterTab tab, CancellationToken ct) => await Filter.UpdateAsync(_ => tab.Filter, ct);
-
-    public async ValueTask ToggleDetails(PatientCard card, CancellationToken ct) =>
-        await Expanded.UpdateAsync(set => set is null ? ImmutableHashSet.Create(card.CaseId) : set.Contains(card.CaseId) ? set.Remove(card.CaseId) : set.Add(card.CaseId), ct);
 
     /// <summary>Placeholder count for the card skeleton (the populated grid's first row).</summary>
     public IImmutableList<int> Skeleton { get; } = [1, 2, 3];
