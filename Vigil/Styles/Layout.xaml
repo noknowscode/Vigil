@@ -151,8 +151,6 @@
   <!-- Today's Due next table: the status column (from Wide) and the action column. -->
   <x:Double x:Key="DueStatusWidth">148</x:Double>
   <x:Double x:Key="DueActionWidth">96</x:Double>
-  <!-- Top bar search field (shell-and-tokens.md §9) from Normal; it stretches on phones. -->
-  <x:Double x:Key="SearchFieldWidth">340</x:Double>
 
   <!-- The pane's one-tap "Record reading". -->
   <x:Double x:Key="ActionHeightLarge">64</x:Double>
@@ -176,7 +174,6 @@
   <Thickness x:Key="ChartInset">12,12,8,4</Thickness>
   <Thickness x:Key="PreviewCardInset">16,18,16,14</Thickness>
   <Thickness x:Key="PreviewBodyInset">16,16,16,40</Thickness>
-  <Thickness x:Key="SwitcherInset">10,0,12,0</Thickness>
   <Thickness x:Key="BrandRowInset">8,0,4,0</Thickness>
   <Thickness x:Key="UserRowInset">8,6,0,0</Thickness>
   <Thickness x:Key="TimelineInset">0,4,4,0</Thickness>

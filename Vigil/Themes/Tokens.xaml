@@ -691,10 +691,6 @@
     <Setter Property="BorderBrush" Value="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" /><Setter Property="BorderThickness" Value="1" />
   </Style>
   <!-- Shell surfaces (§8-9) -->
-  <Style x:Key="MonogramTile" TargetType="Border">
-    <Setter Property="Width" Value="34" /><Setter Property="Height" Value="34" /><Setter Property="CornerRadius" Value="10" />
-    <Setter Property="Background" Value="{ThemeResource ChipNeutralBrush}" />
-  </Style>
   <Style x:Key="AvatarCircle" TargetType="Border">
     <Setter Property="Width" Value="34" /><Setter Property="Height" Value="34" /><Setter Property="CornerRadius" Value="17" />
     <Setter Property="Background" Value="{ThemeResource AvatarBrush}" />
@@ -703,16 +699,5 @@
     <Setter Property="Padding" Value="11,9" /><Setter Property="CornerRadius" Value="12" />
     <Setter Property="Background" Value="{ThemeResource Surface1Brush}" />
     <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" /><Setter Property="BorderThickness" Value="1" />
-  </Style>
-  <Style x:Key="SearchFieldSurface" TargetType="Border">
-    <Setter Property="Height" Value="40" /><Setter Property="Padding" Value="11,0,7,0" /><Setter Property="CornerRadius" Value="12" />
-    <Setter Property="Background" Value="{ThemeResource Surface2Brush}" />
-    <Setter Property="BorderBrush" Value="{ThemeResource TriToneBorderBrush}" /><Setter Property="BorderThickness" Value="1" />
-  </Style>
-  <!-- Keycap "Ctrl K" (§9): Martian Mono 11/16, pad 2 6, radius 6. -->
-  <Style x:Key="Keycap" TargetType="Border">
-    <Setter Property="Padding" Value="6,2" /><Setter Property="CornerRadius" Value="6" />
-    <Setter Property="Background" Value="{ThemeResource Surface1Brush}" />
-    <Setter Property="BorderBrush" Value="{ThemeResource EdgeBrush}" /><Setter Property="BorderThickness" Value="1" />
   </Style>
 </ResourceDictionary>
