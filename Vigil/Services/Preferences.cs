@@ -1,4 +1,3 @@
-using Uno.Extensions.Reactive;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -12,15 +11,33 @@ public interface IPreferences
     /// <summary>In-app setting, OR'ed with the platform's (Skia desktop always reports animations enabled).</summary>
     bool ReduceMotion { get; }
 
+    /// <summary>The in-app setting alone, without the platform's: what the Settings switch shows.</summary>
+    bool ReduceMotionSetting { get; }
+
     /// <summary>Raised after a change; feeds that depend on preferences reload from it.</summary>
     Signal Changed { get; }
 
     ValueTask SetReadingIntervalAsync(int minutes, CancellationToken ct);
 
     ValueTask SetReduceMotionAsync(bool value, CancellationToken ct);
+
+    /// <summary>Surname for the board greeting ("Good morning, Dr. Okafor"); empty greets without a name.</summary>
+    string ClinicianName { get; }
+
+    ValueTask SetClinicianNameAsync(string name, CancellationToken ct);
+
+    /// <summary>First name, for the avatar initials only ("Amara" + "Okafor" gives "AO"); empty uses the surname alone.</summary>
+    string ClinicianFirstName { get; }
+
+    ValueTask SetClinicianFirstNameAsync(string name, CancellationToken ct);
+
+    /// <summary>Planned preparation time per case, for the care-time insight and the next surgery's prep start.</summary>
+    int PlannedPrepMinutes { get; }
+
+    ValueTask SetPlannedPrepMinutesAsync(int minutes, CancellationToken ct);
 }
 
-internal sealed record PreferencesFile(int ReadingIntervalMinutes, bool ReduceMotion);
+internal sealed record PreferencesFile(int ReadingIntervalMinutes, bool ReduceMotion, string ClinicianName = "", int PlannedPrepMinutes = Preferences.DefaultPlannedPrepMinutes, string ClinicianFirstName = "");
 
 [JsonSerializable(typeof(PreferencesFile))]
 internal partial class PreferencesJsonContext : JsonSerializerContext;
@@ -29,10 +46,14 @@ public sealed class Preferences : IPreferences
 {
     public static readonly int[] Intervals = [3, 5, 10];
 
+    public const int DefaultPlannedPrepMinutes = 25;
+
     private readonly string? _path;
     private PreferencesFile _value = new(5, false);
 
-    public Preferences(string? path = null)
+    /// <param name="path">The preferences file; null keeps them in memory (tests).</param>
+    /// <param name="logger">Where a preferences file that cannot be read is reported.</param>
+    public Preferences(string? path = null, ILogger? logger = null)
     {
         _path = path;
         if (_path is not null && File.Exists(_path))
@@ -41,9 +62,10 @@ public sealed class Preferences : IPreferences
             {
                 _value = JsonSerializer.Deserialize(File.ReadAllText(_path), PreferencesJsonContext.Default.PreferencesFile) ?? _value;
             }
-            catch (JsonException)
+            catch (Exception ex) when (ex is JsonException or IOException or UnauthorizedAccessException)
             {
-                // A damaged preferences file falls back to defaults; the record data is unaffected.
+                // A damaged or unreadable preferences file falls back to defaults; the record data is unaffected.
+                logger?.LogWarning(ex, "The preferences file could not be read; the defaults apply.");
             }
         }
     }
@@ -58,7 +80,19 @@ public sealed class Preferences : IPreferences
 
     public ValueTask SetReduceMotionAsync(bool value, CancellationToken ct) => SaveAsync(_value with { ReduceMotion = value }, ct);
 
-    /// <summary>The user's own setting, without the platform's.</summary>
+    public string ClinicianName => _value.ClinicianName ?? "";
+
+    public ValueTask SetClinicianNameAsync(string name, CancellationToken ct) => SaveAsync(_value with { ClinicianName = name.Trim() }, ct);
+
+    public string ClinicianFirstName => _value.ClinicianFirstName ?? "";
+
+    public ValueTask SetClinicianFirstNameAsync(string name, CancellationToken ct) => SaveAsync(_value with { ClinicianFirstName = name.Trim() }, ct);
+
+    public int PlannedPrepMinutes => _value.PlannedPrepMinutes is >= 5 and <= 180 ? _value.PlannedPrepMinutes : DefaultPlannedPrepMinutes;
+
+    public ValueTask SetPlannedPrepMinutesAsync(int minutes, CancellationToken ct) =>
+        SaveAsync(_value with { PlannedPrepMinutes = Math.Clamp(minutes, 5, 180) }, ct);
+
     public bool ReduceMotionSetting => _value.ReduceMotion;
 
     private async ValueTask SaveAsync(PreferencesFile value, CancellationToken ct)
@@ -67,13 +101,18 @@ public sealed class Preferences : IPreferences
         {
             return;
         }
+        // Applied first: when the write below fails, the app still uses the new value until it closes, and the
+        // exception tells the caller it was not saved.
         _value = value;
+        Changed.Raise();
         if (_path is not null)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
-            await File.WriteAllTextAsync(_path, JsonSerializer.Serialize(value, PreferencesJsonContext.Default.PreferencesFile), ct);
+            // Written beside the file, then moved over it: a failed or interrupted write never leaves a half file.
+            var temp = _path + ".tmp";
+            await File.WriteAllTextAsync(temp, JsonSerializer.Serialize(value, PreferencesJsonContext.Default.PreferencesFile), ct);
+            File.Move(temp, _path, overwrite: true);
         }
-        Changed.Raise();
     }
 
     private static bool PlatformAnimationsEnabled()

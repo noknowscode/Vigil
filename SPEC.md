@@ -1,5 +1,7 @@
 # Vigil: spec
 
+> **v2 redesign (2026-10-28):** the Today dashboard, Patient care screen, app shell and design tokens are specified in `SPEC-v2.md`, which supersedes the Board and Record layouts below.
+
 Vigil is the anesthesia record for surgical vet techs in a small-animal hospital. The tech sets it on
 a tablet beside the patient, records the pre-anesthetic check and weight-based doses, enters vitals
 every 5 minutes during the procedure, logs recovery, and the veterinarian signs the record. It
@@ -106,7 +108,7 @@ from the store, so a sheet and the page behind it never hold diverging copies.
 | `IFormulary` → `EmbeddedFormulary` | Singleton | Drug list, concentrations, mg/kg ranges, species alarm thresholds from an embedded `formulary.json` (sample reference data, labelled in the UI) |
 | `IClock` → `SystemClock` | Singleton | `Now` + a 1 Hz `IAsyncEnumerable<DateTimeOffset> Ticks(ct)`; replaced by a fake clock in tests |
 | `IRecordExporter` → `CsvRecordExporter` | Singleton | Signed record → CSV + plain-text summary |
-| `IFaultInjection` | Singleton | Reads `VIGIL_FAULT` / `VIGIL_SLOW_MS` env vars (desktop/Android) to prove Error/Loading states at runtime. Inert when unset; never shipped as a feature |
+| `IFaultInjection` | Singleton | Reads `VIGIL_FAULT` / `VIGIL_SLOW_MS` env vars (desktop/Android) to prove Error/Loading states at runtime. Debug builds only; Release registers a no-op (`NoFaultInjection`) |
 
 Domain logic (dose math, range classification, reading-due computation, MAP derivation, CSV) lives in
 `Vigil/Domain/` as plain C# with no Uno dependency, tested from `Vigil.Tests`.
@@ -236,7 +238,8 @@ Wide (≥1080, tablet landscape)                       Narrow (<600, phone)
 ### Tokens
 
 From DesignMd2Uno (`Styles/ColorPaletteOverride.xaml`, `Styles/Typography.xaml`, `Styles/Tokens.xaml`,
-regenerated, never hand-edited). Roles (light / dark):
+regenerated, never hand-edited). Roles (light / dark). v2 replaced the generated palette with
+`Styles/CloverPalette.xaml`; the generated one is kept only in `docs/design/generated/`:
 
 | Role | Light (Paper) | Dark (Theatre) | Use |
 |---|---|---|---|
@@ -261,14 +264,15 @@ body-small 14, label 13), IBM Plex Mono 500 (times, doses 15). Static per-weight
 `PublicSans_SemiBold.ttf`, `IBMPlexMono_Medium.ttf`), wired with Uno `.ttf.manifest` files so weights
 resolve, and Material's `MaterialRegular/Medium/LightFontFamily` set through `FontOverrideDictionary`.
 
-Spacing 4/8/12/16/24/32/48; radii 6/12/24; touch targets ≥ 56 px, steppers 64 px.
+Spacing 4/8/12/16/24/32/48; radii 6/12/24. Touch-target minimums no longer apply (2026-10-28: the app will not ship on
+tablets); size controls to the design, e.g. 40 px icon buttons and 44 px primary buttons in the agenda card.
 
-Motion (`Themes/MotionTokens.xaml`): `EaseSmooth 0.22,1 0.36,1`, `EaseOut 0.17,1 0.32,1`;
+Motion (values inline where used; the unused `MotionTokens.xaml` was removed 2026-10-28): `EaseSmooth 0.22,1 0.36,1`, `EaseOut 0.17,1 0.32,1`;
 durations 150/200/280 ms; entrance = opacity 0→1 + Translation.Y 6→0 over 280 ms; press scale 0.98.
 
 ### Dictionary scopes
 
-`App.xaml`: Material theme with ColorPaletteOverride, Typography, Tokens, VitalsPalette, MotionTokens,
+`App.xaml`: Material theme with ColorPaletteOverride, Typography, VitalsPalette,
 Icons (none needed if the Fluent font covers all icons), control lightweight keys (Card radius 12,
 Button min height 56). Page-scoped resources: `RecordPage.Resources` (stepper template, strip
 sizing). Nothing page-scoped lands in App.xaml.

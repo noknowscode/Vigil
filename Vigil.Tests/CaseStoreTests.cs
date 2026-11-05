@@ -32,9 +32,9 @@ public class CaseStoreTests
         await SeedAsync(Store());
 
         var reloaded = await Store().GetAllAsync(CancellationToken.None);
-        reloaded.Should().HaveCount(5);
-        var bella = reloaded.Single(c => c.Patient.Name == "Bella");
-        bella.Readings.Should().HaveCount(14);
+        reloaded.Should().HaveCount(4);
+        var bella = reloaded.Single(c => c.Patient.Name == "Knuckles");
+        bella.Readings.Should().HaveCount(13);
         bella.Doses.Should().HaveCount(4);
         bella.Preop.Asa.Should().Be(2);
         bella.Status.Should().Be(CaseStatus.Anesthetized);
@@ -65,6 +65,24 @@ public class CaseStoreTests
     }
 
     [Test]
+    public async Task SignedRecordsStillTakeTheDischargeCallButNothingWithIt()
+    {
+        var store = Store();
+        var signed = SampleDay.Create(DateTimeOffset.Now).Single(c => c.IsSigned);
+        await store.SaveAsync(signed, CancellationToken.None);
+        var at = DateTimeOffset.Now;
+
+        var mixed = async () => await store.UpdateAsync(signed.Id, c => c.WithDischargeCallDone(at) with { Procedure = "Changed" }, CancellationToken.None);
+        await mixed.Should().ThrowAsync<SignedRecordException>();
+        await store.UpdateAsync(signed.Id, c => c.WithDischargeCallDone(at), CancellationToken.None);
+
+        var stored = (await store.GetAsync(signed.Id, CancellationToken.None))!;
+        stored.DischargeCall!.DoneAt.Should().Be(at);
+        stored.Procedure.Should().Be(signed.Procedure);
+        stored.IsSigned.Should().BeTrue();
+    }
+
+    [Test]
     public async Task ReadFaultOnceThenRecovers()
     {
         await Store().SaveAsync(SampleDay.Create(DateTimeOffset.Now)[0], CancellationToken.None);
@@ -92,6 +110,71 @@ public class CaseStoreTests
         await store.ClearAsync(CancellationToken.None);
         store.Reload();
         store.Version.Should().Be(3);
+    }
+
+    [Test]
+    public async Task DeleteRemovesAnUnsignedCaseFromDisk()
+    {
+        var store = Store();
+        await SeedAsync(store);
+        var oscar = (await store.GetAllAsync(CancellationToken.None)).Single(c => c.Patient.Name == "Oscar");
+        var version = store.Version;
+
+        await store.DeleteAsync(oscar.Id, CancellationToken.None);
+
+        store.Version.Should().Be(version + 1, "the change signal refreshes every page");
+        (await store.GetAsync(oscar.Id, CancellationToken.None)).Should().BeNull();
+        (await Store().GetAllAsync(CancellationToken.None)).Should().HaveCount(3).And.NotContain(c => c.Id == oscar.Id);
+        await store.DeleteAsync(oscar.Id, CancellationToken.None);
+        store.Version.Should().Be(version + 1, "a case already gone is not deleted twice");
+    }
+
+    [Test]
+    public async Task SignedRecordsCannotBeDeleted()
+    {
+        var store = Store();
+        var signed = SampleDay.Create(DateTimeOffset.Now).Single(c => c.IsSigned);
+        await store.SaveAsync(signed, CancellationToken.None);
+
+        var delete = async () => await store.DeleteAsync(signed.Id, CancellationToken.None);
+        await delete.Should().ThrowAsync<SignedRecordException>();
+        (await Store().GetAsync(signed.Id, CancellationToken.None)).Should().NotBeNull();
+    }
+
+    [Test]
+    public async Task ADamagedFileIsSetAsideAndTheOtherRecordsLoad()
+    {
+        await SeedAsync(Store());
+        await File.WriteAllTextAsync(Path.Combine(_folder, "broken.json"), "{ \"Id\": ");
+
+        var store = Store();
+        (await store.GetAllAsync(CancellationToken.None)).Should().HaveCount(4);
+        store.SetAside.Should().Equal("broken.json");
+        File.Exists(Path.Combine(_folder, "broken.json")).Should().BeFalse();
+        Directory.GetFiles(Path.Combine(_folder, JsonCaseStore.DamagedFolder)).Should().ContainSingle();
+
+        var next = Store();
+        (await next.GetAllAsync(CancellationToken.None)).Should().HaveCount(4);
+        next.SetAside.Should().BeEmpty("the file was moved aside, so Retry and the next launch read cleanly");
+        await next.ClearAsync(CancellationToken.None);
+        Directory.Exists(Path.Combine(_folder, JsonCaseStore.DamagedFolder)).Should().BeFalse("Clear all deletes every record, unreadable ones too");
+    }
+
+    [Test]
+    public async Task ReplaceAllSwapsEveryRecordOrNone()
+    {
+        await SeedAsync(Store());
+        var sample = SampleDay.Create(DateTimeOffset.Now);
+
+        var failing = Store("store-write");
+        var replace = async () => await failing.ReplaceAllAsync(sample, CancellationToken.None);
+        await replace.Should().ThrowAsync<IOException>();
+        (await Store().GetAllAsync(CancellationToken.None)).Should().HaveCount(4, "a failed Load sample day leaves the records as they were");
+
+        var store = Store();
+        await store.ReplaceAllAsync(sample, CancellationToken.None);
+        (await store.GetAllAsync(CancellationToken.None)).Select(c => c.Id).Should().BeEquivalentTo(sample.Select(c => c.Id), "the signed record is replaced too");
+        Directory.GetFiles(_folder, "*.json").Should().HaveCount(4);
     }
 
     [Test]

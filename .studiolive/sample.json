@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schemas.platform.uno/sample/v1",
+  "id": "vigil",
+  "displayName": "Vigil",
+  "description": "Anesthesia record for surgical vet techs in a small-animal hospital. The tech records the pre-anesthetic check and weight-based doses, enters vitals every five minutes during the procedure, logs recovery, and the veterinarian signs the record; Today shows each patient's stage and what is due next. Local-first, English and French, one C# and XAML codebase for desktop, web, Android and iOS, built with MVUX, Navigation Extensions, the Uno Toolkit and Material.",
+  "platforms": [
+    "desktop",
+    "wasm",
+    "android",
+    "ios"
+  ],
+  "sourcePath": "Vigil/Vigil.csproj",
+  "iconUrl": "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/icon.png",
+  "screenshots": [
+    "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/screenshots/today-desktop.png",
+    "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/screenshots/record-desktop.png",
+    "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/screenshots/today-phone.png",
+    "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/screenshots/record-phone.png"
+  ],
+  "showcase": {
+    "summary": "An anesthesia record for veterinary technicians: doses, vitals every five minutes, recovery and sign-off, local-first and bilingual.",
+    "type": "showcase",
+    "status": "preview",
+    "owner": [
+      "noknowscode"
+    ],
+    "industry": "Veterinary medicine",
+    "goals": [
+      "A responsive shell: a sidebar on desktop and a menu drawer on phones",
+      "MVUX models over a local JSON case store",
+      "Navigation Extensions with the record's panes as drawer routes in the Toolkit's DrawerFlyoutPresenter",
+      "Weight-based dose calculation and a five-minute vitals schedule with overdue warnings",
+      "Localization with English and French string tables",
+      "Light and dark themes from one Material token set"
+    ],
+    "tags": [
+      "mvux",
+      "navigation",
+      "toolkit",
+      "material",
+      "localization",
+      "local-first",
+      "drawers"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+<UserControl x:Class="Vigil.Controls.CareMark" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" IsHitTestVisible="False">
+  <UserControl.Resources>
+    <!-- The mark's layers take their path data from Content (Themes/Icons.xaml), as the line icons do.
+         xaml-lint: allow template - a Path drawn from Content; no stock control draws keyed path data with a fill and a stroke layer -->
+    <ControlTemplate x:Key="MarkFill" TargetType="ContentControl">
+      <Path Data="{TemplateBinding Content}" Fill="{TemplateBinding Foreground}" />
+    </ControlTemplate>
+    <ControlTemplate x:Key="MarkStroke" TargetType="ContentControl">
+      <Path Data="{TemplateBinding Content}" Stroke="{TemplateBinding Foreground}" StrokeThickness="2" />
+    </ControlTemplate>
+  </UserControl.Resources>
+  <Viewbox><Grid x:Name="Leaves" Width="36" Height="40" RenderTransformOrigin="0.5,0.5"><Grid.RenderTransform><CompositeTransform /></Grid.RenderTransform>
+    <ContentControl Template="{StaticResource MarkFill}" Content="{StaticResource CareMarkLeaves}" Foreground="{ThemeResource PrimaryBrush}" IsTabStop="False" />
+    <ContentControl Template="{StaticResource MarkFill}" Content="{StaticResource CareMarkCentre}" Foreground="{ThemeResource CloverLime}" IsTabStop="False" />
+    <ContentControl Template="{StaticResource MarkStroke}" Content="{StaticResource CareMarkStem}" Foreground="{ThemeResource PrimaryBrush}" IsTabStop="False" />
+  </Grid></Viewbox>
+</UserControl>

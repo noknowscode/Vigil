@@ -1,0 +1,21 @@
+<!--
+  The Administer dose drawer (route "!Dose"): the patient line over the dose entry (DoseEntryView and DoseModel, shared
+  with the Redose page). Give closes the drawer.
+-->
+<Flyout x:Class="Vigil.Presentation.DoseDrawer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:utu="using:Uno.Toolkit.UI"
+        xmlns:local="using:Vigil.Presentation"
+        xmlns:controls="using:Vigil.Controls"
+        Placement="Full"
+        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}"
+        controls:FlyoutFocus.Restores="True">
+  <Grid RowDefinitions="Auto,Auto,*" utu:SafeArea.Insets="VisibleBounds">
+    <controls:DrawerHeader x:Uid="DoseDrawer_1" Title="Administer dose" CloseCommand="{Binding Cancel}" />
+    <TextBlock Grid.Row="1" Margin="{StaticResource Inset24x16}" Text="{Binding Patient}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextTrimming="CharacterEllipsis" />
+    <local:DoseEntryView Grid.Row="2"
+                         BodyPadding="{utu:Responsive Narrow={StaticResource PaneInsetNarrow}, Wide={StaticResource PaneInsetWide}}"
+                         ActionPadding="{utu:Responsive Narrow={StaticResource PaneInsetNarrow}, Wide={StaticResource PaneInsetWide}}" />
+  </Grid>
+</Flyout>

@@ -1,8 +1,5 @@
-using System.Collections.Immutable;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Uno.Extensions.Reactive;
-using Vigil.Domain;
 
 namespace Vigil.Services;
 
@@ -18,18 +15,39 @@ public interface ICaseStore
     /// <summary>Drops a failed load so the next read retries, then raises <see cref="Changed"/> (Retry).</summary>
     void Reload();
 
+    /// <summary>
+    /// Case files that could not be read this session. Each was moved to the "damaged" folder beside the cases so the
+    /// other records still load; the shell shows a warning while the list is not empty.
+    /// </summary>
+    IReadOnlyList<string> SetAside { get; }
+
     /// <summary>Creates or replaces a case. Throws <see cref="SignedRecordException"/> when the stored case is signed.</summary>
     ValueTask SaveAsync(Case value, CancellationToken ct);
 
     /// <summary>Reads, transforms and saves one case. Returns the saved value.</summary>
     ValueTask<Case> UpdateAsync(Guid id, Func<Case, Case> update, CancellationToken ct);
 
+    /// <summary>
+    /// Deletes an unsigned case (booked by mistake, or the patient is not coming); a missing case is already gone.
+    /// Throws <see cref="SignedRecordException"/> for a signed record.
+    /// </summary>
+    ValueTask DeleteAsync(Guid id, CancellationToken ct);
+
     ValueTask ClearAsync(CancellationToken ct);
+
+    /// <summary>
+    /// Replaces every case with <paramref name="cases"/> (Load sample day). The new cases are written first and the old
+    /// ones deleted only once all of them are saved, so a failure leaves the records as they were, never empty.
+    /// </summary>
+    ValueTask ReplaceAllAsync(IReadOnlyList<Case> cases, CancellationToken ct);
 }
 
 public sealed class SignedRecordException(Guid id) : InvalidOperationException($"Case {id} is signed and can no longer change.");
 
 public sealed class StoreReadException(string message, Exception? inner = null) : IOException(message, inner);
+
+/// <summary>A change the case's state does not allow (vitals before induction); the message is written for the user.</summary>
+public sealed class CaseRuleException(string message) : InvalidOperationException(message);
 
 [JsonSourceGenerationOptions(WriteIndented = true, UseStringEnumConverter = true)]
 [JsonSerializable(typeof(Case))]
@@ -38,23 +56,41 @@ internal partial class VigilJsonContext : JsonSerializerContext;
 /// <summary>One JSON file per case under a folder (the app's LocalFolder), with an in-memory cache.</summary>
 public sealed class JsonCaseStore : ICaseStore
 {
+    /// <summary>Subfolder that unreadable case files are moved to (see <see cref="SetAside"/>).</summary>
+    public const string DamagedFolder = "damaged";
+
     private readonly string _folder;
     private readonly IFaultInjection _fault;
+    private readonly ILogger? _logger;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private ImmutableDictionary<Guid, Case>? _cache;
     public Signal Changed { get; } = new();
 
     public void Reload() => Notify();
 
-    public JsonCaseStore(string folder, IFaultInjection fault)
+    public IReadOnlyList<string> SetAside { get; private set; } = [];
+
+    public JsonCaseStore(string folder, IFaultInjection fault, ILogger? logger = null)
     {
         _folder = folder;
         _fault = fault;
+        _logger = logger;
     }
 
     public async ValueTask<ImmutableList<Case>> GetAllAsync(CancellationToken ct) => Order(await LoadAsync(ct));
 
-    public async ValueTask<Case?> GetAsync(Guid id, CancellationToken ct) => (await LoadAsync(ct)).GetValueOrDefault(id);
+    public async ValueTask<Case?> GetAsync(Guid id, CancellationToken ct)
+    {
+        if (_fault.RecordDelayMs > 0)
+        {
+            await Task.Delay(_fault.RecordDelayMs, ct);
+        }
+        if (_fault.ConsumeRecordFault())
+        {
+            throw new StoreReadException("This record could not be read (injected fault).");
+        }
+        return (await LoadAsync(ct)).GetValueOrDefault(id);
+    }
 
     public async ValueTask SaveAsync(Case value, CancellationToken ct)
     {
@@ -62,7 +98,7 @@ public sealed class JsonCaseStore : ICaseStore
         try
         {
             var cache = await LoadCoreAsync(ct);
-            if (cache.TryGetValue(value.Id, out var existing) && existing.IsSigned)
+            if (cache.TryGetValue(value.Id, out var existing) && existing.IsSigned && !existing.OnlyFollowUpDiffers(value))
             {
                 throw new SignedRecordException(value.Id);
             }
@@ -87,11 +123,11 @@ public sealed class JsonCaseStore : ICaseStore
             {
                 throw new KeyNotFoundException($"Case {id} does not exist.");
             }
-            if (existing.IsSigned)
+            updated = update(existing);
+            if (existing.IsSigned && !existing.OnlyFollowUpDiffers(updated))
             {
                 throw new SignedRecordException(id);
             }
-            updated = update(existing);
             await WriteAsync(updated, ct);
             _cache = cache.SetItem(id, updated);
         }
@@ -101,6 +137,34 @@ public sealed class JsonCaseStore : ICaseStore
         }
         Notify();
         return updated;
+    }
+
+    public async ValueTask DeleteAsync(Guid id, CancellationToken ct)
+    {
+        await _gate.WaitAsync(ct);
+        try
+        {
+            var cache = await LoadCoreAsync(ct);
+            if (!cache.TryGetValue(id, out var existing))
+            {
+                return;
+            }
+            if (existing.IsSigned)
+            {
+                throw new SignedRecordException(id);
+            }
+            if (_fault.WriteFault)
+            {
+                throw new IOException("The record could not be deleted (injected fault).");
+            }
+            File.Delete(PathOf(id));
+            _cache = cache.Remove(id);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+        Notify();
     }
 
     public async ValueTask ClearAsync(CancellationToken ct)
@@ -114,11 +178,54 @@ public sealed class JsonCaseStore : ICaseStore
                 {
                     File.Delete(file);
                 }
+                if (Directory.Exists(Path.Combine(_folder, DamagedFolder)))
+                {
+                    Directory.Delete(Path.Combine(_folder, DamagedFolder), recursive: true);
+                }
             }
             _cache = ImmutableDictionary<Guid, Case>.Empty;
+            SetAside = [];
         }
         finally
         {
+            _gate.Release();
+        }
+        Notify();
+    }
+
+    public async ValueTask ReplaceAllAsync(IReadOnlyList<Case> cases, CancellationToken ct)
+    {
+        await _gate.WaitAsync(ct);
+        try
+        {
+            var old = Directory.Exists(_folder) ? Directory.GetFiles(_folder, "*.json") : [];
+            var written = new List<string>();
+            try
+            {
+                foreach (var c in cases)
+                {
+                    await WriteAsync(c, ct);
+                    written.Add(PathOf(c.Id));
+                }
+            }
+            catch
+            {
+                // Nothing replaced: take the new files back out and keep the old records.
+                foreach (var file in written.Except(old))
+                {
+                    File.Delete(file);
+                }
+                throw;
+            }
+            foreach (var file in old.Except(written))
+            {
+                File.Delete(file);
+            }
+        }
+        finally
+        {
+            // Read back from disk, whatever happened above.
+            _cache = null;
             _gate.Release();
         }
         Notify();
@@ -170,25 +277,41 @@ public sealed class JsonCaseStore : ICaseStore
         var builder = ImmutableDictionary.CreateBuilder<Guid, Case>();
         if (Directory.Exists(_folder))
         {
-            foreach (var file in Directory.EnumerateFiles(_folder, "*.json"))
+            // ToList: a damaged file moves out of the folder during the loop.
+            foreach (var file in Directory.EnumerateFiles(_folder, "*.json").ToList())
             {
                 ct.ThrowIfCancellationRequested();
-                try
+                if (await ReadAsync(file, ct) is { } c)
                 {
-                    await using var stream = File.OpenRead(file);
-                    if (await JsonSerializer.DeserializeAsync(stream, VigilJsonContext.Default.Case, ct) is { } c)
-                    {
-                        builder[c.Id] = c;
-                    }
-                }
-                catch (JsonException ex)
-                {
-                    throw new StoreReadException($"Saved record {Path.GetFileName(file)} is damaged.", ex);
+                    builder[c.Id] = c;
                 }
             }
         }
         _cache = builder.ToImmutable();
         return _cache;
+    }
+
+    /// <summary>
+    /// One case file. A file that is not a readable case is moved to <see cref="DamagedFolder"/> and skipped, so one bad
+    /// file never keeps the other records from loading (and Retry does not trip over it again).
+    /// </summary>
+    private async ValueTask<Case?> ReadAsync(string file, CancellationToken ct)
+    {
+        try
+        {
+            await using var stream = File.OpenRead(file);
+            return await JsonSerializer.DeserializeAsync(stream, VigilJsonContext.Default.Case, ct);
+        }
+        catch (JsonException ex)
+        {
+            var damaged = Path.Combine(_folder, DamagedFolder);
+            Directory.CreateDirectory(damaged);
+            var target = Path.Combine(damaged, $"{Path.GetFileNameWithoutExtension(file)}-{DateTime.UtcNow:yyyyMMddHHmmss}.json");
+            File.Move(file, target, overwrite: true);
+            SetAside = SetAside.Append(Path.GetFileName(file)).ToArray();
+            _logger?.LogWarning(ex, "Case file {File} could not be read and was moved to {Target}.", file, target);
+            return null;
+        }
     }
 
     private async ValueTask WriteAsync(Case value, CancellationToken ct)
@@ -198,7 +321,7 @@ public sealed class JsonCaseStore : ICaseStore
             throw new IOException("The record could not be saved (injected fault).");
         }
         Directory.CreateDirectory(_folder);
-        var path = Path.Combine(_folder, $"{value.Id:N}.json");
+        var path = PathOf(value.Id);
         var temp = path + ".tmp";
         await using (var stream = File.Create(temp))
         {
@@ -206,6 +329,8 @@ public sealed class JsonCaseStore : ICaseStore
         }
         File.Move(temp, path, overwrite: true);
     }
+
+    private string PathOf(Guid id) => Path.Combine(_folder, $"{id:N}.json");
 
     /// <summary>Incremented on every change notification (observable in tests; the Signal itself is not).</summary>
     public long Version { get; private set; }

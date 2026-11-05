@@ -1,0 +1,166 @@
+<!--
+  Today's "Due next" (BoardPage, BoardModel): the header with the summary and Open agenda, the column heads, and one row
+  per task (time chip, task, status, action). A row opens its patient's record; its button does the task (OpenTask).
+  Below Wide the status column folds under the task; phones tighten the gaps. The FeedView shows a skeleton, "All
+  caught up" with what is next, and an error with Retry (bound by ElementName: ErrorTemplate's DataContext is the exception).
+-->
+<UserControl x:Class="Vigil.Presentation.DueNextView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+             xmlns:mvux="using:Uno.Extensions.Reactive.UI"
+             xmlns:utu="using:Uno.Toolkit.UI"
+             IsTabStop="False">
+  <UserControl.Resources>
+    <!-- Due row hit layer (.row): hover #F8F8F7; opens the patient's record.
+         xaml-lint: allow template - row hover fill under the row content -->
+    <Style x:Key="RowHitButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Grid x:Name="Root" Background="{TemplateBinding Background}">
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                  <VisualState x:Name="Normal" />
+                  <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource Surface2Brush}" /></VisualState.Setters></VisualState>
+                  <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource PageBrush}" /></VisualState.Setters></VisualState>
+                  <VisualState x:Name="Disabled" />
+                </VisualStateGroup>
+              </VisualStateManager.VisualStateGroups>
+            </Grid>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+
+  <StackPanel>
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space16}">
+      <StackPanel>
+        <TextBlock x:Uid="TodayPage_31" Text="Due next" Style="{StaticResource TypeH2Section}" />
+        <TextBlock Text="{Binding DueHeader.Summary}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Margin="{StaticResource GapTop2}" />
+      </StackPanel>
+      <Button x:Uid="TodayPage_32" Grid.Column="1" Style="{StaticResource LinkButton}" Content="Open agenda" Command="{Binding OpenAgenda}" VerticalAlignment="Bottom" />
+    </Grid>
+    <!-- Status (148) from Wide; below it the column is empty (Auto, 0 wide) and the status folds under the task.
+         Phones tighten the gaps so the task keeps ~130 px next to the time chip and the action. -->
+    <Grid Margin="{StaticResource GapTop16}" Padding="{StaticResource GapBottom8}" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space10}, Normal={StaticResource Space16}}">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+      <TextBlock x:Uid="TodayPage_33" Text="Due" Style="{StaticResource TypeCaptionStrong}" />
+      <TextBlock x:Uid="TodayPage_34" Grid.Column="1" Text="Task" Style="{StaticResource TypeCaptionStrong}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1}" />
+      <TextBlock x:Uid="TodayPage_35" Grid.Column="2" Text="Status" Style="{StaticResource TypeCaptionStrong}" Width="{StaticResource DueStatusWidth}" Visibility="{utu:Responsive Narrowest=Collapsed, Wide=Visible}" />
+      <!-- Holds the action column at its 96 px in the header row too. -->
+      <Border Grid.Column="3" Width="{StaticResource DueActionWidth}" />
+    </Grid>
+    <mvux:FeedView x:Name="DueFeed" Source="{Binding DueRows}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch" MinHeight="72">
+      <mvux:FeedView.ValueTemplate>
+        <DataTemplate>
+          <muxc:ItemsRepeater x:Uid="TodayPage_36" ItemsSource="{Binding Data}" AutomationProperties.Name="Due next">
+            <muxc:ItemsRepeater.ItemTemplate>
+              <DataTemplate>
+                <!-- Row: min-h 72, pad 10 8, bleeds 8 px each side, top divider, hover #F8F8F7 -->
+                <Grid Margin="-8,0" MinHeight="72" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
+                  <Button Style="{StaticResource RowHitButton}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenRow}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding AccessibleName}" />
+                  <Grid Padding="{StaticResource DueRowInset}" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space10}, Normal={StaticResource Space16}}">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <!-- Time chip 56 x 46, radius 10 -->
+                    <Grid Width="56" Height="46" HorizontalAlignment="Left" IsHitTestVisible="False">
+                      <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PageBrush}" Stroke="{ThemeResource EdgeBrush}" StrokeThickness="1" Visibility="{Binding IsDue, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PhaseErrorSoftBrush}" Stroke="{ThemeResource PhaseErrorSoftBorderBrush}" StrokeThickness="1" Visibility="{Binding IsLate, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding DueLabel}" Style="{StaticResource TypeMicro}" HorizontalAlignment="Center" Visibility="{Binding IsDue, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                        <TextBlock Text="{Binding DueLabel}" Style="{StaticResource TypeMicro}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseErrorSolidBrush}" HorizontalAlignment="Center" Visibility="{Binding IsLate, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                        <TextBlock Text="{Binding Time}" Style="{StaticResource TypeMonoCell}" HorizontalAlignment="Center" />
+                      </StackPanel>
+                    </Grid>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" IsHitTestVisible="False" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1}">
+                      <TextBlock Text="{Binding Title}" Style="{StaticResource TypeTitleS}" TextTrimming="CharacterEllipsis" />
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
+                        <Grid Width="6" Height="6" VerticalAlignment="Center">
+                          <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding IsAnesthesia, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                          <Ellipse Fill="{ThemeResource PhaseRecoverySolidBrush}" Visibility="{Binding IsRecovery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                          <Ellipse Fill="{ThemeResource PhasePrepSolidBrush}" Visibility="{Binding IsPrep, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                          <Ellipse Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding IsWaiting, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                          <Ellipse Fill="{ThemeResource InkMutedBrush}" Visibility="{Binding IsHome, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                        </Grid>
+                        <TextBlock Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis"><Run Text="{Binding PatientName}" FontWeight="Medium" Foreground="{ThemeResource InkBrush}" /><Run Text=" · " /><Run Text="{Binding Meta}" /></TextBlock>
+                      </StackPanel>
+                      <!-- Below Wide the status column folds under the task -->
+                      <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyS}" Visibility="{utu:Responsive Narrowest=Visible, Wide=Collapsed}" />
+                    </StackPanel>
+                    <Grid Grid.Column="2" Width="{StaticResource DueStatusWidth}" VerticalAlignment="Center" IsHitTestVisible="False" Visibility="{utu:Responsive Narrowest=Collapsed, Wide=Visible}">
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsOverdue, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                        <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource PhaseErrorSolidBrush}" />
+                      </StackPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsReady, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                        <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" />
+                      </StackPanel>
+                      <TextBlock Text="{Binding Status}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding IsNeutral, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                    </Grid>
+                    <Grid Grid.Column="3" MinWidth="{StaticResource DueActionWidth}" HorizontalAlignment="Right" VerticalAlignment="Center">
+                      <Button Style="{StaticResource ButtonPrimaryM}" Visibility="{Binding IsPrimary, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenTask}" CommandParameter="{Binding}">
+                        <TextBlock Text="{Binding ActionLabel}" Style="{StaticResource TypeButtonS}" Foreground="{ThemeResource OnPrimaryInkBrush}" />
+                      </Button>
+                      <Button Style="{StaticResource ButtonSecondaryM}" Visibility="{Binding IsSecondary, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenTask}" CommandParameter="{Binding}">
+                        <TextBlock Text="{Binding ActionLabel}" Style="{StaticResource TypeButtonS}" />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </DataTemplate>
+            </muxc:ItemsRepeater.ItemTemplate>
+          </muxc:ItemsRepeater>
+        </DataTemplate>
+      </mvux:FeedView.ValueTemplate>
+      <mvux:FeedView.ProgressTemplate>
+        <DataTemplate>
+          <StackPanel AutomationProperties.AccessibilityView="Raw">
+            <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
+              <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" />
+              <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="160" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="220" Height="12" /></StackPanel>
+            </Grid>
+            <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
+              <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" />
+              <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="120" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="200" Height="12" /></StackPanel>
+            </Grid>
+            <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0">
+              <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" />
+              <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="140" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="180" Height="12" /></StackPanel>
+            </Grid>
+          </StackPanel>
+        </DataTemplate>
+      </mvux:FeedView.ProgressTemplate>
+      <mvux:FeedView.NoneTemplate>
+        <DataTemplate>
+          <!-- Nothing due: green check tile, "All caught up", what is next -->
+          <Grid MinHeight="72" Padding="{StaticResource InsetY14}" ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
+            <Grid Width="32" Height="32" VerticalAlignment="Center">
+              <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource PhaseAnesthesiaSoftBrush}" Stroke="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" StrokeThickness="1" />
+              <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" />
+            </Grid>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+              <TextBlock x:Uid="TodayPage_37" Text="All caught up" Style="{StaticResource TypeTitleS}" />
+              <TextBlock Text="{Binding DataContext.DueHeader.NextUp, ElementName=DueFeed}" Style="{StaticResource TypeBodyS}" />
+            </StackPanel>
+          </Grid>
+        </DataTemplate>
+      </mvux:FeedView.NoneTemplate>
+      <mvux:FeedView.ErrorTemplate>
+        <DataTemplate>
+          <StackPanel Padding="{StaticResource InsetY14}" Spacing="{StaticResource Space10}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
+            <TextBlock x:Uid="TodayPage_38" Text="Couldn't work out what is due." Style="{StaticResource TypeTitleS}" />
+            <Button x:Uid="TodayPage_39" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=DueFeed}" AutomationProperties.Name="Retry reading records">
+              <TextBlock x:Uid="TodayPage_40" Text="Retry" Style="{StaticResource TypeButtonS}" />
+            </Button>
+          </StackPanel>
+        </DataTemplate>
+      </mvux:FeedView.ErrorTemplate>
+    </mvux:FeedView>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,41 @@
+<!--
+  Shared by the record's drawers (Preop, Dose, Drugs, Monitor, Recovery, History, Labs): the presenter (Toolkit
+  DrawerFlyoutPresenter from the right, RecordDrawerLength, light-dismiss scrim, Escape closes) and the FeedView states
+  every drawer shows while its case loads, after it is deleted, and when it cannot be read. Retry reaches the drawer
+  model through the FeedView (the ErrorTemplate's DataContext is the exception, and a shared template has no ElementName).
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mvux="using:Uno.Extensions.Reactive.UI"
+                    xmlns:utu="using:Uno.Toolkit.UI">
+
+  <Style x:Key="RecordDrawerPresenterStyle" TargetType="FlyoutPresenter" BasedOn="{StaticResource RightDrawerFlyoutPresenterStyle}">
+    <Setter Property="utu:DrawerFlyoutPresenter.DrawerLength" Value="{StaticResource RecordDrawerLength}" />
+    <Setter Property="Background" Value="{ThemeResource BackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource DividerBrush}" />
+    <Setter Property="BorderThickness" Value="1,0,0,0" />
+  </Style>
+
+  <DataTemplate x:Key="DrawerProgressTemplate">
+    <ProgressRing x:Uid="RecordDrawer_1" Width="24" Height="24" Margin="{StaticResource Inset24}" IsActive="True" HorizontalAlignment="Left" VerticalAlignment="Top" AutomationProperties.Name="Loading the record" />
+  </DataTemplate>
+
+  <DataTemplate x:Key="DrawerNoneTemplate">
+    <StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space8}">
+      <TextBlock x:Uid="RecordDrawer_2" Text="This record no longer exists." Style="{StaticResource TypeTitleM}" AutomationProperties.LiveSetting="Polite" />
+      <TextBlock x:Uid="RecordDrawer_3" Text="It may have been cleared from this device." Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+    </StackPanel>
+  </DataTemplate>
+
+  <DataTemplate x:Key="DrawerErrorTemplate">
+    <StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space12}">
+      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
+        <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
+        <TextBlock x:Uid="RecordDrawer_4" Text="Couldn't read this record." Style="{StaticResource TypeTitleM}" AutomationProperties.LiveSetting="Polite" />
+      </StackPanel>
+      <TextBlock x:Uid="RecordDrawer_5" Text="The record file could not be read. Nothing was changed." Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+      <Button x:Uid="RecordDrawer_6" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" Content="Retry" AutomationProperties.Name="Retry reading the record"
+              Command="{utu:AncestorBinding AncestorType=mvux:FeedView, Path=DataContext.Retry}" />
+    </StackPanel>
+  </DataTemplate>
+</ResourceDictionary>

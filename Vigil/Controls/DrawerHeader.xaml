@@ -1,0 +1,15 @@
+<!--
+  A record drawer's header: the pane title (TypeTitleM) and Close (the drawer's own CloseCommand); a divider under it.
+  Escape and a tap on the scrim close the drawer too (the flyout's light dismiss).
+-->
+<UserControl x:Class="Vigil.Controls.DrawerHeader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="Root">
+  <Grid ColumnDefinitions="*,Auto" Padding="{StaticResource Inset24x16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+    <TextBlock Text="{Binding Title, ElementName=Root}" Style="{StaticResource TypeTitleM}" VerticalAlignment="Center" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level1" />
+    <Button x:Uid="DrawerHeader_1" Grid.Column="1" Style="{StaticResource ButtonIconGhost}" Command="{Binding CloseCommand, ElementName=Root}" AutomationProperties.Name="Close panel">
+      <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconX}" />
+    </Button>
+  </Grid>
+</UserControl>

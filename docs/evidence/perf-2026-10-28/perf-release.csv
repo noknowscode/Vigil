@@ -1,0 +1,14 @@
+run,step,page,navigated_ms,loaded_ms,first_frame_ms,settled_ms,elements
+0,startup,BoardPage,,,,14696,1077
+1,Patients,PatientsPage,553,978,1017,1997,525
+1,Settings,SettingsPage,622,1934,2049,3381,325
+1,Agenda,AgendaPage,86,233,268,1137,288
+1,Today,BoardPage,29,81,103,717,1228
+1,Record,RecordPage,292,351,393,1185,519
+1,Today (back),BoardPage,49,81,100,586,1229
+2,Patients,PatientsPage,60,108,115,230,525
+2,Settings,SettingsPage,36,156,225,226,324
+2,Agenda,AgendaPage,187,255,292,675,288
+2,Today,BoardPage,88,281,398,6000,1228
+2,Record,RecordPage,699,800,949,2762,519
+2,Today (back),BoardPage,77,280,398,2304,1228

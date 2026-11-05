@@ -25,6 +25,11 @@ public static class CsvExport
                 Time(d.At), "dose", "", "", "", "", "", "", "", "", "", "", "", "", Q(d.DrugName), D(d.MgPerKg), D(d.VolumeMl), d.Route.ToString(),
                 d.OutOfRangeConfirmed ? "out of range, confirmed" : "")));
         }
+        foreach (var x in c.Corrections)
+        {
+            rows.Add((x.At, string.Join(',',
+                Time(x.At), "correction", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", Q($"{x.Field}: {x.Before} -> {x.After}"))));
+        }
         foreach (var (at, line) in rows.OrderBy(r => r.At))
         {
             sb.AppendLine(line);
@@ -49,6 +54,10 @@ public static class CsvExport
         if (!string.IsNullOrWhiteSpace(r.Notes))
         {
             sb.AppendLine($"Notes: {r.Notes}");
+        }
+        foreach (var x in c.Corrections)
+        {
+            sb.AppendLine($"Corrected {Time(x.At)}: {x.Field} {(x.Before.Length == 0 ? "—" : x.Before)} -> {(x.After.Length == 0 ? "—" : x.After)}");
         }
         sb.AppendLine($"Signed by {c.SignedBy ?? "—"} at {Time(c.SignedAt)}.");
         return sb.ToString();

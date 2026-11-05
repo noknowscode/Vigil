@@ -1,0 +1,18 @@
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "Build an anesthesia record for surgical vet techs in a small-animal hospital, to replace the paper sheet clipped to the anesthesia machine:\n- a Today dashboard with the patient in surgery, how long since induction, when the next reading is due, a timeline of every patient's day and each patient's stage\n- a patient record with the pre-anesthetic check, weight-based doses, vitals every five minutes, medications, labs, medical history and recovery\n- a dose calculator from the patient's weight, with redose reminders\n- the veterinarian's sign-off, a pet-parent view and a CSV export of the record\n- new patients, an agenda, and settings for theme and language\n\nUse MVUX, Navigation Extensions, the Uno Toolkit and Material. Keep the data local and make it bilingual English and French."
+    },
+    {
+      "role": "assistant",
+      "content": "Here's **Vigil**. It's built and running in the preview: the Today dashboard, the patient record with its drawers for vitals, doses and recovery, sign-off and the pet-parent view, in English and French."
+    }
+  ],
+  "suggestedPrompts": [
+    "Add a chart of heart rate and SpO2 over the procedure to the Vitals drawer",
+    "Add a third language",
+    "Add a printable anesthesia sheet for the patient's file",
+    "Let the clinic set its own reading interval in Settings"
+  ]
+}

@@ -50,3 +50,62 @@ while Settings showed), and Create from the `!NewCase` sheet saved the case but 
 the URL stuck at `/Board/NewCase`. For an anesthesia record, browser history must not hold dialog text or
 record routes either.
 Tradeoff: no deep links or browser Back on the web head; the in-app Back (NavigationBar) is the only back path.
+
+## D6. The "Coming soon" controls stay: an exception to "every control functional" (2026-11-01)
+
+Superseded by D7 (2026-11-04): the controls are cut.
+
+Decision: the controls without a screen stay visible and disabled, with a "Coming soon" tooltip and automation
+name: in the sidebar the clinic switcher, Records, Messages, Reports, Help center and the account menu, plus the
+Monitoring pill; in the top bar search and the notification bell; on Today the care-time report button and "See the
+prep checklist". They are the one recorded exception to the production-readiness rule that every visible control
+works.
+Reason: SPEC-v2 user decision 1 (2026-10-28): the sidebar shows every item as designed and items without a screen
+are disabled. The code review of 2026-11-01 asked to hide them, build them or record an exception; the owner kept
+the design.
+Tradeoff: the app advertises features it does not have (docs/COMPLETENESS.md). Building or hiding any of them
+retires its part of this exception.
+
+## D7. The "Coming soon" controls are cut; D6 is superseded (2026-11-04, proposed)
+
+Decision: remove the controls and copy that advertised features Vigil does not have: in the sidebar the clinic
+switcher (with its hard-coded "Clinique Plateau · 2 suites · Montréal"), Records, Messages, Reports, Help center and the
+account menu; the top bar's search field and notification bell (the whole top bar cluster, on Today, Patients, Agenda,
+Settings and the record); on Today the care-time report button. "See the prep checklist" is wired instead of cut: it
+opens the next booked case's record on its Preparation drawer, and it hides when nothing is booked. The "No monitor
+connected" pill stays as a status (no tooltip, no "coming soon" in its name): Vigil has no monitor link, and the pill
+says so.
+Reason: the A-grade plan's owner rule "build small, cut large" (uno-lab docs/production-readiness/A-GRADE-PLAN.md).
+Each of these is a large unbuilt feature (multi-clinic, a records archive, messaging, reporting, help content, accounts,
+search, an alert feed), and a disabled control that promises one counts as a functional Major (docs/COMPLETENESS.md).
+Tradeoff: the sidebar and headers no longer match the v2 design frames (SPEC-v2 decision 1 showed every item). Building
+any of these features brings its control back with it.
+
+## D8. The record's panes are drawers with their own models (2026-11-04)
+
+Decision: the seven panes of the record (Preparation, Administer dose, Medication record, Record observations, Recovery
+and handover, Visit history, Lab results) are `!` routes ("!Preop", "!Dose", "!Drugs", "!Monitor", "!Recovery",
+"!History", "!Labs"), each a Flyout view in the Toolkit's DrawerFlyoutPresenter from the right (640 px, the whole window
+when narrower) with its own model. A drawer that closes on a step for the record (open another pane, Sign off, the case
+details, Delete case) hands it back to RecordModel as a PaneChoice. The Dose drawer shares DoseModel with the Due next
+redose page, whose route is now "Redose". Escape, Close and a tap on the scrim close a drawer, and focus returns to the
+control that opened it (Controls/FlyoutFocus.cs: Uno's flyout left it on the page, measured with --vigil-focuslog).
+RecordModel.OpenPane ends once the drawer shows and follows up on what it hands back, so the buttons that share the
+command stay enabled to take that focus.
+Reason: the approved refactor in docs/UNO-AUDIT.md: RecordModel drove seven panes and RecordPage.xaml was 903 lines,
+with the pane width clamp and focus handling in code-behind. Measured: the Toolkit 11 presenter renders on desktop
+(it did not with Toolkit 9.1.3, MenuFlyout.xaml), and a pixel DrawerLength is min(length, window), the old clamp.
+Tradeoff: a drawer covers the sidebar with a scrim, where the SplitView pane sat beside it; a save failure shows in the
+drawer's own Not saved bar.
+
+## D9. Case details stay correctable until sign-off, and every correction is logged (2026-11-04, proposed)
+
+Decision: Edit case details (Preparation drawer, until the record is signed) reopens the case form filled from the
+case: patient (name, species, breed, weight, age, owner), procedure, team and schedule. Each changed detail is kept as a
+correction (time, detail, before, after) in the case, listed in Visit history and exported in the CSV and the summary.
+What was recorded never changes: readings, doses with the volume drawn up at the time, stage, recovery. Everything
+calculated from the case follows the correction: the dose calculator and its reference range, the vitals alarms for
+the species, Today's timeline.
+Reason: a weight mistyped at booking drives every dose and could not be corrected once the case was under anesthesia
+(docs/COMPLETENESS.md, Data Major). "Build small, cut large": the form already existed.
+Tradeoff: no per-field reason or second signature for a correction; the signed record stays read-only.
