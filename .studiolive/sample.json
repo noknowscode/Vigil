@@ -10,12 +10,12 @@
     "ios"
   ],
   "sourcePath": "Vigil/Vigil.csproj",
-  "iconUrl": "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/icon.png",
+  "iconUrl": "https://raw.githubusercontent.com/noknowscode/Vigil/studio/.studiolive/icon.png",
   "screenshots": [
-    "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/screenshots/today-desktop.png",
-    "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/screenshots/record-desktop.png",
-    "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/screenshots/today-phone.png",
-    "https://raw.githubusercontent.com/unoplatform/Uno.Samples/master/studio/vigil/.studiolive/screenshots/record-phone.png"
+    "https://raw.githubusercontent.com/noknowscode/Vigil/studio/.studiolive/screenshots/today-desktop.png",
+    "https://raw.githubusercontent.com/noknowscode/Vigil/studio/.studiolive/screenshots/record-desktop.png",
+    "https://raw.githubusercontent.com/noknowscode/Vigil/studio/.studiolive/screenshots/today-phone.png",
+    "https://raw.githubusercontent.com/noknowscode/Vigil/studio/.studiolive/screenshots/record-phone.png"
   ],
   "showcase": {
     "summary": "An anesthesia record for veterinary technicians: doses, vitals every five minutes, recovery and sign-off, local-first and bilingual.",
