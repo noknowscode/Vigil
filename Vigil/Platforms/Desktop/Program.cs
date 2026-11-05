@@ -17,7 +17,7 @@ internal class Program
             {
                 if (Environment.GetEnvironmentVariable("VIGIL_X11_RENDERER") == "software")
                 {
-                    x11.ForceRenderingBackend(X11RenderingBackend.Software);
+                    x11.RenderingBackend(X11RenderingBackend.Software);
                 }
             })
 #else
