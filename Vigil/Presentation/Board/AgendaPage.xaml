@@ -135,7 +135,7 @@
                   <Button Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" AutomationProperties.Name="{Binding Data.AccessibleName}">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space100}">
                       <TextBlock Text="{Binding Data.OpenLabel}" />
-                      <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconArrowRight}" VerticalAlignment="Center" />
+                      <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconArrowRight}" Foreground="{ThemeResource OnPrimaryBrush}" VerticalAlignment="Center" />
                     </StackPanel>
                   </Button>
                 </StackPanel>
