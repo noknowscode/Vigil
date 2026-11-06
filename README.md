@@ -40,7 +40,14 @@ Drug concentrations, dose ranges and alarm thresholds are sample reference data,
   - the shell's sections are region routes;
   - each record pane is a `!` route opened in the Uno Toolkit's `DrawerFlyoutPresenter`;
   - a sidebar shows on desktop, and a menu drawer on phones.
-- **Material** theme with a custom token set, in light and dark.
+- **Material** (`MaterialToolkitTheme`), light and dark, with the look taken from the theme so Uno Platform Studio's
+  Themes tab drives it:
+  - the design's colours are the palette (`Vigil/Styles/ColorPaletteOverride.xaml`, all 33 roles in Light and Default),
+    and screens use the role brushes (`OnSurfaceBrush`, `SurfaceBrush`, `OutlineVariantBrush`, `PrimaryBrush`,
+    `ErrorBrush`...);
+  - the care stages and vital-sign series, which have no role, are the only other colours (`App.xaml`);
+  - text uses the semantic type styles at the design's sizes (`Vigil/Styles/Typography.xaml`, Hanken Grotesk as
+    `DefaultFontFamily`), spacing and corners the theme's `Space*` and `Radius*` tokens.
 - **Localization:** English and French `.resw` tables, written by `tools/localize.py`.
 
 ## Try it
@@ -72,7 +79,7 @@ and drawer model) live in the development repository, [noknowscode/Vigil](https:
 | `Vigil/Domain/` | case records, dosing, the vitals schedule, care stages, the CSV export, the sample day |
 | `Vigil/Services/` | the JSON case store, preferences, the record exporter, the clock, the formulary, the crash reporter |
 | `Vigil/Presentation/` | the shell, Today and Agenda, Patients, the record and its drawers, Dose, Sign-off, the case form, the pet-parent view, Settings |
-| `Vigil/Themes/`, `Vigil/Styles/` | tokens, type ramp and the Material colour override |
+| `Vigil/Styles/`, `Vigil/Themes/` | the palette override, the type scale, layout values, icons and the control styles |
 | `Vigil/Strings/` | English and French string tables |
 | `docs/` | decisions, the completeness audit, the uno-audit, design notes and evidence |
 | `.studiolive/` | the showcase info file, the Studio agent context and conversation, the icon and screenshots |

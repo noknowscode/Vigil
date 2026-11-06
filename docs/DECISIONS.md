@@ -109,3 +109,22 @@ the species, Today's timeline.
 Reason: a weight mistyped at booking drives every dose and could not be corrected once the case was under anesthesia
 (docs/COMPLETENESS.md, Data Major). "Build small, cut large": the form already existed.
 Tradeoff: no per-field reason or second signature for a correction; the signed record stays read-only.
+
+## D10. The look comes from the Material theme, so Studio's Themes tab drives it (2026-11-06)
+
+Decision: Vigil keeps MaterialToolkitTheme, Light and Dark, and takes every look value from it. The design's colour
+table is the palette override (Vigil/Styles/ColorPaletteOverride.xaml, all 33 roles in Light and Default) and screens
+use the role brushes: ink OnSurface, ink-muted OnSurfaceVariant, page Background, surface-1 Surface, track and chip
+greys SurfaceVariant, the 3:1 form-field edge Outline, card edges and dividers OutlineVariant, the brand Primary, alerts
+and overdue the Error roles with their On pairs. The care stages and vital-sign series have no role and are App.xaml's
+only other colours. Text uses the semantic type styles at the design's sizes (Vigil/Styles/Typography.xaml; Hanken
+Grotesk is the theme's DefaultFontFamily, figures use the Numeral* styles in Martian Mono); spacing and corners use the
+theme's Space* and Radius* tokens (Space100 = 8, Radius100 = 4), heights ControlHeight*. The care ruler, drawn in code,
+takes brush properties that its implicit style binds to roles. Themes/Tokens.xaml, Styles/VitalsPalette.xaml and the
+hand-made gap and radius scales are gone.
+Reason: Studio's Themes tab edits the palette, and app-defined brushes and tokens outrank the theme, so a palette edit
+did not reach the screen (Studio's uno-themes skill; the theming rules shared by the Uno samples, 2026-11-05).
+Tradeoff: values off the token scale moved to the nearest step (gaps 14 to 12, radii 10 to 12, 18 to 16, 22 to 20, 26
+to 28); the tri-tone card edge is one OutlineVariant line; the primary button's hover is the OnPrimary state layer
+instead of a darker green; the Today hero's glass and gantt tracks use Surface at reduced opacity, darker in Dark than
+the white glass they replace.
