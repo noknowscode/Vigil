@@ -34,14 +34,14 @@
     <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled">
       <StackPanel Padding="{StaticResource SheetInsetFlush}" Spacing="{StaticResource Space16}">
         <StackPanel Spacing="{StaticResource Space6}" Margin="{StaticResource GapBottom8}">
-          <TextBlock Text="{Binding Heading}" Style="{StaticResource TypeDisplayTitle}" AutomationProperties.HeadingLevel="Level1" />
-          <TextBlock Text="{Binding Intro}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
-          <TextBlock Text="{Binding Note}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Visibility="{Binding HasNote, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+          <TextBlock Text="{Binding Heading}" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level1" />
+          <TextBlock Text="{Binding Intro}" Style="{StaticResource BodyLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+          <TextBlock Text="{Binding Note}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Visibility="{Binding HasNote, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
         </StackPanel>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="{StaticResource Space14}">
-            <TextBlock x:Uid="NewCase_4" Style="{StaticResource TypeEyebrow}" Text="PATIENT" />
+            <TextBlock x:Uid="NewCase_4" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="PATIENT" />
             <TextBox x:Uid="NewCase_5" Header="Name"
                      Text="{Binding Draft.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Patient name" />
@@ -79,7 +79,7 @@
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="{StaticResource Space14}">
-            <TextBlock x:Uid="NewCase_14" Style="{StaticResource TypeEyebrow}" Text="PROCEDURE" />
+            <TextBlock x:Uid="NewCase_14" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="PROCEDURE" />
             <TextBox x:Uid="NewCase_15" Header="Procedure"
                      Text="{Binding Draft.Procedure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Procedure" />
@@ -98,8 +98,8 @@
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="{StaticResource Space14}">
             <StackPanel Spacing="{StaticResource Space4}">
-              <TextBlock x:Uid="NewCase_18" Style="{StaticResource TypeEyebrow}" Text="SCHEDULE" />
-              <TextBlock x:Uid="NewCase_19" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+              <TextBlock x:Uid="NewCase_18" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="SCHEDULE" />
+              <TextBlock x:Uid="NewCase_19" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card." />
             </StackPanel>
             <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto">
@@ -132,13 +132,13 @@
 
     <StackPanel Grid.Row="2" Padding="{StaticResource SheetInset}" Spacing="{StaticResource Space12}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
       <StackPanel Spacing="{StaticResource Space4}" Visibility="{Binding HasErrors, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
-        <TextBlock x:Uid="NewCase_25" Style="{StaticResource TypeBodyS}"
+        <TextBlock x:Uid="NewCase_25" Style="{StaticResource BodySmall}"
                    Foreground="{ThemeResource ErrorBrush}"
                    TextWrapping="WrapWholeWords"
                    Text="{Binding ErrorText}"
                    AutomationProperties.LiveSetting="Assertive"
                    AutomationProperties.Name="Form errors" />
-        <TextBlock Style="{StaticResource TypeBodyS}"
+        <TextBlock Style="{StaticResource BodySmall}"
                    Foreground="{ThemeResource ErrorBrush}"
                    TextWrapping="WrapWholeWords"
                    Text="{Binding SaveError}" />

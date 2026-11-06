@@ -16,17 +16,17 @@
     </Grid.ColumnDefinitions>
 
     <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="{StaticResource Space6}">
-      <TextBlock Style="{StaticResource TypeEyebrow}"
+      <TextBlock Style="{StaticResource CaptionLarge}" FontWeight="SemiBold"
                  Foreground="{Binding GlyphBrush, ElementName=Root}"
                  Text="{Binding Glyph, ElementName=Root}" />
-      <TextBlock Style="{StaticResource TypeEyebrow}"
+      <TextBlock Style="{StaticResource CaptionLarge}" FontWeight="SemiBold"
                  Foreground="{ThemeResource OnSurfaceBrush}"
                  Text="{Binding Label, ElementName=Root}" />
-      <TextBlock Style="{StaticResource TypeCaptionStrong}"
+      <TextBlock Style="{StaticResource CaptionLarge}" FontWeight="SemiBold"
                  Foreground="{ThemeResource OnSurfaceVariantBrush}"
                  VerticalAlignment="Bottom"
                  Text="{Binding Unit, ElementName=Root}" />
-      <TextBlock Style="{StaticResource TypeEyebrow}"
+      <TextBlock Style="{StaticResource CaptionLarge}" FontWeight="SemiBold"
                  Foreground="{ThemeResource ErrorBrush}"
                  Text="{Binding Flag, ElementName=Root}"
                  AutomationProperties.LiveSetting="Polite" />
@@ -50,8 +50,8 @@
              MinHeight="{StaticResource StepperTarget}"
              TextAlignment="Center"
              VerticalContentAlignment="Center"
-             FontFamily="{StaticResource FontMono}"
-             FontSize="{StaticResource StepperValueFontSize}"
+             FontFamily="{StaticResource NumeralFontFamily}"
+             FontSize="{StaticResource TitleMediumFontSize}"
              InputScope="Number"
              Text="{Binding Text, ElementName=Root, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
              AutomationProperties.Name="{Binding AccessibleName, ElementName=Root}" />

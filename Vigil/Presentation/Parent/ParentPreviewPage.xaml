@@ -17,9 +17,9 @@
       <utu:NavigationBar.Content>
         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center">
           <controls:CareMark Width="20" Height="23" />
-          <TextBlock x:Uid="ParentPreview_1" Text="clover" Style="{StaticResource TypeBrand}" />
+          <TextBlock x:Uid="ParentPreview_1" Text="clover" Style="{StaticResource TitleLarge}" Foreground="{ThemeResource PrimaryBrush}" />
           <!-- xaml-lint: allow card - 20 px audience badge, display-only -->
-          <Border Style="{StaticResource BadgeNeutral}" VerticalAlignment="Center" Margin="{StaticResource GapStart8}"><TextBlock x:Uid="ParentPreview_2" Text="For you" Style="{StaticResource TypeCaptionStrong}" /></Border>
+          <Border Style="{StaticResource BadgeNeutral}" VerticalAlignment="Center" Margin="{StaticResource GapStart8}"><TextBlock x:Uid="ParentPreview_2" Text="For you" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></Border>
         </StackPanel>
       </utu:NavigationBar.Content>
       <utu:NavigationBar.MainCommand>
@@ -32,7 +32,7 @@
       <StackPanel MaxWidth="{StaticResource PhonePreviewMaxWidth}" Padding="{StaticResource PreviewBodyInset}" Spacing="{StaticResource Space16}">
         <!-- xaml-lint: allow card - one-line notice pill, display-only -->
         <Border Style="{StaticResource PillSurface}" HorizontalAlignment="Center">
-          <TextBlock x:Uid="ParentPreview_4" Text="Clinic preview · remote sharing is not connected" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextAlignment="Center" TextWrapping="WrapWholeWords" />
+          <TextBlock x:Uid="ParentPreview_4" Text="Clinic preview · remote sharing is not connected" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextAlignment="Center" TextWrapping="WrapWholeWords" />
         </Border>
         <mvux:FeedView x:Name="ParentFeed" Source="{Binding Patient}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch">
           <mvux:FeedView.ValueTemplate><DataTemplate>
@@ -45,19 +45,19 @@
                     <Rectangle RadiusX="{StaticResource RectRadius19}" RadiusY="{StaticResource RectRadius19}" Visibility="{Binding Data.HasPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                       <Rectangle.Fill><ImageBrush ImageSource="{Binding Data.Photo}" Stretch="UniformToFill" /></Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock Text="{Binding Data.Initial}" Style="{StaticResource TypeDisplayTitleL}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Data.HasNoPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                    <TextBlock Text="{Binding Data.Initial}" Style="{StaticResource DisplayMedium}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Data.HasNoPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                     <!-- xaml-lint: allow card - status pill over the photo, display-only -->
                     <Border Style="{StaticResource PillSurface}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="{StaticResource Inset12}">
                       <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                         <Ellipse Width="6" Height="6" Fill="{ThemeResource AnesthesiaBrush}" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding Data.Status}" Style="{StaticResource TypeCaptionStrong}" />
+                        <TextBlock Text="{Binding Data.Status}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                       </StackPanel>
                     </Border>
                   </Grid>
                   <StackPanel Padding="{StaticResource PreviewCardInset}" Spacing="{StaticResource Space6}">
-                    <TextBlock Text="{Binding Data.Name}" Style="{StaticResource TypeDisplayTitle}" />
-                    <TextBlock Text="{Binding Data.Breed}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
-                    <TextBlock Text="{Binding Data.Updated}" Style="{StaticResource TypeMonoMeta}" />
+                    <TextBlock Text="{Binding Data.Name}" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" />
+                    <TextBlock Text="{Binding Data.Breed}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                    <TextBlock Text="{Binding Data.Updated}" Style="{StaticResource NumeralCaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                   </StackPanel>
                 </StackPanel>
               </utu:CardContentControl>
@@ -65,46 +65,46 @@
               <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
                 <StackPanel Spacing="{StaticResource Space12}">
                   <Grid ColumnDefinitions="*,Auto">
-                    <TextBlock x:Uid="ParentPreview_5" Text="A little closer, even apart." Style="{StaticResource TypeH3Card}" />
+                    <TextBlock x:Uid="ParentPreview_5" Text="A little closer, even apart." Style="{StaticResource BodyLarge}" FontWeight="SemiBold" />
                     <controls:CareMark Grid.Column="1" Width="16" Height="18" VerticalAlignment="Center" />
                   </Grid>
-                  <TextBlock Text="{Binding Data.Description}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+                  <TextBlock Text="{Binding Data.Description}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
                   <ItemsControl ItemsSource="{Binding Data.Milestones}">
                     <ItemsControl.ItemTemplate><DataTemplate>
                       <Grid ColumnDefinitions="28,*,Auto" Padding="{StaticResource InsetY12}" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0">
                         <!-- xaml-lint: allow card - 28 px milestone marker disc -->
                         <Border Width="28" Height="28" CornerRadius="{StaticResource Radius14}" Background="{ThemeResource AnesthesiaContainerBrush}" VerticalAlignment="Top">
-                          <TextBlock Text="{Binding Marker}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding Marker}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}">
-                          <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyStrong}" TextWrapping="WrapWholeWords" />
-                          <TextBlock Text="{Binding Detail}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+                          <TextBlock Text="{Binding Label}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" TextWrapping="WrapWholeWords" />
+                          <TextBlock Text="{Binding Detail}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
                         </StackPanel>
-                        <TextBlock Grid.Column="2" Text="{Binding Time}" Style="{StaticResource TypeMonoMeta}" />
+                        <TextBlock Grid.Column="2" Text="{Binding Time}" Style="{StaticResource NumeralCaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                       </Grid>
                     </DataTemplate></ItemsControl.ItemTemplate>
                   </ItemsControl>
-                  <TextBlock x:Uid="ParentPreview_6" Text="Milestones are entered by the team. This is not a live monitor." Style="{StaticResource TypeCaption}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+                  <TextBlock x:Uid="ParentPreview_6" Text="Milestones are entered by the team. This is not a live monitor." Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
               </utu:CardContentControl>
 
               <utu:CardContentControl Style="{StaticResource PanelCardStyle}" Background="{ThemeResource AnesthesiaContainerBrush}" BorderBrush="{ThemeResource AnesthesiaOutlineBrush}">
                 <StackPanel Spacing="{StaticResource Space8}">
-                  <TextBlock x:Uid="ParentPreview_7" Text="WHAT HAPPENS NEXT" Style="{StaticResource TypeEyebrow}" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" />
-                  <TextBlock x:Uid="ParentPreview_8" Text="One step at a time." Style="{StaticResource TypeTitleM}" />
-                  <TextBlock Text="{Binding Data.Next}" Style="{StaticResource TypeBody}" TextWrapping="WrapWholeWords" />
+                  <TextBlock x:Uid="ParentPreview_7" Text="WHAT HAPPENS NEXT" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" />
+                  <TextBlock x:Uid="ParentPreview_8" Text="One step at a time." Style="{StaticResource TitleSmall}" />
+                  <TextBlock Text="{Binding Data.Next}" Style="{StaticResource BodyMedium}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
               </utu:CardContentControl>
 
               <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
                 <StackPanel Spacing="{StaticResource Space8}">
-                  <TextBlock x:Uid="ParentPreview_9" Text="Your visit and care team" Style="{StaticResource TypeH3Card}" />
-                  <TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TypeBodyStrong}" TextWrapping="WrapWholeWords" />
-                  <TextBlock Text="{Binding Data.Team}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
-                  <TextBlock x:Uid="ParentPreview_10" Text="For a personal update, contact your clinic using the details on your appointment confirmation." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+                  <TextBlock x:Uid="ParentPreview_9" Text="Your visit and care team" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" TextWrapping="WrapWholeWords" />
+                  <TextBlock Text="{Binding Data.Team}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+                  <TextBlock x:Uid="ParentPreview_10" Text="For a personal update, contact your clinic using the details on your appointment confirmation." Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
               </utu:CardContentControl>
-              <TextBlock x:Uid="ParentPreview_11" Text="Care, continued. For the ones you love." Style="{StaticResource TypeCaption}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextAlignment="Center" Margin="{StaticResource InsetY8}" />
+              <TextBlock x:Uid="ParentPreview_11" Text="Care, continued. For the ones you love." Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextAlignment="Center" Margin="{StaticResource InsetY8}" />
             </StackPanel>
           </DataTemplate></mvux:FeedView.ValueTemplate>
           <mvux:FeedView.ProgressTemplate><DataTemplate>
@@ -113,10 +113,10 @@
               <Rectangle Style="{StaticResource Skeleton}" HorizontalAlignment="Stretch" Height="200" RadiusX="{StaticResource RectRadius18}" RadiusY="{StaticResource RectRadius18}" />
             </StackPanel>
           </DataTemplate></mvux:FeedView.ProgressTemplate>
-          <mvux:FeedView.NoneTemplate><DataTemplate><TextBlock x:Uid="ParentPreview_12" Text="This visit is no longer available on this device." Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" /></DataTemplate></mvux:FeedView.NoneTemplate>
+          <mvux:FeedView.NoneTemplate><DataTemplate><TextBlock x:Uid="ParentPreview_12" Text="This visit is no longer available on this device." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" /></DataTemplate></mvux:FeedView.NoneTemplate>
           <mvux:FeedView.ErrorTemplate><DataTemplate>
             <StackPanel Spacing="{StaticResource Space12}">
-              <TextBlock x:Uid="ParentPreview_13" Text="Care updates could not be loaded." Style="{StaticResource TypeH3Card}" />
+              <TextBlock x:Uid="ParentPreview_13" Text="Care updates could not be loaded." Style="{StaticResource BodyLarge}" FontWeight="SemiBold" />
               <Button x:Uid="ParentPreview_14" Content="Try again" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=ParentFeed}" />
             </StackPanel>
           </DataTemplate></mvux:FeedView.ErrorTemplate>

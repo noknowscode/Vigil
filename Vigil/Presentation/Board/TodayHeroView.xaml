@@ -40,7 +40,7 @@
       <Setter Property="BorderThickness" Value="1" />
     </Style>
 
-    <Style x:Key="GanttName" TargetType="TextBlock" BasedOn="{StaticResource TypeBodyS}">
+    <Style x:Key="GanttName" TargetType="TextBlock" BasedOn="{StaticResource BodySmall}">
       <Setter Property="LineHeight" Value="16" />
       <Setter Property="FontWeight" Value="Medium" />
       <Setter Property="Foreground" Value="{ThemeResource OnSurfaceBrush}" />
@@ -56,12 +56,12 @@
             <Ellipse Fill="{ThemeResource ErrorBrush}" Visibility="{Binding IsError, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
             <Ellipse Fill="{ThemeResource OnSurfaceVariantBrush}" Visibility="{Binding IsMuted, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
           </Grid>
-          <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" />
+          <TextBlock Text="{Binding Label}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
         </StackPanel>
         <!-- Phones: the 16 px mono step, so a time still fits a third of the live card. -->
-        <TextBlock Text="{Binding Value}" Style="{utu:Responsive Narrowest={StaticResource TypeMonoValueS}, Normal={StaticResource TypeMonoValue}}" Visibility="{Binding IsMono, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" TextTrimming="CharacterEllipsis" />
-        <TextBlock Text="{Binding Value}" Style="{StaticResource TypeTitleS}" LineHeight="26" Visibility="{Binding IsText, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" TextTrimming="CharacterEllipsis" />
-        <TextBlock Text="{Binding Sub}" Style="{StaticResource TypeCaption}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Text="{Binding Value}" Style="{utu:Responsive Narrowest={StaticResource NumeralBodyLarge}, Normal={StaticResource NumeralTitleSmall}}" Visibility="{Binding IsMono, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Text="{Binding Value}" Style="{StaticResource LabelLarge}" LineHeight="26" Visibility="{Binding IsText, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Text="{Binding Sub}" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextTrimming="CharacterEllipsis" />
       </StackPanel>
     </DataTemplate>
 
@@ -120,27 +120,27 @@
                         </Grid>
                       </Grid>
                       <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding Data.Title}" Style="{StaticResource TypeTitleS}" TextTrimming="CharacterEllipsis" />
-                        <TextBlock Text="{Binding Data.Subtitle}" Style="{StaticResource TypeBodyS}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Data.Title}" Style="{StaticResource LabelLarge}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Data.Subtitle}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextTrimming="CharacterEllipsis" />
                       </StackPanel>
                       <Button x:Uid="TodayPage_1" Grid.Column="{utu:Responsive Narrowest=1, Normal=2}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" Style="{StaticResource ButtonPrimaryS}" VerticalAlignment="Center" Visibility="{Binding Data.IsLive, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}"
                               Command="{Binding Parent.OpenRecord}" CommandParameter="{Binding Data}" AutomationProperties.Name="Record observations">
                         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
-                          <TextBlock x:Uid="TodayPage_2" Text="Record" Style="{StaticResource TypeButtonS}" Foreground="{ThemeResource OnPrimaryBrush}" VerticalAlignment="Center" />
+                          <TextBlock x:Uid="TodayPage_2" Text="Record" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource OnPrimaryBrush}" VerticalAlignment="Center" />
                           <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnPrimaryBrush}" VerticalAlignment="Center" />
                         </StackPanel>
                       </Button>
                       <Button Grid.Column="{utu:Responsive Narrowest=1, Normal=2}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" HorizontalAlignment="Left" Style="{StaticResource ButtonSecondaryS}" VerticalAlignment="Center" Visibility="{Binding Data.CanStartPrep, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}"
                               Command="{Binding Parent.StartPrep}" CommandParameter="{Binding Data}">
-                        <TextBlock x:Uid="TodayPage_3" Text="Start prep" Style="{StaticResource TypeButtonS}" VerticalAlignment="Center" />
+                        <TextBlock x:Uid="TodayPage_3" Text="Start prep" Style="{StaticResource LabelMedium}" VerticalAlignment="Center" />
                       </Button>
                     </Grid>
                     <!-- Timer row: margin-top 14, baseline-aligned caption -->
                     <!-- Phones put the caption under the timer: side by side they need ~280 px. -->
                     <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space12}" Margin="{StaticResource GapTop14}">
-                      <TextBlock Text="{Binding Data.Timer}" Style="{StaticResource TypeMonoHero}" />
+                      <TextBlock Text="{Binding Data.Timer}" Style="{StaticResource NumeralDisplayLarge}" />
                       <!-- 11 px: the caption's baseline on the timer's (optical, as the prototype's align-items: baseline). -->
-                      <TextBlock Text="{Binding Data.TimerCaption}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis"
+                      <TextBlock Text="{Binding Data.TimerCaption}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis"
                                  Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Margin="{utu:Responsive Narrowest='0', Normal='0,0,0,11'}" />
                     </Grid>
                     <!-- Chip row: margin-top 8 -->
@@ -148,20 +148,20 @@
                       <Border Style="{StaticResource ChipErrorSoft}" Visibility="{Binding Data.ShowErrorChip, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                           <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource OnErrorContainerBrush}" VerticalAlignment="Center" />
-                          <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource OnErrorContainerBrush}" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource BodySmall}" FontWeight="SemiBold" Foreground="{ThemeResource OnErrorContainerBrush}" VerticalAlignment="Center" />
                         </StackPanel>
                       </Border>
                       <Border Style="{StaticResource ChipLiveSoft}" Height="26" Padding="{StaticResource InsetX8}" Visibility="{Binding Data.ShowReadyChip, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
                           <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" VerticalAlignment="Center" />
-                          <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource BodySmall}" FontWeight="SemiBold" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" VerticalAlignment="Center" />
                         </StackPanel>
                       </Border>
                       <Border Style="{StaticResource BadgeNeutral}" Height="26" Visibility="{Binding Data.ShowNeutralChip, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
-                        <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Data.ChipText}" Style="{StaticResource BodySmall}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" />
                       </Border>
                       <!-- One chip shows at a time (they share the first cell); the note trims. -->
-                      <TextBlock Grid.Column="1" Text="{Binding Data.ChipNote}" Style="{StaticResource TypeBodyS}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="1" Text="{Binding Data.ChipNote}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
                     </Grid>
                     <!-- Stats: margin-top 16, pad-top 14, top divider; 2 and 3 have a left divider + 16 -->
                     <Grid Margin="{StaticResource GapTop16}" Padding="{StaticResource GapTop14}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0" ColumnDefinitions="*,*,*" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space8}, Normal={StaticResource Space16}}">
@@ -198,8 +198,8 @@
             <Border Style="{StaticResource GlassEdge}" Background="{ThemeResource SurfaceLowBrush}">
               <Border Style="{StaticResource LiveCardSurface}" MinHeight="287">
                 <StackPanel VerticalAlignment="Center" Spacing="{StaticResource Space6}" AutomationProperties.LiveSetting="Polite">
-                  <TextBlock x:Uid="TodayPage_4" Text="Nothing in surgery" Style="{StaticResource TypeTitleS}" />
-                  <TextBlock x:Uid="TodayPage_5" Text="No surgery is running and none is booked for later today." Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+                  <TextBlock x:Uid="TodayPage_4" Text="Nothing in surgery" Style="{StaticResource LabelLarge}" />
+                  <TextBlock x:Uid="TodayPage_5" Text="No surgery is running and none is booked for later today." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
               </Border>
             </Border>
@@ -212,10 +212,10 @@
                 <StackPanel VerticalAlignment="Center" Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
                   <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                     <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
-                    <TextBlock x:Uid="TodayPage_6" Text="Couldn't read the case in surgery." Style="{StaticResource TypeTitleS}" />
+                    <TextBlock x:Uid="TodayPage_6" Text="Couldn't read the case in surgery." Style="{StaticResource LabelLarge}" />
                   </StackPanel>
                   <Button x:Uid="TodayPage_7" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=HeroFeed}" AutomationProperties.Name="Retry reading records">
-                    <TextBlock x:Uid="TodayPage_8" Text="Retry" Style="{StaticResource TypeButtonS}" />
+                    <TextBlock x:Uid="TodayPage_8" Text="Retry" Style="{StaticResource LabelMedium}" />
                   </Button>
                 </StackPanel>
               </Border>
@@ -232,15 +232,15 @@
         <mvux:FeedView.ValueTemplate>
           <DataTemplate>
             <StackPanel Padding="{StaticResource TimelineInset}">
-              <TextBlock x:Uid="TodayPage_9" Text="Under care today" Style="{StaticResource TypeBodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
-              <TextBlock Text="{Binding Data.TotalText}" Style="{StaticResource TypeMonoStat}" Margin="{StaticResource GapTop2}" />
-              <TextBlock Text="{Binding Data.DayLine}" Style="{StaticResource TypeBodyS}" Margin="{StaticResource GapTop4}" />
+              <TextBlock x:Uid="TodayPage_9" Text="Under care today" Style="{StaticResource BodyMedium}" FontWeight="Medium" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+              <TextBlock Text="{Binding Data.TotalText}" Style="{StaticResource NumeralHeadlineSmall}" Margin="{StaticResource GapTop2}" />
+              <TextBlock Text="{Binding Data.DayLine}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="{StaticResource GapTop4}" />
               <StackPanel Margin="{StaticResource GapTop14}" AutomationProperties.Name="{Binding Data.AccessibleName}">
                 <!-- Now pill: 20 px, radius 6, ink ground, centred on now -->
                 <controls:SpanPanel Margin="56,0,0,0" Height="22">
                   <!-- xaml-lint: allow card - 20 px "Now" pill, display-only -->
                   <Border controls:SpanPanel.Start="{Binding Data.NowFraction}" Height="20" Padding="{StaticResource InsetX6}" CornerRadius="{StaticResource Radius6}" Background="{ThemeResource SurfaceInverseBrush}" VerticalAlignment="Top">
-                    <TextBlock Text="{Binding Data.NowText}" Style="{StaticResource TypeMonoAxis}" Foreground="{ThemeResource OnSurfaceInverseBrush}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Data.NowText}" Style="{StaticResource NumeralLabelSmall}" Foreground="{ThemeResource OnSurfaceInverseBrush}" VerticalAlignment="Center" />
                   </Border>
                 </controls:SpanPanel>
                 <Grid>
@@ -267,15 +267,15 @@
                 </Grid>
                 <!-- Axis labels: margin-top 6, Martian Mono 11/16 -->
                 <ItemsControl Margin="56,6,0,0" Height="16" ItemsSource="{Binding Data.Ticks}" ItemsPanel="{StaticResource SpanLabelItems}" IsTabStop="False">
-                  <ItemsControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding Label}" Style="{StaticResource TypeMonoAxis}" /></DataTemplate></ItemsControl.ItemTemplate>
+                  <ItemsControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding Label}" Style="{StaticResource NumeralLabelSmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></DataTemplate></ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <!-- Legend: margin T14 L56 (under the tracks), gap 16. Phones start it at the edge and wrap it onto two rows (three, then two). -->
                 <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space10}, Normal={StaticResource Space16}}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space6}, Normal=0}" Margin="{utu:Responsive Narrowest={StaticResource GapTop14}, Normal='56,14,0,0'}">
-                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource PrepBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_10" Text="Prep" Style="{StaticResource TypeCaption}" /></StackPanel>
-                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=1, Normal=1}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource AnesthesiaBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_11" Text="Anesthesia" Style="{StaticResource TypeCaption}" /></StackPanel>
-                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=2, Normal=2}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource RecoveryBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_12" Text="Recovery" Style="{StaticResource TypeCaption}" /></StackPanel>
-                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=0, Normal=3}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource WaitingBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_13" Text="Waiting" Style="{StaticResource TypeCaption}" /></StackPanel>
-                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=1, Normal=4}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"><Rectangle Width="14" Height="8" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PlannedHatchBrush}" Stroke="{ThemeResource OutlineVariantBrush}" StrokeThickness="0.5" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_14" Text="Planned" Style="{StaticResource TypeCaption}" /></StackPanel>
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource PrepBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_10" Text="Prep" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></StackPanel>
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=1, Normal=1}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource AnesthesiaBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_11" Text="Anesthesia" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></StackPanel>
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=2, Normal=2}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource RecoveryBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_12" Text="Recovery" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></StackPanel>
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=0, Normal=3}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"><Ellipse Width="8" Height="8" Fill="{ThemeResource WaitingBrush}" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_13" Text="Waiting" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></StackPanel>
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Grid.Column="{utu:Responsive Narrowest=1, Normal=4}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}"><Rectangle Width="14" Height="8" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PlannedHatchBrush}" Stroke="{ThemeResource OutlineVariantBrush}" StrokeThickness="0.5" VerticalAlignment="Center" /><TextBlock x:Uid="TodayPage_14" Text="Planned" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></StackPanel>
                 </Grid>
               </StackPanel>
             </StackPanel>
@@ -294,18 +294,18 @@
         <mvux:FeedView.NoneTemplate>
           <DataTemplate>
             <StackPanel Padding="{StaticResource TimelineInset}" Spacing="{StaticResource Space4}" AutomationProperties.LiveSetting="Polite">
-              <TextBlock x:Uid="TodayPage_15" Text="Under care today" Style="{StaticResource TypeBodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
-              <TextBlock x:Uid="TodayPage_16" Text="0h 0m" Style="{StaticResource TypeMonoStat}" />
-              <TextBlock x:Uid="TodayPage_17" Text="No care recorded yet today. The timeline fills in as patients are prepared." Style="{StaticResource TypeBodyS}" TextWrapping="WrapWholeWords" />
+              <TextBlock x:Uid="TodayPage_15" Text="Under care today" Style="{StaticResource BodyMedium}" FontWeight="Medium" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+              <TextBlock x:Uid="TodayPage_16" Text="0h 0m" Style="{StaticResource NumeralHeadlineSmall}" />
+              <TextBlock x:Uid="TodayPage_17" Text="No care recorded yet today. The timeline fills in as patients are prepared." Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
             </StackPanel>
           </DataTemplate>
         </mvux:FeedView.NoneTemplate>
         <mvux:FeedView.ErrorTemplate>
           <DataTemplate>
             <StackPanel Padding="{StaticResource TimelineInset}" Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
-              <TextBlock x:Uid="TodayPage_18" Text="Couldn't build today's timeline." Style="{StaticResource TypeTitleS}" />
+              <TextBlock x:Uid="TodayPage_18" Text="Couldn't build today's timeline." Style="{StaticResource LabelLarge}" />
               <Button x:Uid="TodayPage_19" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=TimelineFeed}" AutomationProperties.Name="Retry reading records">
-                <TextBlock x:Uid="TodayPage_20" Text="Retry" Style="{StaticResource TypeButtonS}" />
+                <TextBlock x:Uid="TodayPage_20" Text="Retry" Style="{StaticResource LabelMedium}" />
               </Button>
             </StackPanel>
           </DataTemplate>

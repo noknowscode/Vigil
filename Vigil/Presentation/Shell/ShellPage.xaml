@@ -37,7 +37,7 @@
               </Button>
               <ContentControl Grid.Column="1" Style="{StaticResource FilledIcon}" Width="22" Height="22" Content="{StaticResource IconLogo}" VerticalAlignment="Center" />
               <!-- -4: the wordmark's side bearing, so the gap reads as the sidebar's 10 px (optical). -->
-              <TextBlock x:Uid="Shell_2" Grid.Column="2" Text="clover" Style="{StaticResource TypeBrand}" Margin="-4,0,0,0" VerticalAlignment="Center" />
+              <TextBlock x:Uid="Shell_2" Grid.Column="2" Text="clover" Style="{StaticResource TitleLarge}" Foreground="{ThemeResource PrimaryBrush}" Margin="-4,0,0,0" VerticalAlignment="Center" />
             </Grid>
             <!-- Case files the store could not read were set aside and every other record loaded: say so, without blocking.
                  Closing it collapses it, margin included. -->

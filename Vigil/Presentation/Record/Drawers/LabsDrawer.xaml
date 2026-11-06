@@ -24,16 +24,16 @@
         <DataTemplate>
           <ScrollViewer HorizontalScrollMode="Disabled">
             <StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space16}">
-              <TextBlock x:Uid="LabsDrawer_4" Text="Lab panels for this visit" Style="{StaticResource TypeH2Section}" />
-              <TextBlock x:Uid="LabsDrawer_5" Text="Vigil tracks which panels are pending, ready and reviewed. The reports and their values stay in your lab system." Style="{StaticResource TypeBodyMuted}" TextWrapping="WrapWholeWords" />
-              <TextBlock x:Uid="LabsDrawer_6" Text="No lab panels for this visit." Style="{StaticResource TypeBodyMuted}" Visibility="{Binding Data.HasNoLabs, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+              <TextBlock x:Uid="LabsDrawer_4" Text="Lab panels for this visit" Style="{StaticResource TitleMedium}" />
+              <TextBlock x:Uid="LabsDrawer_5" Text="Vigil tracks which panels are pending, ready and reviewed. The reports and their values stay in your lab system." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+              <TextBlock x:Uid="LabsDrawer_6" Text="No lab panels for this visit." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Visibility="{Binding Data.HasNoLabs, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
               <ItemsControl x:Uid="LabsDrawer_7" ItemsSource="{Binding Data.LabRows}" AutomationProperties.Name="Lab panels">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate x:DataType="local:LabRow">
                     <Grid Padding="{StaticResource InsetY10}" ColumnSpacing="{StaticResource Space16}" ColumnDefinitions="*,Auto" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
                       <StackPanel Spacing="{StaticResource Space2}" VerticalAlignment="Center">
-                        <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{x:Bind Panel}" />
-                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind StateText}" />
+                        <TextBlock Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" Text="{x:Bind Panel}" />
+                        <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind StateText}" />
                       </StackPanel>
                       <Button x:Uid="LabsDrawer_8" Grid.Column="1" Style="{StaticResource ButtonSecondaryL}" Content="Mark reviewed" Visibility="{x:Bind IsReady}" VerticalAlignment="Center"
                               Command="{utu:AncestorBinding AncestorType=mvux:FeedView, Path=DataContext.ReviewLab}" CommandParameter="{x:Bind Panel}" AutomationProperties.Name="Mark the panel reviewed" />

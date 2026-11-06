@@ -55,7 +55,7 @@
       <Button x:Uid="RecordNav_1" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="Preop" AutomationProperties.Name="Preparation">
         <Grid ColumnDefinitions="18,*">
           <ContentControl x:Name="PreopIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconClipboardCheck}" />
-          <TextBlock x:Uid="RecordNav_2" Grid.Column="1" Text="Preparation" Style="{StaticResource TypeBodyMedium}" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
+          <TextBlock x:Uid="RecordNav_2" Grid.Column="1" Text="Preparation" Style="{StaticResource BodyMedium}" FontWeight="Medium" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
         </Grid>
       </Button>
     </Grid>
@@ -67,7 +67,7 @@
       <Button x:Uid="RecordNav_3" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="Monitor" AutomationProperties.Name="Vitals">
         <Grid ColumnDefinitions="18,*">
           <ContentControl x:Name="MonitorIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconActivity}" />
-          <TextBlock x:Uid="RecordNav_4" Grid.Column="1" Text="Vitals" Style="{StaticResource TypeBodyMedium}" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
+          <TextBlock x:Uid="RecordNav_4" Grid.Column="1" Text="Vitals" Style="{StaticResource BodyMedium}" FontWeight="Medium" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
         </Grid>
       </Button>
     </Grid>
@@ -79,7 +79,7 @@
       <Button x:Uid="RecordNav_5" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="History" AutomationProperties.Name="Medical history">
         <Grid ColumnDefinitions="18,*">
           <ContentControl x:Name="HistoryIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconHistory}" />
-          <TextBlock x:Uid="RecordNav_6" Grid.Column="1" Text="Medical history" Style="{StaticResource TypeBodyMedium}" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
+          <TextBlock x:Uid="RecordNav_6" Grid.Column="1" Text="Medical history" Style="{StaticResource BodyMedium}" FontWeight="Medium" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
         </Grid>
       </Button>
     </Grid>
@@ -91,7 +91,7 @@
       <Button x:Uid="RecordNav_7" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="Labs" AutomationProperties.Name="Lab results">
         <Grid ColumnDefinitions="18,*">
           <ContentControl x:Name="LabsIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconFlaskConical}" />
-          <TextBlock x:Uid="RecordNav_8" Grid.Column="1" Text="Lab results" Style="{StaticResource TypeBodyMedium}" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
+          <TextBlock x:Uid="RecordNav_8" Grid.Column="1" Text="Lab results" Style="{StaticResource BodyMedium}" FontWeight="Medium" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
         </Grid>
       </Button>
     </Grid>
@@ -103,7 +103,7 @@
       <Button x:Uid="RecordNav_9" Style="{StaticResource NavItemButtonStyle}" Command="{Binding Parent.OpenPane}" CommandParameter="Drugs" AutomationProperties.Name="Medications">
         <Grid ColumnDefinitions="18,*">
           <ContentControl x:Name="DrugsIcon" Style="{StaticResource LineIcon18}" Content="{StaticResource IconPill}" />
-          <TextBlock x:Uid="RecordNav_10" Grid.Column="1" Text="Medications" Style="{StaticResource TypeBodyMedium}" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
+          <TextBlock x:Uid="RecordNav_10" Grid.Column="1" Text="Medications" Style="{StaticResource BodyMedium}" FontWeight="Medium" Margin="{StaticResource GapStart12}" VerticalAlignment="Center" />
         </Grid>
       </Button>
     </Grid>

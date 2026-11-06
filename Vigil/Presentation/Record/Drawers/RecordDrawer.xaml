@@ -22,8 +22,8 @@
 
   <DataTemplate x:Key="DrawerNoneTemplate">
     <StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space8}">
-      <TextBlock x:Uid="RecordDrawer_2" Text="This record no longer exists." Style="{StaticResource TypeTitleM}" AutomationProperties.LiveSetting="Polite" />
-      <TextBlock x:Uid="RecordDrawer_3" Text="It may have been cleared from this device." Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+      <TextBlock x:Uid="RecordDrawer_2" Text="This record no longer exists." Style="{StaticResource TitleSmall}" AutomationProperties.LiveSetting="Polite" />
+      <TextBlock x:Uid="RecordDrawer_3" Text="It may have been cleared from this device." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
     </StackPanel>
   </DataTemplate>
 
@@ -31,9 +31,9 @@
     <StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space12}">
       <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
         <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
-        <TextBlock x:Uid="RecordDrawer_4" Text="Couldn't read this record." Style="{StaticResource TypeTitleM}" AutomationProperties.LiveSetting="Polite" />
+        <TextBlock x:Uid="RecordDrawer_4" Text="Couldn't read this record." Style="{StaticResource TitleSmall}" AutomationProperties.LiveSetting="Polite" />
       </StackPanel>
-      <TextBlock x:Uid="RecordDrawer_5" Text="The record file could not be read. Nothing was changed." Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+      <TextBlock x:Uid="RecordDrawer_5" Text="The record file could not be read. Nothing was changed." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
       <Button x:Uid="RecordDrawer_6" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" Content="Retry" AutomationProperties.Name="Retry reading the record"
               Command="{utu:AncestorBinding AncestorType=mvux:FeedView, Path=DataContext.Retry}" />
     </StackPanel>

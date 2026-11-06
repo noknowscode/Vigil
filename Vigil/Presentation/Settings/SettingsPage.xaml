@@ -14,8 +14,8 @@
       <!-- No Spacing here: the closed bar is collapsed, and a spaced StackPanel still charges a gap for it on Uno. -->
       <StackPanel>
         <StackPanel Spacing="{StaticResource Space8}">
-          <TextBlock x:Uid="Settings_1" Text="Settings" Style="{StaticResource TypeDisplayTitle}" />
-          <TextBlock x:Uid="Settings_2" Text="Preferences for this device. Records and settings stay on it." Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+          <TextBlock x:Uid="Settings_1" Text="Settings" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" />
+          <TextBlock x:Uid="Settings_2" Text="Preferences for this device. Records and settings stay on it." Style="{StaticResource BodyLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
         </StackPanel>
         <!-- A preference the device could not write (it still applies until the app closes). The capped star column
              keeps the bar as wide as the cards below, left-aligned. -->
@@ -31,8 +31,8 @@
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="{StaticResource Space14}">
             <StackPanel Spacing="{StaticResource Space4}">
-              <TextBlock x:Uid="Settings_3" Style="{StaticResource TypeH3Card}" Text="You" />
-              <TextBlock x:Uid="Settings_4" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+              <TextBlock x:Uid="Settings_3" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="You" />
+              <TextBlock x:Uid="Settings_4" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="Today greets you as Dr. Okafor and the sidebar shows your initials. Leave both empty for a plain greeting." />
             </StackPanel>
             <!-- Phones stack the two names; from Normal they share a row. -->
@@ -45,7 +45,7 @@
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="{StaticResource Space14}">
-            <TextBlock x:Uid="Settings_7" Style="{StaticResource TypeH3Card}" Text="Appearance" />
+            <TextBlock x:Uid="Settings_7" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Appearance" />
             <muxc:RadioButtons x:Uid="Settings_8" Header="Theme" MaxColumns="{utu:Responsive Narrowest=1, Normal=3}" SelectedIndex="{Binding ThemeIndex, Mode=TwoWay}">
               <RadioButton x:Uid="Settings_9" Content="System" />
               <RadioButton x:Uid="Settings_10" Content="Light" />
@@ -54,8 +54,8 @@
             <!-- Material's ToggleSwitch drops its Header: the label is its own text, the switch carries the name. -->
             <Grid ColumnSpacing="{StaticResource Space16}" ColumnDefinitions="*,Auto" Padding="{StaticResource GapTop14}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
               <StackPanel Spacing="{StaticResource Space2}" VerticalAlignment="Center">
-                <TextBlock x:Uid="Settings_12" Style="{StaticResource TypeBodyStrong}" Text="Reduce motion" />
-                <TextBlock x:Uid="Settings_13" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+                <TextBlock x:Uid="Settings_12" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Text="Reduce motion" />
+                <TextBlock x:Uid="Settings_13" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                            Text="Card details, the live pulse and new chart columns appear without animating." />
               </StackPanel>
               <ToggleSwitch x:Uid="Settings_14" Grid.Column="1" OnContent="" OffContent=""
@@ -67,14 +67,14 @@
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="{StaticResource Space14}">
-            <TextBlock x:Uid="Settings_15" Style="{StaticResource TypeH3Card}" Text="Language" />
+            <TextBlock x:Uid="Settings_15" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Language" />
             <StackPanel>
               <muxc:RadioButtons x:Uid="Settings_16" Header="Language (applies after restart)" MaxColumns="2" SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}">
                 <RadioButton x:Uid="Settings_17" Content="English" />
                 <RadioButton x:Uid="Settings_18" Content="Français" />
               </muxc:RadioButtons>
               <!-- Shown once the language changes (applies at the next start). -->
-              <TextBlock Style="{StaticResource TypeBodyS}" Text="{Binding LanguageNotice}" Visibility="{Binding HasLanguageNotice, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" AutomationProperties.LiveSetting="Polite" />
+              <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{Binding LanguageNotice}" Visibility="{Binding HasLanguageNotice, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" AutomationProperties.LiveSetting="Polite" />
             </StackPanel>
           </StackPanel>
         </utu:CardContentControl>
@@ -82,8 +82,8 @@
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="{StaticResource Space14}">
             <StackPanel Spacing="{StaticResource Space4}">
-              <TextBlock x:Uid="Settings_19" Style="{StaticResource TypeH3Card}" Text="Monitoring" />
-              <TextBlock x:Uid="Settings_20" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+              <TextBlock x:Uid="Settings_19" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Monitoring" />
+              <TextBlock x:Uid="Settings_20" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="The next reading falls due one interval after the last one. The due slot turns yellow 30 seconds before, red when late." />
             </StackPanel>
             <muxc:RadioButtons x:Uid="Settings_21" Header="Reading interval" MaxColumns="3" SelectedIndex="{Binding IntervalIndex, Mode=TwoWay}">
@@ -95,7 +95,7 @@
             <StackPanel Spacing="{StaticResource Space6}" Padding="{StaticResource GapTop14}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
               <TextBox x:Uid="Settings_30" Header="Planned prep (minutes)" InputScope="Number" MaxLength="3" MaxWidth="{StaticResource ShortFieldMaxWidth}" HorizontalAlignment="Left"
                        Text="{Binding PlannedPrepMinutes, Mode=TwoWay}" AutomationProperties.Name="Planned preparation time per case, in minutes" />
-              <TextBlock x:Uid="Settings_31" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+              <TextBlock x:Uid="Settings_31" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="Preparation starts this long before a booked case's planned start, unless the case sets its own. Today's care-time insight compares against it." />
             </StackPanel>
           </StackPanel>
@@ -104,19 +104,19 @@
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="{StaticResource Space14}">
             <StackPanel Spacing="{StaticResource Space4}">
-              <TextBlock x:Uid="Settings_25" Style="{StaticResource TypeH3Card}" Text="Records on this device" />
-              <TextBlock x:Uid="Settings_26" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+              <TextBlock x:Uid="Settings_25" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Records on this device" />
+              <TextBlock x:Uid="Settings_26" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="Records are stored on this device only. They are not synced to other devices or to the practice management system: export each signed record from its Recovery pane." />
             </StackPanel>
             <StackPanel Orientation="{utu:Responsive Narrowest=Vertical, Normal=Horizontal}" Spacing="{StaticResource Space8}">
               <Button x:Uid="Settings_27" Style="{StaticResource ButtonSecondaryM}" Content="Load sample day" Command="{Binding LoadSampleDay}" />
               <Button x:Uid="Settings_28" Style="{StaticResource ButtonSecondaryM}" Content="Clear all records" Command="{Binding ClearAll}" />
             </StackPanel>
-            <TextBlock Style="{StaticResource TypeBodyS}" Text="{Binding Notice}" AutomationProperties.LiveSetting="Polite" />
+            <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{Binding Notice}" AutomationProperties.LiveSetting="Polite" />
           </StackPanel>
         </utu:CardContentControl>
 
-        <TextBlock x:Uid="Settings_29" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+        <TextBlock x:Uid="Settings_29" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                    Text="Clover is an Uno Platform reference app. Drug concentrations, dose ranges and alarm thresholds are sample reference data, not for clinical use." />
       </StackPanel>
     </StackPanel>

@@ -45,7 +45,7 @@
                     <SymbolIcon Symbol="Accept" VerticalAlignment="Center" />
                     <StackPanel Orientation="{utu:Responsive Narrowest=Vertical, Normal=Horizontal}" Spacing="{utu:Responsive Narrowest=0, Normal={StaticResource Space12}}" VerticalAlignment="Center">
                       <TextBlock x:Uid="VitalsDrawer_5" Text="Record reading" />
-                      <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource OnPrimaryBrush}" Text="{Binding Parent.Timers.ClockText}" VerticalAlignment="Center" />
+                      <TextBlock Style="{StaticResource NumeralBodyMedium}" Foreground="{ThemeResource OnPrimaryBrush}" Text="{Binding Parent.Timers.ClockText}" VerticalAlignment="Center" />
                     </StackPanel>
                   </StackPanel>
                 </Button>
@@ -74,7 +74,7 @@
                   <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_14" Grid.Row="{utu:Responsive Narrowest=8, Normal=4}" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Field="Vaporizer" Label="Sevo" Unit="%" Glyph="" GlyphBrush="{ThemeResource OnSurfaceVariantBrush}" SpokenName="vaporizer setting, percent" Text="{Binding Parent.Draft.Vaporizer, Mode=TwoWay}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
                   <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_15" Grid.Row="{utu:Responsive Narrowest=9, Normal=4}" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Field="O2" Label="O₂" Unit="L/min" Glyph="" GlyphBrush="{ThemeResource OnSurfaceVariantBrush}" SpokenName="oxygen flow, litres per minute" Text="{Binding Parent.Draft.O2, Mode=TwoWay}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
                 </Grid>
-                <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords">
+                <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords">
                   <Run x:Uid="VitalsDrawer_16" Text="MAP left blank is derived as (SYS + 2·DIA) / 3:" />
                   <Run Text="{Binding Parent.Flags.MapHint}" />
                 </TextBlock>

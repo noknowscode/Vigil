@@ -192,21 +192,21 @@
                       <Rectangle RadiusX="{StaticResource RectRadius12}" RadiusY="{StaticResource RectRadius12}" Visibility="{Binding HasPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                         <Rectangle.Fill><ImageBrush ImageSource="{Binding Photo}" Stretch="Uniform" /></Rectangle.Fill>
                       </Rectangle>
-                      <TextBlock Text="{Binding Initials}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnSurfaceVariantBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasNoPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <TextBlock Text="{Binding Initials}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasNoPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                     </Grid>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space12}">
-                        <TextBlock Text="{Binding Name}" Style="{StaticResource TypeH3CardName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Name}" Style="{StaticResource TitleMedium}" LineHeight="24" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                         <Border Grid.Column="1" Style="{StaticResource BadgeOutline}" Visibility="{Binding AsaKnown, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center">
-                          <TextBlock Text="{Binding Asa}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding Asa}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" />
                         </Border>
                         <!-- dashed-pending badge: no fill, 1 px dashed #A3A6AE -->
                         <Grid Grid.Column="1" Height="24" Visibility="{Binding AsaPending, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center">
                           <Rectangle RadiusX="{StaticResource RectRadius8}" RadiusY="{StaticResource RectRadius8}" Stroke="{ThemeResource OutlineBrush}" StrokeThickness="1" StrokeDashArray="3,2" />
-                          <TextBlock Text="{Binding Asa}" Style="{StaticResource TypeCaptionStrong}" Margin="9,0" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding Asa}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="9,0" VerticalAlignment="Center" />
                         </Grid>
                       </Grid>
-                      <TextBlock Text="{Binding Sub}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{Binding Sub}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextTrimming="CharacterEllipsis" />
                     </StackPanel>
                   </Grid>
                 </utu:ShadowContainer>
@@ -217,26 +217,26 @@
                   <Grid Style="{StaticResource DetailRow}" ColumnDefinitions="Auto,*">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center">
                       <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconStethoscope}" />
-                      <TextBlock x:Uid="PatientCard_2" Text="Procedure" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                      <TextBlock x:Uid="PatientCard_2" Text="Procedure" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Text="{Binding Procedure}" Style="{StaticResource TypeBodyMedium}" TextWrapping="WrapWholeWords" TextAlignment="Right" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="{Binding Procedure}" Style="{StaticResource BodyMedium}" FontWeight="Medium" TextWrapping="WrapWholeWords" TextAlignment="Right" VerticalAlignment="Center" />
                   </Grid>
                   <Grid Style="{StaticResource DetailRow}" ColumnDefinitions="Auto,*" Padding="{StaticResource InsetX14}">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center">
                       <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconWeight}" />
-                      <TextBlock x:Uid="PatientCard_3" Text="Weight" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                      <TextBlock x:Uid="PatientCard_3" Text="Weight" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                     </StackPanel>
                     <Border Grid.Column="1" Style="{StaticResource BadgeNeutral}" HorizontalAlignment="Right" VerticalAlignment="Center">
-                      <TextBlock Text="{Binding Weight}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" />
+                      <TextBlock Text="{Binding Weight}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" />
                     </Border>
                   </Grid>
                   <Grid Style="{StaticResource DetailRow}" ColumnDefinitions="Auto,*" Padding="{StaticResource InsetX14}" BorderThickness="0">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center">
                       <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconUserRound}" />
-                      <TextBlock x:Uid="PatientCard_4" Text="Pet parent" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                      <TextBlock x:Uid="PatientCard_4" Text="Pet parent" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                     </StackPanel>
                     <Border Grid.Column="1" Style="{StaticResource BadgeNeutral}" HorizontalAlignment="Right" VerticalAlignment="Center">
-                      <TextBlock Text="{Binding Owner}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                      <TextBlock Text="{Binding Owner}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                     </Border>
                   </Grid>
                 </StackPanel>
@@ -259,7 +259,7 @@
                         </Ellipse>
                         <Ellipse x:Name="StripDot" Width="8" Height="8" StrokeThickness="1.5" Fill="Transparent" Stroke="{ThemeResource OutlineBrush}" />
                       </Grid>
-                      <TextBlock x:Name="StripLabel" Text="{Binding StripLabel}" Style="{StaticResource TypeMonoLabel}" VerticalAlignment="Center" />
+                      <TextBlock x:Name="StripLabel" Text="{Binding StripLabel}" Style="{StaticResource NumeralCaptionLarge}" VerticalAlignment="Center" />
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{StaticResource Space12}" VerticalAlignment="Center">
                       <!-- Recorded heart rate, last 12 readings (SPEC-v2 decision 3: not a decorative ECG). -->
@@ -269,8 +269,8 @@
                         <Path Data="{Binding Sparkline}" Stroke="{ThemeResource AnesthesiaBrush}" StrokeThickness="1.6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                       </Grid>
                       </Grid>
-                      <TextBlock Text="{Binding StripValue}" Style="{StaticResource TypeMonoTimerCard}" Visibility="{Binding StripIsClock, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center" />
-                      <TextBlock Text="{Binding StripValue}" Style="{StaticResource TypeBodyMedium}" Visibility="{Binding StripIsText, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center" />
+                      <TextBlock Text="{Binding StripValue}" Style="{StaticResource NumeralTitleMedium}" Visibility="{Binding StripIsClock, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center" />
+                      <TextBlock Text="{Binding StripValue}" Style="{StaticResource BodyMedium}" FontWeight="Medium" Visibility="{Binding StripIsText, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center" />
                     </StackPanel>
                   </Grid>
                 </Grid>
@@ -300,16 +300,16 @@
                     </Grid>
                   </Grid>
                   <Grid ColumnSpacing="{StaticResource Space3}" ColumnDefinitions="*,*,*,*,*">
-                    <TextBlock x:Uid="PatientCard_5" x:Name="Step0" Text="Booked" Style="{StaticResource TypeCaption}" FontWeight="Medium" HorizontalAlignment="Center" />
-                    <TextBlock x:Uid="PatientCard_6" x:Name="Step1" Grid.Column="1" Text="Prep" Style="{StaticResource TypeCaption}" FontWeight="Medium" HorizontalAlignment="Center" />
-                    <TextBlock x:Uid="PatientCard_7" x:Name="Step2" Grid.Column="2" Text="Surgery" Style="{StaticResource TypeCaption}" FontWeight="Medium" HorizontalAlignment="Center" />
-                    <TextBlock x:Uid="PatientCard_8" x:Name="Step3" Grid.Column="3" Text="Recovery" Style="{StaticResource TypeCaption}" FontWeight="Medium" HorizontalAlignment="Center" />
-                    <TextBlock x:Uid="PatientCard_9" x:Name="Step4" Grid.Column="4" Text="Home" Style="{StaticResource TypeCaption}" FontWeight="Medium" HorizontalAlignment="Center" />
+                    <TextBlock x:Uid="PatientCard_5" x:Name="Step0" Text="Booked" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" FontWeight="Medium" HorizontalAlignment="Center" />
+                    <TextBlock x:Uid="PatientCard_6" x:Name="Step1" Grid.Column="1" Text="Prep" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" FontWeight="Medium" HorizontalAlignment="Center" />
+                    <TextBlock x:Uid="PatientCard_7" x:Name="Step2" Grid.Column="2" Text="Surgery" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" FontWeight="Medium" HorizontalAlignment="Center" />
+                    <TextBlock x:Uid="PatientCard_8" x:Name="Step3" Grid.Column="3" Text="Recovery" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" FontWeight="Medium" HorizontalAlignment="Center" />
+                    <TextBlock x:Uid="PatientCard_9" x:Name="Step4" Grid.Column="4" Text="Home" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" FontWeight="Medium" HorizontalAlignment="Center" />
                   </Grid>
                 </StackPanel>
 
                 <!-- Team line (opens with the details, 160 ms later) -->
-                <TextBlock x:Name="Team" Text="{Binding Team}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="{StaticResource CardBodyInset}" TextWrapping="WrapWholeWords" Visibility="Collapsed">
+                <TextBlock x:Name="Team" Text="{Binding Team}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="{StaticResource CardBodyInset}" TextWrapping="WrapWholeWords" Visibility="Collapsed">
                   <TextBlock.RenderTransform><TranslateTransform x:Name="TeamSlide" /></TextBlock.RenderTransform>
                 </TextBlock>
               </StackPanel>
@@ -318,7 +318,7 @@
                       Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.ToggleDetails}" CommandParameter="{Binding}"
                       AutomationProperties.Name="{Binding ToggleText}">
                 <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
-                  <TextBlock Text="{Binding ToggleText}" Style="{StaticResource TypeBodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding ToggleText}" Style="{StaticResource BodyMedium}" FontWeight="Medium" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
                   <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconChevronDown}" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                     <ContentControl.RenderTransform><RotateTransform x:Name="ChevronTurn" /></ContentControl.RenderTransform>
                   </ContentControl>

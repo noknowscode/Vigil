@@ -52,17 +52,6 @@
   <!-- Inset: photo frames, the shadow ink at 20 % in both themes (the prototype's rgba(0,0,0,.2)). -->
   <utu:ShadowCollection x:Key="ShadowInsetPhoto"><utu:Shadow IsInner="True" OffsetY="1" BlurRadius="3" Opacity="0.2" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
 
-  <!-- Fonts (§1). Weights resolve through the .ttf.manifest files (static instances per weight). -->
-  <FontFamily x:Key="FontSans">ms-appx:///Assets/Fonts/HankenGrotesk.ttf#Hanken Grotesk</FontFamily>
-  <FontFamily x:Key="FontMono">ms-appx:///Assets/Fonts/MartianMono.ttf#Martian Mono</FontFamily>
-  <!-- Tracked copies (tools/track_fonts.py): the prototype's negative letter-spacing baked into the advance widths,
-       because Skia ignores CharacterSpacing. Txx = -0.0xx em. -->
-  <FontFamily x:Key="FontMonoT50">ms-appx:///Assets/Fonts/MartianMonoT50.ttf#Vigil Mono T50</FontFamily>
-  <FontFamily x:Key="FontMonoT30">ms-appx:///Assets/Fonts/MartianMonoT30.ttf#Vigil Mono T30</FontFamily>
-  <FontFamily x:Key="FontMonoT20">ms-appx:///Assets/Fonts/MartianMonoT20.ttf#Vigil Mono T20</FontFamily>
-  <FontFamily x:Key="FontSerifT20">ms-appx:///Assets/Fonts/NewsreaderT20.ttf#Vigil Serif T20</FontFamily>
-  <FontFamily x:Key="FontSerifT15">ms-appx:///Assets/Fonts/NewsreaderT15.ttf#Vigil Serif T15</FontFamily>
-  <FontFamily x:Key="FontSansT20">ms-appx:///Assets/Fonts/HankenGroteskT20.ttf#Vigil Sans T20</FontFamily>
 
   <!-- Radii (§3) -->
   <CornerRadius x:Key="Radius3">3</CornerRadius>
@@ -84,62 +73,6 @@
   <!-- Page frame (§7): content padding inside the frame's scroll area (CSS main padding 36 40 40 40). -->
   <Thickness x:Key="FramePadding">40,36,40,40</Thickness>
 
-  <!-- Type ramp (§1), named by role. CharacterSpacing is a no-op on Skia: tracked roles use the FontXxxTnn copies. -->
-  <Style x:Key="TypeBase" TargetType="TextBlock">
-    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
-    <Setter Property="FontWeight" Value="Normal" />
-    <Setter Property="Foreground" Value="{ThemeResource OnSurfaceBrush}" />
-    <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
-    <Setter Property="TextWrapping" Value="NoWrap" />
-  </Style>
-  <Style x:Key="TypeDisplayTitleL" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
-    <Setter Property="FontFamily" Value="{StaticResource FontSerifT20}" />
-    <Setter Property="FontSize" Value="56" />
-    <Setter Property="LineHeight" Value="60" />
-  </Style>
-  <Style x:Key="TypeDisplayTitle" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
-    <Setter Property="FontFamily" Value="{StaticResource FontSerifT15}" />
-    <Setter Property="FontSize" Value="40" />
-    <Setter Property="LineHeight" Value="46" />
-    <Setter Property="TextWrapping" Value="WrapWholeWords" />
-  </Style>
-  <Style x:Key="TypeMono" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
-    <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
-    <Setter Property="FontWeight" Value="Medium" />
-  </Style>
-  <Style x:Key="TypeMonoHero" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT50}" /><Setter Property="FontSize" Value="64" /><Setter Property="LineHeight" Value="68" /></Style>
-  <Style x:Key="TypeMonoHeroS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT50}" /><Setter Property="FontSize" Value="56" /><Setter Property="LineHeight" Value="60" /></Style>
-  <Style x:Key="TypeMonoVital" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT50}" /><Setter Property="FontSize" Value="48" /><Setter Property="LineHeight" Value="52" /></Style>
-  <Style x:Key="TypeMonoStatL" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT30}" /><Setter Property="FontSize" Value="30" /><Setter Property="LineHeight" Value="36" /></Style>
-  <Style x:Key="TypeMonoStat" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT30}" /><Setter Property="FontSize" Value="28" /><Setter Property="LineHeight" Value="32" /></Style>
-  <Style x:Key="TypeMonoStatS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT30}" /><Setter Property="FontSize" Value="24" /><Setter Property="LineHeight" Value="30" /></Style>
-  <Style x:Key="TypeMonoTimerCard" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontFamily" Value="{StaticResource FontMonoT20}" /><Setter Property="FontSize" Value="20" /><Setter Property="LineHeight" Value="24" /></Style>
-  <Style x:Key="TypeMonoValue" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="18" /><Setter Property="LineHeight" Value="26" /></Style>
-  <Style x:Key="TypeMonoValueS" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="16" /><Setter Property="LineHeight" Value="22" /></Style>
-  <Style x:Key="TypeMonoCell" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="14" /><Setter Property="LineHeight" Value="18" /></Style>
-  <Style x:Key="TypeMonoNum" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="13" /><Setter Property="LineHeight" Value="18" /></Style>
-  <Style x:Key="TypeMonoLabel" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="12" /><Setter Property="LineHeight" Value="16" /></Style>
-  <Style x:Key="TypeMonoMeta" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="12" /><Setter Property="LineHeight" Value="18" /><Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" /></Style>
-  <Style x:Key="TypeMonoAxis" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="11" /><Setter Property="LineHeight" Value="16" /><Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" /></Style>
-  <Style x:Key="TypeMonoChart" TargetType="TextBlock" BasedOn="{StaticResource TypeMono}"><Setter Property="FontSize" Value="10" /><Setter Property="LineHeight" Value="12" /><Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" /></Style>
-  <Style x:Key="TypeBrand" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}">
-    <Setter Property="FontFamily" Value="{StaticResource FontSansT20}" /><Setter Property="FontSize" Value="24" /><Setter Property="LineHeight" Value="28" /><Setter Property="FontWeight" Value="Medium" />
-    <Setter Property="Foreground" Value="{ThemeResource PrimaryBrush}" />
-  </Style>
-  <Style x:Key="TypeH2Section" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="20" /><Setter Property="LineHeight" Value="28" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
-  <Style x:Key="TypeH3CardName" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="20" /><Setter Property="LineHeight" Value="24" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
-  <Style x:Key="TypeTitleM" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="18" /><Setter Property="LineHeight" Value="24" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
-  <Style x:Key="TypeH3Card" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="16" /><Setter Property="LineHeight" Value="24" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
-  <Style x:Key="TypeBodyL" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="16" /><Setter Property="LineHeight" Value="24" /><Setter Property="TextWrapping" Value="WrapWholeWords" /></Style>
-  <Style x:Key="TypeTitleS" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="15" /><Setter Property="LineHeight" Value="20" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
-  <Style x:Key="TypeBody" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="14" /><Setter Property="LineHeight" Value="20" /></Style>
-  <Style x:Key="TypeBodyMedium" TargetType="TextBlock" BasedOn="{StaticResource TypeBody}"><Setter Property="FontWeight" Value="Medium" /></Style>
-  <Style x:Key="TypeBodyStrong" TargetType="TextBlock" BasedOn="{StaticResource TypeBody}"><Setter Property="FontWeight" Value="SemiBold" /></Style>
-  <Style x:Key="TypeBodyS" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="13" /><Setter Property="LineHeight" Value="18" /><Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" /></Style>
-  <Style x:Key="TypeButtonS" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="13" /><Setter Property="LineHeight" Value="20" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
-  <Style x:Key="TypeCaption" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="12" /><Setter Property="LineHeight" Value="16" /><Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" /></Style>
-  <Style x:Key="TypeCaptionStrong" TargetType="TextBlock" BasedOn="{StaticResource TypeCaption}"><Setter Property="FontWeight" Value="SemiBold" /></Style>
-  <Style x:Key="TypeMicro" TargetType="TextBlock" BasedOn="{StaticResource TypeBase}"><Setter Property="FontSize" Value="11" /><Setter Property="LineHeight" Value="14" /><Setter Property="FontWeight" Value="Medium" /><Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" /></Style>
 
   <!--
     Line icons (§11): Lucide geometry from Icons.xaml drawn at 24 units and scaled to the box, so the stroke scales
@@ -197,9 +130,9 @@
     xaml-lint: allow template - exact prototype fills, press scale; Material overlays cannot match them
   -->
   <Style x:Key="ButtonBase" TargetType="Button">
-    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+    <Setter Property="FontFamily" Value="{ThemeResource BodyMediumFontFamily}" />
     <Setter Property="FontWeight" Value="SemiBold" />
-    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontSize" Value="{StaticResource BodyMediumFontSize}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="MinWidth" Value="0" />
     <Setter Property="MinHeight" Value="0" />
@@ -272,16 +205,16 @@
     <Setter Property="Template" Value="{StaticResource PrimaryButtonTemplate}" />
   </Style>
   <Style x:Key="ButtonPrimaryS" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
-    <Setter Property="Height" Value="32" /><Setter Property="Padding" Value="14,0" /><Setter Property="CornerRadius" Value="10" /><Setter Property="FontSize" Value="13" />
+    <Setter Property="Height" Value="32" /><Setter Property="Padding" Value="14,0" /><Setter Property="CornerRadius" Value="10" /><Setter Property="FontSize" Value="{StaticResource BodySmallFontSize}" />
   </Style>
   <Style x:Key="ButtonPrimaryM" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
-    <Setter Property="Height" Value="36" /><Setter Property="Padding" Value="14,0" /><Setter Property="CornerRadius" Value="10" /><Setter Property="FontSize" Value="13" />
+    <Setter Property="Height" Value="36" /><Setter Property="Padding" Value="14,0" /><Setter Property="CornerRadius" Value="10" /><Setter Property="FontSize" Value="{StaticResource BodySmallFontSize}" />
   </Style>
   <Style x:Key="ButtonPrimaryL" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
     <Setter Property="Height" Value="40" /><Setter Property="Padding" Value="18,0" /><Setter Property="CornerRadius" Value="12" />
   </Style>
   <Style x:Key="ButtonPrimaryXL" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
-    <Setter Property="Height" Value="48" /><Setter Property="Padding" Value="18,0" /><Setter Property="CornerRadius" Value="14" /><Setter Property="FontSize" Value="15" />
+    <Setter Property="Height" Value="48" /><Setter Property="Padding" Value="18,0" /><Setter Property="CornerRadius" Value="14" /><Setter Property="FontSize" Value="{StaticResource LabelLargeFontSize}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
   </Style>
   <Style x:Key="ButtonSecondary" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
@@ -291,7 +224,7 @@
     <Setter Property="Template" Value="{StaticResource SecondaryButtonTemplate}" />
   </Style>
   <Style x:Key="ButtonSecondaryM" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
-    <Setter Property="Height" Value="36" /><Setter Property="Padding" Value="14,0" /><Setter Property="CornerRadius" Value="10" /><Setter Property="FontSize" Value="13" />
+    <Setter Property="Height" Value="36" /><Setter Property="Padding" Value="14,0" /><Setter Property="CornerRadius" Value="10" /><Setter Property="FontSize" Value="{StaticResource BodySmallFontSize}" />
   </Style>
   <Style x:Key="ButtonSecondaryL" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
     <Setter Property="Height" Value="40" /><Setter Property="Padding" Value="18,0" /><Setter Property="CornerRadius" Value="12" />
@@ -335,7 +268,7 @@
             </VisualStateManager.VisualStateGroups>
             <StackPanel Orientation="Horizontal" Spacing="6">
               <Grid>
-                <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource TypeBodyStrong}" Foreground="{TemplateBinding Foreground}" />
+                <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{TemplateBinding Foreground}" />
                 <Rectangle x:Name="Underline" Height="1" VerticalAlignment="Bottom" Margin="0,0,0,-3" Fill="{ThemeResource OnSurfaceLowBrush}" />
               </Grid>
               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconArrowRight}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" />
@@ -398,15 +331,6 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </Style>
-  <!-- Help and explanatory copy: body 14/20, muted, wrapping. -->
-  <Style x:Key="TypeBodyMuted" TargetType="TextBlock" BasedOn="{StaticResource TypeBody}">
-    <Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
-    <Setter Property="TextWrapping" Value="WrapWholeWords" />
-  </Style>
-  <!-- Section eyebrow over a group of fields ("PATIENT", "SCHEDULE"): 12/16 semibold muted. -->
-  <Style x:Key="TypeEyebrow" TargetType="TextBlock" BasedOn="{StaticResource TypeCaptionStrong}">
-    <Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
   </Style>
   <!-- Loading placeholder bar (skeletons keep the loaded layout's footprint). The record page adds VerticalAlignment Top. -->
   <Style x:Key="Skeleton" TargetType="Rectangle">
@@ -492,7 +416,7 @@
     </Setter>
   </Style>
 
-  <!-- Badges and chips (§10). Text inside uses TypeCaptionStrong (badges) or TypeBodyS + SemiBold (status chips). -->
+  <!-- Badges and chips (§10). Text inside uses CaptionLarge SemiBold (badges) or BodySmall SemiBold (status chips). -->
   <Style x:Key="BadgeOutline" TargetType="Border">
     <Setter Property="Height" Value="24" /><Setter Property="Padding" Value="9,0" /><Setter Property="CornerRadius" Value="8" />
     <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />

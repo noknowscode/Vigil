@@ -33,28 +33,28 @@
             <DataTemplate>
               <StackPanel Spacing="{StaticResource Space16}">
                 <StackPanel Spacing="{StaticResource Space6}" Margin="{StaticResource GapBottom8}">
-                  <TextBlock x:Uid="SignOff_2" Text="Sign off" Style="{StaticResource TypeDisplayTitle}" />
-                  <TextBlock Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Patient}" />
+                  <TextBlock x:Uid="SignOff_2" Text="Sign off" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" />
+                  <TextBlock Style="{StaticResource BodyLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Patient}" />
                 </StackPanel>
                 <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
                   <StackPanel Spacing="{StaticResource Space14}">
-                    <TextBlock Style="{StaticResource TypeH3Card}" TextWrapping="WrapWholeWords" Text="{Binding Data.Procedure}" />
+                    <TextBlock Style="{StaticResource BodyLarge}" FontWeight="SemiBold" TextWrapping="WrapWholeWords" Text="{Binding Data.Procedure}" />
                     <!-- Anchor: the signed summary as two mono stats. -->
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space32}">
                       <StackPanel>
-                        <TextBlock x:Uid="SignOff_3" Text="Anesthesia" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
-                        <TextBlock x:Uid="SignOff_4" Style="{StaticResource TypeMonoStat}" Text="{Binding Data.Duration}" AutomationProperties.Name="Anesthesia duration" />
+                        <TextBlock x:Uid="SignOff_3" Text="Anesthesia" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                        <TextBlock x:Uid="SignOff_4" Style="{StaticResource NumeralHeadlineSmall}" Text="{Binding Data.Duration}" AutomationProperties.Name="Anesthesia duration" />
                       </StackPanel>
                       <StackPanel>
-                        <TextBlock x:Uid="SignOff_5" Text="Readings" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
-                        <TextBlock x:Uid="SignOff_6" Style="{StaticResource TypeMonoStat}" Text="{Binding Data.Readings}" AutomationProperties.Name="Readings recorded" />
+                        <TextBlock x:Uid="SignOff_5" Text="Readings" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                        <TextBlock x:Uid="SignOff_6" Style="{StaticResource NumeralHeadlineSmall}" Text="{Binding Data.Readings}" AutomationProperties.Name="Readings recorded" />
                       </StackPanel>
                     </StackPanel>
                     <StackPanel Spacing="{StaticResource Space4}" Padding="{StaticResource GapTop14}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
-                      <TextBlock Style="{StaticResource TypeBody}" TextWrapping="WrapWholeWords" Text="{Binding Data.Counts}" />
-                      <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Recovery}" />
+                      <TextBlock Style="{StaticResource BodyMedium}" TextWrapping="WrapWholeWords" Text="{Binding Data.Counts}" />
+                      <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Recovery}" />
                     </StackPanel>
-                    <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Blocker}" />
+                    <TextBlock Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.Blocker}" />
                   </StackPanel>
                 </utu:CardContentControl>
               </StackPanel>
@@ -72,8 +72,8 @@
           <mvux:FeedView.ErrorTemplate>
             <DataTemplate>
               <StackPanel Spacing="{StaticResource Space12}">
-                <TextBlock x:Uid="SignOff_7" Style="{StaticResource TypeH3Card}" Text="Couldn't read this record." />
-                <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding Message}" />
+                <TextBlock x:Uid="SignOff_7" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Couldn't read this record." />
+                <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding Message}" />
                 <Button x:Uid="SignOff_8" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Content="Retry"
                         Command="{Binding DataContext.Retry, ElementName=SummaryFeed}" />
               </StackPanel>
@@ -83,13 +83,13 @@
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
           <StackPanel Spacing="{StaticResource Space14}">
-            <TextBlock x:Uid="SignOff_9" Style="{StaticResource TypeEyebrow}" Text="SIGNED BY" />
+            <TextBlock x:Uid="SignOff_9" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="SIGNED BY" />
             <TextBox x:Uid="SignOff_10" Header="Veterinarian"
                      Text="{Binding Veterinarian, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Signing veterinarian" />
             <CheckBox x:Uid="SignOff_11" Content="I have reviewed this anesthesia record and it is complete."
                       IsChecked="{Binding Confirmed, Mode=TwoWay}" />
-            <TextBlock x:Uid="SignOff_12" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+            <TextBlock x:Uid="SignOff_12" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                        Text="Signing makes the record read-only on this device. This is a typed name on a shared device, not an electronic signature." />
           </StackPanel>
         </utu:CardContentControl>
@@ -97,7 +97,7 @@
     </ScrollViewer>
 
     <StackPanel Grid.Row="2" Padding="{StaticResource SheetInset}" Spacing="{StaticResource Space8}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
-      <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Error}" />
+      <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Error}" />
       <Button x:Uid="SignOff_13" Style="{StaticResource ButtonPrimaryXL}" Content="Sign record"
               Command="{Binding Sign}" AutomationProperties.Name="Sign the record" />
     </StackPanel>

@@ -154,9 +154,8 @@
 
   <!-- The pane's one-tap "Record reading". -->
   <x:Double x:Key="ActionHeightLarge">64</x:Double>
-  <!-- Vital stepper: 48 px buttons and value box, the value in mono 20 (type ramp: between title-m 18 and mono-timer-card 20). -->
+  <!-- Vital stepper: 48 px buttons and value box (the value is TitleMedium's 20 in the numeral face). -->
   <x:Double x:Key="StepperTarget">48</x:Double>
-  <x:Double x:Key="StepperValueFontSize">20</x:Double>
 
   <!-- Component insets -->
   <Thickness x:Key="LiveCardInset">20,18</Thickness>

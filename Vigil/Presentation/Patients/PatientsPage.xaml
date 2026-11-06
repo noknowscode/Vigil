@@ -11,8 +11,8 @@
   <ScrollViewer HorizontalScrollMode="Disabled">
     <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ContentMaxWidth}">
       <StackPanel Spacing="{StaticResource Space8}">
-        <TextBlock x:Uid="Patients_1" Text="Patients" Style="{StaticResource TypeDisplayTitle}" />
-        <TextBlock Text="{Binding Summary}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+        <TextBlock x:Uid="Patients_1" Text="Patients" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" />
+        <TextBlock Text="{Binding Summary}" Style="{StaticResource BodyLarge}" TextWrapping="WrapWholeWords" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
       </StackPanel>
       <mvux:FeedView x:Name="PatientsFeed" Source="{Binding All}" VerticalContentAlignment="Top" RefreshingState="None" IsTabStop="False">
         <mvux:FeedView.ValueTemplate>
@@ -29,12 +29,12 @@
           <DataTemplate><ProgressRing x:Uid="Patients_3" Width="24" Height="24" IsActive="True" HorizontalAlignment="Left" AutomationProperties.Name="Loading patients" /></DataTemplate>
         </mvux:FeedView.ProgressTemplate>
         <mvux:FeedView.NoneTemplate>
-          <DataTemplate><TextBlock x:Uid="Patients_4" Text="No patients on this device yet. Use New patient in the sidebar to start a record." Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" /></DataTemplate>
+          <DataTemplate><TextBlock x:Uid="Patients_4" Text="No patients on this device yet. Use New patient in the sidebar to start a record." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" /></DataTemplate>
         </mvux:FeedView.NoneTemplate>
         <mvux:FeedView.ErrorTemplate>
           <DataTemplate>
             <StackPanel Spacing="{StaticResource Space12}" HorizontalAlignment="Left">
-              <TextBlock x:Uid="Patients_5" Text="Couldn't read saved records." Style="{StaticResource TypeH3Card}" />
+              <TextBlock x:Uid="Patients_5" Text="Couldn't read saved records." Style="{StaticResource BodyLarge}" FontWeight="SemiBold" />
               <!-- ErrorTemplate DataContext is the Exception: reach the page model by ElementName. -->
               <Button x:Uid="Patients_6" Content="Retry" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" AutomationProperties.Name="Retry reading records"
                       Command="{Binding DataContext.Retry, ElementName=PatientsFeed}" />

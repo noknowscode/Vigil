@@ -23,8 +23,8 @@
       <utu:CardContentControl Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Style="{StaticResource PanelCardStyle}" Padding="{StaticResource Inset12x16}" VerticalContentAlignment="Stretch">
       <Grid RowSpacing="{StaticResource Space8}" RowDefinitions="Auto,Auto">
         <StackPanel Spacing="{StaticResource Space2}" Padding="{StaticResource InsetX8}">
-          <TextBlock x:Uid="Dose_3" Style="{StaticResource TypeH3Card}" Text="Drug" />
-          <TextBlock x:Uid="Dose_4" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="Sample formulary, not for clinical use." TextWrapping="WrapWholeWords" />
+          <TextBlock x:Uid="Dose_3" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Drug" />
+          <TextBlock x:Uid="Dose_4" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="Sample formulary, not for clinical use." TextWrapping="WrapWholeWords" />
         </StackPanel>
         <!-- Formulary states; the list binds the IListFeed through Parent so the MVUX selection (Selected) still syncs. -->
         <mvux:FeedView x:Name="DrugsFeed" Grid.Row="1" Source="{Binding Drugs}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch">
@@ -42,10 +42,10 @@
                         <ColumnDefinition Width="Auto" />
                       </Grid.ColumnDefinitions>
                       <StackPanel Spacing="{StaticResource Space2}">
-                        <TextBlock Style="{StaticResource TypeBodyStrong}" Text="{x:Bind Name}" />
-                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind DrugClass}" />
+                        <TextBlock Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Text="{x:Bind Name}" />
+                        <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind DrugClass}" />
                       </StackPanel>
-                      <TextBlock Grid.Column="1" Style="{StaticResource TypeMonoMeta}" VerticalAlignment="Center">
+                      <TextBlock Grid.Column="1" Style="{StaticResource NumeralCaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center">
                         <Run Text="{x:Bind MgPerMl}" /><Run x:Uid="Dose_6" Text=" mg/mL" />
                       </TextBlock>
                     </Grid>
@@ -65,7 +65,7 @@
           </mvux:FeedView.ProgressTemplate>
           <mvux:FeedView.NoneTemplate>
             <DataTemplate>
-              <TextBlock x:Uid="Dose_23" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Margin="{StaticResource InsetX8}"
+              <TextBlock x:Uid="Dose_23" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Margin="{StaticResource InsetX8}"
                          Text="The formulary has no drugs." />
             </DataTemplate>
           </mvux:FeedView.NoneTemplate>
@@ -73,8 +73,8 @@
             <DataTemplate>
               <StackPanel Spacing="{StaticResource Space12}" Padding="{StaticResource InsetX8}" AutomationProperties.LiveSetting="Polite">
                 <!-- The formulary ships inside the app: a read failure is not something a retry fixes. -->
-                <TextBlock x:Uid="Dose_24" Style="{StaticResource TypeTitleS}" Text="Couldn't load the formulary." />
-                <TextBlock x:Uid="Dose_25" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="Doses can't be calculated on this device until the app is reinstalled." />
+                <TextBlock x:Uid="Dose_24" Style="{StaticResource LabelLarge}" Text="Couldn't load the formulary." />
+                <TextBlock x:Uid="Dose_25" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="Doses can't be calculated on this device until the app is reinstalled." />
               </StackPanel>
             </DataTemplate>
           </mvux:FeedView.ErrorTemplate>
@@ -97,14 +97,14 @@
             <mvux:FeedView.ValueTemplate>
               <DataTemplate>
                 <StackPanel Spacing="{StaticResource Space6}">
-                  <TextBlock x:Uid="Dose_8" Style="{StaticResource TypeEyebrow}" Text="DRAW UP" />
-                  <TextBlock x:Uid="Dose_9" Style="{StaticResource TypeMonoVital}"
+                  <TextBlock x:Uid="Dose_8" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="DRAW UP" />
+                  <TextBlock x:Uid="Dose_9" Style="{StaticResource NumeralDisplaySmall}"
                              Text="{Binding Data.VolumeText}"
                              AutomationProperties.Name="Volume to draw up" />
-                  <TextBlock Style="{StaticResource TypeMonoMeta}" TextWrapping="Wrap">
+                  <TextBlock Style="{StaticResource NumeralCaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="Wrap">
                     <Run Text="{Binding Data.Formula}" />
                   </TextBlock>
-                  <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}">
+                  <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}">
                     <Run x:Uid="Dose_10" Text="Reference range" />
                     <Run Text="{Binding Data.ReferenceText}" />
                   </TextBlock>
@@ -112,7 +112,7 @@
                   <Grid ColumnSpacing="{StaticResource Space8}" Visibility="{Binding Data.IsOutOfRange, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                     <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
                     <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
-                    <TextBlock x:Uid="Dose_11" Grid.Column="1" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource ErrorBrush}" Text="Outside the reference range: you will be asked to confirm." TextWrapping="WrapWholeWords" />
+                    <TextBlock x:Uid="Dose_11" Grid.Column="1" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource ErrorBrush}" Text="Outside the reference range: you will be asked to confirm." TextWrapping="WrapWholeWords" />
                   </Grid>
                 </StackPanel>
               </DataTemplate>
@@ -120,9 +120,9 @@
             <mvux:FeedView.NoneTemplate>
               <DataTemplate>
                 <StackPanel Spacing="{StaticResource Space6}">
-                  <TextBlock x:Uid="Dose_12" Style="{StaticResource TypeEyebrow}" Text="DRAW UP" />
-                  <TextBlock x:Uid="Dose_13" Style="{StaticResource TypeTitleM}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="Pick a drug" />
-                  <TextBlock x:Uid="Dose_14" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
+                  <TextBlock x:Uid="Dose_12" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="DRAW UP" />
+                  <TextBlock x:Uid="Dose_13" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="Pick a drug" />
+                  <TextBlock x:Uid="Dose_14" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                              Text="The volume appears here with its formula once a drug and a dose in mg/kg are set." />
                 </StackPanel>
               </DataTemplate>
@@ -135,7 +135,7 @@
             <RadioButton x:Uid="Dose_18" Content="SC" />
             <RadioButton x:Uid="Dose_19" Content="PO" />
           </muxc:RadioButtons>
-          <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Error}" />
+          <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource ErrorBrush}" TextWrapping="WrapWholeWords" Text="{Binding Error}" />
         </StackPanel>
       </utu:CardContentControl>
 
@@ -156,9 +156,9 @@
           <StackPanel Spacing="{StaticResource Space12}">
             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
               <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
-              <TextBlock Style="{StaticResource TypeTitleM}" Text="{Binding ConfirmTitle}" />
+              <TextBlock Style="{StaticResource TitleSmall}" Text="{Binding ConfirmTitle}" />
             </StackPanel>
-            <TextBlock Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding ConfirmText}"
+            <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="{Binding ConfirmText}"
                        AutomationProperties.LiveSetting="Assertive" />
             <Grid ColumnSpacing="{StaticResource Space12}">
               <Grid.ColumnDefinitions>

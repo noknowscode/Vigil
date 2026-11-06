@@ -57,9 +57,9 @@
       <!-- 1. Header: greeting + recap -->
       <StackPanel>
         <!-- Newsreader sits 4 px lower than the browser places it at 40/46: pulled up to the render. -->
-        <TextBlock Text="{Binding Greeting.Title}" Style="{StaticResource TypeDisplayTitle}" Margin="0,-4,0,0" />
+        <TextBlock Text="{Binding Greeting.Title}" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" Margin="0,-4,0,0" />
         <!-- Recap: the most urgent fact in bold, then the other counts. -->
-        <TextBlock Margin="{StaticResource GapTop10}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource OnSurfaceVariantBrush}" AutomationProperties.LiveSetting="Off"><Run Text="{Binding Greeting.Lead}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" /><Run Text="{Binding Greeting.Rest}" /></TextBlock>
+        <TextBlock Margin="{StaticResource GapTop10}" Style="{StaticResource BodyLarge}" TextWrapping="WrapWholeWords" Foreground="{ThemeResource OnSurfaceVariantBrush}" AutomationProperties.LiveSetting="Off"><Run Text="{Binding Greeting.Lead}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" /><Run Text="{Binding Greeting.Rest}" /></TextBlock>
       </StackPanel>
 
       <!-- A failed action (Start prep) says why, above the hero, until dismissed. -->
@@ -76,7 +76,7 @@
       <!-- 3. Today's patients: header (segmented filter, All records), 3 / 2 / 1 column card grid -->
       <!-- Below Wide the title and All records share the first row and the filter takes the second; from Wide one row. -->
       <Grid Margin="{StaticResource GapTop40}" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space16}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space12}, Wide=0}">
-        <TextBlock x:Uid="TodayPage_21" Text="Today's patients" Style="{StaticResource TypeH2Section}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+        <TextBlock x:Uid="TodayPage_21" Text="Today's patients" Style="{StaticResource TitleMedium}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space16}" VerticalAlignment="Center" HorizontalAlignment="Left"
                     Grid.Column="{utu:Responsive Narrowest=0, Wide=1}"
                     Grid.ColumnSpan="{utu:Responsive Narrowest=3, Wide=1}"
@@ -94,9 +94,9 @@
                         <Border CornerRadius="{StaticResource Radius8}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="1" />
                       </utu:ShadowContainer>
                       <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Padding="{StaticResource InsetX12}" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceBrush}" FontWeight="SemiBold" Visibility="{Binding IsSelected, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
-                        <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceBrush}" FontWeight="Medium" Visibility="{Binding IsUnselected, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
-                        <TextBlock Text="{Binding Count}" Style="{StaticResource TypeBodyS}" />
+                        <TextBlock Text="{Binding Label}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceBrush}" FontWeight="SemiBold" Visibility="{Binding IsSelected, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                        <TextBlock Text="{Binding Label}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceBrush}" FontWeight="Medium" Visibility="{Binding IsUnselected, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                        <TextBlock Text="{Binding Count}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                       </StackPanel>
                     </Grid>
                   </Button>
@@ -149,17 +149,17 @@
           <DataTemplate>
             <Border Style="{StaticResource QuietPanel}" MinHeight="227" Padding="{StaticResource Inset24}">
               <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="{StaticResource Space8}" AutomationProperties.LiveSetting="Polite">
-                <TextBlock Text="{Binding DataContext.CardsEmpty.Title, ElementName=CardsFeed}" Style="{StaticResource TypeTitleS}" TextWrapping="WrapWholeWords" />
-                <TextBlock Text="{Binding DataContext.CardsEmpty.Body, ElementName=CardsFeed}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+                <TextBlock Text="{Binding DataContext.CardsEmpty.Title, ElementName=CardsFeed}" Style="{StaticResource LabelLarge}" TextWrapping="WrapWholeWords" />
+                <TextBlock Text="{Binding DataContext.CardsEmpty.Body, ElementName=CardsFeed}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
                 <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space10}" Margin="{StaticResource GapTop8}" Visibility="{Binding DataContext.CardsEmpty.ShowActions, ElementName=CardsFeed, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                   <Button x:Uid="TodayPage_25" Style="{StaticResource ButtonPrimaryM}" Command="{Binding DataContext.NewCase, ElementName=CardsFeed}" AutomationProperties.Name="New patient">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
-                      <TextBlock x:Uid="TodayPage_26" Text="New patient" Style="{StaticResource TypeButtonS}" Foreground="{ThemeResource OnPrimaryBrush}" VerticalAlignment="Center" />
+                      <TextBlock x:Uid="TodayPage_26" Text="New patient" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource OnPrimaryBrush}" VerticalAlignment="Center" />
                       <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnPrimaryBrush}" VerticalAlignment="Center" />
                     </StackPanel>
                   </Button>
                   <Button Style="{StaticResource ButtonSecondaryM}" Command="{Binding DataContext.OpenAgenda, ElementName=CardsFeed}">
-                    <TextBlock x:Uid="TodayPage_27" Text="Open agenda" Style="{StaticResource TypeButtonS}" VerticalAlignment="Center" />
+                    <TextBlock x:Uid="TodayPage_27" Text="Open agenda" Style="{StaticResource LabelMedium}" VerticalAlignment="Center" />
                   </Button>
                 </StackPanel>
               </StackPanel>
@@ -172,10 +172,10 @@
               <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
                 <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                   <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
-                  <TextBlock x:Uid="TodayPage_28" Text="Couldn't read saved records." Style="{StaticResource TypeTitleS}" />
+                  <TextBlock x:Uid="TodayPage_28" Text="Couldn't read saved records." Style="{StaticResource LabelLarge}" />
                 </StackPanel>
                 <Button x:Uid="TodayPage_29" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=CardsFeed}" AutomationProperties.Name="Retry reading records">
-                  <TextBlock x:Uid="TodayPage_30" Text="Retry" Style="{StaticResource TypeButtonS}" />
+                  <TextBlock x:Uid="TodayPage_30" Text="Retry" Style="{StaticResource LabelMedium}" />
                 </Button>
               </StackPanel>
             </Border>
@@ -199,8 +199,8 @@
                     BorderThickness="{utu:Responsive Narrowest='0', Widest='1,0,0,0', Layout={StaticResource SplitLayout}}"
                     BorderBrush="{ThemeResource OutlineVariantBrush}">
           <StackPanel>
-            <TextBlock x:Uid="TodayPage_41" Text="Where care time went" Style="{StaticResource TypeH2Section}" />
-            <TextBlock Text="{Binding CareTime.Summary}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="{StaticResource GapTop2}" />
+            <TextBlock x:Uid="TodayPage_41" Text="Where care time went" Style="{StaticResource TitleMedium}" />
+            <TextBlock Text="{Binding CareTime.Summary}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="{StaticResource GapTop2}" />
           </StackPanel>
           <mvux:FeedView x:Name="CareFeed" Source="{Binding CareTime}" RefreshingState="None" IsTabStop="False" HorizontalContentAlignment="Stretch" Margin="{StaticResource GapTop20}">
             <mvux:FeedView.ValueTemplate>
@@ -211,7 +211,7 @@
                       <DataTemplate>
                         <Grid Height="36" ColumnSpacing="{StaticResource Space12}" ToolTipService.ToolTip="{Binding Tooltip}" Background="Transparent" AutomationProperties.Name="{Binding Tooltip}">
                           <Grid.ColumnDefinitions><ColumnDefinition Width="96" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /><ColumnDefinition Width="40" /></Grid.ColumnDefinitions>
-                          <TextBlock Text="{Binding Label}" Style="{StaticResource TypeBody}" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding Label}" Style="{StaticResource BodyMedium}" VerticalAlignment="Center" />
                           <Grid Grid.Column="1" Height="8" VerticalAlignment="Center">
                             <Rectangle RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource SurfaceVariantBrush}" />
                             <controls:SpanPanel>
@@ -221,8 +221,8 @@
                               <Rectangle controls:SpanPanel.Start="0" controls:SpanPanel.Length="{Binding Fraction}" Height="8" RadiusX="{StaticResource RectRadius4}" RadiusY="{StaticResource RectRadius4}" Fill="{ThemeResource WaitingBrush}" Visibility="{Binding IsWaiting, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                             </controls:SpanPanel>
                           </Grid>
-                          <TextBlock Grid.Column="2" Text="{Binding DurationText}" Style="{StaticResource TypeMonoNum}" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                          <TextBlock Grid.Column="3" Text="{Binding PercentText}" Style="{StaticResource TypeBodyS}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                          <TextBlock Grid.Column="2" Text="{Binding DurationText}" Style="{StaticResource NumeralBodySmall}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                          <TextBlock Grid.Column="3" Text="{Binding PercentText}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                         </Grid>
                       </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -235,7 +235,7 @@
                         <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconLightbulb}" Foreground="{ThemeResource OnPrepContainerBrush}" />
                       </Grid>
                       <StackPanel Grid.Column="1" Spacing="{StaticResource Space4}">
-                        <TextBlock Text="{Binding Data.Insight}" Style="{StaticResource TypeBody}" TextWrapping="WrapWholeWords" />
+                        <TextBlock Text="{Binding Data.Insight}" Style="{StaticResource BodyMedium}" TextWrapping="WrapWholeWords" />
                         <!-- The next case to prepare, on its record's Preparation drawer; hidden when nothing is booked. -->
                         <Button x:Uid="TodayPage_45" Style="{StaticResource LinkButton}" HorizontalAlignment="Left" Content="See the prep checklist" Visibility="{Binding Data.HasChecklist, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}"
                                 Command="{Binding DataContext.OpenPrepChecklist, ElementName=CareFeed}" AutomationProperties.Name="{Binding Data.ChecklistName}" />
@@ -257,15 +257,15 @@
             </mvux:FeedView.ProgressTemplate>
             <mvux:FeedView.NoneTemplate>
               <DataTemplate>
-                <TextBlock x:Uid="TodayPage_46" Text="No care time recorded yet today." Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" AutomationProperties.LiveSetting="Polite" />
+                <TextBlock x:Uid="TodayPage_46" Text="No care time recorded yet today." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" AutomationProperties.LiveSetting="Polite" />
               </DataTemplate>
             </mvux:FeedView.NoneTemplate>
             <mvux:FeedView.ErrorTemplate>
               <DataTemplate>
                 <StackPanel Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
-                  <TextBlock x:Uid="TodayPage_47" Text="Couldn't total today's care time." Style="{StaticResource TypeTitleS}" />
+                  <TextBlock x:Uid="TodayPage_47" Text="Couldn't total today's care time." Style="{StaticResource LabelLarge}" />
                   <Button x:Uid="TodayPage_48" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=CareFeed}" AutomationProperties.Name="Retry reading records">
-                    <TextBlock x:Uid="TodayPage_49" Text="Retry" Style="{StaticResource TypeButtonS}" />
+                    <TextBlock x:Uid="TodayPage_49" Text="Retry" Style="{StaticResource LabelMedium}" />
                   </Button>
                 </StackPanel>
               </DataTemplate>

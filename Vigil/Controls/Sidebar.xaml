@@ -22,7 +22,7 @@
     <Grid Height="40" Padding="{StaticResource BrandRowInset}" ColumnDefinitions="Auto,*,Auto">
       <ContentControl Style="{StaticResource FilledIcon}" Width="26" Height="26" Content="{StaticResource IconLogo}" />
       <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-        <TextBlock x:Uid="Sidebar_1" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="clover" Style="{StaticResource TypeBrand}" Margin="{StaticResource GapStart10}" VerticalAlignment="Center" />
+        <TextBlock x:Uid="Sidebar_1" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="clover" Style="{StaticResource TitleLarge}" Foreground="{ThemeResource PrimaryBrush}" Margin="{StaticResource GapStart10}" VerticalAlignment="Center" />
       </Grid>
       <Grid Grid.Column="2" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
         <Button x:Uid="Sidebar_2" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Style="{StaticResource ButtonIconGhost}" Command="{Binding ToggleSidebar}" AutomationProperties.Name="Collapse sidebar">
@@ -49,7 +49,7 @@
         <StackPanel Orientation="Horizontal">
           <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnSurfaceBrush}" />
           <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <TextBlock x:Uid="Sidebar_13" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="New patient" Style="{StaticResource TypeBodyMedium}" Margin="{StaticResource GapStart8}" VerticalAlignment="Center" />
+            <TextBlock x:Uid="Sidebar_13" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="New patient" Style="{StaticResource BodyMedium}" FontWeight="Medium" Margin="{StaticResource GapStart8}" VerticalAlignment="Center" />
           </Grid>
         </StackPanel>
       </Button>
@@ -64,7 +64,7 @@
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconLayoutGrid}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
             <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
-              <TextBlock x:Uid="Sidebar_16" Text="Today" Style="{StaticResource TypeBodyMedium}" VerticalAlignment="Center" />
+              <TextBlock x:Uid="Sidebar_16" Text="Today" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
             </Grid>
           </Grid>
         </Grid>
@@ -76,8 +76,8 @@
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconPawPrint}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
             <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
-              <TextBlock x:Uid="Sidebar_19" Text="Patients" Style="{StaticResource TypeBodyMedium}" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="{Binding PatientsCount}" Style="{StaticResource TypeCaptionStrong}" VerticalAlignment="Center" />
+              <TextBlock x:Uid="Sidebar_19" Text="Patients" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding PatientsCount}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
             </Grid>
           </Grid>
         </Grid>
@@ -89,7 +89,7 @@
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconCalendar}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
             <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
-              <TextBlock x:Uid="Sidebar_22" Text="Agenda" Style="{StaticResource TypeBodyMedium}" VerticalAlignment="Center" />
+              <TextBlock x:Uid="Sidebar_22" Text="Agenda" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
             </Grid>
           </Grid>
         </Grid>
@@ -101,8 +101,8 @@
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconActivity}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
             <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
-              <TextBlock x:Uid="Sidebar_25" Text="Anesthesia" Style="{StaticResource TypeBodyMedium}" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="{Binding AnesthesiaCount}" Style="{StaticResource TypeCaptionStrong}" VerticalAlignment="Center" />
+              <TextBlock x:Uid="Sidebar_25" Text="Anesthesia" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding AnesthesiaCount}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
             </Grid>
           </Grid>
         </Grid>
@@ -118,7 +118,7 @@
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconSettings}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
             <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
-              <TextBlock x:Uid="Sidebar_37" Text="Settings" Style="{StaticResource TypeBodyMedium}" VerticalAlignment="Center" />
+              <TextBlock x:Uid="Sidebar_37" Text="Settings" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
             </Grid>
           </Grid>
         </Grid>
@@ -135,7 +135,7 @@
             <Ellipse Width="8" Height="8" Stroke="{ThemeResource OnSurfaceVariantBrush}" StrokeThickness="1.5" />
           </Grid>
           <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <TextBlock x:Uid="Sidebar_43" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="No monitor connected" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="7,0,0,0" VerticalAlignment="Center" />
+            <TextBlock x:Uid="Sidebar_43" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="No monitor connected" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="7,0,0,0" VerticalAlignment="Center" />
           </Grid>
         </StackPanel>
       </Border>
@@ -146,12 +146,12 @@
          the 10 px gap. The -2 margin keeps 8 + 34 px inside the 40 px rail. -->
     <Grid Grid.Row="7" Padding="{StaticResource UserRowInset}" Margin="0,0,-2,0" ColumnDefinitions="Auto,*">
       <Border Style="{StaticResource AvatarCircle}">
-        <TextBlock Text="{Binding ClinicianInitials}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" LineHeight="16" Foreground="{ThemeResource OnPrimaryContainerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding ClinicianInitials}" Style="{StaticResource BodySmall}" FontWeight="SemiBold" LineHeight="16" Foreground="{ThemeResource OnPrimaryContainerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
       </Border>
       <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
         <StackPanel Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource GapStart10}" VerticalAlignment="Center">
-          <TextBlock Text="{Binding ClinicianName}" Style="{StaticResource TypeBodyStrong}" TextTrimming="CharacterEllipsis" />
-          <TextBlock x:Uid="Sidebar_44" Text="Veterinarian" Style="{StaticResource TypeCaption}" />
+          <TextBlock Text="{Binding ClinicianName}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+          <TextBlock x:Uid="Sidebar_44" Text="Veterinarian" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
         </StackPanel>
       </Grid>
     </Grid>
