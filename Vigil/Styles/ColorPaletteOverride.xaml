@@ -7,7 +7,8 @@
     Studio's Themes tab edits it, and every role brush (PrimaryBrush, OnSurfaceBrush, OutlineVariantBrush...) and every
     control follows. Light values are the design's (SPEC-v2.md, docs/design/shell-and-tokens.md); Dark values are derived.
     Design token to role: ink OnSurface, ink-muted OnSurfaceVariant, page Background, surface-1 Surface, track and chip
-    fills SurfaceVariant, form-field edge Outline (3:1 on Surface), card edges and dividers OutlineVariant.
+    fills SurfaceVariant, form-field edge Outline (3:1 on Surface), card edges and dividers OutlineVariant. All 33 keys
+    are set in both themes, so no generated role reaches the screen; ShadowColor keeps Material's 20 % black.
   -->
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
@@ -15,10 +16,14 @@
       <Color x:Key="OnPrimaryColor">#FFFFFF</Color>
       <Color x:Key="PrimaryContainerColor">#D5ECE0</Color>
       <Color x:Key="OnPrimaryContainerColor">#005527</Color>
+      <Color x:Key="PrimaryVariantDarkColor">#1C3A2B</Color>
+      <Color x:Key="PrimaryVariantLightColor">#B8DDC8</Color>
       <Color x:Key="SecondaryColor">#5F78E2</Color>
       <Color x:Key="OnSecondaryColor">#FFFFFF</Color>
       <Color x:Key="SecondaryContainerColor">#E5E8F9</Color>
       <Color x:Key="OnSecondaryContainerColor">#1B212F</Color>
+      <Color x:Key="SecondaryVariantDarkColor">#3A4166</Color>
+      <Color x:Key="SecondaryVariantLightColor">#CDD3F3</Color>
       <Color x:Key="TertiaryColor">#C97A2E</Color>
       <Color x:Key="OnTertiaryColor">#FFFFFF</Color>
       <Color x:Key="TertiaryContainerColor">#FCE3C6</Color>
@@ -39,16 +44,21 @@
       <Color x:Key="SurfaceInverseColor">#1B212F</Color>
       <Color x:Key="OnSurfaceInverseColor">#FCFBF9</Color>
       <Color x:Key="PrimaryInverseColor">#B8DDC8</Color>
+      <Color x:Key="ShadowColor">#33000000</Color>
     </ResourceDictionary>
     <ResourceDictionary x:Key="Default">
       <Color x:Key="PrimaryColor">#8FD1AE</Color>
       <Color x:Key="OnPrimaryColor">#0B2418</Color>
       <Color x:Key="PrimaryContainerColor">#17372A</Color>
       <Color x:Key="OnPrimaryContainerColor">#BFE3CF</Color>
+      <Color x:Key="PrimaryVariantDarkColor">#24513D</Color>
+      <Color x:Key="PrimaryVariantLightColor">#BFE3CF</Color>
       <Color x:Key="SecondaryColor">#9AAAF0</Color>
       <Color x:Key="OnSecondaryColor">#141B3D</Color>
       <Color x:Key="SecondaryContainerColor">#262B45</Color>
       <Color x:Key="OnSecondaryContainerColor">#E6E7EA</Color>
+      <Color x:Key="SecondaryVariantDarkColor">#3A4166</Color>
+      <Color x:Key="SecondaryVariantLightColor">#CDD3F3</Color>
       <Color x:Key="TertiaryColor">#E6A766</Color>
       <Color x:Key="OnTertiaryColor">#2E1A06</Color>
       <Color x:Key="TertiaryContainerColor">#3D2A16</Color>
@@ -69,6 +79,7 @@
       <Color x:Key="SurfaceInverseColor">#E6E7EA</Color>
       <Color x:Key="OnSurfaceInverseColor">#1B212F</Color>
       <Color x:Key="PrimaryInverseColor">#244936</Color>
+      <Color x:Key="ShadowColor">#33000000</Color>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

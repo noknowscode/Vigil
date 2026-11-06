@@ -18,10 +18,12 @@
             OutlineVariantBrush, PrimaryBrush, ErrorBrush...).
           - Type: DefaultFontFamily is the body face, Hanken Grotesk, for every type-scale slot and every Material control
             (the weights resolve through its .ttf.manifest); Styles/Typography.xaml sets the design's sizes on the scale.
-          - Spacing, corners and heights: the theme's Space*, Radius*, ControlHeight* and IconSize* tokens, at the theme's
-            defaults (DefaultSpacing 8, DefaultCornerRadius 4).
+          - Spacing, corners and heights: the theme's Space*, Radius*, ControlHeight* and IconSize* tokens. The base is
+            stated here at the theme's defaults (Space100 = 8, Radius100 = 4), which the design's 4-based scale sits on.
         -->
-        <utum:MaterialToolkitTheme DefaultFontFamily="ms-appx:///Assets/Fonts/HankenGrotesk.ttf#Hanken Grotesk">
+        <utum:MaterialToolkitTheme DefaultFontFamily="ms-appx:///Assets/Fonts/HankenGrotesk.ttf#Hanken Grotesk"
+                                   DefaultSpacing="8"
+                                   DefaultCornerRadius="4">
           <utum:MaterialToolkitTheme.Colors>
             <ut:ThemeColors OverrideSource="ms-appx:///Styles/ColorPaletteOverride.xaml" />
           </utum:MaterialToolkitTheme.Colors>
