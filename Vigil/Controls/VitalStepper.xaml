@@ -4,7 +4,7 @@
              xmlns:utu="using:Uno.Toolkit.UI"
              x:Name="Root">
   <!-- One vital on the pad: label with its series glyph, 48 px − / value / +, range flag as text. -->
-  <Grid RowSpacing="{StaticResource Space4}">
+  <Grid RowSpacing="{StaticResource Space050}">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
@@ -15,7 +15,7 @@
       <ColumnDefinition Width="Auto" />
     </Grid.ColumnDefinitions>
 
-    <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="{StaticResource Space6}">
+    <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="{StaticResource Space075}">
       <TextBlock Style="{StaticResource CaptionLarge}" FontWeight="SemiBold"
                  Foreground="{Binding GlyphBrush, ElementName=Root}"
                  Text="{Binding Glyph, ElementName=Root}" />
@@ -46,7 +46,7 @@
     </RepeatButton>
     <TextBox Grid.Row="1"
              Grid.Column="1"
-             Margin="{utu:Responsive Narrowest={StaticResource InsetX4}, Normal={StaticResource InsetX8}}"
+             Margin="{utu:Responsive Narrowest={StaticResource Space050HorizontalThickness}, Normal={StaticResource Space100HorizontalThickness}}"
              MinHeight="{StaticResource StepperTarget}"
              TextAlignment="Center"
              VerticalContentAlignment="Center"

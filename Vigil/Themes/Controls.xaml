@@ -3,11 +3,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:utu="using:Uno.Toolkit.UI">
   <!--
-    App-wide lightweight-styling keys (rung 2). Material buttons keep 56 px (only the Settings dialogs still use them;
-    screens use the v2 buttons in Tokens.xaml). Cards are outlined with OutlineVariant at radius 12.
-    Form fields (v2): outlined at radius 10, 56 px with the floating label, Hanken 14. Their outline is the Outline role
-    (the palette keeps it at 3:1 on Surface), focus Primary; hover takes OnSurfaceVariant instead of Material's OnSurface.
-    The aliases sit per theme so they follow a theme switch.
+    The app's control styles, all on theme resources: no colour, size or radius of its own. Brushes are palette roles
+    (Styles/ColorPaletteOverride.xaml) or App.xaml's no-role brushes, type comes from Styles/Typography.xaml, spacing
+    and corners from the theme's Space* and Radius* tokens, heights from ControlHeight* and IconSize*.
+
+    1. Material lightweight-styling keys. Material buttons keep 56 px (only the Settings dialogs still use them; screens
+       use the v2 buttons below). Cards are outlined with OutlineVariant at Radius300. Form fields (v2): outlined at
+       Radius300, 56 px with the floating label, BodyMedium; their outline is the Outline role (the palette keeps it at
+       3:1 on Surface), focus Primary; hover takes OnSurfaceVariant instead of Material's OnSurface. The brush aliases
+       sit per theme so they follow a theme switch.
   -->
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
@@ -23,15 +27,15 @@
       <StaticResource x:Key="OutlinedCardContentBorderBrush" ResourceKey="OutlineVariantBrush" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
-  <CornerRadius x:Key="OutlinedTextBoxCornerRadius">10</CornerRadius>
-  <x:Double x:Key="OutlinedTextBoxFontSize">14</x:Double>
-  <CornerRadius x:Key="ComboBoxCornerRadius">10</CornerRadius>
+  <StaticResource x:Key="OutlinedTextBoxCornerRadius" ResourceKey="Radius300CornerRadius" />
+  <StaticResource x:Key="OutlinedTextBoxFontSize" ResourceKey="BodyMediumFontSize" />
+  <StaticResource x:Key="ComboBoxCornerRadius" ResourceKey="Radius300CornerRadius" />
   <!-- Matches the outlined TextBox (56 px with its floating label), so a ComboBox beside a field lines up. -->
   <x:Double x:Key="ComboBoxMinHeight">56</x:Double>
   <x:Double x:Key="ButtonHeight">56</x:Double>
   <x:Double x:Key="ButtonMinHeight">56</x:Double>
-  <CornerRadius x:Key="ButtonCornerRadius">12</CornerRadius>
-  <CornerRadius x:Key="CardCornerRadius">12</CornerRadius>
+  <StaticResource x:Key="ButtonCornerRadius" ResourceKey="Radius300CornerRadius" />
+  <StaticResource x:Key="CardCornerRadius" ResourceKey="Radius300CornerRadius" />
 
   <!--
     WORKAROUND(CardContentControl washes out after a touch swipe): the Material card templates keep their
@@ -59,5 +63,424 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
+  </Style>
+
+  <!--
+    2. Brushes drawn from role colours (ThemeResource stops), so they follow the theme and the palette: the Today hero's
+    ground (secondary to primary container), the gantt's planned slots, a booked status strip, done stepper segments,
+    the stepper knob and the status strip's inset shade.
+  -->
+  <LinearGradientBrush x:Key="HeroGradientBrush" StartPoint="0,0.32" EndPoint="1,0.68">
+    <GradientStop Color="{ThemeResource SecondaryContainerColor}" Offset="0" />
+    <GradientStop Color="{ThemeResource PrimaryContainerColor}" Offset="1" />
+  </LinearGradientBrush>
+  <!-- 135deg repeating stripes: Absolute mapping, end point (p/√2, p/√2) for a period of p px; hard stops. -->
+  <LinearGradientBrush x:Key="PlannedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+    <GradientStop Color="{ThemeResource SurfaceColor}" Offset="0" /><GradientStop Color="{ThemeResource SurfaceColor}" Offset="0.75" />
+    <GradientStop Color="{ThemeResource OutlineColor}" Offset="0.75" /><GradientStop Color="{ThemeResource OutlineColor}" Offset="1" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="BookedHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="4.243,4.243">
+    <GradientStop Color="{ThemeResource BackgroundColor}" Offset="0" /><GradientStop Color="{ThemeResource BackgroundColor}" Offset="0.8333" />
+    <GradientStop Color="{ThemeResource SurfaceVariantColor}" Offset="0.8333" /><GradientStop Color="{ThemeResource SurfaceVariantColor}" Offset="1" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="StepDoneHatchBrush" MappingMode="Absolute" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="2.828,2.828">
+    <GradientStop Color="{ThemeResource OutlineVariantColor}" Offset="0" /><GradientStop Color="{ThemeResource OutlineVariantColor}" Offset="0.25" />
+    <GradientStop Color="{ThemeResource SurfaceColor}" Offset="0.25" /><GradientStop Color="{ThemeResource SurfaceColor}" Offset="1" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="KnobBrush" StartPoint="0,0" EndPoint="0,1">
+    <GradientStop Color="{ThemeResource SurfaceColor}" Offset="0" /><GradientStop Color="{ThemeResource SurfaceVariantColor}" Offset="1" />
+  </LinearGradientBrush>
+  <!-- Inset shadow (CSS inset 0 1px 3px) as a 4 px top shade inside rounded strips and status cards. -->
+  <LinearGradientBrush x:Key="InsetShadeBrush" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,4" Opacity="0.12">
+    <GradientStop Color="{StaticResource ShadowInkColor}" Offset="0" /><GradientStop Color="Transparent" Offset="1" />
+  </LinearGradientBrush>
+
+  <!-- 3. Shadows (§4), shared by every ShadowContainer that wears them (Toolkit: a ShadowCollection may be a resource). -->
+  <utu:ShadowCollection x:Key="ShadowFrame">
+    <utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" />
+    <utu:Shadow OffsetY="12" BlurRadius="32" Spread="-24" Opacity="0.25" Color="{StaticResource ShadowInkColor}" />
+  </utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowXs"><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.05" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowNavOn"><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.06" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowSegOn"><utu:Shadow OffsetY="1" BlurRadius="2" Opacity="0.12" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowCard"><utu:Shadow OffsetY="2" BlurRadius="3" Spread="-1" Opacity="0.07" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowGlass"><utu:Shadow OffsetY="10" BlurRadius="28" Spread="-16" Opacity="0.28" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowFloatButton"><utu:Shadow OffsetY="2" BlurRadius="8" Opacity="0.18" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowKnob"><utu:Shadow OffsetY="1" BlurRadius="3" Opacity="0.2" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <utu:ShadowCollection x:Key="ShadowGanttDot"><utu:Shadow OffsetY="1" BlurRadius="3" Opacity="0.25" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+  <!-- Inset: photo frames, the shadow ink at 20 % in both themes (the prototype's rgba(0,0,0,.2)). -->
+  <utu:ShadowCollection x:Key="ShadowInsetPhoto"><utu:Shadow IsInner="True" OffsetY="1" BlurRadius="3" Opacity="0.2" Color="{StaticResource ShadowInkColor}" /></utu:ShadowCollection>
+
+  <!--
+    4. Line icons (§11): Lucide geometry from Icons.xaml drawn at 24 units and scaled to the box, so the stroke scales
+    with it exactly like the prototype's SVG (stroke 1.75 or 2 in viewBox units). Set Content to the geometry key and
+    Foreground to the stroke colour. Path.Stroke does not inherit Foreground, so the template binds it.
+  -->
+  <ControlTemplate x:Key="LineIconTemplate" TargetType="ContentControl">
+    <Viewbox Stretch="Uniform">
+      <Grid Width="24" Height="24">
+        <Path Data="{TemplateBinding Content}" Stroke="{TemplateBinding Foreground}" StrokeThickness="1.75"
+              StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" />
+      </Grid>
+    </Viewbox>
+  </ControlTemplate>
+  <ControlTemplate x:Key="LineIconBoldTemplate" TargetType="ContentControl">
+    <Viewbox Stretch="Uniform">
+      <Grid Width="24" Height="24">
+        <Path Data="{TemplateBinding Content}" Stroke="{TemplateBinding Foreground}" StrokeThickness="2"
+              StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" />
+      </Grid>
+    </Viewbox>
+  </ControlTemplate>
+  <ControlTemplate x:Key="FilledIconTemplate" TargetType="ContentControl">
+    <Viewbox Stretch="Uniform">
+      <Grid Width="24" Height="24">
+        <Path Data="{TemplateBinding Content}" Fill="{TemplateBinding Foreground}" />
+      </Grid>
+    </Viewbox>
+  </ControlTemplate>
+  <Style x:Key="LineIcon18" TargetType="ContentControl">
+    <Setter Property="Width" Value="18" /><Setter Property="Height" Value="18" />
+    <Setter Property="IsTabStop" Value="False" /><Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
+    <Setter Property="Template" Value="{StaticResource LineIconTemplate}" />
+  </Style>
+  <Style x:Key="LineIcon16" TargetType="ContentControl" BasedOn="{StaticResource LineIcon18}">
+    <Setter Property="Width" Value="{StaticResource IconSizeSmall}" /><Setter Property="Height" Value="{StaticResource IconSizeSmall}" />
+  </Style>
+  <Style x:Key="LineIcon16Bold" TargetType="ContentControl" BasedOn="{StaticResource LineIcon16}">
+    <Setter Property="Template" Value="{StaticResource LineIconBoldTemplate}" />
+  </Style>
+  <Style x:Key="LineIcon14Bold" TargetType="ContentControl" BasedOn="{StaticResource LineIcon16Bold}">
+    <Setter Property="Width" Value="14" /><Setter Property="Height" Value="14" />
+  </Style>
+  <Style x:Key="FilledIcon" TargetType="ContentControl" BasedOn="{StaticResource LineIcon18}">
+    <Setter Property="Foreground" Value="{ThemeResource PrimaryBrush}" />
+    <Setter Property="Template" Value="{StaticResource FilledIconTemplate}" />
+  </Style>
+
+  <!--
+    5. Buttons (§10). Two templates: the Material button templates carry their own elevation, min sizes and state
+    overlays, so a Border + ContentPresenter template keeps the box, the hover fill and the 0.96 press scale. Every
+    colour is a role brush: the primary button is Primary with the OnPrimary state layer, the secondary one Surface with
+    the Background hover and the SurfaceVariant press.
+    xaml-lint: allow template - exact prototype fills, press scale; Material overlays cannot match them
+  -->
+  <Style x:Key="ButtonBase" TargetType="Button">
+    <Setter Property="FontFamily" Value="{ThemeResource BodyMediumFontFamily}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="FontSize" Value="{StaticResource BodyMediumFontSize}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="UseSystemFocusVisuals" Value="True" />
+    <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource OnSurfaceBrush}" />
+    <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+    <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+    <Setter Property="FocusVisualMargin" Value="-4" />
+  </Style>
+  <!-- Disabled buttons (primary, secondary, nav item) fade to this, so an unavailable action never reads as available. -->
+  <x:Double x:Key="DisabledOpacity">0.45</x:Double>
+  <ControlTemplate x:Key="PrimaryButtonTemplate" TargetType="Button">
+    <Grid x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" RenderTransformOrigin="0.5,0.5">
+      <Grid.RenderTransform><ScaleTransform x:Name="Press" /></Grid.RenderTransform>
+      <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup x:Name="CommonStates">
+          <VisualState x:Name="Normal" />
+          <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="StateLayer.Background" Value="{ThemeResource OnPrimaryHoverBrush}" /></VisualState.Setters></VisualState>
+          <VisualState x:Name="Pressed">
+            <VisualState.Setters><Setter Target="StateLayer.Background" Value="{ThemeResource OnPrimaryPressedBrush}" /></VisualState.Setters>
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleX" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleY" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
+            </Storyboard>
+          </VisualState>
+          <VisualState x:Name="Disabled"><VisualState.Setters><Setter Target="Root.Opacity" Value="{StaticResource DisabledOpacity}" /></VisualState.Setters></VisualState>
+        </VisualStateGroup>
+      </VisualStateManager.VisualStateGroups>
+      <!-- State layer (Material): the OnPrimary hover and pressed tints over the primary fill. -->
+      <Border x:Name="StateLayer" Background="Transparent" CornerRadius="{TemplateBinding CornerRadius}" IsHitTestVisible="False" />
+      <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                        Padding="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+    </Grid>
+  </ControlTemplate>
+  <ControlTemplate x:Key="SecondaryButtonTemplate" TargetType="Button">
+    <Grid x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" RenderTransformOrigin="0.5,0.5">
+      <Grid.RenderTransform><ScaleTransform x:Name="Press" /></Grid.RenderTransform>
+      <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup x:Name="CommonStates">
+          <VisualState x:Name="Normal" />
+          <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource BackgroundBrush}" /></VisualState.Setters></VisualState>
+          <VisualState x:Name="Pressed">
+            <VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource SurfaceVariantBrush}" /></VisualState.Setters>
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleX" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="Press" Storyboard.TargetProperty="ScaleY" To="0.96" Duration="0:0:0.15"><DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction></DoubleAnimation>
+            </Storyboard>
+          </VisualState>
+          <!-- A disabled button reads as unavailable (Induce before the checks, Administer dose on a signed record). -->
+          <VisualState x:Name="Disabled"><VisualState.Setters><Setter Target="Root.Opacity" Value="{StaticResource DisabledOpacity}" /></VisualState.Setters></VisualState>
+        </VisualStateGroup>
+      </VisualStateManager.VisualStateGroups>
+      <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                        Padding="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+    </Grid>
+  </ControlTemplate>
+
+  <Style x:Key="ButtonPrimary" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="{ThemeResource PrimaryBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource PrimaryBrush}" />
+    <Setter Property="Foreground" Value="{ThemeResource OnPrimaryBrush}" />
+    <Setter Property="Template" Value="{StaticResource PrimaryButtonTemplate}" />
+  </Style>
+  <Style x:Key="ButtonPrimaryS" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+    <Setter Property="Height" Value="{StaticResource ControlHeightSmall}" /><Setter Property="Padding" Value="{StaticResource Space150HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius300CornerRadius}" /><Setter Property="FontSize" Value="{StaticResource BodySmallFontSize}" />
+  </Style>
+  <Style x:Key="ButtonPrimaryM" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+    <Setter Property="Height" Value="{StaticResource ButtonHeightCompact}" /><Setter Property="Padding" Value="{StaticResource Space150HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius300CornerRadius}" /><Setter Property="FontSize" Value="{StaticResource BodySmallFontSize}" />
+  </Style>
+  <Style x:Key="ButtonPrimaryL" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+    <Setter Property="Height" Value="{StaticResource ControlHeightMedium}" /><Setter Property="Padding" Value="{StaticResource Space200HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius300CornerRadius}" />
+  </Style>
+  <Style x:Key="ButtonPrimaryXL" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+    <Setter Property="Height" Value="{StaticResource ControlHeightLarge}" /><Setter Property="Padding" Value="{StaticResource Space200HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius400CornerRadius}" /><Setter Property="FontSize" Value="{StaticResource LabelLargeFontSize}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+  </Style>
+  <Style x:Key="ButtonSecondary" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource OutlineVariantBrush}" />
+    <Setter Property="Foreground" Value="{ThemeResource OnSurfaceBrush}" />
+    <Setter Property="Template" Value="{StaticResource SecondaryButtonTemplate}" />
+  </Style>
+  <Style x:Key="ButtonSecondaryM" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
+    <Setter Property="Height" Value="{StaticResource ButtonHeightCompact}" /><Setter Property="Padding" Value="{StaticResource Space150HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius300CornerRadius}" /><Setter Property="FontSize" Value="{StaticResource BodySmallFontSize}" />
+  </Style>
+  <Style x:Key="ButtonSecondaryL" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
+    <Setter Property="Height" Value="{StaticResource ControlHeightMedium}" /><Setter Property="Padding" Value="{StaticResource Space200HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius300CornerRadius}" />
+  </Style>
+  <Style x:Key="ButtonIconSecondary" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
+    <Setter Property="Width" Value="{StaticResource ControlHeightMedium}" /><Setter Property="Height" Value="{StaticResource ControlHeightMedium}" /><Setter Property="Padding" Value="0" /><Setter Property="CornerRadius" Value="{StaticResource Radius300CornerRadius}" />
+  </Style>
+  <Style x:Key="ButtonIconSecondaryS" TargetType="Button" BasedOn="{StaticResource ButtonSecondary}">
+    <Setter Property="Width" Value="{StaticResource ControlHeightSmall}" /><Setter Property="Height" Value="{StaticResource ControlHeightSmall}" /><Setter Property="Padding" Value="0" /><Setter Property="CornerRadius" Value="{StaticResource Radius300CornerRadius}" />
+  </Style>
+  <Style x:Key="ButtonIconGhost" TargetType="Button" BasedOn="{StaticResource ButtonIconSecondaryS}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
+  </Style>
+
+  <!--
+    Sidebar nav item (§8): 40 px, radius 12, icon 18 + label 14/20 Medium + optional count. Hover ink 5 %; the active
+    item (NavStates.Active, driven by utu:VisualStateManagerExtensions.States from ShellModel) gets the surface, the
+    tri-tone border, the nav-on shadow and a primary icon (icons bind the presenter's Foreground).
+    xaml-lint: allow template - route-driven Active state needs its own visual state group
+  -->
+  <!-- Link (.lnk): 14/20 600 ink, underline rgba(27,33,47,.3) 4 px below, trailing arrow 16 / 2.
+       xaml-lint: allow template - underline colour and offset are not TextDecorations options -->
+  <Style x:Key="LinkButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Foreground" Value="{ThemeResource OnSurfaceBrush}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid x:Name="Root" Background="Transparent">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Underline.Fill" Value="{ThemeResource OnSurfaceBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Underline.Fill" Value="{ThemeResource OnSurfaceBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled" />
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space075}">
+              <Grid>
+                <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{TemplateBinding Foreground}" />
+                <Rectangle x:Name="Underline" Height="1" VerticalAlignment="Bottom" Margin="0,0,0,-3" Fill="{ThemeResource OnSurfaceLowBrush}" />
+              </Grid>
+              <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconArrowRight}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <!-- A row that opens something (record card footers): content row, hover Surface2, radius 8. The negative margin at the
+       call site keeps the content aligned with the card text while the hover fill bleeds 8 px.
+       xaml-lint: allow template - row hover fill behind arbitrary row content -->
+  <Style x:Key="RowLinkButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="{StaticResource Inset8x6}" />
+    <Setter Property="CornerRadius" Value="{StaticResource Radius200CornerRadius}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource SurfaceVariantBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource BackgroundBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled" />
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <ContentPresenter Padding="{TemplateBinding Padding}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="Center" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <!-- Panel card for the utility screens (Settings, Agenda, sheets): the record cards' surface. Surface1, tri-tone edge,
+       radius 18, padding 20, shadow xs (0 1 2 / 5 %). Static: no pressed overlay (see StaticOutlinedCardStyle).
+       xaml-lint: allow template - shadow xs and the gradient edge; the Material card templates draw neither -->
+  <Style x:Key="PanelCardStyle" TargetType="utu:CardContentControl" BasedOn="{StaticResource OutlinedCardContentControlStyle}">
+    <Setter Property="IsTabStop" Value="False" />
+    <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource OutlineVariantBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{StaticResource Radius400CornerRadius}" />
+    <Setter Property="Padding" Value="{StaticResource Space250Thickness}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="utu:CardContentControl">
+          <utu:ShadowContainer Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" Shadows="{StaticResource ShadowXs}">
+            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}">
+              <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Border>
+          </utu:ShadowContainer>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <!-- Loading placeholder bar (skeletons keep the loaded layout's footprint). The record page adds VerticalAlignment Top. -->
+  <Style x:Key="Skeleton" TargetType="Rectangle">
+    <Setter Property="RadiusX" Value="{StaticResource Radius200}" />
+    <Setter Property="RadiusY" Value="{StaticResource Radius200}" />
+    <Setter Property="Fill" Value="{ThemeResource SurfaceVariantBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+  </Style>
+  <!-- Care ruler time block (CareRuler builds these in code): radius 9, hover outline primary, press 10 % primary.
+       xaml-lint: allow template - hover tint over a block whose fill is the phase colour -->
+  <Style x:Key="CloverTimeBlock" TargetType="Button">
+    <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource OutlineBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{StaticResource Radius200CornerRadius}" />
+    <Setter Property="Padding" Value="{StaticResource Space100Thickness}" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="UseSystemFocusVisuals" Value="True" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid>
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Shell.BorderBrush" Value="{ThemeResource PrimaryBrush}" /><Setter Target="Hover.Opacity" Value="0.04" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Hover.Opacity" Value="0.10" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled"><VisualState.Setters><Setter Target="Shell.Opacity" Value="0.5" /></VisualState.Setters></VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Border x:Name="Shell" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}">
+              <ContentPresenter Content="{TemplateBinding Content}" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="Stretch" />
+            </Border>
+            <Border x:Name="Hover" CornerRadius="{TemplateBinding CornerRadius}" Background="{ThemeResource PrimaryBrush}" Opacity="0" IsHitTestVisible="False" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="NavItemButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+    <Setter Property="Height" Value="{StaticResource ControlHeightMedium}" />
+    <Setter Property="Padding" Value="{StaticResource Space150LeftThickness}" />
+    <Setter Property="CornerRadius" Value="{StaticResource Radius300CornerRadius}" />
+    <Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid x:Name="Root">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Hover.Background" Value="{ThemeResource OnSurfaceHoverBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Hover.Background" Value="{ThemeResource OnSurfacePressedBrush}" /></VisualState.Setters></VisualState>
+                <VisualState x:Name="Disabled"><VisualState.Setters><Setter Target="Root.Opacity" Value="{StaticResource DisabledOpacity}" /></VisualState.Setters></VisualState>
+              </VisualStateGroup>
+              <VisualStateGroup x:Name="NavStates">
+                <VisualState x:Name="Inactive" />
+                <VisualState x:Name="Active">
+                  <VisualState.Setters>
+                    <Setter Target="Shadow.Visibility" Value="Visible" />
+                    <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource PrimaryBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Border x:Name="Hover" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" />
+            <utu:ShadowContainer x:Name="Shadow" Visibility="Collapsed" Background="{ThemeResource SurfaceBrush}" CornerRadius="{TemplateBinding CornerRadius}" Shadows="{StaticResource ShadowNavOn}">
+              <Border CornerRadius="{TemplateBinding CornerRadius}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="1" />
+            </utu:ShadowContainer>
+            <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Padding="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}" BorderThickness="1" BorderBrush="Transparent"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="Center" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- Badges and chips (§10). Text inside uses CaptionLarge SemiBold (badges) or BodySmall SemiBold (status chips). -->
+  <Style x:Key="BadgeOutline" TargetType="Border">
+    <Setter Property="Height" Value="24" /><Setter Property="Padding" Value="{StaticResource Space100HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius200CornerRadius}" />
+    <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource OutlineVariantBrush}" /><Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style x:Key="BadgeNeutral" TargetType="Border">
+    <Setter Property="Height" Value="24" /><Setter Property="Padding" Value="{StaticResource Space100HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius200CornerRadius}" />
+    <Setter Property="Background" Value="{ThemeResource SurfaceVariantBrush}" />
+  </Style>
+  <Style x:Key="ChipErrorSoft" TargetType="Border">
+    <Setter Property="Height" Value="26" /><Setter Property="Padding" Value="{StaticResource Space100HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius200CornerRadius}" />
+    <Setter Property="Background" Value="{ThemeResource ErrorContainerBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource ErrorLowBrush}" /><Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style x:Key="ChipLiveSoft" TargetType="Border">
+    <Setter Property="Height" Value="28" /><Setter Property="Padding" Value="{StaticResource Space125HorizontalThickness}" /><Setter Property="CornerRadius" Value="{StaticResource Radius200CornerRadius}" />
+    <Setter Property="Background" Value="{ThemeResource AnesthesiaContainerBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource AnesthesiaOutlineBrush}" /><Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <!-- Shell surfaces (§8-9) -->
+  <Style x:Key="AvatarCircle" TargetType="Border">
+    <Setter Property="Width" Value="34" /><Setter Property="Height" Value="34" /><Setter Property="CornerRadius" Value="{StaticResource RadiusFullCornerRadius}" />
+    <Setter Property="Background" Value="{ThemeResource PrimaryContainerBrush}" />
+  </Style>
+  <Style x:Key="PillSurface" TargetType="Border">
+    <Setter Property="Padding" Value="{StaticResource Inset12x8}" /><Setter Property="CornerRadius" Value="{StaticResource Radius300CornerRadius}" />
+    <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource OutlineVariantBrush}" /><Setter Property="BorderThickness" Value="1" />
   </Style>
 </ResourceDictionary>

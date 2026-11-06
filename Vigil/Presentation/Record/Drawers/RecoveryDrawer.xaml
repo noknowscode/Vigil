@@ -16,7 +16,7 @@
         controls:FlyoutFocus.Restores="True">
   <Grid RowDefinitions="Auto,Auto,*" utu:SafeArea.Insets="VisibleBounds">
     <controls:DrawerHeader x:Uid="RecoveryDrawer_1" Title="Recovery &amp; handover" CloseCommand="{Binding Close}" />
-    <muxc:InfoBar x:Uid="RecoveryDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource InsetX20}">
+    <muxc:InfoBar x:Uid="RecoveryDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource Space250HorizontalThickness}">
       <muxc:InfoBar.ActionButton><Button x:Uid="RecoveryDrawer_3" Content="Dismiss" Command="{Binding DismissError}" /></muxc:InfoBar.ActionButton>
     </muxc:InfoBar>
     <mvux:FeedView Grid.Row="2" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"
@@ -24,41 +24,41 @@
       <mvux:FeedView.ValueTemplate>
         <DataTemplate>
           <ScrollViewer HorizontalScrollMode="Disabled">
-            <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
+            <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space300}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
 
-              <StackPanel Spacing="{StaticResource Space8}" Visibility="{Binding Data.IsAnesthetized, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+              <StackPanel Spacing="{StaticResource Space100}" Visibility="{Binding Data.IsAnesthetized, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                 <TextBlock x:Uid="RecoveryDrawer_4" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" Text="Patient is under anesthesia" />
                 <TextBlock x:Uid="RecoveryDrawer_5" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Text="End anesthesia when the vaporizer is off. The reading clock stops and recovery starts." />
                 <Button x:Uid="RecoveryDrawer_6" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="End anesthesia" Command="{Binding Parent.EndAnesthesia}" AutomationProperties.Name="End anesthesia" />
               </StackPanel>
 
-              <StackPanel Spacing="{StaticResource Space4}" Visibility="{Binding Data.IsNotAnesthetized, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+              <StackPanel Spacing="{StaticResource Space050}" Visibility="{Binding Data.IsNotAnesthetized, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                 <TextBlock x:Uid="RecoveryDrawer_7" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="RECOVERY" />
                 <TextBlock x:Uid="RecoveryDrawer_8" Style="{StaticResource NumeralDisplaySmall}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{Binding Parent.Timers.RecoveryAnchor}" AutomationProperties.Name="Time in recovery" />
                 <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{Binding Data.RecoveryAnchorLabel}" />
               </StackPanel>
 
               <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False" Visibility="{Binding Data.IsNotAnesthetized, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
-                <StackPanel Padding="{StaticResource Inset20}" Spacing="{StaticResource Space12}">
+                <StackPanel Padding="{StaticResource Space250Thickness}" Spacing="{StaticResource Space150}">
                   <TextBlock x:Uid="RecoveryDrawer_9" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" Text="Recovery log" />
-                  <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{StaticResource Space12}">
+                  <Grid ColumnSpacing="{StaticResource Space150}" RowSpacing="{StaticResource Space150}">
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel Spacing="{StaticResource Space6}">
+                    <StackPanel Spacing="{StaticResource Space075}">
                       <Button x:Uid="RecoveryDrawer_10" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Stretch" Content="Extubated now" Visibility="{Binding Data.IsNotExtubated, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.Extubate}" AutomationProperties.Name="Record extubation now" />
                       <TextBlock Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" Text="{Binding Data.ExtubatedText}" />
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Spacing="{StaticResource Space6}">
+                    <StackPanel Grid.Column="1" Spacing="{StaticResource Space075}">
                       <Button x:Uid="RecoveryDrawer_11" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Stretch" Content="Sternal now" Visibility="{Binding Data.IsNotSternal, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.Sternal}" AutomationProperties.Name="Record sternal recumbency now" />
                       <TextBlock Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" Text="{Binding Data.SternalText}" />
                     </StackPanel>
                   </Grid>
                   <!-- Pain score: each tap records a timed score (the 15-minute task resets even when the score is unchanged). -->
-                  <StackPanel Spacing="{StaticResource Space8}">
+                  <StackPanel Spacing="{StaticResource Space100}">
                     <TextBlock x:Uid="RecoveryDrawer_12" Text="Pain score (0 none to 4 severe)" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" FontWeight="Medium" />
-                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" Visibility="{Binding Data.CanEditRecovery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space100}" Visibility="{Binding Data.CanEditRecovery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                       <Button x:Uid="RecoveryDrawer_13" Style="{StaticResource ButtonSecondaryM}" MinWidth="{StaticResource ScoreButtonMinWidth}" Content="0" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="0" AutomationProperties.Name="Record pain score 0" />
                       <Button x:Uid="RecoveryDrawer_14" Style="{StaticResource ButtonSecondaryM}" MinWidth="{StaticResource ScoreButtonMinWidth}" Content="1" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="1" AutomationProperties.Name="Record pain score 1" />
                       <Button x:Uid="RecoveryDrawer_15" Style="{StaticResource ButtonSecondaryM}" MinWidth="{StaticResource ScoreButtonMinWidth}" Content="2" IsEnabled="{Binding Data.CanEditRecovery}" Command="{Binding Parent.ScorePain}" CommandParameter="2" AutomationProperties.Name="Record pain score 2" />
@@ -72,10 +72,10 @@
                 </StackPanel>
               </utu:CardContentControl>
 
-              <StackPanel Spacing="{StaticResource Space8}">
+              <StackPanel Spacing="{StaticResource Space100}">
                 <Button x:Uid="RecoveryDrawer_20" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Sign off" Visibility="{Binding Data.IsRecovery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.SignOff}" AutomationProperties.Name="Sign off the record" />
                 <TextBlock Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Text="{Binding Data.SignedText}" />
-                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space12}" Visibility="{Binding Data.IsSigned, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space150}" Visibility="{Binding Data.IsSigned, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                   <Button x:Uid="RecoveryDrawer_21" Style="{StaticResource ButtonPrimaryL}" Content="Export CSV" Command="{Binding Parent.Export}" AutomationProperties.Name="Export the record as CSV" />
                   <Button x:Uid="RecoveryDrawer_22" Style="{StaticResource ButtonSecondaryL}" Content="Copy summary" Command="{Binding Parent.CopySummary}" AutomationProperties.Name="Copy a text summary" />
                 </StackPanel>
@@ -83,7 +83,7 @@
               </StackPanel>
 
               <!-- Discharge call to the pet parent (a "Due next" task): recorded here once made. -->
-              <StackPanel Spacing="{StaticResource Space8}" Visibility="{Binding Data.HasDischargeCall, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+              <StackPanel Spacing="{StaticResource Space100}" Visibility="{Binding Data.HasDischargeCall, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                 <TextBlock x:Uid="RecoveryDrawer_23" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" Text="Discharge call" />
                 <TextBlock Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{Binding Data.DischargeText}" TextWrapping="WrapWholeWords" />
                 <Button x:Uid="RecoveryDrawer_24" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Call made" Visibility="{Binding Data.CanCompleteCall, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.CompleteDischargeCall}" AutomationProperties.Name="Record the discharge call as made" />

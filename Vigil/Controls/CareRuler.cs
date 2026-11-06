@@ -113,7 +113,7 @@ public sealed partial class CareRuler : UserControl
             var nowY = day.NowTop + 22;
             Place(_present, new Border { Width = width - 43, Height = 1.5, Background = primary }, 43, nowY);
             Place(_present, new Ellipse { Width = 6, Height = 6, Fill = primary }, 40, nowY - 2.5);
-            var marker = new Border { Background = primary, CornerRadius = (CornerRadius)Application.Current.Resources["Radius6"], Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), "CaptionLarge", Ink("OnPrimaryColor")) };
+            var marker = new Border { Background = primary, CornerRadius = (CornerRadius)Application.Current.Resources["Radius200CornerRadius"], Padding = new Thickness(5, 3, 5, 3), Child = Label(Loc.T("Ruler_Now", "Now"), "CaptionLarge", Ink("OnPrimaryColor")) };
             Place(_present, marker, 0, nowY - 10);
         }
         finally { _drawing = false; }

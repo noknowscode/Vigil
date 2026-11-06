@@ -15,7 +15,7 @@
         controls:FlyoutFocus.Restores="True">
   <Grid RowDefinitions="Auto,Auto,*" utu:SafeArea.Insets="VisibleBounds">
     <controls:DrawerHeader x:Uid="LabsDrawer_1" Title="Lab results" CloseCommand="{Binding Close}" />
-    <muxc:InfoBar x:Uid="LabsDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource InsetX20}">
+    <muxc:InfoBar x:Uid="LabsDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource Space250HorizontalThickness}">
       <muxc:InfoBar.ActionButton><Button x:Uid="LabsDrawer_3" Content="Dismiss" Command="{Binding DismissError}" /></muxc:InfoBar.ActionButton>
     </muxc:InfoBar>
     <mvux:FeedView Grid.Row="2" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"
@@ -23,15 +23,15 @@
       <mvux:FeedView.ValueTemplate>
         <DataTemplate>
           <ScrollViewer HorizontalScrollMode="Disabled">
-            <StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space16}">
+            <StackPanel Padding="{StaticResource Space300Thickness}" Spacing="{StaticResource Space200}">
               <TextBlock x:Uid="LabsDrawer_4" Text="Lab panels for this visit" Style="{StaticResource TitleMedium}" />
               <TextBlock x:Uid="LabsDrawer_5" Text="Vigil tracks which panels are pending, ready and reviewed. The reports and their values stay in your lab system." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
               <TextBlock x:Uid="LabsDrawer_6" Text="No lab panels for this visit." Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" Visibility="{Binding Data.HasNoLabs, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
               <ItemsControl x:Uid="LabsDrawer_7" ItemsSource="{Binding Data.LabRows}" AutomationProperties.Name="Lab panels">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate x:DataType="local:LabRow">
-                    <Grid Padding="{StaticResource InsetY10}" ColumnSpacing="{StaticResource Space16}" ColumnDefinitions="*,Auto" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
-                      <StackPanel Spacing="{StaticResource Space2}" VerticalAlignment="Center">
+                    <Grid Padding="{StaticResource Space125VerticalThickness}" ColumnSpacing="{StaticResource Space200}" ColumnDefinitions="*,Auto" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
+                      <StackPanel Spacing="{StaticResource Space025}" VerticalAlignment="Center">
                         <TextBlock Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" Text="{x:Bind Panel}" />
                         <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind StateText}" />
                       </StackPanel>

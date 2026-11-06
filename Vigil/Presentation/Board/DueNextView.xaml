@@ -39,16 +39,16 @@
   </UserControl.Resources>
 
   <StackPanel>
-    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space16}">
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space200}">
       <StackPanel>
         <TextBlock x:Uid="TodayPage_31" Text="Due next" Style="{StaticResource TitleMedium}" />
-        <TextBlock Text="{Binding DueHeader.Summary}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="{StaticResource GapTop2}" />
+        <TextBlock Text="{Binding DueHeader.Summary}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="{StaticResource Space025TopThickness}" />
       </StackPanel>
       <Button x:Uid="TodayPage_32" Grid.Column="1" Style="{StaticResource LinkButton}" Content="Open agenda" Command="{Binding OpenAgenda}" VerticalAlignment="Bottom" />
     </Grid>
     <!-- Status (148) from Wide; below it the column is empty (Auto, 0 wide) and the status folds under the task.
          Phones tighten the gaps so the task keeps ~130 px next to the time chip and the action. -->
-    <Grid Margin="{StaticResource GapTop16}" Padding="{StaticResource GapBottom8}" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space10}, Normal={StaticResource Space16}}">
+    <Grid Margin="{StaticResource Space200TopThickness}" Padding="{StaticResource Space100BottomThickness}" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space125}, Normal={StaticResource Space200}}">
       <Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
       <TextBlock x:Uid="TodayPage_33" Text="Due" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
       <TextBlock x:Uid="TodayPage_34" Grid.Column="1" Text="Task" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1}" />
@@ -65,12 +65,12 @@
                 <!-- Row: min-h 72, pad 10 8, bleeds 8 px each side, top divider, hover #F8F8F7 -->
                 <Grid Margin="-8,0" MinHeight="72" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0">
                   <Button Style="{StaticResource RowHitButton}" Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.OpenRow}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding AccessibleName}" />
-                  <Grid Padding="{StaticResource DueRowInset}" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space10}, Normal={StaticResource Space16}}">
+                  <Grid Padding="{StaticResource DueRowInset}" ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space125}, Normal={StaticResource Space200}}">
                     <Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                     <!-- Time chip 56 x 46, radius 10 -->
                     <Grid Width="56" Height="46" HorizontalAlignment="Left" IsHitTestVisible="False">
-                      <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource BackgroundBrush}" Stroke="{ThemeResource OutlineVariantBrush}" StrokeThickness="1" Visibility="{Binding IsDue, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
-                      <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource ErrorContainerBrush}" Stroke="{ThemeResource ErrorLowBrush}" StrokeThickness="1" Visibility="{Binding IsLate, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <Rectangle RadiusX="{StaticResource Radius300}" RadiusY="{StaticResource Radius300}" Fill="{ThemeResource BackgroundBrush}" Stroke="{ThemeResource OutlineVariantBrush}" StrokeThickness="1" Visibility="{Binding IsDue, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <Rectangle RadiusX="{StaticResource Radius300}" RadiusY="{StaticResource Radius300}" Fill="{ThemeResource ErrorContainerBrush}" Stroke="{ThemeResource ErrorLowBrush}" StrokeThickness="1" Visibility="{Binding IsLate, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                       <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Text="{Binding DueLabel}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" HorizontalAlignment="Center" Visibility="{Binding IsDue, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                         <TextBlock Text="{Binding DueLabel}" Style="{StaticResource LabelSmall}" FontWeight="SemiBold" Foreground="{ThemeResource OnErrorContainerBrush}" HorizontalAlignment="Center" Visibility="{Binding IsLate, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
@@ -79,7 +79,7 @@
                     </Grid>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" IsHitTestVisible="False" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Wide=1}">
                       <TextBlock Text="{Binding Title}" Style="{StaticResource LabelLarge}" TextTrimming="CharacterEllipsis" />
-                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space075}">
                         <Grid Width="6" Height="6" VerticalAlignment="Center">
                           <Ellipse Fill="{ThemeResource AnesthesiaBrush}" Visibility="{Binding IsAnesthesia, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                           <Ellipse Fill="{ThemeResource RecoveryBrush}" Visibility="{Binding IsRecovery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
@@ -93,11 +93,11 @@
                       <TextBlock Text="{Binding Status}" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Visibility="{utu:Responsive Narrowest=Visible, Wide=Collapsed}" />
                     </StackPanel>
                     <Grid Grid.Column="2" Width="{StaticResource DueStatusWidth}" VerticalAlignment="Center" IsHitTestVisible="False" Visibility="{utu:Responsive Narrowest=Collapsed, Wide=Visible}">
-                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsOverdue, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space075}" Visibility="{Binding IsOverdue, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                         <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
                         <TextBlock Text="{Binding Status}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource ErrorBrush}" />
                       </StackPanel>
-                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}" Visibility="{Binding IsReady, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                      <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space075}" Visibility="{Binding IsReady, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                         <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" VerticalAlignment="Center" />
                         <TextBlock Text="{Binding Status}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" />
                       </StackPanel>
@@ -121,17 +121,17 @@
       <mvux:FeedView.ProgressTemplate>
         <DataTemplate>
           <StackPanel AutomationProperties.AccessibilityView="Raw">
-            <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0">
-              <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" />
-              <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="160" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="220" Height="12" /></StackPanel>
+            <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space200}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0">
+              <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource Radius300}" RadiusY="{StaticResource Radius300}" />
+              <StackPanel Grid.Column="1" Spacing="{StaticResource Space100}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="160" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="220" Height="12" /></StackPanel>
             </Grid>
-            <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0">
-              <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" />
-              <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="120" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="200" Height="12" /></StackPanel>
+            <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space200}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0">
+              <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource Radius300}" RadiusY="{StaticResource Radius300}" />
+              <StackPanel Grid.Column="1" Spacing="{StaticResource Space100}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="120" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="200" Height="12" /></StackPanel>
             </Grid>
-            <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0">
-              <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" />
-              <StackPanel Grid.Column="1" Spacing="{StaticResource Space8}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="140" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="180" Height="12" /></StackPanel>
+            <Grid Height="72" ColumnDefinitions="64,*" ColumnSpacing="{StaticResource Space200}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0">
+              <Rectangle Style="{StaticResource Skeleton}" Width="56" Height="46" RadiusX="{StaticResource Radius300}" RadiusY="{StaticResource Radius300}" />
+              <StackPanel Grid.Column="1" Spacing="{StaticResource Space100}" VerticalAlignment="Center"><Rectangle Style="{StaticResource Skeleton}" Width="140" Height="14" /><Rectangle Style="{StaticResource Skeleton}" Width="180" Height="12" /></StackPanel>
             </Grid>
           </StackPanel>
         </DataTemplate>
@@ -139,9 +139,9 @@
       <mvux:FeedView.NoneTemplate>
         <DataTemplate>
           <!-- Nothing due: green check tile, "All caught up", what is next -->
-          <Grid MinHeight="72" Padding="{StaticResource InsetY14}" ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
+          <Grid MinHeight="72" Padding="{StaticResource Space150VerticalThickness}" ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space150}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
             <Grid Width="32" Height="32" VerticalAlignment="Center">
-              <Rectangle RadiusX="{StaticResource RectRadius10}" RadiusY="{StaticResource RectRadius10}" Fill="{ThemeResource AnesthesiaContainerBrush}" Stroke="{ThemeResource AnesthesiaOutlineBrush}" StrokeThickness="1" />
+              <Rectangle RadiusX="{StaticResource Radius300}" RadiusY="{StaticResource Radius300}" Fill="{ThemeResource AnesthesiaContainerBrush}" Stroke="{ThemeResource AnesthesiaOutlineBrush}" StrokeThickness="1" />
               <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconCheck}" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" />
             </Grid>
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
@@ -153,7 +153,7 @@
       </mvux:FeedView.NoneTemplate>
       <mvux:FeedView.ErrorTemplate>
         <DataTemplate>
-          <StackPanel Padding="{StaticResource InsetY14}" Spacing="{StaticResource Space10}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
+          <StackPanel Padding="{StaticResource Space150VerticalThickness}" Spacing="{StaticResource Space125}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0" AutomationProperties.LiveSetting="Polite">
             <TextBlock x:Uid="TodayPage_38" Text="Couldn't work out what is due." Style="{StaticResource LabelLarge}" />
             <Button x:Uid="TodayPage_39" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Command="{Binding DataContext.Retry, ElementName=DueFeed}" AutomationProperties.Name="Retry reading records">
               <TextBlock x:Uid="TodayPage_40" Text="Retry" Style="{StaticResource LabelMedium}" />

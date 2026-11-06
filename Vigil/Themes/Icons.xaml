@@ -1,7 +1,7 @@
 <!--
   Interface icons for the v2 shell (SPEC-v2.md, docs/design/shell-and-tokens.md §11): Lucide (ISC licence), copied
   verbatim from the prototype's inline SVG (viewBox 24, round caps and joins). Circles and rounded rects are converted
-  to arcs so each icon is one path string (Uno converts it to a Geometry when the template binds Path.Data). Draw them with the LineIcon styles in Tokens.xaml (stroke 1.75 or 2, 24-unit
+  to arcs so each icon is one path string (Uno converts it to a Geometry when the template binds Path.Data). Draw them with the LineIcon styles in Controls.xaml (stroke 1.75 or 2, 24-unit
   box scaled to 16/18 px), never as inline path data in a page.
 -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

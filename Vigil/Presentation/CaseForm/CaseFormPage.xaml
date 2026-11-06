@@ -32,20 +32,20 @@
     </utu:NavigationBar>
 
     <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled">
-      <StackPanel Padding="{StaticResource SheetInsetFlush}" Spacing="{StaticResource Space16}">
-        <StackPanel Spacing="{StaticResource Space6}" Margin="{StaticResource GapBottom8}">
+      <StackPanel Padding="{StaticResource SheetInsetFlush}" Spacing="{StaticResource Space200}">
+        <StackPanel Spacing="{StaticResource Space075}" Margin="{StaticResource Space100BottomThickness}">
           <TextBlock Text="{Binding Heading}" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level1" />
           <TextBlock Text="{Binding Intro}" Style="{StaticResource BodyLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
           <TextBlock Text="{Binding Note}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Visibility="{Binding HasNote, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
         </StackPanel>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="{StaticResource Space14}">
+          <StackPanel Spacing="{StaticResource Space150}">
             <TextBlock x:Uid="NewCase_4" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="PATIENT" />
             <TextBox x:Uid="NewCase_5" Header="Name"
                      Text="{Binding Draft.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Patient name" />
-            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+            <Grid ColumnSpacing="{StaticResource Space150}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space150}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
               <ComboBox x:Uid="NewCase_6" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" x:Name="SpeciesBox"
                         Header="Species"
                         HorizontalAlignment="Stretch"
@@ -60,7 +60,7 @@
                        Text="{Binding Draft.Breed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Breed" />
             </Grid>
-            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+            <Grid ColumnSpacing="{StaticResource Space150}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space150}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
               <TextBox x:Uid="NewCase_11" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Header="Weight (kg)"
                        InputScope="Number"
                        Text="{Binding Draft.WeightText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -78,12 +78,12 @@
         </utu:CardContentControl>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="{StaticResource Space14}">
+          <StackPanel Spacing="{StaticResource Space150}">
             <TextBlock x:Uid="NewCase_14" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="PROCEDURE" />
             <TextBox x:Uid="NewCase_15" Header="Procedure"
                      Text="{Binding Draft.Procedure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Procedure" />
-            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+            <Grid ColumnSpacing="{StaticResource Space150}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space150}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
               <TextBox x:Uid="NewCase_16" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Header="Veterinarian"
                        Text="{Binding Draft.Veterinarian, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Veterinarian" />
@@ -96,13 +96,13 @@
         </utu:CardContentControl>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="{StaticResource Space14}">
-            <StackPanel Spacing="{StaticResource Space4}">
+          <StackPanel Spacing="{StaticResource Space150}">
+            <StackPanel Spacing="{StaticResource Space050}">
               <TextBlock x:Uid="NewCase_18" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="SCHEDULE" />
               <TextBlock x:Uid="NewCase_19" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card." />
             </StackPanel>
-            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto">
+            <Grid ColumnSpacing="{StaticResource Space150}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space150}, Normal=0}" ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto">
               <TextBox x:Uid="NewCase_20" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=3, Normal=1}" Header="Room"
                        Text="{Binding Draft.OperatingRoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Operating room" />
@@ -116,7 +116,7 @@
                        Text="{Binding Draft.PlannedMinutesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Planned length in minutes" />
             </Grid>
-            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,2*" RowDefinitions="Auto,Auto">
+            <Grid ColumnSpacing="{StaticResource Space150}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space150}, Normal=0}" ColumnDefinitions="*,2*" RowDefinitions="Auto,Auto">
               <TextBox x:Uid="NewCase_23" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Header="Fasting since"
                        Text="{Binding Draft.FastingSinceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        AutomationProperties.Name="Fasting since, time of day" />
@@ -130,8 +130,8 @@
       </StackPanel>
     </ScrollViewer>
 
-    <StackPanel Grid.Row="2" Padding="{StaticResource SheetInset}" Spacing="{StaticResource Space12}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
-      <StackPanel Spacing="{StaticResource Space4}" Visibility="{Binding HasErrors, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+    <StackPanel Grid.Row="2" Padding="{StaticResource SheetInset}" Spacing="{StaticResource Space150}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
+      <StackPanel Spacing="{StaticResource Space050}" Visibility="{Binding HasErrors, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
         <TextBlock x:Uid="NewCase_25" Style="{StaticResource BodySmall}"
                    Foreground="{ThemeResource ErrorBrush}"
                    TextWrapping="WrapWholeWords"

@@ -15,7 +15,7 @@
         controls:FlyoutFocus.Restores="True">
   <Grid RowDefinitions="Auto,Auto,*" utu:SafeArea.Insets="VisibleBounds">
     <controls:DrawerHeader x:Uid="PreopDrawer_1" Title="Preoperative preparation" CloseCommand="{Binding Close}" />
-    <muxc:InfoBar x:Uid="PreopDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource InsetX20}">
+    <muxc:InfoBar x:Uid="PreopDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource Space250HorizontalThickness}">
       <muxc:InfoBar.ActionButton><Button x:Uid="PreopDrawer_3" Content="Dismiss" Command="{Binding DismissError}" /></muxc:InfoBar.ActionButton>
     </muxc:InfoBar>
     <mvux:FeedView Grid.Row="2" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"
@@ -23,22 +23,22 @@
       <mvux:FeedView.ValueTemplate>
         <DataTemplate>
           <ScrollViewer HorizontalScrollMode="Disabled">
-            <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
-              <StackPanel Spacing="{StaticResource Space4}">
+            <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space300}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
+              <StackPanel Spacing="{StaticResource Space050}">
                 <TextBlock x:Uid="PreopDrawer_4" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="WEIGHT" />
-                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space100}">
                   <TextBlock x:Uid="PreopDrawer_5" Style="{StaticResource NumeralDisplaySmall}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{Binding Data.WeightText}" AutomationProperties.Name="Patient weight in kilograms" />
-                  <TextBlock x:Uid="PreopDrawer_6" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Bottom" Margin="{StaticResource GapBottom10}" Text="kg" />
+                  <TextBlock x:Uid="PreopDrawer_6" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Bottom" Margin="{StaticResource Space125BottomThickness}" Text="kg" />
                 </StackPanel>
                 <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{Binding Data.Signalment}" />
                 <!-- A mistyped weight drives every dose: the details stay correctable until the record is signed (logged in Visit history). -->
-                <Button x:Uid="PreopDrawer_28" Style="{StaticResource ButtonSecondaryM}" Margin="{StaticResource GapTop8}" HorizontalAlignment="Left" Content="Edit case details" Visibility="{Binding Data.CanChange, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.EditDetails}" AutomationProperties.Name="Edit the patient, weight, procedure and schedule" />
+                <Button x:Uid="PreopDrawer_28" Style="{StaticResource ButtonSecondaryM}" Margin="{StaticResource Space100TopThickness}" HorizontalAlignment="Left" Content="Edit case details" Visibility="{Binding Data.CanChange, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.EditDetails}" AutomationProperties.Name="Edit the patient, weight, procedure and schedule" />
               </StackPanel>
 
               <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
-                <StackPanel Padding="{StaticResource Inset20}" Spacing="{StaticResource Space8}">
+                <StackPanel Padding="{StaticResource Space250Thickness}" Spacing="{StaticResource Space100}">
                   <!-- Two columns, so the count never runs over a wrapped title (390 px, French). -->
-                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space12}">
+                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space150}">
                     <TextBlock x:Uid="PreopDrawer_7" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Text="Pre-anesthetic check" />
                     <TextBlock Grid.Column="1" Style="{StaticResource NumeralBodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" Text="{Binding Data.PreopProgress}" />
                   </Grid>
@@ -51,7 +51,7 @@
               </utu:CardContentControl>
 
               <utu:CardContentControl Style="{StaticResource StaticOutlinedCardStyle}" HorizontalAlignment="Stretch" IsTabStop="False">
-                <StackPanel Padding="{StaticResource Inset20}" Spacing="{StaticResource Space12}">
+                <StackPanel Padding="{StaticResource Space250Thickness}" Spacing="{StaticResource Space150}">
                   <TextBlock x:Uid="PreopDrawer_13" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" Text="ASA physical status" />
                   <muxc:RadioButtons x:Uid="PreopDrawer_14" MaxColumns="3" IsEnabled="{Binding Data.IsScheduled}" SelectedIndex="{Binding Parent.Preop.Asa, Mode=TwoWay}" AutomationProperties.Name="ASA physical status">
                     <RadioButton x:Uid="PreopDrawer_15" Content="Not set" />
@@ -66,7 +66,7 @@
                 </StackPanel>
               </utu:CardContentControl>
 
-              <StackPanel Spacing="{StaticResource Space8}">
+              <StackPanel Spacing="{StaticResource Space100}">
                 <Button x:Uid="PreopDrawer_23" Style="{StaticResource ButtonSecondaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Give premedication" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.GivePremedication}" AutomationProperties.Name="Give premedication" />
                 <Button x:Uid="PreopDrawer_24" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" MinWidth="{StaticResource ActionMinWidth}" Content="Induce" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" IsEnabled="{Binding Data.CanInduce}" Command="{Binding Parent.Induce}" AutomationProperties.Name="Induce anesthesia" />
                 <TextBlock x:Uid="PreopDrawer_25" TextWrapping="WrapWholeWords" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="Complete the five checks and set the ASA status to induce. Induction starts the reading clock." />
@@ -74,7 +74,7 @@
               </StackPanel>
 
               <!-- A booking made by mistake (a mistyped weight drives every dose) is deleted and booked again. -->
-              <StackPanel Spacing="{StaticResource Space8}" Padding="{StaticResource GapTop16}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+              <StackPanel Spacing="{StaticResource Space100}" Padding="{StaticResource Space200TopThickness}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,1,0,0" Visibility="{Binding Data.IsScheduled, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                 <TextBlock x:Uid="PreopDrawer_26" TextWrapping="WrapWholeWords" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="Booked by mistake, or the patient is not coming? Delete the case, then book it again with the right details." />
                 <Button x:Uid="PreopDrawer_27" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" Content="Delete case" Command="{Binding Parent.DeleteCase}" AutomationProperties.Name="Delete this case" />
               </StackPanel>

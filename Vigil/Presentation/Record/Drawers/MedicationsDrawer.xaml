@@ -15,7 +15,7 @@
         controls:FlyoutFocus.Restores="True">
   <Grid RowDefinitions="Auto,Auto,*" utu:SafeArea.Insets="VisibleBounds">
     <controls:DrawerHeader x:Uid="MedicationsDrawer_1" Title="Medication record" CloseCommand="{Binding Close}" />
-    <muxc:InfoBar x:Uid="MedicationsDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource InsetX20}">
+    <muxc:InfoBar x:Uid="MedicationsDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource Space250HorizontalThickness}">
       <muxc:InfoBar.ActionButton><Button x:Uid="MedicationsDrawer_3" Content="Dismiss" Command="{Binding DismissError}" /></muxc:InfoBar.ActionButton>
     </muxc:InfoBar>
     <mvux:FeedView Grid.Row="2" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"
@@ -23,11 +23,11 @@
       <mvux:FeedView.ValueTemplate>
         <DataTemplate>
           <ScrollViewer HorizontalScrollMode="Disabled">
-            <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space16}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
-              <StackPanel Spacing="{StaticResource Space12}">
+            <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space200}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
+              <StackPanel Spacing="{StaticResource Space150}">
                 <TextBlock x:Uid="MedicationsDrawer_4" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" Text="Doses given" />
                 <Button x:Uid="MedicationsDrawer_5" Style="{StaticResource ButtonPrimaryL}" IsEnabled="{Binding Data.CanChange}" Command="{Binding Parent.GiveDose}" AutomationProperties.Name="Give a dose">
-                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space100}">
                     <SymbolIcon Symbol="Add" />
                     <TextBlock x:Uid="MedicationsDrawer_6" Text="Give a dose" />
                   </StackPanel>
@@ -37,14 +37,14 @@
               <ItemsControl x:Uid="MedicationsDrawer_8" ItemsSource="{Binding Data.Doses}" AutomationProperties.Name="Doses given">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate x:DataType="local:DoseRow">
-                    <Grid Padding="{StaticResource InsetY10}" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
+                    <Grid Padding="{StaticResource Space125VerticalThickness}" ColumnSpacing="{StaticResource Space200}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
                       <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="56" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                       </Grid.ColumnDefinitions>
                       <TextBlock Style="{StaticResource NumeralBodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind Time}" />
-                      <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}">
+                      <StackPanel Grid.Column="1" Spacing="{StaticResource Space025}">
                         <TextBlock Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceBrush}" Text="{x:Bind Drug}" />
                         <TextBlock Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}">
                           <Run Text="{x:Bind Dose}" />
@@ -60,20 +60,20 @@
               </ItemsControl>
 
               <!-- Fluids: one run at a time; starting a new rate stops the running one (Case.WithFluidsStarted). -->
-              <StackPanel Spacing="{StaticResource Space12}" Margin="{StaticResource GapTop12}">
+              <StackPanel Spacing="{StaticResource Space150}" Margin="{StaticResource Space150TopThickness}">
                 <TextBlock x:Uid="MedicationsDrawer_9" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Fluids" />
-                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space100}">
                   <Grid Width="6" Height="6" VerticalAlignment="Center">
                     <Ellipse Fill="{ThemeResource AnesthesiaBrush}" Visibility="{Binding Data.Fluids.IsRunning, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                     <Ellipse Fill="{ThemeResource WaitingBrush}" Visibility="{Binding Data.Fluids.IsStopped, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                   </Grid>
                   <TextBlock Text="{Binding Data.Fluids.Text}" Style="{StaticResource BodyMedium}" VerticalAlignment="Center" />
                 </StackPanel>
-                <Grid ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="*,*" Visibility="{Binding Data.CanChange, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                <Grid ColumnSpacing="{StaticResource Space150}" ColumnDefinitions="*,*" Visibility="{Binding Data.CanChange, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                   <TextBox x:Uid="MedicationsDrawer_10" Header="Fluid" Text="{Binding Parent.FluidName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Fluid name" />
                   <TextBox x:Uid="MedicationsDrawer_11" Grid.Column="1" Header="Rate (mL/kg/h)" InputScope="Number" Text="{Binding Parent.FluidRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Fluid rate in millilitres per kilogram per hour" />
                 </Grid>
-                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" Visibility="{Binding Data.CanChange, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space100}" Visibility="{Binding Data.CanChange, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                   <Button Style="{StaticResource ButtonPrimaryM}" Content="{Binding Data.Fluids.StartLabel}" Command="{Binding Parent.StartFluids}" AutomationProperties.Name="{Binding Data.Fluids.StartLabel}" />
                   <Button x:Uid="MedicationsDrawer_12" Style="{StaticResource ButtonSecondaryM}" Content="Stop fluids" Visibility="{Binding Data.Fluids.IsRunning, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Command="{Binding Parent.StopFluids}" AutomationProperties.Name="Stop fluids" />
                 </StackPanel>

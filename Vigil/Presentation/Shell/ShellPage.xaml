@@ -26,12 +26,12 @@
 
     <!-- The frame keeps a fixed offset inside this wrapper: ShadowContainer repaints on size, not on offset changes. -->
     <Grid Grid.Column="1" Margin="{utu:Responsive Narrowest={StaticResource FrameMarginNarrow}, Normal={StaticResource FrameMarginNormal}}">
-      <utu:ShadowContainer Background="{ThemeResource SurfaceBrush}" CornerRadius="{StaticResource Radius22}" Shadows="{StaticResource ShadowFrame}">
-        <Border CornerRadius="{StaticResource Radius22}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="1">
+      <utu:ShadowContainer Background="{ThemeResource SurfaceBrush}" CornerRadius="{StaticResource Radius500CornerRadius}" Shadows="{StaticResource ShadowFrame}">
+        <Border CornerRadius="{StaticResource Radius500CornerRadius}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="1">
           <Grid RowDefinitions="Auto,Auto,*">
             <!-- Narrow: a frame header with the menu button that opens the sidebar drawer. -->
             <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed}"
-                  Padding="{StaticResource FrameHeaderInset}" ColumnDefinitions="Auto,Auto,*" ColumnSpacing="{StaticResource Space12}">
+                  Padding="{StaticResource FrameHeaderInset}" ColumnDefinitions="Auto,Auto,*" ColumnSpacing="{StaticResource Space150}">
               <Button x:Uid="Shell_1" Style="{StaticResource ButtonIconSecondary}" Command="{Binding OpenMenu}" AutomationProperties.Name="Open menu">
                 <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconMenu}" Foreground="{ThemeResource OnSurfaceBrush}" />
               </Button>
@@ -41,7 +41,7 @@
             </Grid>
             <!-- Case files the store could not read were set aside and every other record loaded: say so, without blocking.
                  Closing it collapses it, margin included. -->
-            <muxc:InfoBar x:Uid="Shell_3" Grid.Row="1" Margin="{StaticResource Inset16}" Severity="Warning" Title="Some saved records could not be read" Message="{Binding StoreWarning}" IsOpen="{Binding HasStoreWarning}" Visibility="{Binding IsOpen, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+            <muxc:InfoBar x:Uid="Shell_3" Grid.Row="1" Margin="{StaticResource Space200Thickness}" Severity="Warning" Title="Some saved records could not be read" Message="{Binding StoreWarning}" IsOpen="{Binding HasStoreWarning}" Visibility="{Binding IsOpen, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
             <Frame Grid.Row="2" uen:Region.Attached="True" />
           </Grid>
         </Border>

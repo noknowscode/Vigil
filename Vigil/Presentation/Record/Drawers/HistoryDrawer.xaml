@@ -21,18 +21,18 @@
       <mvux:FeedView.ValueTemplate>
         <DataTemplate>
           <ScrollViewer HorizontalScrollMode="Disabled">
-            <StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space16}">
+            <StackPanel Padding="{StaticResource Space300Thickness}" Spacing="{StaticResource Space200}">
               <TextBlock Text="{Binding Data.VisitDate}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
               <TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TitleMedium}" />
               <TextBlock Text="{Binding Data.Team}" Style="{StaticResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
               <!-- Corrections to the case's details (Edit case details), newest first, above the readings:
                    a corrected weight changes every dose given after it. -->
-              <StackPanel Spacing="{StaticResource Space8}" Visibility="{Binding Data.HasCorrections, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+              <StackPanel Spacing="{StaticResource Space100}" Visibility="{Binding Data.HasCorrections, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                 <TextBlock x:Uid="HistoryDrawer_11" Text="Corrections to this record" Style="{StaticResource TitleSmall}" />
                 <ItemsControl x:Uid="HistoryDrawer_12" ItemsSource="{Binding Data.Corrections}" AutomationProperties.Name="Corrections to this record">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="local:CorrectionRow">
-                      <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="Auto,*" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
+                      <Grid Padding="{StaticResource Space100VerticalThickness}" ColumnSpacing="{StaticResource Space150}" ColumnDefinitions="Auto,*" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
                         <TextBlock Style="{StaticResource NumeralBodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind Time}" />
                         <TextBlock Grid.Column="1" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Text="{x:Bind Text}" />
                       </Grid>
@@ -45,13 +45,13 @@
               <muxc:ItemsRepeater x:Uid="HistoryDrawer_3" ItemsSource="{Binding Data.Readings}" AutomationProperties.Name="Readings table">
                 <muxc:ItemsRepeater.ItemTemplate>
                   <DataTemplate x:DataType="local:ReadingRow">
-                    <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
+                    <Grid Padding="{StaticResource Space100VerticalThickness}" ColumnSpacing="{StaticResource Space150}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
                       <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="56" />
                         <ColumnDefinition Width="*" />
                       </Grid.ColumnDefinitions>
                       <TextBlock Style="{StaticResource NumeralBodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind Time}" />
-                      <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}">
+                      <StackPanel Grid.Column="1" Spacing="{StaticResource Space025}">
                         <TextBlock Style="{StaticResource NumeralBodyMedium}" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="Wrap">
                           <Run x:Uid="HistoryDrawer_4" Text="HR" /> <Run Text="{x:Bind Hr}" />
                           <Run x:Uid="HistoryDrawer_5" Text=" RR" /> <Run Text="{x:Bind Rr}" />

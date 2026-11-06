@@ -9,8 +9,8 @@
       Background="Transparent">
   <!-- Patients (sidebar destination): every case on this device as Today's patient cards (PatientCardView). -->
   <ScrollViewer HorizontalScrollMode="Disabled">
-    <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ContentMaxWidth}">
-      <StackPanel Spacing="{StaticResource Space8}">
+    <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" Spacing="{StaticResource Space300}" MaxWidth="{StaticResource ContentMaxWidth}">
+      <StackPanel Spacing="{StaticResource Space100}">
         <TextBlock x:Uid="Patients_1" Text="Patients" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" />
         <TextBlock Text="{Binding Summary}" Style="{StaticResource BodyLarge}" TextWrapping="WrapWholeWords" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
       </StackPanel>
@@ -18,7 +18,7 @@
         <mvux:FeedView.ValueTemplate>
           <DataTemplate>
             <muxc:ItemsRepeater x:Uid="Patients_2" ItemsSource="{Binding Data}" AutomationProperties.Name="All patients">
-              <muxc:ItemsRepeater.Layout><controls:CardColumnsLayout MinColumnWidth="{StaticResource CardMinColumnWidth}" MaxColumns="3" ColumnSpacing="{StaticResource Space24}" RowSpacing="{StaticResource Space24}" /></muxc:ItemsRepeater.Layout>
+              <muxc:ItemsRepeater.Layout><controls:CardColumnsLayout MinColumnWidth="{StaticResource CardMinColumnWidth}" MaxColumns="3" ColumnSpacing="{StaticResource Space300}" RowSpacing="{StaticResource Space300}" /></muxc:ItemsRepeater.Layout>
               <muxc:ItemsRepeater.ItemTemplate>
                 <DataTemplate><local:PatientCardView /></DataTemplate>
               </muxc:ItemsRepeater.ItemTemplate>
@@ -33,7 +33,7 @@
         </mvux:FeedView.NoneTemplate>
         <mvux:FeedView.ErrorTemplate>
           <DataTemplate>
-            <StackPanel Spacing="{StaticResource Space12}" HorizontalAlignment="Left">
+            <StackPanel Spacing="{StaticResource Space150}" HorizontalAlignment="Left">
               <TextBlock x:Uid="Patients_5" Text="Couldn't read saved records." Style="{StaticResource BodyLarge}" FontWeight="SemiBold" />
               <!-- ErrorTemplate DataContext is the Exception: reach the page model by ElementName. -->
               <Button x:Uid="Patients_6" Content="Retry" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" AutomationProperties.Name="Retry reading records"

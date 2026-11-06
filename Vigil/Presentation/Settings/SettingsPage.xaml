@@ -10,16 +10,16 @@
       Background="Transparent">
 
   <ScrollViewer HorizontalScrollMode="Disabled">
-    <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ContentMaxWidth}">
+    <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" Spacing="{StaticResource Space300}" MaxWidth="{StaticResource ContentMaxWidth}">
       <!-- No Spacing here: the closed bar is collapsed, and a spaced StackPanel still charges a gap for it on Uno. -->
       <StackPanel>
-        <StackPanel Spacing="{StaticResource Space8}">
+        <StackPanel Spacing="{StaticResource Space100}">
           <TextBlock x:Uid="Settings_1" Text="Settings" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" />
           <TextBlock x:Uid="Settings_2" Text="Preferences for this device. Records and settings stay on it." Style="{StaticResource BodyLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
         </StackPanel>
         <!-- A preference the device could not write (it still applies until the app closes). The capped star column
              keeps the bar as wide as the cards below, left-aligned. -->
-        <Grid Margin="{StaticResource GapTop24}" Visibility="{Binding HasSaveError, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+        <Grid Margin="{StaticResource Space300TopThickness}" Visibility="{Binding HasSaveError, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
           <Grid.ColumnDefinitions><ColumnDefinition Width="*" MaxWidth="{StaticResource SettingsMaxWidth}" /></Grid.ColumnDefinitions>
           <muxc:InfoBar x:Uid="Settings_32" Severity="Warning" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False">
             <muxc:InfoBar.ActionButton><Button x:Uid="Settings_33" Content="Dismiss" Command="{Binding DismissSaveError}" /></muxc:InfoBar.ActionButton>
@@ -27,16 +27,16 @@
         </Grid>
       </StackPanel>
 
-      <StackPanel Spacing="{StaticResource Space16}" MaxWidth="{StaticResource SettingsMaxWidth}" HorizontalAlignment="Left">
+      <StackPanel Spacing="{StaticResource Space200}" MaxWidth="{StaticResource SettingsMaxWidth}" HorizontalAlignment="Left">
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="{StaticResource Space14}">
-            <StackPanel Spacing="{StaticResource Space4}">
+          <StackPanel Spacing="{StaticResource Space150}">
+            <StackPanel Spacing="{StaticResource Space050}">
               <TextBlock x:Uid="Settings_3" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="You" />
               <TextBlock x:Uid="Settings_4" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="Today greets you as Dr. Okafor and the sidebar shows your initials. Leave both empty for a plain greeting." />
             </StackPanel>
             <!-- Phones stack the two names; from Normal they share a row. -->
-            <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space12}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+            <Grid ColumnSpacing="{StaticResource Space150}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space150}, Normal=0}" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
               <TextBox x:Uid="Settings_5" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Header="First name" Text="{Binding ClinicianFirstName, Mode=TwoWay}" MaxLength="40" AutomationProperties.Name="Your first name for the avatar initials" />
               <TextBox x:Uid="Settings_6" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" Header="Surname" Text="{Binding ClinicianName, Mode=TwoWay}" MaxLength="40" AutomationProperties.Name="Your surname for the board greeting" />
             </Grid>
@@ -44,7 +44,7 @@
         </utu:CardContentControl>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="{StaticResource Space14}">
+          <StackPanel Spacing="{StaticResource Space150}">
             <TextBlock x:Uid="Settings_7" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Appearance" />
             <muxc:RadioButtons x:Uid="Settings_8" Header="Theme" MaxColumns="{utu:Responsive Narrowest=1, Normal=3}" SelectedIndex="{Binding ThemeIndex, Mode=TwoWay}">
               <RadioButton x:Uid="Settings_9" Content="System" />
@@ -52,8 +52,8 @@
               <RadioButton x:Uid="Settings_11" Content="Dark" />
             </muxc:RadioButtons>
             <!-- Material's ToggleSwitch drops its Header: the label is its own text, the switch carries the name. -->
-            <Grid ColumnSpacing="{StaticResource Space16}" ColumnDefinitions="*,Auto" Padding="{StaticResource GapTop14}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
-              <StackPanel Spacing="{StaticResource Space2}" VerticalAlignment="Center">
+            <Grid ColumnSpacing="{StaticResource Space200}" ColumnDefinitions="*,Auto" Padding="{StaticResource Space150TopThickness}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
+              <StackPanel Spacing="{StaticResource Space025}" VerticalAlignment="Center">
                 <TextBlock x:Uid="Settings_12" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" Text="Reduce motion" />
                 <TextBlock x:Uid="Settings_13" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                            Text="Card details, the live pulse and new chart columns appear without animating." />
@@ -66,7 +66,7 @@
         </utu:CardContentControl>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="{StaticResource Space14}">
+          <StackPanel Spacing="{StaticResource Space150}">
             <TextBlock x:Uid="Settings_15" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Language" />
             <StackPanel>
               <muxc:RadioButtons x:Uid="Settings_16" Header="Language (applies after restart)" MaxColumns="2" SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}">
@@ -80,8 +80,8 @@
         </utu:CardContentControl>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="{StaticResource Space14}">
-            <StackPanel Spacing="{StaticResource Space4}">
+          <StackPanel Spacing="{StaticResource Space150}">
+            <StackPanel Spacing="{StaticResource Space050}">
               <TextBlock x:Uid="Settings_19" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Monitoring" />
               <TextBlock x:Uid="Settings_20" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="The next reading falls due one interval after the last one. The due slot turns yellow 30 seconds before, red when late." />
@@ -92,7 +92,7 @@
               <RadioButton x:Uid="Settings_24" Content="10 min" />
             </muxc:RadioButtons>
             <!-- Saved when the field loses focus; out of range is clamped to 5-180 and shown as saved. -->
-            <StackPanel Spacing="{StaticResource Space6}" Padding="{StaticResource GapTop14}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
+            <StackPanel Spacing="{StaticResource Space075}" Padding="{StaticResource Space150TopThickness}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
               <TextBox x:Uid="Settings_30" Header="Planned prep (minutes)" InputScope="Number" MaxLength="3" MaxWidth="{StaticResource ShortFieldMaxWidth}" HorizontalAlignment="Left"
                        Text="{Binding PlannedPrepMinutes, Mode=TwoWay}" AutomationProperties.Name="Planned preparation time per case, in minutes" />
               <TextBlock x:Uid="Settings_31" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
@@ -102,13 +102,13 @@
         </utu:CardContentControl>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
-          <StackPanel Spacing="{StaticResource Space14}">
-            <StackPanel Spacing="{StaticResource Space4}">
+          <StackPanel Spacing="{StaticResource Space150}">
+            <StackPanel Spacing="{StaticResource Space050}">
               <TextBlock x:Uid="Settings_25" Style="{StaticResource BodyLarge}" FontWeight="SemiBold" Text="Records on this device" />
               <TextBlock x:Uid="Settings_26" Style="{StaticResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="Records are stored on this device only. They are not synced to other devices or to the practice management system: export each signed record from its Recovery pane." />
             </StackPanel>
-            <StackPanel Orientation="{utu:Responsive Narrowest=Vertical, Normal=Horizontal}" Spacing="{StaticResource Space8}">
+            <StackPanel Orientation="{utu:Responsive Narrowest=Vertical, Normal=Horizontal}" Spacing="{StaticResource Space100}">
               <Button x:Uid="Settings_27" Style="{StaticResource ButtonSecondaryM}" Content="Load sample day" Command="{Binding LoadSampleDay}" />
               <Button x:Uid="Settings_28" Style="{StaticResource ButtonSecondaryM}" Content="Clear all records" Command="{Binding ClearAll}" />
             </StackPanel>

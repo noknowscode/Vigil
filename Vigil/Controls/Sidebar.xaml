@@ -14,7 +14,7 @@
   <!-- Scrolls when the window is shorter than the sidebar (640 px holds the rail only to Settings); the grid is at least
        the viewport tall, so the footer rows still sit at the bottom when everything fits. -->
   <ScrollViewer x:Name="SidebarScroll" HorizontalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
-  <Grid Padding="{StaticResource SidebarInset}" MinWidth="{StaticResource RailWidth}" MinHeight="{Binding ViewportHeight, ElementName=SidebarScroll}" RowSpacing="{StaticResource Space12}" RowDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto">
+  <Grid Padding="{StaticResource SidebarInset}" MinWidth="{StaticResource RailWidth}" MinHeight="{Binding ViewportHeight, ElementName=SidebarScroll}" RowSpacing="{StaticResource Space150}" RowDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto">
     <!-- Holds the full width: 256 = 224 content + 2 x 16 padding. -->
     <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}" Grid.RowSpan="8"><Border Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Width="{StaticResource SidebarContentWidth}" /></Grid>
 
@@ -22,7 +22,7 @@
     <Grid Height="40" Padding="{StaticResource BrandRowInset}" ColumnDefinitions="Auto,*,Auto">
       <ContentControl Style="{StaticResource FilledIcon}" Width="26" Height="26" Content="{StaticResource IconLogo}" />
       <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-        <TextBlock x:Uid="Sidebar_1" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="clover" Style="{StaticResource TitleLarge}" Foreground="{ThemeResource PrimaryBrush}" Margin="{StaticResource GapStart10}" VerticalAlignment="Center" />
+        <TextBlock x:Uid="Sidebar_1" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="clover" Style="{StaticResource TitleLarge}" Foreground="{ThemeResource PrimaryBrush}" Margin="{StaticResource Space125LeftThickness}" VerticalAlignment="Center" />
       </Grid>
       <Grid Grid.Column="2" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
         <Button x:Uid="Sidebar_2" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Style="{StaticResource ButtonIconGhost}" Command="{Binding ToggleSidebar}" AutomationProperties.Name="Collapse sidebar">
@@ -33,7 +33,7 @@
     </Grid>
 
     <!-- The collapsed rail's expand button (from Widest). -->
-    <Grid Grid.Row="1" Margin="{StaticResource GapTop8}">
+    <Grid Grid.Row="1" Margin="{StaticResource Space100TopThickness}">
       <Grid Visibility="{utu:Responsive Narrowest=Collapsed, Widest=Visible}">
         <Button x:Uid="Sidebar_9" Visibility="{Binding IsCollapsed, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Style="{StaticResource ButtonIconGhost}" HorizontalAlignment="Center" Command="{Binding ToggleSidebar}" AutomationProperties.Name="Expand sidebar">
           <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_10" Content="Expand sidebar" /></ToolTipService.ToolTip>
@@ -43,27 +43,27 @@
     </Grid>
 
     <!-- New patient (secondary L, Medium label, xs shadow): opens the New case sheet. -->
-    <utu:ShadowContainer Grid.Row="2" Background="{ThemeResource SurfaceBrush}" CornerRadius="{StaticResource Radius12}" Shadows="{StaticResource ShadowXs}">
+    <utu:ShadowContainer Grid.Row="2" Background="{ThemeResource SurfaceBrush}" CornerRadius="{StaticResource Radius300CornerRadius}" Shadows="{StaticResource ShadowXs}">
       <Button x:Uid="Sidebar_11" Style="{StaticResource ButtonSecondaryL}" Padding="0" FontWeight="Medium" HorizontalAlignment="Stretch" Command="{Binding NewPatient}" AutomationProperties.Name="New patient">
         <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_12" Content="New patient" /></ToolTipService.ToolTip>
         <StackPanel Orientation="Horizontal">
           <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnSurfaceBrush}" />
           <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <TextBlock x:Uid="Sidebar_13" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="New patient" Style="{StaticResource BodyMedium}" FontWeight="Medium" Margin="{StaticResource GapStart8}" VerticalAlignment="Center" />
+            <TextBlock x:Uid="Sidebar_13" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="New patient" Style="{StaticResource BodyMedium}" FontWeight="Medium" Margin="{StaticResource Space100LeftThickness}" VerticalAlignment="Center" />
           </Grid>
         </StackPanel>
       </Button>
     </utu:ShadowContainer>
 
     <!-- Main nav: margin-top 12, gap 2. -->
-    <StackPanel Grid.Row="3" Margin="{StaticResource GapTop12}" Spacing="{StaticResource Space2}">
+    <StackPanel Grid.Row="3" Margin="{StaticResource Space150TopThickness}" Spacing="{StaticResource Space025}">
       <Button x:Uid="Sidebar_14" Style="{StaticResource NavItemButtonStyle}" utu:VisualStateManagerExtensions.States="{Binding TodayState}"
               Command="{Binding Go}" CommandParameter="Today" AutomationProperties.Name="Today">
         <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_15" Content="Today" /></ToolTipService.ToolTip>
         <Grid ColumnDefinitions="18,*">
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconLayoutGrid}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
+            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource Space150HorizontalThickness}" ColumnDefinitions="*,Auto">
               <TextBlock x:Uid="Sidebar_16" Text="Today" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
             </Grid>
           </Grid>
@@ -75,7 +75,7 @@
         <Grid ColumnDefinitions="18,*">
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconPawPrint}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
+            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource Space150HorizontalThickness}" ColumnDefinitions="*,Auto">
               <TextBlock x:Uid="Sidebar_19" Text="Patients" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
               <TextBlock Grid.Column="1" Text="{Binding PatientsCount}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
             </Grid>
@@ -88,7 +88,7 @@
         <Grid ColumnDefinitions="18,*">
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconCalendar}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
+            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource Space150HorizontalThickness}" ColumnDefinitions="*,Auto">
               <TextBlock x:Uid="Sidebar_22" Text="Agenda" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
             </Grid>
           </Grid>
@@ -100,7 +100,7 @@
         <Grid ColumnDefinitions="18,*">
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconActivity}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
+            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource Space150HorizontalThickness}" ColumnDefinitions="*,Auto">
               <TextBlock x:Uid="Sidebar_25" Text="Anesthesia" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
               <TextBlock Grid.Column="1" Text="{Binding AnesthesiaCount}" Style="{StaticResource CaptionLarge}" FontWeight="SemiBold" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
             </Grid>
@@ -110,14 +110,14 @@
     </StackPanel>
 
     <!-- Footer nav, bottom-aligned. -->
-    <StackPanel Grid.Row="5" Spacing="{StaticResource Space2}">
+    <StackPanel Grid.Row="5" Spacing="{StaticResource Space025}">
       <Button x:Uid="Sidebar_35" Style="{StaticResource NavItemButtonStyle}" utu:VisualStateManagerExtensions.States="{Binding SettingsState}"
               Command="{Binding Go}" CommandParameter="Settings" AutomationProperties.Name="Settings">
         <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_36" Content="Settings" /></ToolTipService.ToolTip>
         <Grid ColumnDefinitions="18,*">
           <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconSettings}" Foreground="{utu:AncestorBinding AncestorType=ContentPresenter, Path=Foreground}" />
           <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource InsetX12}" ColumnDefinitions="*,Auto">
+            <Grid Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource Space150HorizontalThickness}" ColumnDefinitions="*,Auto">
               <TextBlock x:Uid="Sidebar_37" Text="Settings" Style="{StaticResource BodyMedium}" FontWeight="Medium" VerticalAlignment="Center" />
             </Grid>
           </Grid>
@@ -149,7 +149,7 @@
         <TextBlock Text="{Binding ClinicianInitials}" Style="{StaticResource BodySmall}" FontWeight="SemiBold" LineHeight="16" Foreground="{ThemeResource OnPrimaryContainerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
       </Border>
       <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-        <StackPanel Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource GapStart10}" VerticalAlignment="Center">
+        <StackPanel Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource Space125LeftThickness}" VerticalAlignment="Center">
           <TextBlock Text="{Binding ClinicianName}" Style="{StaticResource BodyMedium}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
           <TextBlock x:Uid="Sidebar_44" Text="Veterinarian" Style="{StaticResource CaptionLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
         </StackPanel>

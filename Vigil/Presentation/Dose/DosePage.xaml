@@ -26,7 +26,7 @@
       </utu:NavigationBar.MainCommand>
     </utu:NavigationBar>
 
-    <StackPanel Grid.Row="1" Spacing="{StaticResource Space6}" Padding="{utu:Responsive Narrowest={StaticResource SheetSectionInsetNarrow}, Normal={StaticResource SheetSectionInsetNormal}}">
+    <StackPanel Grid.Row="1" Spacing="{StaticResource Space075}" Padding="{utu:Responsive Narrowest={StaticResource SheetSectionInsetNarrow}, Normal={StaticResource SheetSectionInsetNormal}}">
       <TextBlock x:Uid="Dose_2" Text="Administer dose" Style="{StaticResource HeadlineLarge}" TextWrapping="WrapWholeWords" />
       <TextBlock Text="{Binding Patient}" Style="{StaticResource BodyLarge}" TextWrapping="WrapWholeWords" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextTrimming="CharacterEllipsis" />
     </StackPanel>
