@@ -17,7 +17,7 @@
     <StackPanel Padding="{utu:Responsive Narrowest={StaticResource PageInsetNarrow}, Normal={StaticResource PageInsetNormal}}" Spacing="{StaticResource Space24}" MaxWidth="{StaticResource ContentMaxWidth}">
       <StackPanel Spacing="{StaticResource Space8}">
         <TextBlock x:Uid="Agenda_1" Text="Agenda" Style="{StaticResource TypeDisplayTitle}" />
-        <TextBlock Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}">
+        <TextBlock Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource OnSurfaceVariantBrush}">
           <Run Text="{Binding AgendaDate}" /><Run Text=" · " /><Run Text="{Binding AgendaClock}" FontFamily="{StaticResource FontMono}" />
         </TextBlock>
       </StackPanel>
@@ -36,12 +36,12 @@
                   </Grid>
                   <!-- xaml-lint: allow card - 10 px legend swatches for the ruler colours -->
                   <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space16}">
-                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}"><Border Width="10" Height="10" CornerRadius="{StaticResource Radius3}" Background="{ThemeResource CloverMint}" BorderBrush="{ThemeResource CloverMintEdge}" BorderThickness="1" VerticalAlignment="Center" /><TextBlock x:Uid="Agenda_3" Text="Anaesthesia" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource InkMutedBrush}" /></StackPanel>
-                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}"><Border Width="10" Height="10" CornerRadius="{StaticResource Radius3}" Background="{ThemeResource CloverLavender}" BorderBrush="{ThemeResource CloverLavenderEdge}" BorderThickness="1" VerticalAlignment="Center" /><TextBlock x:Uid="Agenda_4" Text="Recovery" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource InkMutedBrush}" /></StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}"><Border Width="10" Height="10" CornerRadius="{StaticResource Radius3}" Background="{ThemeResource AnesthesiaContainerBrush}" BorderBrush="{ThemeResource AnesthesiaOutlineBrush}" BorderThickness="1" VerticalAlignment="Center" /><TextBlock x:Uid="Agenda_3" Text="Anaesthesia" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}"><Border Width="10" Height="10" CornerRadius="{StaticResource Radius3}" Background="{ThemeResource RecoveryContainerBrush}" BorderBrush="{ThemeResource RecoveryOutlineBrush}" BorderThickness="1" VerticalAlignment="Center" /><TextBlock x:Uid="Agenda_4" Text="Recovery" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></StackPanel>
                   </StackPanel>
                   <!-- The ruler fills the card and scrolls sideways only when its lanes need more than the card has (phones). -->
                   <ScrollViewer x:Name="RulerScroll" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled"><controls:CareRuler Data="{Binding Data}" Width="{Binding ViewportWidth, ElementName=RulerScroll}" /></ScrollViewer>
-                  <TextBlock x:Uid="Agenda_5" Text="Gaps indicate no recorded care." Style="{StaticResource TypeCaption}" Foreground="{ThemeResource InkMutedBrush}" />
+                  <TextBlock x:Uid="Agenda_5" Text="Gaps indicate no recorded care." Style="{StaticResource TypeCaption}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                 </StackPanel>
               </DataTemplate></mvux:FeedView.ValueTemplate>
               <mvux:FeedView.ProgressTemplate><DataTemplate>
@@ -74,20 +74,20 @@
                       <Button Style="{StaticResource RowLinkButton}" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding}" AutomationProperties.Name="{Binding AccessibleName}">
                         <Grid ColumnDefinitions="40,*,Auto" ColumnSpacing="{StaticResource Space12}">
                           <Grid Width="40" Height="40" VerticalAlignment="Center">
-                            <Ellipse Fill="{ThemeResource MediaPlaceholderBrush}" />
+                            <Ellipse Fill="{ThemeResource SurfaceVariantBrush}" />
                             <Ellipse Visibility="{Binding HasPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}"><Ellipse.Fill><ImageBrush ImageSource="{Binding Photo}" Stretch="UniformToFill" /></Ellipse.Fill></Ellipse>
                             <TextBlock Text="{Binding Initial}" Visibility="{Binding HasNoPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Style="{StaticResource TypeBodyStrong}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                           </Grid>
                           <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}" VerticalAlignment="Center">
                             <TextBlock Text="{Binding Name}" Style="{StaticResource TypeTitleS}" TextTrimming="CharacterEllipsis" />
-                            <TextBlock Text="{Binding Detail}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{Binding Detail}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextTrimming="CharacterEllipsis" />
                           </StackPanel>
-                          <ContentControl Grid.Column="2" Style="{StaticResource LineIcon16}" Content="{StaticResource IconChevronRight}" Foreground="{ThemeResource IconMutedBrush}" VerticalAlignment="Center" />
+                          <ContentControl Grid.Column="2" Style="{StaticResource LineIcon16}" Content="{StaticResource IconChevronRight}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
                         </Grid>
                       </Button>
                     </DataTemplate></muxc:ItemsRepeater.ItemTemplate>
                   </muxc:ItemsRepeater>
-                  <TextBlock x:Uid="Agenda_10" Text="No patients waiting for preparation." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.NoPreparing, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                  <TextBlock x:Uid="Agenda_10" Text="No patients waiting for preparation." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Visibility="{Binding Data.NoPreparing, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                 </StackPanel>
               </DataTemplate></mvux:FeedView.ValueTemplate>
               <mvux:FeedView.ProgressTemplate><DataTemplate>
@@ -98,7 +98,7 @@
               </DataTemplate></mvux:FeedView.ProgressTemplate>
               <mvux:FeedView.ErrorTemplate><DataTemplate>
                 <StackPanel Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
-                  <TextBlock x:Uid="Agenda_11" Text="Patients in preparation couldn't be loaded." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+                  <TextBlock x:Uid="Agenda_11" Text="Patients in preparation couldn't be loaded." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
                   <Button x:Uid="Agenda_15" Content="Retry" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" AutomationProperties.Name="Retry reading records" Command="{Binding DataContext.Retry, ElementName=PreparingFeed}" />
                 </StackPanel>
               </DataTemplate></mvux:FeedView.ErrorTemplate>
@@ -118,7 +118,7 @@
                 <StackPanel Spacing="{StaticResource Space14}">
                   <Grid ColumnDefinitions="40,*" ColumnSpacing="{StaticResource Space12}">
                     <Grid Width="40" Height="40" VerticalAlignment="Center">
-                      <Ellipse Fill="{ThemeResource MediaPlaceholderBrush}" />
+                      <Ellipse Fill="{ThemeResource SurfaceVariantBrush}" />
                       <Ellipse Visibility="{Binding Data.HasPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}"><Ellipse.Fill><ImageBrush ImageSource="{Binding Data.Photo}" Stretch="UniformToFill" /></Ellipse.Fill></Ellipse>
                       <TextBlock Text="{Binding Data.Initial}" Visibility="{Binding Data.HasNoPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Style="{StaticResource TypeBodyStrong}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Grid>
@@ -131,7 +131,7 @@
                       </StackPanel>
                     </StackPanel>
                   </Grid>
-                  <TextBlock Text="{Binding Data.Detail}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+                  <TextBlock Text="{Binding Data.Detail}" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
                   <Button Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Left" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Data}" AutomationProperties.Name="{Binding Data.AccessibleName}">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                       <TextBlock Text="{Binding Data.OpenLabel}" />
@@ -140,7 +140,7 @@
                   </Button>
                 </StackPanel>
               </DataTemplate></mvux:FeedView.ValueTemplate>
-              <mvux:FeedView.NoneTemplate><DataTemplate><TextBlock x:Uid="Agenda_13" Text="No observation reminders right now." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" /></DataTemplate></mvux:FeedView.NoneTemplate>
+              <mvux:FeedView.NoneTemplate><DataTemplate><TextBlock x:Uid="Agenda_13" Text="No observation reminders right now." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" /></DataTemplate></mvux:FeedView.NoneTemplate>
               <mvux:FeedView.ProgressTemplate><DataTemplate>
                 <StackPanel Spacing="{StaticResource Space10}" AutomationProperties.AccessibilityView="Raw">
                   <Rectangle Style="{StaticResource Skeleton}" Width="180" Height="40" />
@@ -149,7 +149,7 @@
               </DataTemplate></mvux:FeedView.ProgressTemplate>
               <mvux:FeedView.ErrorTemplate><DataTemplate>
                 <StackPanel Spacing="{StaticResource Space10}" AutomationProperties.LiveSetting="Polite">
-                  <TextBlock x:Uid="Agenda_14" Text="Observation reminders unavailable." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
+                  <TextBlock x:Uid="Agenda_14" Text="Observation reminders unavailable." Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
                   <Button x:Uid="Agenda_16" Content="Retry" Style="{StaticResource ButtonSecondaryM}" HorizontalAlignment="Left" AutomationProperties.Name="Retry reading records" Command="{Binding DataContext.Retry, ElementName=NextFeed}" />
                 </StackPanel>
               </DataTemplate></mvux:FeedView.ErrorTemplate>

@@ -11,7 +11,7 @@
       xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:uen="using:Uno.Extensions.Navigation.UI"
       xmlns:utu="using:Uno.Toolkit.UI"
-      Background="{ThemeResource PageBrush}">
+      Background="{ThemeResource BackgroundBrush}">
   <Grid utu:SafeArea.Insets="VisibleBounds" ColumnDefinitions="Auto,*">
     <!--
       Navigation by width (default breakpoints): Narrow (phones, below 600) has no sidebar column, the frame header's
@@ -26,14 +26,14 @@
 
     <!-- The frame keeps a fixed offset inside this wrapper: ShadowContainer repaints on size, not on offset changes. -->
     <Grid Grid.Column="1" Margin="{utu:Responsive Narrowest={StaticResource FrameMarginNarrow}, Normal={StaticResource FrameMarginNormal}}">
-      <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius22}" Shadows="{StaticResource ShadowFrame}">
-        <Border CornerRadius="{StaticResource Radius22}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
+      <utu:ShadowContainer Background="{ThemeResource SurfaceBrush}" CornerRadius="{StaticResource Radius22}" Shadows="{StaticResource ShadowFrame}">
+        <Border CornerRadius="{StaticResource Radius22}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="1">
           <Grid RowDefinitions="Auto,Auto,*">
             <!-- Narrow: a frame header with the menu button that opens the sidebar drawer. -->
             <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed}"
                   Padding="{StaticResource FrameHeaderInset}" ColumnDefinitions="Auto,Auto,*" ColumnSpacing="{StaticResource Space12}">
               <Button x:Uid="Shell_1" Style="{StaticResource ButtonIconSecondary}" Command="{Binding OpenMenu}" AutomationProperties.Name="Open menu">
-                <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconMenu}" Foreground="{ThemeResource InkBrush}" />
+                <ContentControl Style="{StaticResource LineIcon18}" Content="{StaticResource IconMenu}" Foreground="{ThemeResource OnSurfaceBrush}" />
               </Button>
               <ContentControl Grid.Column="1" Style="{StaticResource FilledIcon}" Width="22" Height="22" Content="{StaticResource IconLogo}" VerticalAlignment="Center" />
               <!-- -4: the wordmark's side bearing, so the gap reads as the sidebar's 10 px (optical). -->

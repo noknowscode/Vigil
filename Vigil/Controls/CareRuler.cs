@@ -26,7 +26,7 @@ public sealed partial class CareRuler : UserControl
         ActualThemeChanged += (_, _) => Draw();
     }
 
-    // Every key exists in both theme dictionaries (Material roles in Styles/CloverPalette.xaml, ruler inks in Tokens.xaml).
+    // Every key exists in both theme dictionaries (Material roles in Styles/ColorPaletteOverride.xaml, stage brushes in App.xaml).
     private SolidColorBrush Ink(string key) => new(ThemePalette.Resolve(key, ActualTheme, Microsoft.UI.Colors.Transparent));
     private static void Place(Canvas host, FrameworkElement element, double x, double y)
     {
@@ -52,7 +52,7 @@ public sealed partial class CareRuler : UserControl
             // Color keys, not *Brush: only the colours sit in theme dictionaries, so a brush key resolves to the Light value under Theatre.
             var text = Ink("OnSurfaceColor");
             var quiet = Ink("OnSurfaceVariantColor");
-            var line = Ink("OutlineColor");
+            var line = Ink("OutlineVariantColor");
             var primary = Ink("PrimaryColor");
             Place(_ticks, new Border { Width = 1, Height = day.Height, Background = line }, 43, 22);
             for (var q = 0; q <= (day.End - day.Start).TotalMinutes / 15; q++)
@@ -87,8 +87,8 @@ public sealed partial class CareRuler : UserControl
                 }
                 button.Width = laneWidth - 5; button.Height = slot.Height;
                 Canvas.SetLeft(button, 52 + laneWidth * slot.Lane); Canvas.SetTop(button, slot.Top + 24);
-                button.Background = Ink(span.Phase == CarePhaseKind.Anesthesia ? "CloverMint" : "CloverLavender");
-                button.BorderBrush = Ink(span.Phase == CarePhaseKind.Anesthesia ? "CloverMintEdge" : "CloverLavenderEdge");
+                button.Background = Ink(span.Phase == CarePhaseKind.Anesthesia ? "AnesthesiaContainerBrush" : "RecoveryContainerBrush");
+                button.BorderBrush = Ink(span.Phase == CarePhaseKind.Anesthesia ? "AnesthesiaOutlineBrush" : "RecoveryOutlineBrush");
                 var content = new StackPanel { Spacing = 4 };
                 var name = Label(span.Name, "TypeTitleS", text);
                 name.TextTrimming = TextTrimming.CharacterEllipsis;

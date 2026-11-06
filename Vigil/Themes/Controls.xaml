@@ -4,32 +4,23 @@
     xmlns:utu="using:Uno.Toolkit.UI">
   <!--
     App-wide lightweight-styling keys (rung 2). Material buttons keep 56 px (only the Settings dialogs still use them;
-    screens use the v2 buttons in Tokens.xaml). Cards are outlined with the border colour at radius 12.
-    Form fields (v2): outlined at radius 10, 56 px with the floating label, Hanken 14; outline InputEdgeBrush, hover ink-muted, focus
-    primary at 2 px. Brushes alias theme brushes per theme so they follow a theme switch.
+    screens use the v2 buttons in Tokens.xaml). Cards are outlined with OutlineVariant at radius 12.
+    Form fields (v2): outlined at radius 10, 56 px with the floating label, Hanken 14. Their outline is the Outline role
+    (the palette keeps it at 3:1 on Surface), focus Primary; hover takes OnSurfaceVariant instead of Material's OnSurface.
+    The aliases sit per theme so they follow a theme switch.
   -->
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
-      <StaticResource x:Key="OutlinedTextBoxBorderBrush" ResourceKey="InputEdgeBrush" />
-      <StaticResource x:Key="OutlinedTextBoxBorderBrushPointerOver" ResourceKey="InkMutedBrush" />
-      <StaticResource x:Key="OutlinedTextBoxBorderBrushFocused" ResourceKey="PrimaryBrush" />
-      <StaticResource x:Key="OutlinedTextBoxHeaderForeground" ResourceKey="InkMutedBrush" />
-      <StaticResource x:Key="OutlinedTextBoxHeaderForegroundFocused" ResourceKey="PrimaryBrush" />
-      <StaticResource x:Key="OutlinedTextBoxForeground" ResourceKey="InkBrush" />
-      <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="InputEdgeBrush" />
-      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="InkMutedBrush" />
-      <StaticResource x:Key="ComboBoxBorderBrushOpened" ResourceKey="PrimaryBrush" />
+      <StaticResource x:Key="OutlinedTextBoxBorderBrushPointerOver" ResourceKey="OnSurfaceVariantBrush" />
+      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="OnSurfaceVariantBrush" />
+      <StaticResource x:Key="OutlinedCardBorderBrush" ResourceKey="OutlineVariantBrush" />
+      <StaticResource x:Key="OutlinedCardContentBorderBrush" ResourceKey="OutlineVariantBrush" />
     </ResourceDictionary>
-    <ResourceDictionary x:Key="Dark">
-      <StaticResource x:Key="OutlinedTextBoxBorderBrush" ResourceKey="InputEdgeBrush" />
-      <StaticResource x:Key="OutlinedTextBoxBorderBrushPointerOver" ResourceKey="InkMutedBrush" />
-      <StaticResource x:Key="OutlinedTextBoxBorderBrushFocused" ResourceKey="PrimaryBrush" />
-      <StaticResource x:Key="OutlinedTextBoxHeaderForeground" ResourceKey="InkMutedBrush" />
-      <StaticResource x:Key="OutlinedTextBoxHeaderForegroundFocused" ResourceKey="PrimaryBrush" />
-      <StaticResource x:Key="OutlinedTextBoxForeground" ResourceKey="InkBrush" />
-      <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="InputEdgeBrush" />
-      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="InkMutedBrush" />
-      <StaticResource x:Key="ComboBoxBorderBrushOpened" ResourceKey="PrimaryBrush" />
+    <ResourceDictionary x:Key="Default">
+      <StaticResource x:Key="OutlinedTextBoxBorderBrushPointerOver" ResourceKey="OnSurfaceVariantBrush" />
+      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="OnSurfaceVariantBrush" />
+      <StaticResource x:Key="OutlinedCardBorderBrush" ResourceKey="OutlineVariantBrush" />
+      <StaticResource x:Key="OutlinedCardContentBorderBrush" ResourceKey="OutlineVariantBrush" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
   <CornerRadius x:Key="OutlinedTextBoxCornerRadius">10</CornerRadius>

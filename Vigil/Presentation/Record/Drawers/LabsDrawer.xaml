@@ -30,10 +30,10 @@
               <ItemsControl x:Uid="LabsDrawer_7" ItemsSource="{Binding Data.LabRows}" AutomationProperties.Name="Lab panels">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate x:DataType="local:LabRow">
-                    <Grid Padding="{StaticResource InsetY10}" ColumnSpacing="{StaticResource Space16}" ColumnDefinitions="*,Auto" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+                    <Grid Padding="{StaticResource InsetY10}" ColumnSpacing="{StaticResource Space16}" ColumnDefinitions="*,Auto" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
                       <StackPanel Spacing="{StaticResource Space2}" VerticalAlignment="Center">
-                        <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{x:Bind Panel}" />
-                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind StateText}" />
+                        <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{x:Bind Panel}" />
+                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind StateText}" />
                       </StackPanel>
                       <Button x:Uid="LabsDrawer_8" Grid.Column="1" Style="{StaticResource ButtonSecondaryL}" Content="Mark reviewed" Visibility="{x:Bind IsReady}" VerticalAlignment="Center"
                               Command="{utu:AncestorBinding AncestorType=mvux:FeedView, Path=DataContext.ReviewLab}" CommandParameter="{x:Bind Panel}" AutomationProperties.Name="Mark the panel reviewed" />

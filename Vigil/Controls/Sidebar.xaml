@@ -43,11 +43,11 @@
     </Grid>
 
     <!-- New patient (secondary L, Medium label, xs shadow): opens the New case sheet. -->
-    <utu:ShadowContainer Grid.Row="2" Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius12}" Shadows="{StaticResource ShadowXs}">
+    <utu:ShadowContainer Grid.Row="2" Background="{ThemeResource SurfaceBrush}" CornerRadius="{StaticResource Radius12}" Shadows="{StaticResource ShadowXs}">
       <Button x:Uid="Sidebar_11" Style="{StaticResource ButtonSecondaryL}" Padding="0" FontWeight="Medium" HorizontalAlignment="Stretch" Command="{Binding NewPatient}" AutomationProperties.Name="New patient">
         <ToolTipService.ToolTip><ToolTip x:Uid="Sidebar_12" Content="New patient" /></ToolTipService.ToolTip>
         <StackPanel Orientation="Horizontal">
-          <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource InkBrush}" />
+          <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconPlus}" Foreground="{ThemeResource OnSurfaceBrush}" />
           <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
             <TextBlock x:Uid="Sidebar_13" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="New patient" Style="{StaticResource TypeBodyMedium}" Margin="{StaticResource GapStart8}" VerticalAlignment="Center" />
           </Grid>
@@ -132,10 +132,10 @@
       <Border Style="{StaticResource PillSurface}">
         <StackPanel Orientation="Horizontal" Height="20">
           <Grid Width="14" Height="14" VerticalAlignment="Center" Margin="-3,0,0,0">
-            <Ellipse Width="8" Height="8" Stroke="{ThemeResource IconMutedBrush}" StrokeThickness="1.5" />
+            <Ellipse Width="8" Height="8" Stroke="{ThemeResource OnSurfaceVariantBrush}" StrokeThickness="1.5" />
           </Grid>
           <Grid Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
-            <TextBlock x:Uid="Sidebar_43" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="No monitor connected" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Margin="7,0,0,0" VerticalAlignment="Center" />
+            <TextBlock x:Uid="Sidebar_43" Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="No monitor connected" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="7,0,0,0" VerticalAlignment="Center" />
           </Grid>
         </StackPanel>
       </Border>
@@ -146,7 +146,7 @@
          the 10 px gap. The -2 margin keeps 8 + 34 px inside the 40 px rail. -->
     <Grid Grid.Row="7" Padding="{StaticResource UserRowInset}" Margin="0,0,-2,0" ColumnDefinitions="Auto,*">
       <Border Style="{StaticResource AvatarCircle}">
-        <TextBlock Text="{Binding ClinicianInitials}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" LineHeight="16" Foreground="{ThemeResource AvatarInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding ClinicianInitials}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" LineHeight="16" Foreground="{ThemeResource OnPrimaryContainerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
       </Border>
       <Grid Grid.Column="1" Visibility="{utu:Responsive Narrowest=Visible, Normal=Collapsed, Widest=Visible}">
         <StackPanel Visibility="{Binding IsExpanded, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Margin="{StaticResource GapStart10}" VerticalAlignment="Center">

@@ -28,7 +28,7 @@
 
     <StackPanel Grid.Row="1" Spacing="{StaticResource Space6}" Padding="{utu:Responsive Narrowest={StaticResource SheetSectionInsetNarrow}, Normal={StaticResource SheetSectionInsetNormal}}">
       <TextBlock x:Uid="Dose_2" Text="Administer dose" Style="{StaticResource TypeDisplayTitle}" />
-      <TextBlock Text="{Binding Patient}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextTrimming="CharacterEllipsis" />
+      <TextBlock Text="{Binding Patient}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextTrimming="CharacterEllipsis" />
     </StackPanel>
 
     <!-- The body scrolls when the window is short (a 640 px window left the stacked drug list no height at all). -->

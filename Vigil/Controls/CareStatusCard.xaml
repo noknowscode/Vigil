@@ -16,38 +16,38 @@
         <VisualState x:Name="Surgery" />
         <VisualState x:Name="Recovery">
           <VisualState.Setters>
-            <Setter Target="Surface.Background" Value="{ThemeResource PhaseRecoverySoftBrush}" />
-            <Setter Target="Edge.BorderBrush" Value="{ThemeResource PhaseRecoverySoftBorderBrush}" />
-            <Setter Target="Divider.BorderBrush" Value="{ThemeResource PhaseRecoverySoftBorderBrush}" />
-            <Setter Target="Dot.Fill" Value="{ThemeResource PhaseRecoverySolidBrush}" />
-            <Setter Target="Label.Foreground" Value="{ThemeResource InkBrush}" />
-            <Setter Target="Since.Foreground" Value="{ThemeResource InkMutedBrush}" />
-            <Setter Target="FirstLabel.Foreground" Value="{ThemeResource InkMutedBrush}" />
-            <Setter Target="SecondLabel.Foreground" Value="{ThemeResource InkMutedBrush}" />
+            <Setter Target="Surface.Background" Value="{ThemeResource RecoveryContainerBrush}" />
+            <Setter Target="Edge.BorderBrush" Value="{ThemeResource RecoveryOutlineBrush}" />
+            <Setter Target="Divider.BorderBrush" Value="{ThemeResource RecoveryOutlineBrush}" />
+            <Setter Target="Dot.Fill" Value="{ThemeResource RecoveryBrush}" />
+            <Setter Target="Label.Foreground" Value="{ThemeResource OnSurfaceBrush}" />
+            <Setter Target="Since.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
+            <Setter Target="FirstLabel.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
+            <Setter Target="SecondLabel.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
           </VisualState.Setters>
         </VisualState>
         <VisualState x:Name="Prep">
           <VisualState.Setters>
-            <Setter Target="Surface.Background" Value="{ThemeResource PhasePrepSoftBrush}" />
-            <Setter Target="Edge.BorderBrush" Value="{ThemeResource PhasePrepSoftBorderBrush}" />
-            <Setter Target="Divider.BorderBrush" Value="{ThemeResource PhasePrepSoftBorderBrush}" />
-            <Setter Target="Dot.Fill" Value="{ThemeResource PhasePrepSolidBrush}" />
-            <Setter Target="Label.Foreground" Value="{ThemeResource PhasePrepDeepBrush}" />
-            <Setter Target="Since.Foreground" Value="{ThemeResource InkMutedBrush}" />
-            <Setter Target="FirstLabel.Foreground" Value="{ThemeResource InkMutedBrush}" />
-            <Setter Target="SecondLabel.Foreground" Value="{ThemeResource InkMutedBrush}" />
+            <Setter Target="Surface.Background" Value="{ThemeResource PrepContainerBrush}" />
+            <Setter Target="Edge.BorderBrush" Value="{ThemeResource PrepOutlineBrush}" />
+            <Setter Target="Divider.BorderBrush" Value="{ThemeResource PrepOutlineBrush}" />
+            <Setter Target="Dot.Fill" Value="{ThemeResource PrepBrush}" />
+            <Setter Target="Label.Foreground" Value="{ThemeResource OnPrepContainerBrush}" />
+            <Setter Target="Since.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
+            <Setter Target="FirstLabel.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
+            <Setter Target="SecondLabel.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
           </VisualState.Setters>
         </VisualState>
         <VisualState x:Name="Neutral">
           <VisualState.Setters>
-            <Setter Target="Surface.Background" Value="{ThemeResource Surface1Brush}" />
-            <Setter Target="Edge.BorderBrush" Value="{ThemeResource TriToneBorderBrush}" />
-            <Setter Target="Divider.BorderBrush" Value="{ThemeResource DividerBrush}" />
-            <Setter Target="Dot.Fill" Value="{ThemeResource PhaseWaitingSolidBrush}" />
-            <Setter Target="Label.Foreground" Value="{ThemeResource InkBrush}" />
-            <Setter Target="Since.Foreground" Value="{ThemeResource InkMutedBrush}" />
-            <Setter Target="FirstLabel.Foreground" Value="{ThemeResource InkMutedBrush}" />
-            <Setter Target="SecondLabel.Foreground" Value="{ThemeResource InkMutedBrush}" />
+            <Setter Target="Surface.Background" Value="{ThemeResource SurfaceBrush}" />
+            <Setter Target="Edge.BorderBrush" Value="{ThemeResource OutlineVariantBrush}" />
+            <Setter Target="Divider.BorderBrush" Value="{ThemeResource OutlineVariantBrush}" />
+            <Setter Target="Dot.Fill" Value="{ThemeResource WaitingBrush}" />
+            <Setter Target="Label.Foreground" Value="{ThemeResource OnSurfaceBrush}" />
+            <Setter Target="Since.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
+            <Setter Target="FirstLabel.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
+            <Setter Target="SecondLabel.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
           </VisualState.Setters>
         </VisualState>
       </VisualStateGroup>
@@ -56,39 +56,39 @@
     <!-- Surface: tone fill, inset shade (inset 0 1px 3px rgba(0,0,0,.12)) and tone edge as rounded Borders (a filled
          ShadowContainer with an inner shadow painted its fill square on Skia). -->
     <!-- xaml-lint: allow card - state-driven tone fill -->
-    <Border x:Name="Surface" CornerRadius="{StaticResource Radius14}" Background="{ThemeResource PhaseAnesthesiaSoftBrush}" />
+    <Border x:Name="Surface" CornerRadius="{StaticResource Radius14}" Background="{ThemeResource AnesthesiaContainerBrush}" />
     <!-- xaml-lint: allow card - inset shade over the fill -->
     <Border CornerRadius="{StaticResource Radius14}" Background="{ThemeResource InsetShadeBrush}" IsHitTestVisible="False" />
     <!-- xaml-lint: allow card - state-driven tone stroke -->
-    <Border x:Name="Edge" CornerRadius="{StaticResource Radius14}" BorderThickness="1" BorderBrush="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" />
+    <Border x:Name="Edge" CornerRadius="{StaticResource Radius14}" BorderThickness="1" BorderBrush="{ThemeResource AnesthesiaOutlineBrush}" />
 
     <Grid Padding="{StaticResource StatusCardInset}" RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space8}">
         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
-          <Ellipse x:Name="Dot" Width="8" Height="8" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" VerticalAlignment="Center" />
-          <TextBlock x:Name="Label" Text="{Binding Care.Label}" Style="{StaticResource TypeMonoLabel}" Foreground="{ThemeResource PhaseAnesthesiaDeepBrush}" VerticalAlignment="Center" />
+          <Ellipse x:Name="Dot" Width="8" Height="8" Fill="{ThemeResource AnesthesiaBrush}" VerticalAlignment="Center" />
+          <TextBlock x:Name="Label" Text="{Binding Care.Label}" Style="{StaticResource TypeMonoLabel}" Foreground="{ThemeResource OnAnesthesiaContainerBrush}" VerticalAlignment="Center" />
         </StackPanel>
-        <TextBlock x:Name="Since" Grid.Column="1" Text="{Binding Care.Since}" Style="{StaticResource TypeMonoLabel}" Foreground="{ThemeResource LiveSoftInkBrush}" VerticalAlignment="Center" />
+        <TextBlock x:Name="Since" Grid.Column="1" Text="{Binding Care.Since}" Style="{StaticResource TypeMonoLabel}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
       </Grid>
       <TextBlock Grid.Row="1" Margin="{StaticResource GapTop2}" Text="{Binding Care.Timer}" Style="{StaticResource TypeMonoHeroS}" />
       <!-- Recorded heart rate (last 13 readings), 32 px, stroke 1.6, while the patient is under anesthesia. -->
       <Grid Grid.Row="2" Height="32" Margin="{StaticResource GapTop2}" Visibility="{Binding Care.IsSurgery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" AutomationProperties.AccessibilityView="Raw">
         <Path Data="{Binding HrSpark.Data}" Margin="{Binding HrSpark.LineMargin}" Height="{Binding HrSpark.Height}" VerticalAlignment="Top" Stretch="Fill"
-              Stroke="{ThemeResource PhaseAnesthesiaSolidBrush}" StrokeThickness="1.6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+              Stroke="{ThemeResource AnesthesiaBrush}" StrokeThickness="1.6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
       </Grid>
-      <Grid x:Name="Divider" Grid.Row="4" Padding="{StaticResource GapTop10}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" ColumnDefinitions="*,*" ColumnSpacing="{StaticResource Space12}">
+      <Grid x:Name="Divider" Grid.Row="4" Padding="{StaticResource GapTop10}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource AnesthesiaOutlineBrush}" ColumnDefinitions="*,*" ColumnSpacing="{StaticResource Space12}">
         <StackPanel>
-          <TextBlock x:Name="FirstLabel" Text="{Binding Care.FirstLabel}" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource LiveSoftInkBrush}" />
+          <TextBlock x:Name="FirstLabel" Text="{Binding Care.FirstLabel}" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
           <TextBlock Text="{Binding Care.FirstValue}" Style="{StaticResource TypeMonoValueS}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
         <StackPanel Grid.Column="1">
-          <TextBlock x:Name="SecondLabel" Text="{Binding Care.SecondLabel}" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource LiveSoftInkBrush}" />
+          <TextBlock x:Name="SecondLabel" Text="{Binding Care.SecondLabel}" Style="{StaticResource TypeCaption}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
           <TextBlock Text="{Binding Care.SecondValue}" Style="{StaticResource TypeMonoValueS}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
       </Grid>
       <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="{StaticResource Space6}" Margin="{StaticResource GapTop10}" Visibility="{Binding Care.HasAlert, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
-        <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
-        <TextBlock Text="{Binding Care.Alert}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource PhaseErrorSolidBrush}" VerticalAlignment="Center" />
+        <ContentControl Style="{StaticResource LineIcon14Bold}" Content="{StaticResource IconTriangleAlert}" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding Care.Alert}" Style="{StaticResource TypeBodyS}" FontWeight="SemiBold" Foreground="{ThemeResource ErrorBrush}" VerticalAlignment="Center" />
       </StackPanel>
     </Grid>
   </Grid>

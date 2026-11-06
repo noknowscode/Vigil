@@ -25,7 +25,7 @@
           <ScrollViewer HorizontalScrollMode="Disabled">
             <StackPanel Padding="{StaticResource MetricCardInset}" Spacing="{StaticResource Space16}" MaxWidth="{StaticResource ReadingMaxWidth}" HorizontalAlignment="Stretch">
               <StackPanel Spacing="{StaticResource Space12}">
-                <TextBlock x:Uid="MedicationsDrawer_4" Style="{StaticResource TypeH2Section}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" Text="Doses given" />
+                <TextBlock x:Uid="MedicationsDrawer_4" Style="{StaticResource TypeH2Section}" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" Text="Doses given" />
                 <Button x:Uid="MedicationsDrawer_5" Style="{StaticResource ButtonPrimaryL}" IsEnabled="{Binding Data.CanChange}" Command="{Binding Parent.GiveDose}" AutomationProperties.Name="Give a dose">
                   <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                     <SymbolIcon Symbol="Add" />
@@ -33,27 +33,27 @@
                   </StackPanel>
                 </Button>
               </StackPanel>
-              <TextBlock x:Uid="MedicationsDrawer_7" TextWrapping="WrapWholeWords" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Visibility="{Binding Data.HasNoDoses, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="No doses yet. Premedication, induction agents and antibiotics given for this case are listed here with their volume." />
+              <TextBlock x:Uid="MedicationsDrawer_7" TextWrapping="WrapWholeWords" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Visibility="{Binding Data.HasNoDoses, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" Text="No doses yet. Premedication, induction agents and antibiotics given for this case are listed here with their volume." />
               <ItemsControl x:Uid="MedicationsDrawer_8" ItemsSource="{Binding Data.Doses}" AutomationProperties.Name="Doses given">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate x:DataType="local:DoseRow">
-                    <Grid Padding="{StaticResource InsetY10}" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+                    <Grid Padding="{StaticResource InsetY10}" ColumnSpacing="{StaticResource Space16}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
                       <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="56" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                       </Grid.ColumnDefinitions>
-                      <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
+                      <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind Time}" />
                       <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}">
-                        <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" Text="{x:Bind Drug}" />
-                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}">
+                        <TextBlock Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{x:Bind Drug}" />
+                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}">
                           <Run Text="{x:Bind Dose}" />
                           <Run Text="·" />
                           <Run Text="{x:Bind Route}" />
                           <Run Text="{x:Bind Flag}" Foreground="{ThemeResource ErrorBrush}" />
                         </TextBlock>
                       </StackPanel>
-                      <TextBlock Grid.Column="2" Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkBrush}" Text="{x:Bind Volume}" />
+                      <TextBlock Grid.Column="2" Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource OnSurfaceBrush}" Text="{x:Bind Volume}" />
                     </Grid>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -64,8 +64,8 @@
                 <TextBlock x:Uid="MedicationsDrawer_9" Style="{StaticResource TypeH3Card}" Text="Fluids" />
                 <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}">
                   <Grid Width="6" Height="6" VerticalAlignment="Center">
-                    <Ellipse Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding Data.Fluids.IsRunning, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
-                    <Ellipse Fill="{ThemeResource PhaseWaitingSolidBrush}" Visibility="{Binding Data.Fluids.IsStopped, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                    <Ellipse Fill="{ThemeResource AnesthesiaBrush}" Visibility="{Binding Data.Fluids.IsRunning, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                    <Ellipse Fill="{ThemeResource WaitingBrush}" Visibility="{Binding Data.Fluids.IsStopped, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                   </Grid>
                   <TextBlock Text="{Binding Data.Fluids.Text}" Style="{StaticResource TypeBody}" VerticalAlignment="Center" />
                 </StackPanel>

@@ -9,7 +9,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:utu="using:Uno.Toolkit.UI"
-      Background="{ThemeResource PageBrush}">
+      Background="{ThemeResource BackgroundBrush}">
 
   <!-- Phones stack every field pair; from Normal they share rows. -->
   <Grid utu:SafeArea.Insets="VisibleBounds" MaxWidth="{StaticResource FormMaxWidth}">
@@ -35,8 +35,8 @@
       <StackPanel Padding="{StaticResource SheetInsetFlush}" Spacing="{StaticResource Space16}">
         <StackPanel Spacing="{StaticResource Space6}" Margin="{StaticResource GapBottom8}">
           <TextBlock Text="{Binding Heading}" Style="{StaticResource TypeDisplayTitle}" AutomationProperties.HeadingLevel="Level1" />
-          <TextBlock Text="{Binding Intro}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords" />
-          <TextBlock Text="{Binding Note}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Visibility="{Binding HasNote, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+          <TextBlock Text="{Binding Intro}" Style="{StaticResource TypeBodyL}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords" />
+          <TextBlock Text="{Binding Note}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Visibility="{Binding HasNote, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
         </StackPanel>
 
         <utu:CardContentControl Style="{StaticResource PanelCardStyle}">
@@ -99,7 +99,7 @@
           <StackPanel Spacing="{StaticResource Space14}">
             <StackPanel Spacing="{StaticResource Space4}">
               <TextBlock x:Uid="NewCase_18" Style="{StaticResource TypeEyebrow}" Text="SCHEDULE" />
-              <TextBlock x:Uid="NewCase_19" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords"
+              <TextBlock x:Uid="NewCase_19" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="WrapWholeWords"
                          Text="Optional. Times are like 14:00. A planned start puts the patient on Today's timeline and in the Next surgery card." />
             </StackPanel>
             <Grid ColumnSpacing="{StaticResource Space12}" RowSpacing="{utu:Responsive Narrowest={StaticResource Space14}, Normal=0}" ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto">
@@ -130,7 +130,7 @@
       </StackPanel>
     </ScrollViewer>
 
-    <StackPanel Grid.Row="2" Padding="{StaticResource SheetInset}" Spacing="{StaticResource Space12}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerBrush}">
+    <StackPanel Grid.Row="2" Padding="{StaticResource SheetInset}" Spacing="{StaticResource Space12}" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource OutlineVariantBrush}">
       <StackPanel Spacing="{StaticResource Space4}" Visibility="{Binding HasErrors, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
         <TextBlock x:Uid="NewCase_25" Style="{StaticResource TypeBodyS}"
                    Foreground="{ThemeResource ErrorBrush}"

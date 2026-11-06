@@ -32,9 +32,9 @@
                 <ItemsControl x:Uid="HistoryDrawer_12" ItemsSource="{Binding Data.Corrections}" AutomationProperties.Name="Corrections to this record">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="local:CorrectionRow">
-                      <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="Auto,*" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
-                        <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
-                        <TextBlock Grid.Column="1" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Text="{x:Bind Text}" />
+                      <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="Auto,*" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
+                        <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind Time}" />
+                        <TextBlock Grid.Column="1" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="WrapWholeWords" Text="{x:Bind Text}" />
                       </Grid>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
@@ -45,14 +45,14 @@
               <muxc:ItemsRepeater x:Uid="HistoryDrawer_3" ItemsSource="{Binding Data.Readings}" AutomationProperties.Name="Readings table">
                 <muxc:ItemsRepeater.ItemTemplate>
                   <DataTemplate x:DataType="local:ReadingRow">
-                    <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+                    <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1">
                       <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="56" />
                         <ColumnDefinition Width="*" />
                       </Grid.ColumnDefinitions>
-                      <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
+                      <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind Time}" />
                       <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}">
-                        <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkBrush}" TextWrapping="Wrap">
+                        <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="Wrap">
                           <Run x:Uid="HistoryDrawer_4" Text="HR" /> <Run Text="{x:Bind Hr}" />
                           <Run x:Uid="HistoryDrawer_5" Text=" RR" /> <Run Text="{x:Bind Rr}" />
                           <Run x:Uid="HistoryDrawer_6" Text=" SpO₂" /> <Run Text="{x:Bind SpO2}" />
@@ -63,7 +63,7 @@
                           <Run Text=" " /> <Run Text="{x:Bind Plane}" />
                         </TextBlock>
                         <TextBlock Style="{StaticResource TypeEyebrow}" Foreground="{ThemeResource ErrorBrush}" Text="{x:Bind Alarms}" />
-                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Note}" />
+                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Text="{x:Bind Note}" />
                       </StackPanel>
                     </Grid>
                   </DataTemplate>

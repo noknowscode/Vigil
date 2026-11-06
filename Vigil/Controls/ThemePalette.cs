@@ -22,7 +22,7 @@ internal static class ThemePalette
 
     private static Color? FindThemed(ResourceDictionary dictionary, string key, string themeKey)
     {
-        foreach (var name in themeKey == "Light" ? new[] { "Light", "Default" } : new[] { "Dark" })
+        foreach (var name in themeKey == "Light" ? new[] { "Light", "Default" } : new[] { "Dark", "Default" })
         {
             if (dictionary.ThemeDictionaries.TryGetValue(name, out var t) && t is ResourceDictionary td && Value(td, key) is Color c)
             {

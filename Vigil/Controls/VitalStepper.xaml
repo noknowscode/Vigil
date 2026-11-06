@@ -20,10 +20,10 @@
                  Foreground="{Binding GlyphBrush, ElementName=Root}"
                  Text="{Binding Glyph, ElementName=Root}" />
       <TextBlock Style="{StaticResource TypeEyebrow}"
-                 Foreground="{ThemeResource InkBrush}"
+                 Foreground="{ThemeResource OnSurfaceBrush}"
                  Text="{Binding Label, ElementName=Root}" />
       <TextBlock Style="{StaticResource TypeCaptionStrong}"
-                 Foreground="{ThemeResource InkMutedBrush}"
+                 Foreground="{ThemeResource OnSurfaceVariantBrush}"
                  VerticalAlignment="Bottom"
                  Text="{Binding Unit, ElementName=Root}" />
       <TextBlock Style="{StaticResource TypeEyebrow}"

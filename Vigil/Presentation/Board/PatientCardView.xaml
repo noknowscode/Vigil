@@ -36,7 +36,7 @@
       <Setter Property="Height" Value="44" />
       <Setter Property="HorizontalAlignment" Value="Stretch" />
       <Setter Property="Background" Value="Transparent" />
-      <Setter Property="BorderBrush" Value="{ThemeResource DividerBrush}" />
+      <Setter Property="BorderBrush" Value="{ThemeResource OutlineVariantBrush}" />
       <Setter Property="BorderThickness" Value="0,1,0,0" />
       <Setter Property="CornerRadius" Value="{StaticResource RadiusToggleBottom}" />
       <Setter Property="Template">
@@ -46,8 +46,8 @@
               <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
                   <VisualState x:Name="Normal" />
-                  <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource PageBrush}" /></VisualState.Setters></VisualState>
-                  <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource PressedBrush}" /></VisualState.Setters></VisualState>
+                  <VisualState x:Name="PointerOver"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource BackgroundBrush}" /></VisualState.Setters></VisualState>
+                  <VisualState x:Name="Pressed"><VisualState.Setters><Setter Target="Root.Background" Value="{ThemeResource SurfaceVariantBrush}" /></VisualState.Setters></VisualState>
                   <VisualState x:Name="Disabled" />
                 </VisualStateGroup>
               </VisualStateManager.VisualStateGroups>
@@ -61,7 +61,7 @@
       <Setter Property="MinHeight" Value="44" />
       <Setter Property="Padding" Value="{StaticResource ToggleInset}" />
       <Setter Property="ColumnSpacing" Value="12" />
-      <Setter Property="BorderBrush" Value="{ThemeResource DividerBrush}" />
+      <Setter Property="BorderBrush" Value="{ThemeResource OutlineVariantBrush}" />
       <Setter Property="BorderThickness" Value="0,0,0,1" />
     </Style>
   </UserControl.Resources>
@@ -71,11 +71,11 @@
       <VisualStateGroup x:Name="StripStates">
         <VisualState x:Name="Live">
           <VisualState.Setters>
-            <Setter Target="StripFill.Background" Value="{ThemeResource PhaseAnesthesiaSoftBrush}" />
-            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" />
-            <Setter Target="StripDot.Fill" Value="{ThemeResource PhaseAnesthesiaSolidBrush}" />
-            <Setter Target="StripDot.Stroke" Value="{ThemeResource PhaseAnesthesiaSolidBrush}" />
-            <Setter Target="StripLabel.Foreground" Value="{ThemeResource PhaseAnesthesiaDeepBrush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource AnesthesiaContainerBrush}" />
+            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource AnesthesiaOutlineBrush}" />
+            <Setter Target="StripDot.Fill" Value="{ThemeResource AnesthesiaBrush}" />
+            <Setter Target="StripDot.Stroke" Value="{ThemeResource AnesthesiaBrush}" />
+            <Setter Target="StripLabel.Foreground" Value="{ThemeResource OnAnesthesiaContainerBrush}" />
             <Setter Target="PulseRing.Visibility" Value="Visible" />
           </VisualState.Setters>
           <!-- clv-pulse: ring 14 → 18 px around the 8 px dot, opacity .18 → .08, 2 s ease-in-out; stops with the state. -->
@@ -93,52 +93,52 @@
         </VisualState>
         <VisualState x:Name="LiveStill">
           <VisualState.Setters>
-            <Setter Target="StripFill.Background" Value="{ThemeResource PhaseAnesthesiaSoftBrush}" />
-            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource PhaseAnesthesiaSoftBorderBrush}" />
-            <Setter Target="StripDot.Fill" Value="{ThemeResource PhaseAnesthesiaSolidBrush}" />
-            <Setter Target="StripDot.Stroke" Value="{ThemeResource PhaseAnesthesiaSolidBrush}" />
-            <Setter Target="StripLabel.Foreground" Value="{ThemeResource PhaseAnesthesiaDeepBrush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource AnesthesiaContainerBrush}" />
+            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource AnesthesiaOutlineBrush}" />
+            <Setter Target="StripDot.Fill" Value="{ThemeResource AnesthesiaBrush}" />
+            <Setter Target="StripDot.Stroke" Value="{ThemeResource AnesthesiaBrush}" />
+            <Setter Target="StripLabel.Foreground" Value="{ThemeResource OnAnesthesiaContainerBrush}" />
           </VisualState.Setters>
         </VisualState>
         <VisualState x:Name="Prep">
           <VisualState.Setters>
-            <Setter Target="StripFill.Background" Value="{ThemeResource PhasePrepSoftBrush}" />
-            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource PhasePrepSoftBorderBrush}" />
-            <Setter Target="StripDot.Fill" Value="{ThemeResource PhasePrepSolidBrush}" />
-            <Setter Target="StripDot.Stroke" Value="{ThemeResource PhasePrepSolidBrush}" />
-            <Setter Target="StripLabel.Foreground" Value="{ThemeResource PhasePrepDeepBrush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource PrepContainerBrush}" />
+            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource PrepOutlineBrush}" />
+            <Setter Target="StripDot.Fill" Value="{ThemeResource PrepBrush}" />
+            <Setter Target="StripDot.Stroke" Value="{ThemeResource PrepBrush}" />
+            <Setter Target="StripLabel.Foreground" Value="{ThemeResource OnPrepContainerBrush}" />
           </VisualState.Setters>
         </VisualState>
         <VisualState x:Name="Recovery">
           <VisualState.Setters>
-            <Setter Target="StripFill.Background" Value="{ThemeResource PhaseRecoverySoftBrush}" />
-            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource PhaseRecoverySoftBorderBrush}" />
-            <Setter Target="StripDot.Stroke" Value="{ThemeResource PhaseRecoverySolidBrush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource RecoveryContainerBrush}" />
+            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource RecoveryOutlineBrush}" />
+            <Setter Target="StripDot.Stroke" Value="{ThemeResource RecoveryBrush}" />
           </VisualState.Setters>
         </VisualState>
         <VisualState x:Name="Booked">
           <VisualState.Setters>
             <Setter Target="StripGround.Background" Value="{ThemeResource BookedHatchBrush}" />
-            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource BookedEdgeBrush}" />
-            <Setter Target="StripDot.Stroke" Value="{ThemeResource PhaseWaitingSolidBrush}" />
-            <Setter Target="StripLabel.Foreground" Value="{ThemeResource InkMutedBrush}" />
+            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource OutlineVariantBrush}" />
+            <Setter Target="StripDot.Stroke" Value="{ThemeResource WaitingBrush}" />
+            <Setter Target="StripLabel.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
           </VisualState.Setters>
         </VisualState>
         <VisualState x:Name="Home">
           <VisualState.Setters>
-            <Setter Target="StripFill.Background" Value="{ThemeResource Surface2Brush}" />
-            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource EdgeBrush}" />
-            <Setter Target="StripDot.Stroke" Value="{ThemeResource InkFaintBrush}" />
-            <Setter Target="StripLabel.Foreground" Value="{ThemeResource InkMutedBrush}" />
+            <Setter Target="StripFill.Background" Value="{ThemeResource SurfaceVariantBrush}" />
+            <Setter Target="StripGround.BorderBrush" Value="{ThemeResource OutlineVariantBrush}" />
+            <Setter Target="StripDot.Stroke" Value="{ThemeResource OutlineBrush}" />
+            <Setter Target="StripLabel.Foreground" Value="{ThemeResource OnSurfaceVariantBrush}" />
           </VisualState.Setters>
         </VisualState>
       </VisualStateGroup>
       <VisualStateGroup x:Name="StageStates">
-        <VisualState x:Name="StageBooked"><VisualState.Setters><Setter Target="Step0.Foreground" Value="{ThemeResource InkBrush}" /><Setter Target="Step0.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
-        <VisualState x:Name="StagePrep"><VisualState.Setters><Setter Target="Step1.Foreground" Value="{ThemeResource InkBrush}" /><Setter Target="Step1.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
-        <VisualState x:Name="StageSurgery"><VisualState.Setters><Setter Target="Step2.Foreground" Value="{ThemeResource InkBrush}" /><Setter Target="Step2.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
-        <VisualState x:Name="StageRecovery"><VisualState.Setters><Setter Target="Step3.Foreground" Value="{ThemeResource InkBrush}" /><Setter Target="Step3.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
-        <VisualState x:Name="StageHome"><VisualState.Setters><Setter Target="Step4.Foreground" Value="{ThemeResource InkBrush}" /><Setter Target="Step4.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
+        <VisualState x:Name="StageBooked"><VisualState.Setters><Setter Target="Step0.Foreground" Value="{ThemeResource OnSurfaceBrush}" /><Setter Target="Step0.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
+        <VisualState x:Name="StagePrep"><VisualState.Setters><Setter Target="Step1.Foreground" Value="{ThemeResource OnSurfaceBrush}" /><Setter Target="Step1.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
+        <VisualState x:Name="StageSurgery"><VisualState.Setters><Setter Target="Step2.Foreground" Value="{ThemeResource OnSurfaceBrush}" /><Setter Target="Step2.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
+        <VisualState x:Name="StageRecovery"><VisualState.Setters><Setter Target="Step3.Foreground" Value="{ThemeResource OnSurfaceBrush}" /><Setter Target="Step3.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
+        <VisualState x:Name="StageHome"><VisualState.Setters><Setter Target="Step4.Foreground" Value="{ThemeResource OnSurfaceBrush}" /><Setter Target="Step4.FontWeight" Value="SemiBold" /></VisualState.Setters></VisualState>
       </VisualStateGroup>
       <VisualStateGroup x:Name="DetailStates">
         <VisualState x:Name="Collapsed">
@@ -174,39 +174,39 @@
     </VisualStateManager.VisualStateGroups>
 
     <!-- Outer shell (.sh): #F8F8F7, radius 22, tri-tone border, pad 3, shadow card 0 2 3 -1 .07 -->
-    <utu:ShadowContainer Background="{ThemeResource Surface2Brush}" CornerRadius="{StaticResource Radius22}" Shadows="{StaticResource ShadowCard}">
+    <utu:ShadowContainer Background="{ThemeResource SurfaceVariantBrush}" CornerRadius="{StaticResource Radius22}" Shadows="{StaticResource ShadowCard}">
       <!-- xaml-lint: allow card - tri-tone stroke over the ShadowContainer surface (gradient edge, exact card shadow) -->
-      <Border CornerRadius="{StaticResource Radius22}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1" Padding="{StaticResource Inset3}">
+      <Border CornerRadius="{StaticResource Radius22}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="1" Padding="{StaticResource Inset3}">
         <!-- Tray: #FCFBF9, radius 18, tri-tone border, shadow xs -->
-        <utu:ShadowContainer Background="{ThemeResource Surface1Brush}" CornerRadius="{StaticResource Radius18}" Shadows="{StaticResource ShadowXs}">
-          <Border CornerRadius="{StaticResource Radius18}" BorderBrush="{ThemeResource TriToneBorderBrush}" BorderThickness="1">
+        <utu:ShadowContainer Background="{ThemeResource SurfaceBrush}" CornerRadius="{StaticResource Radius18}" Shadows="{StaticResource ShadowXs}">
+          <Border CornerRadius="{StaticResource Radius18}" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="1">
             <Grid RowDefinitions="*,Auto">
               <Button x:Uid="PatientCard_1" Style="{StaticResource CardHitButton}" uen:Navigation.Request="Record" uen:Navigation.Data="{Binding Ref}" AutomationProperties.Name="{Binding AccessibleName}" />
               <StackPanel IsHitTestVisible="False">
                 <!-- Header tray: #F3F3F2, bottom edge #E6E6E8, radius 0 0 18 18, pad 6 -->
-                <utu:ShadowContainer Background="{ThemeResource PageBrush}" CornerRadius="{StaticResource RadiusTrayHeader}" Shadows="{StaticResource ShadowXs}">
-                  <Grid Padding="{StaticResource CardHeaderInset}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="88,*" BorderBrush="{ThemeResource TrayEdgeBrush}" BorderThickness="0,0,0,1" CornerRadius="{StaticResource RadiusTrayHeader}">
+                <utu:ShadowContainer Background="{ThemeResource BackgroundBrush}" CornerRadius="{StaticResource RadiusTrayHeader}" Shadows="{StaticResource ShadowXs}">
+                  <Grid Padding="{StaticResource CardHeaderInset}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="88,*" BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="0,0,0,1" CornerRadius="{StaticResource RadiusTrayHeader}">
                     <!-- Photo 88 x 44, radius 12, placeholder #E9E9EB, the whole picture fitted (Uniform, user 2026-10-29): an ImageBrush ground, because a Border's radius does not clip an Image child on Skia. -->
                     <Grid Width="88" Height="44">
-                      <Rectangle RadiusX="{StaticResource RectRadius12}" RadiusY="{StaticResource RectRadius12}" Fill="{ThemeResource MediaPlaceholderBrush}" />
+                      <Rectangle RadiusX="{StaticResource RectRadius12}" RadiusY="{StaticResource RectRadius12}" Fill="{ThemeResource SurfaceVariantBrush}" />
                       <Rectangle RadiusX="{StaticResource RectRadius12}" RadiusY="{StaticResource RectRadius12}" Visibility="{Binding HasPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
                         <Rectangle.Fill><ImageBrush ImageSource="{Binding Photo}" Stretch="Uniform" /></Rectangle.Fill>
                       </Rectangle>
-                      <TextBlock Text="{Binding Initials}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource InkMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasNoPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <TextBlock Text="{Binding Initials}" Style="{StaticResource TypeBodyStrong}" Foreground="{ThemeResource OnSurfaceVariantBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasNoPhoto, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                     </Grid>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space12}">
                         <TextBlock Text="{Binding Name}" Style="{StaticResource TypeH3CardName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                         <Border Grid.Column="1" Style="{StaticResource BadgeOutline}" Visibility="{Binding AsaKnown, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center">
-                          <TextBlock Text="{Binding Asa}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding Asa}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" />
                         </Border>
                         <!-- dashed-pending badge: no fill, 1 px dashed #A3A6AE -->
                         <Grid Grid.Column="1" Height="24" Visibility="{Binding AsaPending, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center">
-                          <Rectangle RadiusX="{StaticResource RectRadius8}" RadiusY="{StaticResource RectRadius8}" Stroke="{ThemeResource InkFaintBrush}" StrokeThickness="1" StrokeDashArray="3,2" />
+                          <Rectangle RadiusX="{StaticResource RectRadius8}" RadiusY="{StaticResource RectRadius8}" Stroke="{ThemeResource OutlineBrush}" StrokeThickness="1" StrokeDashArray="3,2" />
                           <TextBlock Text="{Binding Asa}" Style="{StaticResource TypeCaptionStrong}" Margin="9,0" VerticalAlignment="Center" />
                         </Grid>
                       </Grid>
-                      <TextBlock Text="{Binding Sub}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{Binding Sub}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextTrimming="CharacterEllipsis" />
                     </StackPanel>
                   </Grid>
                 </utu:ShadowContainer>
@@ -217,26 +217,26 @@
                   <Grid Style="{StaticResource DetailRow}" ColumnDefinitions="Auto,*">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center">
                       <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconStethoscope}" />
-                      <TextBlock x:Uid="PatientCard_2" Text="Procedure" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" />
+                      <TextBlock x:Uid="PatientCard_2" Text="Procedure" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                     </StackPanel>
                     <TextBlock Grid.Column="1" Text="{Binding Procedure}" Style="{StaticResource TypeBodyMedium}" TextWrapping="WrapWholeWords" TextAlignment="Right" VerticalAlignment="Center" />
                   </Grid>
                   <Grid Style="{StaticResource DetailRow}" ColumnDefinitions="Auto,*" Padding="{StaticResource InsetX14}">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center">
                       <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconWeight}" />
-                      <TextBlock x:Uid="PatientCard_3" Text="Weight" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" />
+                      <TextBlock x:Uid="PatientCard_3" Text="Weight" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                     </StackPanel>
                     <Border Grid.Column="1" Style="{StaticResource BadgeNeutral}" HorizontalAlignment="Right" VerticalAlignment="Center">
-                      <TextBlock Text="{Binding Weight}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource InkBrush}" VerticalAlignment="Center" />
+                      <TextBlock Text="{Binding Weight}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource OnSurfaceBrush}" VerticalAlignment="Center" />
                     </Border>
                   </Grid>
                   <Grid Style="{StaticResource DetailRow}" ColumnDefinitions="Auto,*" Padding="{StaticResource InsetX14}" BorderThickness="0">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center">
                       <ContentControl Style="{StaticResource LineIcon16}" Content="{StaticResource IconUserRound}" />
-                      <TextBlock x:Uid="PatientCard_4" Text="Pet parent" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" />
+                      <TextBlock x:Uid="PatientCard_4" Text="Pet parent" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
                     </StackPanel>
                     <Border Grid.Column="1" Style="{StaticResource BadgeNeutral}" HorizontalAlignment="Right" VerticalAlignment="Center">
-                      <TextBlock Text="{Binding Owner}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource InkBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                      <TextBlock Text="{Binding Owner}" Style="{StaticResource TypeCaptionStrong}" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                     </Border>
                   </Grid>
                 </StackPanel>
@@ -246,18 +246,18 @@
                      painted its fill square on Skia, under the rounded edge. The edge carries the booked hatch. -->
                 <Grid x:Name="StripShell" Margin="{StaticResource CardTrayMargin}" Height="44">
                   <!-- xaml-lint: allow card - status strip fill, recoloured per stage by the StripStates visual states -->
-                  <Border x:Name="StripFill" CornerRadius="{StaticResource Radius12}" Background="{ThemeResource Surface2Brush}" />
+                  <Border x:Name="StripFill" CornerRadius="{StaticResource Radius12}" Background="{ThemeResource SurfaceVariantBrush}" />
                   <!-- xaml-lint: allow card - inset shade over the fill (CSS inset 0 1px 3px) -->
                   <Border CornerRadius="{StaticResource Radius12}" Background="{ThemeResource InsetShadeBrush}" IsHitTestVisible="False" />
                   <!-- xaml-lint: allow card - status strip edge (and the booked hatch), recoloured per stage -->
-                  <Border x:Name="StripGround" CornerRadius="{StaticResource Radius12}" BorderThickness="1" Background="Transparent" BorderBrush="{ThemeResource EdgeBrush}" />
+                  <Border x:Name="StripGround" CornerRadius="{StaticResource Radius12}" BorderThickness="1" Background="Transparent" BorderBrush="{ThemeResource OutlineVariantBrush}" />
                   <Grid Padding="{StaticResource InsetX12}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="*,Auto">
                     <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space8}" VerticalAlignment="Center">
                       <Grid Width="8" Height="8" VerticalAlignment="Center">
-                        <Ellipse x:Name="PulseRing" Width="8" Height="8" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Opacity="0.18" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
+                        <Ellipse x:Name="PulseRing" Width="8" Height="8" Fill="{ThemeResource AnesthesiaBrush}" Opacity="0.18" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
                           <Ellipse.RenderTransform><ScaleTransform x:Name="PulseScale" ScaleX="1.75" ScaleY="1.75" /></Ellipse.RenderTransform>
                         </Ellipse>
-                        <Ellipse x:Name="StripDot" Width="8" Height="8" StrokeThickness="1.5" Fill="Transparent" Stroke="{ThemeResource InkFaintBrush}" />
+                        <Ellipse x:Name="StripDot" Width="8" Height="8" StrokeThickness="1.5" Fill="Transparent" Stroke="{ThemeResource OutlineBrush}" />
                       </Grid>
                       <TextBlock x:Name="StripLabel" Text="{Binding StripLabel}" Style="{StaticResource TypeMonoLabel}" VerticalAlignment="Center" />
                     </StackPanel>
@@ -266,7 +266,7 @@
                       <!-- Phones drop the sparkline: next to the status label and the timer it leaves the label no room. -->
                       <Grid Visibility="{utu:Responsive Narrowest=Collapsed, Normal=Visible}" VerticalAlignment="Center">
                       <Grid Width="72" Height="20" Visibility="{Binding HasSparkline, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center">
-                        <Path Data="{Binding Sparkline}" Stroke="{ThemeResource PhaseAnesthesiaSolidBrush}" StrokeThickness="1.6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                        <Path Data="{Binding Sparkline}" Stroke="{ThemeResource AnesthesiaBrush}" StrokeThickness="1.6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                       </Grid>
                       </Grid>
                       <TextBlock Text="{Binding StripValue}" Style="{StaticResource TypeMonoTimerCard}" Visibility="{Binding StripIsClock, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" VerticalAlignment="Center" />
@@ -280,21 +280,21 @@
                   <Grid Height="20">
                     <Grid Height="6" VerticalAlignment="Top" Margin="0,7,0,0" ColumnSpacing="{StaticResource Space3}" ColumnDefinitions="*,*,*,*,*">
                       <Rectangle RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource StepDoneHatchBrush}" />
-                      <Rectangle Grid.Column="1" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource TrackBrush}" />
-                      <Rectangle Grid.Column="1" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhasePrepStepBrush}" Visibility="{Binding ReachedPrep, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
-                      <Rectangle Grid.Column="2" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource TrackBrush}" />
-                      <Rectangle Grid.Column="2" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseAnesthesiaStepBrush}" Visibility="{Binding ReachedSurgery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
-                      <Rectangle Grid.Column="3" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource TrackBrush}" />
-                      <Rectangle Grid.Column="3" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseRecoveryStepBrush}" Visibility="{Binding ReachedRecovery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
-                      <Rectangle Grid.Column="4" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource TrackBrush}" />
-                      <Rectangle Grid.Column="4" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PhaseHomeStepBrush}" Visibility="{Binding ReachedHome, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <Rectangle Grid.Column="1" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource SurfaceVariantBrush}" />
+                      <Rectangle Grid.Column="1" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource PrepContainerBrush}" Visibility="{Binding ReachedPrep, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <Rectangle Grid.Column="2" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource SurfaceVariantBrush}" />
+                      <Rectangle Grid.Column="2" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource AnesthesiaOutlineBrush}" Visibility="{Binding ReachedSurgery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <Rectangle Grid.Column="3" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource SurfaceVariantBrush}" />
+                      <Rectangle Grid.Column="3" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource RecoveryOutlineBrush}" Visibility="{Binding ReachedRecovery, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                      <Rectangle Grid.Column="4" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource SurfaceVariantBrush}" />
+                      <Rectangle Grid.Column="4" RadiusX="{StaticResource RectRadius3}" RadiusY="{StaticResource RectRadius3}" Fill="{ThemeResource HomeBrush}" Visibility="{Binding ReachedHome, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                     </Grid>
                     <!-- Knob: 20 px, centred on the current stage (10/30/50/70/90 %), shadow knob 0 1 3 .2 -->
                     <Grid ColumnSpacing="{StaticResource Space3}" ColumnDefinitions="*,*,*,*,*">
                       <utu:ShadowContainer Grid.Column="{Binding StageIndex}" Width="20" Height="20" HorizontalAlignment="Center" Background="Transparent" CornerRadius="{StaticResource Radius10}" Shadows="{StaticResource ShadowKnob}">
                         <Grid Width="20" Height="20">
-                          <Ellipse Fill="{ThemeResource KnobBrush}" Stroke="{ThemeResource KnobEdgeBrush}" StrokeThickness="1" />
-                          <Ellipse Width="6" Height="6" Fill="{ThemeResource PhaseAnesthesiaSolidBrush}" Visibility="{Binding KnobLive, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
+                          <Ellipse Fill="{ThemeResource KnobBrush}" Stroke="{ThemeResource OutlineVariantBrush}" StrokeThickness="1" />
+                          <Ellipse Width="6" Height="6" Fill="{ThemeResource AnesthesiaBrush}" Visibility="{Binding KnobLive, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}" />
                         </Grid>
                       </utu:ShadowContainer>
                     </Grid>
@@ -309,7 +309,7 @@
                 </StackPanel>
 
                 <!-- Team line (opens with the details, 160 ms later) -->
-                <TextBlock x:Name="Team" Text="{Binding Team}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource InkMutedBrush}" Margin="{StaticResource CardBodyInset}" TextWrapping="WrapWholeWords" Visibility="Collapsed">
+                <TextBlock x:Name="Team" Text="{Binding Team}" Style="{StaticResource TypeBody}" Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="{StaticResource CardBodyInset}" TextWrapping="WrapWholeWords" Visibility="Collapsed">
                   <TextBlock.RenderTransform><TranslateTransform x:Name="TeamSlide" /></TextBlock.RenderTransform>
                 </TextBlock>
               </StackPanel>
@@ -318,7 +318,7 @@
                       Command="{utu:AncestorBinding AncestorType=Page, Path=DataContext.ToggleDetails}" CommandParameter="{Binding}"
                       AutomationProperties.Name="{Binding ToggleText}">
                 <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space6}">
-                  <TextBlock Text="{Binding ToggleText}" Style="{StaticResource TypeBodyMedium}" Foreground="{ThemeResource InkMutedBrush}" VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding ToggleText}" Style="{StaticResource TypeBodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}" VerticalAlignment="Center" />
                   <ContentControl Style="{StaticResource LineIcon16Bold}" Content="{StaticResource IconChevronDown}" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                     <ContentControl.RenderTransform><RotateTransform x:Name="ChevronTurn" /></ContentControl.RenderTransform>
                   </ContentControl>
