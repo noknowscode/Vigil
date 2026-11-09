@@ -1,0 +1,20 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>showcase-phones</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* Three phones fanned out on the sage wash: Today (Light), Milo's pet-parent view (Dark, centre, raised) and the
+     Patients board (Light). */
+  .floor { position: absolute; left: 22%; right: 22%; bottom: 14px; height: 50px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(28,58,43,.24), rgba(28,58,43,0)); filter: blur(8px); }
+  .ph { width: 236px; height: 500px; --bezel: 9px; --r: 38px; }
+  .l { left: 238px; top: 92px; transform: rotate(-5deg); }
+  .c { left: 482px; top: 50px; width: 246px; height: 522px; z-index: 2; }
+  .r { left: 726px; top: 92px; transform: rotate(5deg); }
+</style></head>
+<body><div class="stage bg-sage grain">
+  <div class="sheet-grid" style="--grid:.6; --grid-mask: 70% 75% at 50% 45%"></div>
+  <div class="floor"></div>
+  <div class="device ph l"><div class="screen"><img src="cap/light-phone-today@2x.png"></div></div>
+  <div class="device ph r"><div class="screen"><img src="cap/light-phone-patients@2x.png"></div></div>
+  <div class="device ph c"><div class="screen"><img src="cap/dark-phone-parent@2x.png"></div></div>
+</div></body></html>

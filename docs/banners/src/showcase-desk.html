@@ -1,0 +1,23 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>showcase-desk</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* House style: Today (Light) in a desktop window between Today at phone width (Dark) and Milo's pet-parent view (Light)
+     on phones, over the morning wash (SecondaryContainer lavender into PrimaryContainer sage on the cream Background). */
+  .floor { position: absolute; left: 10%; right: 10%; bottom: 18px; height: 60px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(28,58,43,.20), rgba(28,58,43,0)); filter: blur(8px); }
+  /* The window shows the capture at half size, so its 257 px sidebar is 128 px wide: the left phone covers all of it
+     (no label cut in half), and the right phone overlaps only the page's right margin. */
+  .win { left: 185px; top: 56px; width: 720px; --bar: 22px; }
+  /* end the page under the patient cards (850 of the capture's 900 px), so no half-cut heading shows at the bottom */
+  .win .view { height: 425px; overflow: hidden; }
+  .p1 { left: 115px; top: 166px; width: 200px; height: 414px; --bezel: 8px; --r: 32px; }
+  .p2 { left: 885px; top: 166px; width: 200px; height: 414px; --bezel: 8px; --r: 32px; }
+</style></head>
+<body><div class="stage bg-morning grain">
+  <div class="sheet-grid" style="--grid:.6; --grid-mask: 75% 70% at 50% 40%"></div>
+  <div class="floor"></div>
+  <div class="win"><div class="bar"><i></i><i></i><i></i><b></b></div><div class="view"><img src="cap/light-desk-today@2x.png"></div></div>
+  <div class="device p1"><div class="screen"><img src="cap/dark-phone-today@2x.png"></div></div>
+  <div class="device p2"><div class="screen"><img src="cap/light-phone-parent@2x.png"></div></div>
+</div></body></html>

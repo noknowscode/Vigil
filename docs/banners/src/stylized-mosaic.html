@@ -1,0 +1,39 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>stylized-mosaic</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* The app's states as a tilted mosaic of sixteen real 1440 x 900 screens, Light and Dark alternating like a
+     checkerboard: Today, both records, the observations pad, the dose drawer, recovery, sign-off, Patients and the
+     Agenda. One plane, laid back and turned, falling into the night backdrop at its far edge. */
+  .wall { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d;
+    transform: perspective(1800px) rotateX(34deg) rotateZ(-16deg); }
+  .grid { position: absolute; left: -790px; top: -530px; display: grid; grid-template-columns: repeat(4, 380px);
+    grid-auto-rows: 237.5px; gap: 24px; }
+  .tile { border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px rgba(230,231,234,.08), 0 18px 34px -12px rgba(0,0,0,.6); }
+  .tile.lt { box-shadow: 0 0 0 1px rgba(27,33,47,.10), 0 18px 34px -12px rgba(0,0,0,.45); }
+  .tile img { width: 100%; height: 100%; }
+  .fade { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(80% 90% at 50% 62%, rgba(17,19,21,0) 50%, rgba(17,19,21,.75) 100%),
+                linear-gradient(180deg, rgba(17,19,21,.55) 0%, rgba(17,19,21,0) 30%); }
+</style></head>
+<body><div class="stage bg-night grain on-night" style="--grain:.05">
+  <div class="wall"><div class="grid">
+    <div class="tile lt"><img src="cap/light-desk-agenda@2x.png"></div>
+    <div class="tile"><img src="cap/dark-desk-vitals@2x.png"></div>
+    <div class="tile lt"><img src="cap/light-desk-recovery@2x.png"></div>
+    <div class="tile"><img src="cap/dark-desk-signoff@2x.png"></div>
+    <div class="tile"><img src="cap/dark-desk-patients@2x.png"></div>
+    <div class="tile lt"><img src="cap/light-desk-record@2x.png"></div>
+    <div class="tile"><img src="cap/dark-desk-today@2x.png"></div>
+    <div class="tile lt"><img src="cap/light-desk-dose@2x.png"></div>
+    <div class="tile lt"><img src="cap/light-desk-vitals@2x.png"></div>
+    <div class="tile"><img src="cap/dark-desk-dose@2x.png"></div>
+    <div class="tile lt"><img src="cap/light-desk-today@2x.png"></div>
+    <div class="tile"><img src="cap/dark-desk-recordlow@2x.png"></div>
+    <div class="tile"><img src="cap/dark-desk-agenda@2x.png"></div>
+    <div class="tile lt"><img src="cap/light-desk-milo@2x.png"></div>
+    <div class="tile"><img src="cap/dark-desk-record@2x.png"></div>
+    <div class="tile lt"><img src="cap/light-desk-signoff@2x.png"></div>
+  </div></div>
+  <div class="fade"></div>
+</div></body></html>

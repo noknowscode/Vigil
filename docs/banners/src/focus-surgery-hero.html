@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>focus-surgery-hero</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* 1920 x 1080 hero of focus-surgery: the same composition laid out on a 1200 x 675 plane and zoomed by 1.6 (CSS zoom, so it is laid out and rasterized at full size), so the
+     panel shows the capture at 1.50 device px per CSS px (the capture holds 2). */
+  .stage { width: 1200px; height: 675px; zoom: 1.6; right: auto; bottom: auto; }
+  .behind { position: absolute; left: -158px; top: 24px; width: 1300px; filter: blur(7px) saturate(.9); opacity: .55;
+    -webkit-mask-image: radial-gradient(70% 70% at 50% 60%, #000 30%, transparent 85%); }
+  .behind img { width: 100%; }
+  .shadow { position: absolute; left: 150px; top: 402px; width: 900px; height: 130px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(28,58,43,.30), rgba(28,58,43,0)); filter: blur(18px); }
+  .panel { position: absolute; left: 90px; top: 156px; width: 1020px; height: 324.7px; border-radius: 22px; overflow: hidden;
+    transform: perspective(2400px) rotateY(-6deg) rotateX(5deg); transform-origin: 50% 50%;
+    box-shadow: 0 0 0 1px rgba(27,33,47,.05), 0 2px 4px rgba(27,33,47,.05), 0 22px 44px -14px rgba(27,33,47,.22),
+                0 60px 90px -36px rgba(28,58,43,.40); }
+  .panel img { position: absolute; width: calc(1440px * var(--s)); left: calc(-297px * var(--s)); top: calc(-155px * var(--s)); }
+  .panel { --s: calc(1020 / 1090); }
+</style></head>
+<body><div class="stage bg-morning grain">
+  <div class="behind"><img src="cap/light-desk-today@2x.png"></div>
+  <div class="shadow"></div>
+  <div class="panel"><img src="cap/light-desk-today@2x.png"></div>
+</div></body></html>

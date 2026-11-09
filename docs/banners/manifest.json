@@ -1,0 +1,137 @@
+{
+  "id": "vigil",
+  "displayName": "Vigil",
+  "banners": [
+    {
+      "name": "showcase-desk",
+      "family": "showcase",
+      "title": "Desk and phones",
+      "description": "Today in a Light desktop window between Today on a Dark phone and Milo's pet-parent view on a Light phone, on the morning wash.",
+      "pick": false,
+      "files": {
+        "1x": "finals/showcase-desk@1x.png",
+        "2x": "finals/showcase-desk@2x.png"
+      }
+    },
+    {
+      "name": "showcase-phones",
+      "family": "showcase",
+      "title": "Three phones",
+      "description": "Today (Light), Milo's pet-parent view (Dark, centre, raised) and the Patients board (Light) on the sage wash.",
+      "pick": false,
+      "files": {
+        "1x": "finals/showcase-phones@1x.png",
+        "2x": "finals/showcase-phones@2x.png"
+      }
+    },
+    {
+      "name": "showcase-daynight",
+      "family": "showcase",
+      "title": "Day and night",
+      "description": "Today on a Dark tablet behind Milo's record in recovery on a Light tablet, on a wash from cream to night.",
+      "pick": false,
+      "files": {
+        "1x": "finals/showcase-daynight@1x.png",
+        "2x": "finals/showcase-daynight@2x.png"
+      }
+    },
+    {
+      "name": "focus-surgery",
+      "family": "focused",
+      "title": "In surgery",
+      "description": "Today's hero lifted out of the page: Knuckles 1:33 under anesthesia, next reading in 3:44, and the day's timeline.",
+      "pick": true,
+      "files": {
+        "1x": "finals/focus-surgery@1x.png",
+        "2x": "finals/focus-surgery@2x.png",
+        "hero": "finals/focus-surgery-hero.png"
+      }
+    },
+    {
+      "name": "focus-stages",
+      "family": "focused",
+      "title": "Stage board",
+      "description": "Four patient cards in care order, booked, surgery, recovery, home, so their stage rails read as one journey.",
+      "pick": false,
+      "files": {
+        "1x": "finals/focus-stages@1x.png",
+        "2x": "finals/focus-stages@2x.png"
+      }
+    },
+    {
+      "name": "focus-vitals",
+      "family": "focused",
+      "title": "Monitoring row",
+      "description": "Knuckles' anesthesia record strip, cefazolin redose, heart rate 94 and SpO2 97 %, the record blurred above.",
+      "pick": false,
+      "files": {
+        "1x": "finals/focus-vitals@1x.png",
+        "2x": "finals/focus-vitals@2x.png"
+      }
+    },
+    {
+      "name": "focus-dose",
+      "family": "focused",
+      "title": "Weight-based dose",
+      "description": "18.4 kg x cefazolin 22 mg/kg = 4.05 mL with its formula and reference range, beside the formulary.",
+      "pick": false,
+      "files": {
+        "1x": "finals/focus-dose@1x.png",
+        "2x": "finals/focus-dose@2x.png"
+      }
+    },
+    {
+      "name": "stylized-split",
+      "family": "stylized",
+      "title": "Light and Dark split",
+      "description": "Knuckles' record in Light and Dark at one moment, cut on one diagonal through window and backdrop.",
+      "pick": true,
+      "files": {
+        "1x": "finals/stylized-split@1x.png",
+        "2x": "finals/stylized-split@2x.png",
+        "hero": "finals/stylized-split-hero.png"
+      }
+    },
+    {
+      "name": "stylized-stack",
+      "family": "stylized",
+      "title": "Afternoon stack",
+      "description": "An isometric stack of Today, the monitoring row, recovery, the Agenda and the sign-off.",
+      "pick": false,
+      "files": {
+        "1x": "finals/stylized-stack@1x.png",
+        "2x": "finals/stylized-stack@2x.png"
+      }
+    },
+    {
+      "name": "stylized-mosaic",
+      "family": "stylized",
+      "title": "State mosaic",
+      "description": "Sixteen screens of the sample day as a tilted Light and Dark checkerboard.",
+      "pick": false,
+      "files": {
+        "1x": "finals/stylized-mosaic@1x.png",
+        "2x": "finals/stylized-mosaic@2x.png"
+      }
+    },
+    {
+      "name": "focus-surgery-titled",
+      "family": "titled",
+      "title": "In surgery, titled",
+      "description": "The In surgery banner with Vigil in the app's Newsreader display serif (optional).",
+      "pick": false,
+      "files": {
+        "1x": "finals/focus-surgery-titled@1x.png",
+        "2x": "finals/focus-surgery-titled@2x.png"
+      }
+    }
+  ],
+  "notes": [
+    "The UI wordmark reads clover, the app's in-product name; it shows in the showcase, split, stack and mosaic frames, not in the focused ones.",
+    "Every capture comes from one session with the page clock held at 17:20, so all timers agree (1:33 under anesthesia, next reading in 3:44).",
+    "One reading was recorded first so Knuckles is not shown overdue; the dose (22 mg/kg) and the sign-off box are typed or ticked, not saved.",
+    "Milo's recovery timer reads 0:55 on Today and 0:54 on the Patients cards at the same clock: the app rounds the two views differently.",
+    "Showcase, stack and mosaic frames show whole screens at a third to a half of their size, so their UI text is below 10 px at 1x.",
+    "Patient photos are the app's bundled fictional AI-generated portraits; there are no real people."
+  ]
+}

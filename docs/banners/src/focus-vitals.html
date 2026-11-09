@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>focus-vitals</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* Knuckles under anesthesia, the record's monitoring row (Dark): the anesthesia record on its 5-minute strip with
+     HR and BP, the latest medication and the cefazolin redose, Circulation (HR 94) and Respiration (SpO2 97 %).
+     Cut on the cards' own edges from the scrolled record, laid back from its bottom edge so nothing comes nearer
+     than 1:1; the record's hero (Knuckles, the anesthesia timer) falls away above it, out of focus. */
+  .behind { position: absolute; left: -120px; top: -96px; width: 1440px; filter: blur(10px) saturate(.8); opacity: .32;
+    -webkit-mask-image: radial-gradient(60% 55% at 52% 30%, #000 20%, transparent 80%); }
+  .behind img { width: 100%; }
+  .row { position: absolute; left: 55px; top: 196px; width: 1090px; height: 290px;
+    transform: perspective(2000px) rotateX(16deg) scale(.93); transform-origin: 50% 100%; transform-style: preserve-3d; }
+  /* four cards, each cut on its own border: y 509-799 and x 297-710, 726-962, 978-1175, 1190-1387 in the capture */
+  .card { position: absolute; top: 0; height: 290px; border-radius: 18px; overflow: hidden;
+    box-shadow: 0 24px 40px -18px rgba(0,0,0,.7); }
+  .card img { position: absolute; width: 1440px; top: -509px; }
+  .k1 { left: 0; width: 413px; }    .k1 img { left: -297px; }
+  .k2 { left: 429px; width: 236px; } .k2 img { left: -726px; }
+  .k3 { left: 681px; width: 197px; } .k3 img { left: -978px; }
+  .k4 { left: 893px; width: 197px; } .k4 img { left: -1190px; }
+  .shadow { position: absolute; left: 120px; right: 120px; top: 456px; height: 80px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0,0,0,.55), rgba(0,0,0,0)); filter: blur(16px); }
+  .glow { position: absolute; left: 140px; top: 210px; width: 920px; height: 360px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(79,194,142,.16), rgba(79,194,142,0)); filter: blur(30px); }
+</style></head>
+<body><div class="stage bg-night grain on-night" style="--grain:.05">
+  <div class="sheet-grid" style="--grid:.9; --grid-mask: 80% 70% at 50% 70%"></div>
+  <div class="behind"><img src="cap/dark-desk-record@2x.png"></div>
+  <div class="glow"></div>
+  <div class="shadow"></div>
+  <div class="row">
+    <div class="card k1"><img src="cap/dark-desk-recordlow@2x.png"></div>
+    <div class="card k2"><img src="cap/dark-desk-recordlow@2x.png"></div>
+    <div class="card k3"><img src="cap/dark-desk-recordlow@2x.png"></div>
+    <div class="card k4"><img src="cap/dark-desk-recordlow@2x.png"></div>
+  </div>
+</div></body></html>
