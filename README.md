@@ -33,8 +33,8 @@ Drug concentrations, dose ranges and alarm thresholds are sample reference data,
 
 ## Built with
 
-- Uno Platform, with Uno.Sdk pinned in `global.json`: a single project for desktop, WebAssembly, Android, iOS and
-  Windows (WinAppSDK).
+- Uno Platform, with Uno.Sdk pinned in `global.json`: a single project for desktop, WebAssembly, Android and
+  iOS.
 - **MVUX:** the page and drawer models expose feeds and states, and pages bind with `{Binding}`.
 - **Navigation Extensions:**
   - the shell's sections are region routes;
