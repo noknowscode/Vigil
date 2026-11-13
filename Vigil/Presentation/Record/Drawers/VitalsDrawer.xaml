@@ -1,0 +1,94 @@
+<!--
+  The Record observations drawer (route "!Monitor", VitalsModel): Record reading (Ctrl+R) with the due countdown, the
+  vitals pad pre-filled from the last reading (steppers, range flags), the derived MAP hint, the plane and a note.
+  Phones stack the pad one vital per row; from Normal two per row.
+-->
+<Flyout x:Class="Vigil.Presentation.VitalsDrawer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+        xmlns:mvux="using:Uno.Extensions.Reactive.UI"
+        xmlns:utu="using:Uno.Toolkit.UI"
+        xmlns:local="using:Vigil.Presentation"
+        xmlns:controls="using:Vigil.Controls"
+        Placement="Full"
+        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}"
+        controls:FlyoutFocus.Restores="True">
+  <Grid RowDefinitions="Auto,Auto,*" utu:SafeArea.Insets="VisibleBounds">
+    <controls:DrawerHeader x:Uid="VitalsDrawer_1" Title="Record observations" CloseCommand="{Binding Close}" />
+    <muxc:InfoBar x:Uid="VitalsDrawer_2" Grid.Row="1" Severity="Error" Title="Not saved" Message="{Binding SaveError}" IsOpen="{Binding HasSaveError}" IsClosable="False" Margin="{StaticResource InsetX20}">
+      <muxc:InfoBar.ActionButton><Button x:Uid="VitalsDrawer_3" Content="Dismiss" Command="{Binding DismissError}" /></muxc:InfoBar.ActionButton>
+    </muxc:InfoBar>
+    <mvux:FeedView Grid.Row="2" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"
+                   ProgressTemplate="{StaticResource DrawerProgressTemplate}" NoneTemplate="{StaticResource DrawerNoneTemplate}" ErrorTemplate="{StaticResource DrawerErrorTemplate}">
+      <mvux:FeedView.ValueTemplate>
+        <DataTemplate>
+          <ScrollViewer HorizontalScrollMode="Disabled">
+            <Grid Padding="{StaticResource MetricCardInset}" ColumnSpacing="{StaticResource Space20}" RowSpacing="{StaticResource Space16}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="4*" />
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+              </Grid.RowDefinitions>
+
+              <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Spacing="{StaticResource Space16}">
+                <Button x:Uid="VitalsDrawer_4" Style="{StaticResource ButtonPrimaryL}" HorizontalAlignment="Stretch" Height="{StaticResource ActionHeightLarge}" IsEnabled="{Binding Data.IsAnesthetized}" Command="{Binding Parent.RecordReading}" AutomationProperties.Name="Record reading">
+                  <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="R" />
+                  </Button.KeyboardAccelerators>
+                  <!-- The due clock in the button's own ink (it was body ink on the primary green, ~1.3:1); phones put
+                       it under the label so neither is clipped. -->
+                  <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space12}">
+                    <SymbolIcon Symbol="Accept" VerticalAlignment="Center" />
+                    <StackPanel Orientation="{utu:Responsive Narrowest=Vertical, Normal=Horizontal}" Spacing="{utu:Responsive Narrowest=0, Normal={StaticResource Space12}}" VerticalAlignment="Center">
+                      <TextBlock x:Uid="VitalsDrawer_5" Text="Record reading" />
+                      <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource OnPrimaryInkBrush}" Text="{Binding Parent.Timers.ClockText}" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </StackPanel>
+                </Button>
+                <!-- Ten rows on phones, five from Normal: no RowSpacing, which the unused rows would still charge (80 px under
+                     the pad at Normal); each stepper carries its own gap. -->
+                <Grid ColumnSpacing="{utu:Responsive Narrowest={StaticResource Space8}, Normal={StaticResource Space16}}">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_6" Grid.Row="{utu:Responsive Narrowest=0, Normal=0}" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Field="Hr" Label="HR" Unit="bpm" Glyph="●" GlyphBrush="{ThemeResource VitalHrBrush}" SpokenName="heart rate, beats per minute" Text="{Binding Parent.Draft.Hr, Mode=TwoWay}" Flag="{Binding Parent.Flags.Hr}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_7" Grid.Row="{utu:Responsive Narrowest=1, Normal=0}" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Field="Rr" Label="RR" Unit="/min" Glyph="" GlyphBrush="{ThemeResource InkMutedBrush}" SpokenName="respiratory rate, breaths per minute" Text="{Binding Parent.Draft.Rr, Mode=TwoWay}" Flag="{Binding Parent.Flags.Rr}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_8" Grid.Row="{utu:Responsive Narrowest=2, Normal=1}" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Field="SpO2" Label="SpO₂" Unit="%" Glyph="○" GlyphBrush="{ThemeResource VitalSpO2Brush}" SpokenName="oxygen saturation, percent" Text="{Binding Parent.Draft.SpO2, Mode=TwoWay}" Flag="{Binding Parent.Flags.SpO2}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_9" Grid.Row="{utu:Responsive Narrowest=3, Normal=1}" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Field="EtCo2" Label="EtCO₂" Unit="mmHg" Glyph="×" GlyphBrush="{ThemeResource VitalEtCo2Brush}" SpokenName="end-tidal CO2, millimetres of mercury" Text="{Binding Parent.Draft.EtCo2, Mode=TwoWay}" Flag="{Binding Parent.Flags.EtCo2}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_10" Grid.Row="{utu:Responsive Narrowest=4, Normal=2}" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Field="Sys" Label="SYS" Unit="mmHg" Glyph="∨" GlyphBrush="{ThemeResource VitalBpBrush}" SpokenName="systolic pressure" Text="{Binding Parent.Draft.Sys, Mode=TwoWay}" Flag="{Binding Parent.Flags.Sys}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_11" Grid.Row="{utu:Responsive Narrowest=5, Normal=2}" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Field="Dia" Label="DIA" Unit="mmHg" Glyph="∧" GlyphBrush="{ThemeResource VitalBpBrush}" SpokenName="diastolic pressure" Text="{Binding Parent.Draft.Dia, Mode=TwoWay}" Flag="{Binding Parent.Flags.Dia}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_12" Grid.Row="{utu:Responsive Narrowest=6, Normal=3}" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Field="Map" Label="MAP" Unit="mmHg" Glyph="" GlyphBrush="{ThemeResource InkMutedBrush}" SpokenName="mean arterial pressure" Text="{Binding Parent.Draft.Map, Mode=TwoWay}" Flag="{Binding Parent.Flags.Map}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_13" Grid.Row="{utu:Responsive Narrowest=7, Normal=3}" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Field="TempC" Label="Temp" Unit="°C" Glyph="■" GlyphBrush="{ThemeResource VitalTempBrush}" SpokenName="temperature, degrees Celsius" Text="{Binding Parent.Draft.TempC, Mode=TwoWay}" Flag="{Binding Parent.Flags.TempC}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_14" Grid.Row="{utu:Responsive Narrowest=8, Normal=4}" Grid.Column="{utu:Responsive Narrowest=0, Normal=0}" Field="Vaporizer" Label="Sevo" Unit="%" Glyph="" GlyphBrush="{ThemeResource InkMutedBrush}" SpokenName="vaporizer setting, percent" Text="{Binding Parent.Draft.Vaporizer, Mode=TwoWay}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                  <controls:VitalStepper Margin="{StaticResource GapBottom16}" x:Uid="VitalsDrawer_15" Grid.Row="{utu:Responsive Narrowest=9, Normal=4}" Grid.Column="{utu:Responsive Narrowest=0, Normal=1}" Field="O2" Label="O₂" Unit="L/min" Glyph="" GlyphBrush="{ThemeResource InkMutedBrush}" SpokenName="oxygen flow, litres per minute" Text="{Binding Parent.Draft.O2, Mode=TwoWay}" Command="{Binding Parent.Step}" Grid.ColumnSpan="{utu:Responsive Narrowest=2, Normal=1}" />
+                </Grid>
+                <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" TextWrapping="WrapWholeWords">
+                  <Run x:Uid="VitalsDrawer_16" Text="MAP left blank is derived as (SYS + 2·DIA) / 3:" />
+                  <Run Text="{Binding Parent.Flags.MapHint}" />
+                </TextBlock>
+                <muxc:RadioButtons x:Uid="VitalsDrawer_17" Header="Anesthetic plane" MaxColumns="3" SelectedIndex="{Binding Parent.Draft.PlaneIndex, Mode=TwoWay}">
+                  <RadioButton x:Uid="VitalsDrawer_18" Content="Light" />
+                  <RadioButton x:Uid="VitalsDrawer_19" Content="Surgical" />
+                  <RadioButton x:Uid="VitalsDrawer_20" Content="Deep" />
+                </muxc:RadioButtons>
+                <TextBox x:Uid="VitalsDrawer_21" Header="Note (optional)" Text="{Binding Parent.Draft.Note, Mode=TwoWay}" AutomationProperties.Name="Note for this reading" />
+              </StackPanel>
+            </Grid>
+          </ScrollViewer>
+        </DataTemplate>
+      </mvux:FeedView.ValueTemplate>
+    </mvux:FeedView>
+  </Grid>
+</Flyout>

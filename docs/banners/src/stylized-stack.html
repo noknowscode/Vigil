@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>stylized-stack</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* The afternoon as an isometric stack of real 1440 x 900 screens, read from the top down: Today (Light), Knuckles'
+     monitoring row (Dark), Milo in recovery (Light), the Agenda's care ruler (Dark), and Milo's sign-off (Light) at the
+     bottom. Each layer shows its lower edge, where these screens keep their charts and rulers. Sage morning backdrop
+     with a forest shadow under the stack. */
+  .stage { --grain: .06; }
+  .glow { position: absolute; left: 270px; top: 260px; width: 720px; height: 360px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(36,73,54,.24), rgba(36,73,54,0)); filter: blur(24px); }
+  .iso { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d;
+    transform: translate(0px, 138px) rotateX(56deg) rotateZ(-38deg); }
+  .sheet { position: absolute; width: 470px; height: 294px; left: -235px; top: -147px; border-radius: 12px; overflow: hidden;
+    transform: translateZ(calc(var(--i) * 84px));
+    box-shadow: 0 0 0 1px rgba(27,33,47,.10), 0 26px 44px -12px rgba(28,58,43,.45); }
+  .sheet.dk { box-shadow: 0 0 0 1px rgba(230,231,234,.10), 0 26px 44px -12px rgba(11,36,24,.6); }
+  .sheet img { width: 100%; height: 100%; }
+  .sheet::after { content: ''; position: absolute; inset: 0; border-radius: 12px;
+    background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,0) 42%); }
+</style></head>
+<body><div class="stage bg-sage grain">
+  <div class="sheet-grid" style="--grid:.7; --grid-mask: 80% 80% at 50% 55%"></div>
+  <div class="glow"></div>
+  <div class="iso">
+    <div class="sheet" style="--i:0"><img src="cap/light-desk-signoff@2x.png"></div>
+    <div class="sheet dk" style="--i:1"><img src="cap/dark-desk-agenda@2x.png"></div>
+    <div class="sheet" style="--i:2"><img src="cap/light-desk-milo@2x.png"></div>
+    <div class="sheet dk" style="--i:3"><img src="cap/dark-desk-recordlow@2x.png"></div>
+    <div class="sheet" style="--i:4"><img src="cap/light-desk-today@2x.png"></div>
+  </div>
+</div></body></html>

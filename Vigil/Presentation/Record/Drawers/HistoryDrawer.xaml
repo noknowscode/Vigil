@@ -1,0 +1,78 @@
+<!--
+  The Visit history drawer (route "!History", HistoryModel): the visit, its team, the corrections made to the case's
+  details (Edit case details) and every reading in this record, newest first, the readings in a repeater (a long case
+  holds a reading every 3 to 10 minutes; only the rows in view are built).
+-->
+<Flyout x:Class="Vigil.Presentation.HistoryDrawer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+        xmlns:mvux="using:Uno.Extensions.Reactive.UI"
+        xmlns:utu="using:Uno.Toolkit.UI"
+        xmlns:local="using:Vigil.Presentation"
+        xmlns:controls="using:Vigil.Controls"
+        Placement="Full"
+        FlyoutPresenterStyle="{StaticResource RecordDrawerPresenterStyle}"
+        controls:FlyoutFocus.Restores="True">
+  <Grid RowDefinitions="Auto,*" utu:SafeArea.Insets="VisibleBounds">
+    <controls:DrawerHeader x:Uid="HistoryDrawer_1" Title="Visit history" CloseCommand="{Binding Close}" />
+    <mvux:FeedView Grid.Row="1" Source="{Binding Case}" RefreshingState="None" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"
+                   ProgressTemplate="{StaticResource DrawerProgressTemplate}" NoneTemplate="{StaticResource DrawerNoneTemplate}" ErrorTemplate="{StaticResource DrawerErrorTemplate}">
+      <mvux:FeedView.ValueTemplate>
+        <DataTemplate>
+          <ScrollViewer HorizontalScrollMode="Disabled">
+            <StackPanel Padding="{StaticResource Inset24}" Spacing="{StaticResource Space16}">
+              <TextBlock Text="{Binding Data.VisitDate}" Style="{StaticResource TypeEyebrow}" />
+              <TextBlock Text="{Binding Data.Procedure}" Style="{StaticResource TypeH2Section}" />
+              <TextBlock Text="{Binding Data.Team}" Style="{StaticResource TypeBodyMuted}" />
+              <!-- Corrections to the case's details (Edit case details), newest first, above the readings:
+                   a corrected weight changes every dose given after it. -->
+              <StackPanel Spacing="{StaticResource Space8}" Visibility="{Binding Data.HasCorrections, Converter={StaticResource VisibleWhenTrue}, FallbackValue=Collapsed}">
+                <TextBlock x:Uid="HistoryDrawer_11" Text="Corrections to this record" Style="{StaticResource TypeTitleM}" />
+                <ItemsControl x:Uid="HistoryDrawer_12" ItemsSource="{Binding Data.Corrections}" AutomationProperties.Name="Corrections to this record">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:CorrectionRow">
+                      <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" ColumnDefinitions="Auto,*" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+                        <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
+                        <TextBlock Grid.Column="1" Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkBrush}" TextWrapping="WrapWholeWords" Text="{x:Bind Text}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+              <TextBlock x:Uid="HistoryDrawer_2" Text="Observations in this record" Style="{StaticResource TypeTitleM}" />
+              <!-- A repeater, not an ItemsControl: a long case holds a reading every 3 to 10 minutes, and only the rows in view are built. -->
+              <muxc:ItemsRepeater x:Uid="HistoryDrawer_3" ItemsSource="{Binding Data.Readings}" AutomationProperties.Name="Readings table">
+                <muxc:ItemsRepeater.ItemTemplate>
+                  <DataTemplate x:DataType="local:ReadingRow">
+                    <Grid Padding="{StaticResource InsetY8}" ColumnSpacing="{StaticResource Space12}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,0,1">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="56" />
+                        <ColumnDefinition Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Time}" />
+                      <StackPanel Grid.Column="1" Spacing="{StaticResource Space2}">
+                        <TextBlock Style="{StaticResource TypeMonoCell}" Foreground="{ThemeResource InkBrush}" TextWrapping="Wrap">
+                          <Run x:Uid="HistoryDrawer_4" Text="HR" /> <Run Text="{x:Bind Hr}" />
+                          <Run x:Uid="HistoryDrawer_5" Text=" RR" /> <Run Text="{x:Bind Rr}" />
+                          <Run x:Uid="HistoryDrawer_6" Text=" SpO₂" /> <Run Text="{x:Bind SpO2}" />
+                          <Run x:Uid="HistoryDrawer_7" Text=" BP" /> <Run Text="{x:Bind Bp}" />
+                          <Run x:Uid="HistoryDrawer_8" Text=" MAP" /> <Run Text="{x:Bind Map}" />
+                          <Run x:Uid="HistoryDrawer_9" Text=" EtCO₂" /> <Run Text="{x:Bind EtCo2}" />
+                          <Run x:Uid="HistoryDrawer_10" Text=" T" /> <Run Text="{x:Bind Temp}" />
+                          <Run Text=" " /> <Run Text="{x:Bind Plane}" />
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource TypeEyebrow}" Foreground="{ThemeResource ErrorBrush}" Text="{x:Bind Alarms}" />
+                        <TextBlock Style="{StaticResource TypeBodyS}" Foreground="{ThemeResource InkMutedBrush}" Text="{x:Bind Note}" />
+                      </StackPanel>
+                    </Grid>
+                  </DataTemplate>
+                </muxc:ItemsRepeater.ItemTemplate>
+              </muxc:ItemsRepeater>
+            </StackPanel>
+          </ScrollViewer>
+        </DataTemplate>
+      </mvux:FeedView.ValueTemplate>
+    </mvux:FeedView>
+  </Grid>
+</Flyout>

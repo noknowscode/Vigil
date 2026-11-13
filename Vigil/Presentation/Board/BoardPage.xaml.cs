@@ -4,6 +4,6 @@ public sealed partial class BoardPage : Page
 {
     public BoardPage()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 }

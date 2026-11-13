@@ -1,5 +1,6 @@
 <Project Sdk="Uno.Sdk">
   <PropertyGroup>
+    <!-- Uno.Sdk skips the heads the build OS can't build (iOS on Linux). -->
     <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-browserwasm;net10.0-desktop;net10.0</TargetFrameworks>
     <!--
       App-only override for single-head builds (CI, RID-specific publish): -p:VigilTargetFrameworks=net10.0-desktop.
@@ -11,14 +12,14 @@
     <UnoSingleProject>true</UnoSingleProject>
 
     <!-- Display name -->
-    <ApplicationTitle>Vigil</ApplicationTitle>
+    <ApplicationTitle>Clover</ApplicationTitle>
     <!-- App Identifier -->
     <ApplicationId>com.unoplatform.vigil</ApplicationId>
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <!-- Package Publisher -->
-    <ApplicationPublisher>Vigil</ApplicationPublisher>
+    <ApplicationPublisher>Clover</ApplicationPublisher>
     <!-- Package Description -->
     <Description>Vigil: the anesthesia record for veterinary surgical technicians. An Uno Platform reference app.</Description>
     <!-- Uno0001 = member not implemented in Uno Platform: fail the build instead of shipping a silent no-op. -->
@@ -47,6 +48,8 @@
       SkiaRenderer;
       Skia;
     </UnoFeatures>
+    <!-- The page-change timing run (Services/PageTimer.cs) is in Debug builds; a Release timing build opts in with -p:VigilPageTimer=true. -->
+    <DefineConstants Condition="'$(VigilPageTimer)' == 'true'">$(DefineConstants);PAGE_TIMER</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

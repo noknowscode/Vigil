@@ -20,7 +20,8 @@ public partial record SignOffSummary(
         ? (n == 1 ? Loc.T("Count_OneDose", "1 dose") : Loc.F("Count_Doses", "{0} doses", n))
         : (n == 1 ? Loc.T("Count_OneReading", "1 reading") : Loc.F("Count_Readings", "{0} readings", n));
 
-    public static SignOffSummary From(Case c)
+    /// <param name="now">The local time zone for the times shown.</param>
+    public static SignOffSummary From(Case c, DateTimeOffset now)
     {
         var alarms = c.Readings.Count(r => Vitals.Alarms(c.Patient.Species, r).Count > 0);
         var blocker = c.Status switch
@@ -31,14 +32,15 @@ public partial record SignOffSummary(
         };
         var r = c.Recovery;
         return new SignOffSummary(
-            $"{c.Patient.Name} · {c.Patient.SpeciesAndBreed} · {c.Patient.WeightKg:0.0} kg · {c.Preop.AsaLabel}",
+            $"{c.Patient.Name} · {Loc.SpeciesAndBreed(c.Patient)} · {c.Patient.WeightKg:0.0} kg · {c.Preop.AsaLabel}",
             c.Procedure,
-            Schedule.HoursMinutes(Schedule.Elapsed(c, c.EndedAt ?? c.CreatedAt)),
+            // Only an ended anesthesia has a length; a live one used CreatedAt as its end and read "00:-30".
+            c.EndedAt is { } ended ? Schedule.HoursMinutes(Schedule.Elapsed(c, ended)) : "—",
             c.Readings.Count,
             c.Doses.Count,
             alarms,
             c.Doses.Count(d => d.OutOfRangeConfirmed),
-            Loc.F("SignOff_Recovery", "Extubated {0} · sternal {1} · pain {2}/4", r.ExtubatedAt?.ToString("HH:mm") ?? "—", r.SternalAt?.ToString("HH:mm") ?? "—", r.PainScore?.ToString() ?? "—"),
+            Loc.F("SignOff_Recovery", "Extubated {0} · sternal {1} · pain {2}/4", r.ExtubatedAt is { } x ? Today.Time(x, now) : "—", r.SternalAt is { } s ? Today.Time(s, now) : "—", r.PainScore?.ToString() ?? "—"),
             c.Veterinarian,
             c.Status == CaseStatus.Recovery,
             blocker);
@@ -46,10 +48,10 @@ public partial record SignOffSummary(
 }
 
 /// <summary>The veterinarian's sign-off: a typed name and an explicit confirmation on a shared device (no authentication).</summary>
-public partial record SignOffModel(CaseRef Ref, ICaseStore Store, IClock Clock, INavigator Navigator)
+public partial record SignOffModel(CaseRef Ref, ICaseStore Store, IClock Clock, INavigator Navigator, ILogger<SignOffModel> Logger)
 {
     public IFeed<SignOffSummary> Summary => Feed<SignOffSummary>.Async(async ct =>
-        await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(SignOffSummary.From(c)) : Option.None<SignOffSummary>(), Store.Changed);
+        await Store.GetAsync(Ref.Id, ct) is { } c ? Option.Some(SignOffSummary.From(c, Clock.Now)) : Option.None<SignOffSummary>(), Store.Changed);
 
     public IState<string> Veterinarian => State.Async(this, async ct => (await Store.GetAsync(Ref.Id, ct))?.Veterinarian ?? "");
 
@@ -70,11 +72,15 @@ public partial record SignOffModel(CaseRef Ref, ICaseStore Store, IClock Clock, 
         {
             await Store.UpdateAsync(Ref.Id, c => c.Status == CaseStatus.Recovery
                 ? c with { Status = CaseStatus.Signed, SignedBy = veterinarian.Trim(), SignedAt = Clock.Now }
-                : throw new InvalidOperationException(Loc.T("SignOff_EndFirst", "End anesthesia before signing.")), ct);
+                : throw new CaseRuleException(Loc.T("SignOff_EndFirst", "End anesthesia before signing.")), ct);
         }
-        catch (Exception ex) when (ex is IOException or InvalidOperationException or KeyNotFoundException)
+        catch (Exception ex) when (StoreErrors.IsReported(ex))
         {
-            await Error.UpdateAsync(_ => Loc.F("SignOff_NotSigned", "Not signed: {0}", ex.Message), ct);
+            if (ex is not CaseRuleException)
+            {
+                Logger.LogWarning(ex, "Signing case {CaseId} failed.", Ref.Id);
+            }
+            await Error.UpdateAsync(_ => Loc.F("SignOff_NotSigned", "Not signed: {0}", StoreErrors.Describe(ex)), ct);
             return;
         }
         await Navigator.NavigateBackAsync(this, cancellation: ct);

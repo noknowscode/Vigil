@@ -1,0 +1,85 @@
+namespace Vigil.Presentation;
+
+/// <summary>
+/// The Recovery and handover drawer (route "!Recovery"): End anesthesia while the case is under anesthesia, then the
+/// recovery log (extubation, sternal, timed pain scores, temperature and notes), Sign off, the discharge call, and
+/// Export CSV and Copy summary once signed.
+/// </summary>
+public partial record RecoveryModel(CaseRef Ref, ICaseStore Store, IClock Clock, IPreferences Preferences, IFormulary Formulary, IRecordExporter Exporter, INavigator Navigator, ILogger<RecoveryModel> Logger)
+    : CaseDrawerModel(Ref, Store, Clock, Preferences, Navigator, Logger)
+{
+    /// <summary>Time in recovery, moving with the clock.</summary>
+    public IFeed<CaseTimers> Timers => TimersOver(Formulary);
+
+    /// <summary>The editable part of the recovery log, saved on every change while the case is in recovery.</summary>
+    public IState<RecoveryDraft> Recovery => State
+        .Async(this, async ct => RecoveryDraft.From((await Store.GetAsync(Ref.Id, ct))?.Recovery ?? RecoveryLog.Empty))
+        .ForEach(async (draft, ct) =>
+        {
+            if (draft is not null)
+            {
+                await SaveAsync(c => c.Status == CaseStatus.Recovery ? c with { Recovery = draft.ApplyTo(c.Recovery) } : c, ct);
+            }
+        });
+
+    /// <summary>Outcome of the last export, shown under the export buttons.</summary>
+    public IState<string> Notice => State.Value(this, () => "");
+
+    public async ValueTask EndAnesthesia(CancellationToken ct) =>
+        await SaveAsync(c => c.Status == CaseStatus.Anesthetized ? c with { Status = CaseStatus.Recovery, EndedAt = Clock.Now } : c, ct);
+
+    public async ValueTask Extubate(CancellationToken ct) =>
+        await SaveAsync(c => c.Status == CaseStatus.Recovery ? c with { Recovery = c.Recovery with { ExtubatedAt = Clock.Now } } : c, ct);
+
+    public async ValueTask Sternal(CancellationToken ct) =>
+        await SaveAsync(c => c.Status == CaseStatus.Recovery ? c with { Recovery = c.Recovery with { SternalAt = Clock.Now } } : c, ct);
+
+    /// <summary>Records a pain score (button "0" to "4") at the current time, while the case is in recovery.</summary>
+    public async ValueTask ScorePain(string score, CancellationToken ct)
+    {
+        if (int.TryParse(score, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var value) && value is >= 0 and <= 4)
+        {
+            var at = Clock.Now;
+            await SaveAsync(c => c.Status == CaseStatus.Recovery ? c with { Recovery = c.Recovery.WithPainScore(value, at) } : c, ct);
+        }
+    }
+
+    /// <summary>The discharge call to the pet parent was made.</summary>
+    public async ValueTask CompleteDischargeCall(CancellationToken ct)
+    {
+        var at = Clock.Now;
+        await SaveAsync(c => c.WithDischargeCallDone(at), ct);
+    }
+
+    /// <summary>Sign off: the sign-off sheet, opened by the record.</summary>
+    public async ValueTask SignOff(CancellationToken ct) => await HandBackAsync(PaneChoice.SignOff, ct);
+
+    public async ValueTask Export(CancellationToken ct) => await HandOffAsync(async (c, token) => (await Exporter.ExportCsvAsync(c, token)) switch
+    {
+        { Status: ExportStatus.Saved } saved => Loc.F("Export_Saved", "Saved {0}.", saved.FileName),
+        { Status: ExportStatus.Unavailable } => Loc.T("Export_NoDialog", "No save dialog could open on this device, so nothing was exported."),
+        _ => Loc.T("Export_Cancelled", "Export cancelled."),
+    }, ct);
+
+    public async ValueTask CopySummary(CancellationToken ct) => await HandOffAsync(async (c, token) =>
+    {
+        await Exporter.CopySummaryAsync(c, token);
+        return Loc.T("Export_Copied", "Summary copied: paste it into the patient file.");
+    }, ct);
+
+    /// <summary>Exports the stored case and shows how it ended under the export buttons; a failure is logged and said so.</summary>
+    private async ValueTask HandOffAsync(Func<Case, CancellationToken, ValueTask<string>> action, CancellationToken ct)
+    {
+        string outcome;
+        try
+        {
+            outcome = await Store.GetAsync(Ref.Id, ct) is { } c ? await action(c, ct) : Loc.T("Record_Gone", "This record no longer exists.");
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            Logger.LogWarning(ex, "Export of case {CaseId} failed.", Ref.Id);
+            outcome = Loc.T("Export_FailedRetry", "The export failed. Nothing was shared; try again.");
+        }
+        await Notice.UpdateAsync(_ => outcome, ct);
+    }
+}

@@ -1,0 +1,34 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>focus-dose</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* The weight-based dose (Light): Knuckles, 18.4 kg, cefazolin at 22 mg/kg. The Draw up card (4.05 mL, its formula
+     and the reference range) and the formulary list with Cefazolin selected open like a book toward the viewer, the
+     list falling off at the bottom. Both are cut on their own borders from the Administer dose drawer; each turns about
+     its inner edge, so its nearest edge stays at 1:1. */
+  .stage { background:
+      radial-gradient(45% 65% at 60% 45%, rgba(252,251,249,1) 0%, rgba(252,251,249,0) 72%),
+      radial-gradient(50% 70% at 12% 85%, rgba(213,236,224,1) 0%, rgba(213,236,224,0) 70%),
+      radial-gradient(40% 55% at 95% 10%, rgba(229,232,249,1) 0%, rgba(229,232,249,0) 70%),
+      linear-gradient(160deg, #EEF0EC 0%, #F3F3F2 100%); }
+  .card { position: absolute; overflow: hidden; border-radius: 16px; }
+  .card img { position: absolute; width: 1440px; }
+  /* the list is x 825-1111, y 125-820 in the capture; the Draw up card x 1131-1416, y 125-541 */
+  .list { left: 318px; top: 70px; width: 286px; height: 520px; transform: perspective(1500px) rotateY(-24deg);
+    transform-origin: 100% 50%; -webkit-mask-image: linear-gradient(180deg, #000 84%, transparent 100%);
+    box-shadow: 0 0 0 1px rgba(27,33,47,.04); }
+  .list img { left: -825px; top: -125px; }
+  .drawup { left: 614px; top: 96px; width: 285px; height: 416px; transform: perspective(1500px) rotateY(10deg);
+    transform-origin: 0% 50%;
+    box-shadow: 0 0 0 1px rgba(27,33,47,.05), 0 2px 4px rgba(27,33,47,.05), 0 20px 40px -12px rgba(27,33,47,.22),
+                0 56px 80px -34px rgba(28,58,43,.45); }
+  .drawup img { left: -1131px; top: -125px; }
+  .floor { position: absolute; left: 330px; width: 560px; top: 520px; height: 70px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(28,58,43,.20), rgba(28,58,43,0)); filter: blur(10px); }
+</style></head>
+<body><div class="stage grain">
+  <div class="sheet-grid" style="--grid:.75; --grid-mask: 65% 75% at 52% 50%"></div>
+  <div class="floor"></div>
+  <div class="card list"><img src="cap/light-desk-dose@2x.png"></div>
+  <div class="card drawup"><img src="cap/light-desk-dose@2x.png"></div>
+</div></body></html>

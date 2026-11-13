@@ -4,6 +4,11 @@
     <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <!--
+      UNOB0025: the tests reference the app's plain net10.0 build, which has no Uno runtime host by design; they test
+      domain, store and model code and never start the Uno runtime.
+    -->
+    <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);UNOB0025</MSBuildWarningsAsMessages>
   </PropertyGroup>
 
   <ItemGroup>

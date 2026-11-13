@@ -1,10 +1,10 @@
 {
-  "background_color": "#ffffff",
-  "description": "Vigil",
+  "background_color": "#F8F5ED",
+  "description": "Clover",
   "display": "standalone",
-  "name": "Vigil",
-  "short_name": "Vigil",
+  "name": "Clover",
+  "short_name": "Clover",
   "start_url": "/index.html",
-  "theme_color": "#ffffff",
+  "theme_color": "#F8F5ED",
   "scope": "/"
 }

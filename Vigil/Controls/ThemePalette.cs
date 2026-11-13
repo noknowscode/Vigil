@@ -3,8 +3,8 @@ using Windows.UI;
 namespace Vigil.Controls;
 
 /// <summary>
-/// Resolves a theme colour for a specific element theme. Skia drawing has no {ThemeResource}, so the strip
-/// takes a snapshot of its colours on load and on every ActualThemeChanged (never through a converter: a
+/// Resolves a theme colour for a specific element theme. Elements built in code have no {ThemeResource}, so the care
+/// ruler takes a snapshot of its colours on load and on every ActualThemeChanged (never through a converter: a
 /// converter snapshots the app theme once and is never re-asked).
 /// </summary>
 internal static class ThemePalette
@@ -13,8 +13,8 @@ internal static class ThemePalette
     {
         var themeKey = theme == ElementTheme.Dark ? "Dark" : "Light";
         // Theme dictionaries first, depth-first through merged dictionaries. A plain TryGetValue on the app
-        // dictionary answers with the application-level theme (Light), not this element's: measured, the strip
-        // drew Paper colours under Theatre. Merged dictionaries are walked last-first: later ones win in WinUI.
+        // dictionary answers with the application-level theme (Light), not this element's (measured: Paper colours
+        // under Theatre). Merged dictionaries are walked last-first: later ones win in WinUI.
         return FindThemed(Application.Current.Resources, key, themeKey)
             ?? FindDirect(Application.Current.Resources, key)
             ?? fallback;

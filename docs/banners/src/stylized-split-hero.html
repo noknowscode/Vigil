@@ -1,0 +1,31 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>stylized-split-hero</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* 1920 x 1080 hero of stylized-split: the same composition on a 1200 x 675 plane zoomed by 1.6 (CSS zoom, so it is rasterized at full size; the window shows the
+     captures at 1.17 CSS px per capture CSS px, under their 2x). The seam keeps the banner's slope. */
+  .stage { width: 1200px; height: 675px; zoom: 1.6; right: auto; bottom: auto; }
+  .layer { position: absolute; inset: 0; }
+  .night { clip-path: polygon(572px 0, 100% 0, 100% 100%, 398px 100%); }
+  .tilt { position: absolute; left: 72px; top: 74px; width: 1056px; transform: perspective(2200px) rotateY(-7deg) rotateX(2deg);
+    transform-origin: 50% 50%; }
+  .tilt .win { position: relative; left: 0; top: 0; width: 100%; --bar: 24px; }
+  .win .view { height: 520px; overflow: hidden; }
+  .seam { position: absolute; inset: 0; pointer-events: none; }
+</style></head>
+<body><div class="stage">
+  <div class="layer bg-morning grain"><div class="sheet-grid" style="--grid:.55"></div>
+    <div class="tilt"><div class="win"><div class="bar"><i></i><i></i><i></i><b></b></div><div class="view"><img src="cap/light-desk-record@2x.png"></div></div></div>
+  </div>
+  <div class="layer night bg-night grain" style="--grain:.05"><div class="sheet-grid" style="--grid:.6"></div>
+    <div class="tilt"><div class="win night"><div class="bar"><i></i><i></i><i></i><b></b></div><div class="view"><img src="cap/dark-desk-record@2x.png"></div></div></div>
+  </div>
+  <svg class="seam" width="1200" height="675" viewBox="0 0 1200 675">
+    <defs><linearGradient id="g" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#8FD1AE" stop-opacity="0"/><stop offset=".2" stop-color="#8FD1AE" stop-opacity=".95"/>
+      <stop offset=".8" stop-color="#8FD1AE" stop-opacity=".95"/><stop offset="1" stop-color="#8FD1AE" stop-opacity="0"/></linearGradient>
+      <filter id="b" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+    <line x1="398" y1="675" x2="572" y2="0" stroke="url(#g)" stroke-width="8" filter="url(#b)" opacity=".5"/>
+    <line x1="398" y1="675" x2="572" y2="0" stroke="url(#g)" stroke-width="1.2"/>
+  </svg>
+</div></body></html>

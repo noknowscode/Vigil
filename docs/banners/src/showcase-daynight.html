@@ -1,0 +1,20 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>showcase-daynight</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* Two tablets, day and night: Today (Dark, ink bezel) behind, Milo's record in recovery (Light, porcelain bezel)
+     in front, on a wash that runs from the morning cream and lavender into the night Background with its forest glow. */
+  .stage { background:
+      radial-gradient(50% 70% at 78% 42%, rgba(23,55,42,.95) 0%, rgba(23,55,42,0) 70%),
+      radial-gradient(40% 55% at 8% 92%, rgba(213,236,224,.95) 0%, rgba(213,236,224,0) 70%),
+      linear-gradient(104deg, #F3F3F2 0%, #E5E8F9 26%, #7D8794 47%, #1A1D21 64%, #111315 100%); --grain: .06; }
+  .t-back { left: 468px; top: 40px; width: 692px; height: 446px; --bezel: 14px; --r: 28px; }
+  .t-front { left: 48px; top: 222px; width: 566px; height: 366px; --bezel: 12px; --r: 24px; }
+  .glint { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; pointer-events: none;
+    background: linear-gradient(180deg, rgba(17,19,21,0), rgba(17,19,21,.18)); }
+</style></head>
+<body><div class="stage grain on-night">
+  <div class="device t-back"><div class="screen"><img src="cap/dark-desk-today@2x.png"></div></div>
+  <div class="device porcelain t-front"><div class="screen"><img src="cap/light-desk-milo@2x.png"></div></div>
+  <div class="glint"></div>
+</div></body></html>

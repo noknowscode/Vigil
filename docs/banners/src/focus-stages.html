@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>focus-stages</title>
+<link rel="stylesheet" href="frames.css">
+<style>
+  /* The stage board: the four patient cards from the Patients page (Dark), each cut on its own outer edge and set in
+     care order, Booked (Oscar), Surgery (Knuckles), Recovery (Milo), Home (Pepper), so the stage rail on each card reads
+     as one journey. Night backdrop with the forest glow. */
+  .board { position: absolute; left: 50%; top: 50%; width: 722px; height: 486px; margin: -243px 0 0 -361px;
+    transform: perspective(1900px) rotateX(10deg) rotateY(-12deg) rotateZ(-1.5deg) scale(.92); transform-style: preserve-3d; }
+  .card { position: absolute; width: 347px; height: 229px; border-radius: 19px; overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(230,231,234,.06), 0 18px 36px -10px rgba(0,0,0,.6), 0 40px 70px -30px rgba(11,36,24,.9); }
+  .card img { position: absolute; width: 1440px; }
+  .c1 { left: 0; top: 0; }       .c1 img { left: -297px; top: -151px; }
+  .c2 { left: 375px; top: 0; }   .c2 img { left: -669px; top: -151px; }
+  .c3 { left: 0; top: 257px; }   .c3 img { left: -1041px; top: -151px; }
+  .c4 { left: 375px; top: 257px; } .c4 img { left: -297px; top: -404px; }
+</style></head>
+<body><div class="stage bg-night grain on-night" style="--grain:.05">
+  <div class="sheet-grid" style="--grid:.8; --grid-mask: 70% 75% at 50% 50%"></div>
+  <div class="board">
+    <div class="card c1"><img src="cap/dark-desk-patients@2x.png"></div>
+    <div class="card c2"><img src="cap/dark-desk-patients@2x.png"></div>
+    <div class="card c3"><img src="cap/dark-desk-patients@2x.png"></div>
+    <div class="card c4"><img src="cap/dark-desk-patients@2x.png"></div>
+  </div>
+</div></body></html>
